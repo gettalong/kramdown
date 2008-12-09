@@ -1,0 +1,5 @@
+api.html:
+  url: rdoc/index.html
+  title: API
+  in_menu: true
+  sort_info: 80

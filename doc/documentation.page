@@ -1,0 +1,49 @@
+---
+title: Documentation
+---
+## Syntax
+
+The kramdown syntax is based on Markdown, a very easy to write, easy to read markup for writing HTML
+documents in plain text. Since the basic Markdown syntax has some shortcomings, implementations
+(especially the PHP Markdown Extra package) have tried to overcome this shortcomings with additional
+syntax. kramdown supports all features of the original Markdown syntax (albeit with some minor
+corrections) as well as newer features implemented in the [PHP Markdown Extra] package and [Maruku]. For
+a complete description of the implemented syntax, have a look at the [Syntax page](syntax.html).
+
+[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
+[Maruku]:             http://maruku.rubyforge.org
+
+
+## Usage
+
+The kramdown package provides two ways for using it:
+
+* **As a library**
+
+  kramdown uses basically the same API as [RedCloth], [BlueCloth] or [Maruku]:
+
+      require 'kramdown'
+
+      Kramdown::Document.new(text).to_html
+
+  The second parameter to the `new` call is an options hash for (de)activating certain features. For
+  more information have a look at the [API documentation](api.html).
+
+* **As an application**
+
+  Together with the library files a binary called `kramdown` is shipped which can be used to convert
+  text in kramdown syntax to HTML. It either reads from the files specified as the command line
+  arguments or from the standard input. For example:
+
+      kramdown path/to/kramdown/doc/syntax.page
+
+[RedCloth]: http://whytheluckystiff.net/ruby/redcloth/
+[BlueCloth]: http://www.deveiate.org/projects/BlueCloth
+
+
+## Tests
+
+kramdown uses various test suites to verify the correct working of the parser and the HTML
+converter. For more information, have a look at the [tests document](tests.html).
+
+

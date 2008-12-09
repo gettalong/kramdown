@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'kramdown'
+
+puts Kramdown::Document.new(ARGF.read).to_html

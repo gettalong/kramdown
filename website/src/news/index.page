@@ -1,0 +1,12 @@
+---
+title: News
+---
+# Latest news
+
+<webgen:block name='content' chain='release_0_1_0.html' />
+
+# News listing
+
+Following is a list of all news entries:
+
+{menu: {used_nodes: files, start_level: 2, max_levels: 1}}

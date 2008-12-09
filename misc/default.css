@@ -1,0 +1,360 @@
+/********************************************
+   AUTHOR:  			Erwin Aligam
+   WEBSITE:   			http://www.styleshout.com/
+   TEMPLATE NAME: 	ablaze
+   TEMPLATE CODE: 	S-0009
+   VERSION:          2.1
+   *******************************************/
+
+/********************************************
+   HTML ELEMENTS
+
+ ********************************************/
+
+/* top elements */
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font: normal .80em/1.5em Tahoma, 'Trebuchet MS', sans-serif;
+  color: #000;
+  text-align: center;
+  background-color: #FCFFF5;
+}
+
+/* links */
+a {
+  color: #3E606F;
+  background-color: inherit;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #193441;
+  background-color: #D1DBBD;
+}
+
+/* headers */
+h1, h2, h3, h4, h5, h6 {
+  font: bold 1.3em 'Trebuchet MS', Arial, Sans-serif;
+  color: #CE900A;
+}
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.4em; color: #A0080D }
+h3 { font-size: 1.3em; }
+
+#main h1 {
+  color: #193441;
+  padding-top: 15px;
+}
+
+#sidebar h1 {
+  font: bold 1.4em 'Trebuchet MS', Arial, Sans-serif;
+  background: url(images/arrow.gif) no-repeat 0px .6em;
+  padding: 7px 0 7px 25px;
+  color: #193441;
+}
+
+p, h1, h2, h3 {
+  margin: 0;
+  padding: 5px 0px;
+}
+
+ul, ol {
+  margin: 10px 0px;
+  padding: 0 15px;
+  color: #000; /* #3E606F; */
+}
+
+/* images */
+img {
+  border: none;
+}
+
+pre {
+  margin: 5px 0px;
+  padding: 5px;
+  text-align: left;
+  overflow: auto;
+  font: 'Lucida Console', 'courier new', monospace;
+  color: #193441;
+  background: #D1DBBD;
+  border-bottom: 1px solid #91AA9D;
+  border-top: 1px solid #91AA9D;
+}
+
+code {
+  font: 'Lucida Console', 'courier new', monospace;
+  color: #193441;
+  font-size: 115%;
+}
+
+acronym {
+  cursor: help;
+  border-bottom: 1px solid #777;
+}
+
+blockquote.exclamation, blockquote.error, blockquote.information {
+  margin: 10px 0px;
+  padding: 0 0 0 40px;
+  min-height: 40px;
+  border: 1px solid #91AA9D;
+  font: 'Trebuchet MS', Sans-serif;
+  background-color: #D1DBBD;
+  background-image: url(images/quote.gif);
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+}
+
+blockquote.exclamation {
+  background-image: url(images/exclamation.gif);
+}
+
+blockquote.error {
+  background-image: url(images/error.gif);
+}
+
+blockquote.information {
+  background-image: url(images/information.gif);
+}
+
+blockquote pre {
+  border: none;
+}
+
+/***********************
+   LAYOUT
+   ************************/
+
+#header-content, #content {
+  width: 100%;
+}
+
+/* header */
+#header {
+  background: #444 url(images/headerbg.jpg) repeat-x 0 0;
+  height: 120px;
+  text-align: left;
+}
+
+#header-content {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+}
+
+#header-content #logo {
+  position: absolute;
+  font: bold 50px Verdana, 'Trebuchet Ms', Sans-serif;
+  letter-spacing: -2px;
+  color: #FCFFF5;
+  margin: 0; padding: 0;
+
+  top: 5px; left: 20px;
+}
+
+#header-content #slogan {
+  position: absolute;
+  font: bold 16px 'Trebuchet Ms', Sans-serif;
+  text-transform: none;
+  color: #CCC;
+  margin: 0; padding: 0;
+
+  top: 65px; left: 35px;
+}
+
+/* header menu */
+#header-content ul {
+  position: absolute;
+  right: 20px; top: 75px;
+  font: bolder 1.3em 'Trebuchet MS', sans-serif;
+  color: #FCFFF5;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+#header-content li {
+  float: left;
+  display: block;
+  color: #FCFFF5;
+  text-decoration: none;
+}
+#header-content li a, #header-content li span {
+  display: block;
+  color: #3E606F;
+  text-decoration: none;
+  padding: 3px 12px;
+}
+#header-content li a:hover {
+  background: #FCFFF5;
+  color: #A0080D;
+}
+#header-content li.webgen-menu-item-selected, #header-content li.webgen-menu-submenu-inhierarchy {
+  background: #FCFFF5;
+  color: #A0080D;
+}
+
+/* content */
+#content-wrap {
+  clear: both;
+  float: left;
+  width: 100%;
+}
+
+#content {
+  text-align: left;
+  padding: 0; margin: 0 auto;
+  background: #91AA9D;
+}
+
+/* sidebar */
+#sidebar {
+  float: right;
+  width: 340px;
+  margin: 0; padding: 10px;
+  background-color: #91AA9D;
+}
+#sidebar p {
+  margin: 0px;
+  padding-left: 10px;
+}
+#sidebar ul {
+  list-style: inside square;
+  margin: 0px;
+  padding: 0px;
+}
+#sidebar ul li {
+  padding: 0px;
+  margin: 0px;
+  padding-left: 1em;
+  padding-top: 0.3em;
+}
+#sidebar ul a {
+  color: #FCFFF5;
+  text-decoration: none;
+  padding: .3em 0 .3em 3px;
+  line-height: 1.5ex;
+}
+#sidebar ul a:hover {
+  border-left: 5px solid  #193441;
+  color: #193441;
+}
+
+/* main */
+#main {
+  margin: 0 360px 0 0;
+  padding: 20px;
+  background-color: #FCFFF5;
+}
+
+/* footer */
+#footer {
+  clear: both;
+  color: #FCFFF5;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #3E60F6;
+  font-size: 95%;
+  text-align: left;
+}
+#footer h2, #footer p {
+  padding-left: 0;
+}
+#footer-content {
+  width: 100%;
+  margin: 0 auto;
+  position: absolute;
+  background-color: #193441;
+}
+#footer-content a {
+  text-decoration: none;
+  color: #CCC;
+}
+#footer-content a:hover {
+  text-decoration: underline;
+  background-color: inherit;
+}
+#footer-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#footer-content .col {
+  width: 32%;
+  padding: 0 5px 30px 15px;
+}
+#footer-content .col2 {
+  width: 30%;
+  padding: 0 0 30px 0;
+}
+
+/* alignment classes */
+.float-left  { float: left; }
+.float-right { float: right; }
+.align-left  {	text-align: left; }
+.align-right {	text-align: right; }
+
+/* additional classes */
+.clear { clear: both; }
+.comments {
+  text-align: right;
+  border: 1px dashed #151515;
+  padding: 5px 10px;
+  margin: 20px 15px 10px 15px;
+}
+.small {
+  font-size: 90%;
+  color: #666;
+  padding: 2px;
+}
+
+/* extensions classes */
+.backlink {
+  float: right;
+}
+
+table.examples {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+table.examples td, table.examples th {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+
+
+/* plugin documentation classes */
+.plugin-info .param-name {
+  color: #193441;
+}
+
+.plugin-info .param-default-value {
+  color: #A0080D;
+}
+
+.plugin-info p.param {
+  padding: 0px 0px 5px;
+}
+
+
+/* blog related classes */
+div.blog-entry {
+  margin-bottom: 15px;
+}
+
+blockquote.blog-entry-details {
+  font-size: 80%;
+  margin-bottom: 5px;
+}
+
+.blog-entry-date, .blog-entry-author {
+  font-weight: bold;
+}

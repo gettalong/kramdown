@@ -1,0 +1,20 @@
+There exist several test suites for testing the correctness of a Markdown implementation. The
+original [Markdown Test Suite](TODO) is the standard which one needs to test against. The [PHP
+Markdown suite](TODO) contains the original test suite and several more tests (some specifically
+geared towards the extension of the PHP Markdown Extra package). I have used the latter test tool to
+verify the correctness of the Kramdown implementation. However, since the syntax used by Kramdown
+varies slightly from standard Markdown some of the tests fail -- which is fine. When looking at the
+differences one can see that the failures result from these differences.
+
+Besides using the above mentioned test suite Kramdown comes with its own set of tests. These tests
+are also used to verify the implementation and to spot regressions.
+
+If you believe you have found a bug in the implementation, follow the outlined steps:
+
+* Check the syntax page and see if the behaviour is not intended.
+
+* If the behaviour is not intended and it seems that Kramdown should parse some text in another
+  fashion, please open a bug report and attach two files: one with the text and one with the HTML
+  conversion you think is correct.
+
+^

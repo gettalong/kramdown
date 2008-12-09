@@ -1,0 +1,4 @@
+--- name:alcn
+/news/:
+  in_menu: true
+  sort_info: 100
