@@ -8,37 +8,43 @@ module Kramdown
 
     State = Struct.new(:tree, :src)
 
+    # Create a new Parser object for the Kramdown::Document +doc+ and the string +source+.
     def initialize(source, doc)
       @doc = doc
       @state = State.new(doc.tree, StringScanner.new(adapt_source(source)))
       @stack = []
     end
 
-    def adapt_source(source)
-      source.gsub(/\r\n?/, "\n") + "\n\n"
-    end
-
+    # Parse the string +source+ provided by the Kramdown::Document +doc+. See Parser#parse.
     def self.parse(source, doc)
       self.new(source, doc).parse
     end
 
+    # The source string provided on initialization is scanned and the +tree+ of the associated
+    # document is updated with the result.
     def parse
       #parse_email_header
       parse_blocks
       parse_text_elements(@doc.tree)
     end
 
+    #######
+    private
+    #######
+
+    # Modify the string +source+ to be usable by the parser.
+    def adapt_source(source)
+      source.gsub(/\r\n?/, "\n") + "\n\n"
+    end
+
+    # Parse all text elements with the span level parser.
     def parse_text_elements(element)
       element.children.map! do |child|
         if child.type == :text
-          #p child.value
           @state = State.new(child, StringScanner.new(child.value))
           @stack = []
           parse_spans
-          #p child.children
           child.children
-          #p child.value
-          #SpanParser.new(child.value).parse
         else
           parse_text_elements(child)
           child
@@ -46,9 +52,9 @@ module Kramdown
       end.flatten!
     end
 
+    # Parse all block level elements in the source string.
     def parse_blocks
       while !@state.src.eos?
-        #p @state.src.peek(10)
         if @state.src.check(BLANK_LINE)
           parse_blank_line
         elsif @state.src.check(CODEBLOCK_START)
@@ -80,11 +86,11 @@ module Kramdown
       end
     end
 
+    # Parse all span level elements in the source string.
     def parse_spans
       while !@state.src.eos?
         if result = @state.src.scan_until(SPAN_START)
           add_text(result)
-          #p @state.src.peek(5)
           if @state.src.check(EMPHASIS_DELIMITER)
             parse_emphasis
           elsif @state.src.check(CODESPAN_DELIMITER)
@@ -104,7 +110,7 @@ module Kramdown
           elsif @state.src.check(LINE_BREAK)
             parse_line_break
           else
-            raise 'Error: this should not occure'
+            raise 'Error: this should not occur'
             @state.src.scan(/./)
           end
         else
@@ -114,6 +120,8 @@ module Kramdown
       end
     end
 
+    # Parse the optional email headers of the document and add the found options to the associated
+    # Kramdown document.
     def parse_email_header
       headers = @state.src.scan(/^(\w[\w\s]*:.*\n)+\n/)
       if headers
@@ -122,7 +130,7 @@ module Kramdown
       end
     end
 
-    INDENT = /\t| {4}/
+    INDENT = /^(?:\t| {4})/
     OPT_SPACE = / {0,3}/
     BLANK_LINE = /(^\s*\n)+/
 
@@ -134,13 +142,13 @@ module Kramdown
     HR_START = /^#{OPT_SPACE}((\*|-|_) *?){3,}\n/
     HR_MATCH = HR_START
 
-    CODEBLOCK_START = /^#{INDENT}/
-    CODEBLOCK_MATCH = /(^#{INDENT}.*?\n)+/
+    CODEBLOCK_START = INDENT
+    CODEBLOCK_MATCH = /(#{INDENT}.*?\n)+/
 
     TILDE_CODEBLOCK_START = /^~{3,}/
     TILDE_CODEBLOCK_MATCH = /^(~{3,})\s*?\n(.*?)^\1~*\s*?\n/m
 
-    BLOCKQUOTE_START = /^#{OPT_SPACE}>/
+    BLOCKQUOTE_START = /^#{OPT_SPACE}> ?/
     BLOCKQUOTE_MATCH = /(^#{OPT_SPACE}>.*?\n)+/
 
     ATX_HEADER_START = /^\#{1,6}/
@@ -159,7 +167,7 @@ module Kramdown
     LINK_DEFINITION_MATCH = LINK_DEFINITION_START
 
     LIST_START_UL = /^#{OPT_SPACE}[+*-][\t| ]/
-    LIST_START_OL = /^#{OPT_SPACE}\d+\.[\t| ]/ #(?:\t| {1,4})/
+    LIST_START_OL = /^#{OPT_SPACE}\d+\.[\t| ]/
     LIST_START = /#{LIST_START_UL}|#{LIST_START_OL}/
     LIST_END_UL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
                                SETEXT_HEADER_START, HTML_BLOCK_START,
@@ -173,20 +181,24 @@ module Kramdown
     ANY_BLOCK_BUT_PARA = Regexp.union(CODEBLOCK_START, TILDE_CODEBLOCK_START, BLOCKQUOTE_START, SETEXT_HEADER_START,
                                       ATX_HEADER_START, HR_START, LIST_START, HTML_BLOCK_START, EOB_MARKER)
 
+
+    # Parse the blank line at the current postition.
     def parse_blank_line
       @state.src.pos += @state.src.matched_size
-      if @state.tree.children.last && @state.tree.children.last.type == :white
+      if @state.tree.children.last && @state.tree.children.last.type == :blank
         @state.tree.children.last.value += @state.src.matched
       else
-        @state.tree.children << Element.new(:white, @state.src.matched)
+        @state.tree.children << Element.new(:blank, @state.src.matched)
       end
     end
 
+    # Parse the EOB marker at the current location.
     def parse_eob_marker
       @state.src.pos += @state.src.matched_size
       @state.tree.children << Element.new(:eob)
     end
 
+    # Parse the paragraph at the current location.
     def parse_paragraph
       result = @state.src.scan(PARAGRAPH_MATCH)
       if @state.tree.children.last && @state.tree.children.last.type == :p
@@ -197,10 +209,11 @@ module Kramdown
       end
     end
 
+    # Parse the indented codeblock at the current location.
     def parse_codeblock
-      result = @state.src.scan(CODEBLOCK_MATCH).gsub(/^#{INDENT}/, '')
+      result = @state.src.scan(CODEBLOCK_MATCH).gsub(INDENT, '')
       children = @state.tree.children
-      if children.length >= 2 && children[-1].type == :white && children[-2].type == :codeblock
+      if children.length >= 2 && children[-1].type == :blank && children[-2].type == :codeblock
         children[-2].value += children[-1].value + result
         children.pop
       else
@@ -208,15 +221,16 @@ module Kramdown
       end
     end
 
+    # Parse the fenced codeblock at the current location.
     def parse_codeblock_tilde
       @state.src.scan(TILDE_CODEBLOCK_MATCH)
       @state.tree.children << Element.new(:codeblock, @state.src[2])
     end
 
+    # Parse the blockquote at the current location.
     def parse_blockquote
-      result = @state.src.scan(BLOCKQUOTE_MATCH)
+      result = @state.src.scan(BLOCKQUOTE_MATCH).gsub(BLOCKQUOTE_START, '')
       el = Element.new(:blockquote)
-      result.gsub!(/#{BLOCKQUOTE_START} ?/, '')
       @state.tree.children << el
 
       @stack.push @state
@@ -225,6 +239,7 @@ module Kramdown
       @state = @stack.pop
     end
 
+    # Parse the Atx header at the current location.
     def parse_atx_header
       result = @state.src.scan(ATX_HEADER_MATCH)
       level, text = @state.src[1], @state.src[2]
@@ -233,6 +248,7 @@ module Kramdown
       @state.tree.children << el
     end
 
+    # Parse the Setext header at the current location.
     def parse_setext_header
       if @state.tree.children.last && @state.tree.children.last.type == :p
         parse_paragraph
@@ -245,12 +261,13 @@ module Kramdown
       @state.tree.children << el
     end
 
+    # Parse the horizontal rule at the current location.
     def parse_horizontal_rule
       @state.src.pointer += @state.src.matched_size
-      el = Element.new(:hr)
-      @state.tree.children << el
+      @state.tree.children << Element.new(:hr)
     end
 
+    # Parse the ordered or unordered list at the current location.
     def parse_list
       type, list_start, list_end, item_start = (@state.src.check(LIST_START_UL) ? [:ul, LIST_START_UL, LIST_END_UL, LIST_ITEM_START_UL] : [:ol, LIST_START_OL, LIST_END_OL, LIST_ITEM_START_OL])
       list = Element.new(type)
@@ -261,7 +278,6 @@ module Kramdown
       end
 
       eob_found = false
-      #insert_eob_marker = false
       while !@state.src.eos?
         if @state.src.check(list_end)
           break
@@ -272,19 +288,12 @@ module Kramdown
 
           item.children << Element.new(:text, result)
           list.children << item
-          #p item.children.first.value
-          #p true if item.children.first.value !~ ANY_BLOCK_BUT_PARA
-          #insert_eob_marker = false #if item.children.first.value !~ ANY_BLOCK_BUT_PARA #/^#{OPT_SPACE}([a-zA-Z]|\d+(?=[^.]))/
         elsif result = @state.src.scan(CODEBLOCK_MATCH)
-          result.gsub!(/^#{INDENT}/, '')
-          if false && result =~ ANY_BLOCK_BUT_PARA && insert_eob_marker
-            result = "^\n" + result
-            insert_eob_marker = false
-          end
+          result.gsub!(INDENT, '')
           list.children.last.children.last.value += result
         elsif result = @state.src.scan(BLANK_LINE)
           list.children.last.children.last.value += result
-        elsif @state.src.check(EOB_MARKER)
+        elsif @state.src.scan(EOB_MARKER)
           eob_found = true
           break
         elsif @state.src.check(PARAGRAPH_START)
@@ -298,37 +307,33 @@ module Kramdown
       last = nil
       list.children.each do |item|
         str = item.children.pop.value
-        #p '-'*20
-        #puts str
-        #p '-'*20
         @stack.push @state
         @state = State.new(item, StringScanner.new(str))
         parse_blocks
         @state = @stack.pop
 
-        #p item.children
-
-        if item.children.first.type == :p && (item.children.length < 2 || item.children[1].type != :white ||
+        if item.children.first.type == :p && (item.children.length < 2 || item.children[1].type != :blank ||
                                               (item == list.children.last && item.children.length == 2 && !eob_found))
           text = item.children.shift.children.first
-          text.value += "\n" if !item.children.empty? && item.children[0].type != :white
+          text.value += "\n" if !item.children.empty? && item.children[0].type != :blank
           item.children.unshift(text)
         else
           item.options[:first_as_para] = true
         end
 
-        if item.children.last.type == :white
+        if item.children.last.type == :blank
           item.children.pop
-          last = :white
+          last = :blank
         else
-          last = :non_white
+          last = :non_blank
         end
       end
 
       @state.tree.children << list
-      @state.tree.children << Element.new(:white, "") if last == :white && !eob_found
+      @state.tree.children << Element.new(:blank, "") if last == :blank && !eob_found
     end
 
+    # Parse the HTML tag, XML processing instruction or XML comment at the current location.
     def parse_html(element_type)
       parser = REXML::Parsers::BaseParser.new(@state.src.string[@state.src.pos..-1])
       element = nil
@@ -354,13 +359,18 @@ module Kramdown
       @state.src.scan(/\n/)
     end
 
+    # Parse the link definition at the current location.
     def parse_link_definition
       result = @state.src.scan(LINK_DEFINITION_MATCH)
       link_id, link_url, link_title = @state.src[1].downcase, @state.src[2], @state.src[4]
-      #TODO: warn on duplicat link_id
+      add_warning("Duplicate link ID #{link_id}") if @doc.options[:link_defs][link_id]
       @doc.options[:link_defs][link_id] = [link_url, link_title]
     end
 
+    # Add the given warning +text+ to the warning array of the Kramdown document.
+    def add_warning(text)
+      @doc.options[:warnings] << text
+    end
 
     ESCAPED_CHAR = /\\[^A-Za-z0-9\s]/
 
@@ -371,8 +381,6 @@ module Kramdown
     HTML_SPAN_START = /<(\w+(?::\w+)?(?=\s+?|\/?>)|\?|!--)/
 
     AUTOLINK_START = /<((mailto|https?|ftps?):.*?|.*?@.*?)>/
-
-    #LINK = /!?\[((?:[^\]]|\\\])+)\](?:\s*?\[(#{LINK_ID_CHARS}+)?\]|\(([^\s]+)(?:[ \t]*(["'])(.+?)\4)?[ \t]*\))?/
 
     LINK_START = /!?\[(?=[^^])/
 
@@ -386,40 +394,44 @@ module Kramdown
                                   #{HTML_SPAN_START}|#{LINK_START}|
                                   #{HTML_ENTITY}|#{SPECIAL_HTML_CHARS}|#{ESCAPED_CHAR}|#{LINE_BREAK})/x)
 
+    # Parse the backslash-escaped character at the current location.
     def parse_escape
       result = @state.src.scan(ESCAPED_CHAR)
       add_text(result[1..1])
     end
 
+    # Parse the HTML entity at the current location.
     def parse_html_entity
       result = @state.src.scan(HTML_ENTITY)
       add_text(result)
     end
 
+    # Parse the special HTML characters at the current location.
     def parse_special_html_chars
       result = @state.src.scan(SPECIAL_HTML_CHARS)
       add_text(result)
     end
 
+    # Parse the line break at the current location.
     def parse_line_break
       result = @state.src.scan(LINE_BREAK)
       @state.tree.children << Element.new(:br)
     end
 
+    # Parse the autolink at the current location.
     def parse_autolink
       result = @state.src.scan(AUTOLINK_START)
 
       if @state.src[2].nil? || @state.src[2] == 'mailto'
         text = obfuscate_email(@state.src[2] ? @state.src[1].sub(/^mailto:/, '') : @state.src[1])
         mailto = obfuscate_email('mailto')
-        el = Element.new(:a, nil, {:attr => {'href' => "#{mailto}:#{text}"}, :type => :mail})
-        el.children << Element.new(:text, text)
-        @state.tree.children << el
+        add_link(text, "#{mailto}:#{text}", nil, false)
       else
-        add_link(@state.src[1], @state.src[1])
+        add_link(@state.src[1], @state.src[1], nil, false)
       end
     end
 
+    # Helper method for obfuscating the +email+ address by using HTML entities.
     def obfuscate_email(email)
       result = ""
       email.each_byte do |b|
@@ -428,6 +440,7 @@ module Kramdown
       result
     end
 
+    # Parse the emphasis at the current location.
     def parse_emphasis
       result = @state.src.scan(EMPHASIS_DELIMITER)
       element = (result.length == 2 ? :strong : :em)
@@ -457,7 +470,6 @@ module Kramdown
         @state.tree.children << el
         remove_re = /#{Regexp.escape(result)}$/
 
-        #p [element, text, nr_of_delims, @state.src.peek(1)]
         if element == :strong && @state.src.check(/#{Regexp.escape(type)}/) &&
             (nr_of_delims % 2 == 1)
           text += @state.src.scan(/#{Regexp.escape(type)}/)
@@ -473,6 +485,7 @@ module Kramdown
       end
     end
 
+    # Parse the codespan at the current scanner location.
     def parse_codespan
       result = @state.src.scan(CODESPAN_DELIMITER)
       simple = (result.length == 1)
@@ -497,16 +510,21 @@ module Kramdown
       end
     end
 
+
+    LINK_TEXT_BRACKET_RE = /\\\[|\\\]|\[|\]/
+    LINK_INLINE_ID_RE = /\s*?\[(#{LINK_ID_CHARS}+)?\]/
+    LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/
+
+    # Parse the link at the current scanner position. This method is used to parse normal links as
+    # well as image links.
     def parse_link
       result = @state.src.scan(LINK_START)
       reset_pos = @state.src.pos
-      #p @state.src.peek(50)
       link_add_method = (result =~ /^!/ ? :add_img_link : :add_link)
 
       link_text = nil
-      re = /\\\[|\\\]|\[|\]/
       nr_of_brackets = 1
-      while temp = @state.src.scan_until(re)
+      while temp = @state.src.scan_until(LINK_TEXT_BRACKET_RE)
         link_text ||= ''
         link_text += temp
         case @state.src.matched
@@ -532,8 +550,7 @@ module Kramdown
 
       conv_link_id = link_text.gsub(/\n/, ' ').gsub(LINK_ID_NON_CHARS, '').downcase
 
-      link_id_re = /\s*?\[(#{LINK_ID_CHARS}+)?\]/
-      if @state.src.scan(link_id_re)
+      if @state.src.scan(LINK_INLINE_ID_RE)
         link_id = (@state.src[1] || conv_link_id).downcase
         if @doc.options[:link_defs].has_key?(link_id)
           send(link_add_method, link_text, *@doc.options[:link_defs][link_id])
@@ -554,34 +571,29 @@ module Kramdown
         return
       end
 
-      link_url = nil
+      link_url = ''
       re = /\(|\)|\s/
       nr_of_brackets = 1
       while temp = @state.src.scan_until(re)
-        link_url ||= ''
         link_url += temp
         case @state.src.matched
         when /\s/
-          link_url.chop!
           break
         when '('
           nr_of_brackets += 1
         when ')'
           nr_of_brackets -= 1
-          if nr_of_brackets == 0
-            link_url.chop!
-            break
-          end
+          break if nr_of_brackets == 0
         end
       end
+      link_url.chop!
 
       if nr_of_brackets == 0
         send(link_add_method, link_text, link_url, nil)
         return
       end
 
-      re = /\s*?(["'])(.+?)\1\s*?\)/
-      if @state.src.scan(re)
+      if @state.src.scan(LINK_INLINE_TITLE_RE)
         send(link_add_method, link_text, link_url, @state.src[2])
       else
         @state.src.pos = reset_pos
@@ -589,7 +601,10 @@ module Kramdown
       end
     end
 
-    def add_link(link_text, href, title = nil)
+
+    # This helper method adds a link with the text +link_text+, the URL +href+ and the optional
+    # +title+ to the tree and parses the link_text as span level text if +parse_text+ is +true+.
+    def add_link(link_text, href, title = nil, parse_text = true)
       el = Element.new(:a, nil, {
                          :attr => {
                            'title' => title,
@@ -598,12 +613,18 @@ module Kramdown
                        })
       @state.tree.children << el
 
-      @stack.push @state
-      @state = State.new(el, StringScanner.new(link_text))
-      parse_spans
-      @state = @stack.pop
+      if parse_text
+        @stack.push @state
+        @state = State.new(el, StringScanner.new(link_text))
+        parse_spans
+        @state = @stack.pop
+      else
+        el.children << Element.new(:text, link_text)
+      end
     end
 
+    # This helper methods adds an image link with the alternative text +alt_text+, the image source
+    # +src+ and the optional +title+ to the the tree.
     def add_img_link(alt_text, src, title = nil)
       el = Element.new(:img, nil, {
                          :attr => {
@@ -615,7 +636,7 @@ module Kramdown
       @state.tree.children << el
     end
 
-    # This helper method adds the given +text+ either to the last element in the tree if this is a
+    # This helper method adds the given +text+ either to the last element in the tree if it is a
     # text element or creates a new text element.
     def add_text(text)
       if @state.tree.children.last && @state.tree.children.last.type == :text

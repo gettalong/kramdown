@@ -36,3 +36,7 @@ bad [URL with trailing spaces](something.html  )
 bad [URL with spaces](this is some url.html)
 
 bad [URL with empty title](something.html '')
+
+bad [URL](
+
+bad [URL](no

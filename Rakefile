@@ -264,21 +264,22 @@ The official version is called 'kramdown' and can be installed via
     end
   end
 
-  task :benchmark do
+  task :benchmark, :count, :types do |t, args|
     require 'maruku'
     require 'rdiscount'
     require 'bluecloth'
     require 'benchmark'
     text = File.read('doc/syntax.page')
+    count = args[:count] ? args[:count].to_s.to_i : 10
     tms = Benchmark.bm(50) do |b|
       GC.start; GC.start
-      b.report('RDiscount') { 10.times { RDiscount.new(text).to_html } }
+      b.report('RDiscount') { count.times { RDiscount.new(text).to_html } } if args[:types].to_s =~ /rdiscount/
       GC.start; GC.start
-      b.report('BlueCloth') { 10.times { BlueCloth.new(text).to_html } }
+      b.report('BlueCloth') { count.times { BlueCloth.new(text).to_html } } if args[:types].to_s =~ /bluecloth/
       GC.start; GC.start
-      b.report('Maruku') { 10.times { Maruku.new(text, :on_error => :ignore).to_html } }
+      b.report('Maruku') { count.times { Maruku.new(text, :on_error => :ignore).to_html } } if args[:types].to_s =~ /maruku/
       GC.start; GC.start
-      b.report('Kramdown') { 10.times { Kramdown::Document.new(text).to_html } }
+      b.report('Kramdown') { count.times { Kramdown::Document.new(text).to_html } }
     end
   end
 

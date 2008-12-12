@@ -4,14 +4,17 @@ module Kramdown
 
     class ToHtml
 
+      # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
       def initialize(tree, doc)
         @tree, @doc = tree, doc
       end
 
+      # Convert the element +tree+ of the Kramdown document +doc+ to HTML.
       def self.convert(tree, doc)
         self.new(tree, doc).convert
       end
 
+      # Convert the element tree +el+, setting the indentation level to +indent+.
       def convert(el = @tree, indent = -2)
         result = ''
         el.children.each do |inner_el|
@@ -20,9 +23,11 @@ module Kramdown
         convert_element(el, result, indent)
       end
 
+      # Convert the element +el+. The result of the already converted inner elements is stored in
+      # +inner+ and the current indentation level in +indent+.
       def convert_element(el, inner, indent)
         case el.type
-        when :white
+        when :blank
           "\n"
         when :text
           escape_html(el.value, false)
@@ -72,6 +77,7 @@ module Kramdown
         end
       end
 
+      # Return the string with the attributes of the element +el+.
       def options_for_element(el)
         if el.options[:attr]
           el.options[:attr].map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v, false)}\"" }.sort.join('')
@@ -90,8 +96,10 @@ module Kramdown
       ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| Regexp.escape(k)})
       ESCAPE_ALL_NOT_ENTITIES_RE = Regexp.union(ENTITY, ESCAPE_ALL_RE)
 
-      def escape_html(attr, all = true)
-        attr.gsub(all ? ESCAPE_ALL_RE : ESCAPE_ALL_NOT_ENTITIES_RE) {|m| ESCAPE_MAP[m] || m}
+      # Escape the special HTML characters in the string +str+. If +all+ is +true+ then all
+      # characters are escaped, if +all+ is +false+
+      def escape_html(str, all = true)
+        str.gsub(all ? ESCAPE_ALL_RE : ESCAPE_ALL_NOT_ENTITIES_RE) {|m| ESCAPE_MAP[m] || m}
       end
 
     end
