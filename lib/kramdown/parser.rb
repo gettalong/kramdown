@@ -396,31 +396,31 @@ module Kramdown
 
     # Parse the backslash-escaped character at the current location.
     def parse_escape
-      result = @state.src.scan(ESCAPED_CHAR)
-      add_text(result[1..1])
+      @state.src.pointer += @state.src.matched_size
+      add_text(@state.src.matched[1..1])
     end
 
     # Parse the HTML entity at the current location.
     def parse_html_entity
-      result = @state.src.scan(HTML_ENTITY)
-      add_text(result)
+      @state.src.pointer += @state.src.matched_size
+      add_text(@state.src.matched)
     end
 
     # Parse the special HTML characters at the current location.
     def parse_special_html_chars
-      result = @state.src.scan(SPECIAL_HTML_CHARS)
-      add_text(result)
+      @state.src.pointer += @state.src.matched_size
+      add_text(@state.src.matched)
     end
 
     # Parse the line break at the current location.
     def parse_line_break
-      result = @state.src.scan(LINE_BREAK)
+      @state.src.pointer += @state.src.matched_size
       @state.tree.children << Element.new(:br)
     end
 
     # Parse the autolink at the current location.
     def parse_autolink
-      result = @state.src.scan(AUTOLINK_START)
+      @state.src.pointer += @state.src.matched_size
 
       if @state.src[2].nil? || @state.src[2] == 'mailto'
         text = obfuscate_email(@state.src[2] ? @state.src[1].sub(/^mailto:/, '') : @state.src[1])
