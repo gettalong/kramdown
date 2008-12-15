@@ -245,6 +245,7 @@ module Kramdown
       level, text = @state.src[1], @state.src[2]
       el = Element.new(:header, nil, :level => level.length)
       el.children << Element.new(:text, text.strip)
+      el.options[:attr] = {:id => generate_id(text.strip)} if @doc.options[:auto_ids]
       @state.tree.children << el
     end
 
@@ -258,7 +259,13 @@ module Kramdown
       text, level = @state.src[1].strip, @state.src[2]
       el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
       el.children << Element.new(:text, text)
+      el.options[:attr] = {:id => generate_id(text.strip)} if @doc.options[:auto_ids]
       @state.tree.children << el
+    end
+
+    # Generate an ID from the the string +str+.
+    def generate_id(str)
+      str.gsub(/[^a-zA-Z0-9 _]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '_').downcase
     end
 
     # Parse the horizontal rule at the current location.

@@ -56,6 +56,7 @@ will be converted to:
 Block level elements are used to structure the content. They can mark up some text, for example, as
 code, as a quote or as list items.
 
+
 ## End-Of-Block Marker
 
 The End-Of-Block (EOB) marker -- a `^` as first character on an otherwise empty line -- can be used
@@ -98,6 +99,7 @@ The following gives you an example of how paragraphs look like:
     This is another paragraph, not connected to the above one. But  
     with a hard line break.
 {: .show-whitespaces}
+
 
 ## Headers
 
@@ -163,6 +165,40 @@ number of hashes at the end of the line to close the header. For example:
     ### Third level header ###
 
     ## Second level header ######
+
+Kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`.
+This is done by converting the untransformed header text via the following steps:
+
+* All characters except letters, numbers, spaces and underscores are removed.
+* All characters from the start of the line till the first letter are removed.
+* All spaces are converted to underscores.
+* Everything is downcased.
+
+So, for example, the following text snippet with `:auto_ids` set to `true`
+
+    # This is a header
+
+    ## 12. Another one 1 here
+
+    ### Do ^& it now
+
+    Hallo
+    =====
+
+    Not now
+    -------
+
+gets converted to:
+
+    <h1 id="this_is_a_header">This is a header</h1>
+
+    <h2 id="another_one_1_here">12. Another one 1 here</h2>
+
+    <h3 id="do__it_now">Do ^&amp; it now</h3>
+
+    <h1 id="hallo">Hallo</h1>
+
+    <h2 id="not_now">Not now</h2>
 
 
 ## Blockquotes
