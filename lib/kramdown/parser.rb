@@ -136,11 +136,9 @@ module Kramdown
 
     EOB_MARKER = /^\^\s*?\n/
 
-    PARAGRAPH_START = /^#{OPT_SPACE}[^ \t]/
-    PARAGRAPH_MATCH = /^#{OPT_SPACE}[^ \t].*?\n/
+    PARAGRAPH_START = /^#{OPT_SPACE}[^ \t].*?\n/
 
     HR_START = /^#{OPT_SPACE}((\*|-|_) *?){3,}\n/
-    HR_MATCH = HR_START
 
     CODEBLOCK_START = INDENT
     CODEBLOCK_MATCH = /(#{INDENT}.*?\n)+/
@@ -155,7 +153,6 @@ module Kramdown
     ATX_HEADER_MATCH = /^(\#{1,6})(.+?)\s*?#*\s*?\n/
 
     SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)\n(-|=)+\s*?\n/
-    SETEXT_HEADER_MATCH = SETEXT_HEADER_START
 
     HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form script ul ol table ins del]
     HTML_BLOCK_ELEMENTS_RE = Regexp.union(*HTML_BLOCK_ELEMENTS)
@@ -164,7 +161,6 @@ module Kramdown
     LINK_ID_CHARS = /[a-zA-Z0-9 _.,!?-]/
     LINK_ID_NON_CHARS = /[^a-zA-Z0-9 _.,!?-]/
     LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*([^\s]+)[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\3[ \t]*?)?\n/
-    LINK_DEFINITION_MATCH = LINK_DEFINITION_START
 
     LIST_START_UL = /^#{OPT_SPACE}[+*-][\t| ]/
     LIST_START_OL = /^#{OPT_SPACE}\d+\.[\t| ]/
@@ -175,11 +171,9 @@ module Kramdown
     LIST_END_OL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
                                SETEXT_HEADER_START, HTML_BLOCK_START,
                                LINK_DEFINITION_START, LIST_START_UL)
-    LIST_ITEM_START_UL = /#{LIST_START_UL}.*?\n(#{PARAGRAPH_MATCH})*?(?=#{LIST_START_UL}|#{CODEBLOCK_START}|#{LIST_END_UL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
-    LIST_ITEM_START_OL = /#{LIST_START_OL}.*?\n(#{PARAGRAPH_MATCH})*?(?=#{LIST_START_OL}|#{CODEBLOCK_START}|#{LIST_END_OL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
+    LIST_ITEM_START_UL = /#{LIST_START_UL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_UL}|#{CODEBLOCK_START}|#{LIST_END_UL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
+    LIST_ITEM_START_OL = /#{LIST_START_OL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_OL}|#{CODEBLOCK_START}|#{LIST_END_OL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
 
-    ANY_BLOCK_BUT_PARA = Regexp.union(CODEBLOCK_START, TILDE_CODEBLOCK_START, BLOCKQUOTE_START, SETEXT_HEADER_START,
-                                      ATX_HEADER_START, HR_START, LIST_START, HTML_BLOCK_START, EOB_MARKER)
 
 
     # Parse the blank line at the current postition.
@@ -200,7 +194,7 @@ module Kramdown
 
     # Parse the paragraph at the current location.
     def parse_paragraph
-      result = @state.src.scan(PARAGRAPH_MATCH)
+      result = @state.src.scan(PARAGRAPH_START)
       if @state.tree.children.last && @state.tree.children.last.type == :p
         @state.tree.children.last.children.first.value << "\n" + result.chomp
       else
@@ -368,7 +362,7 @@ module Kramdown
 
     # Parse the link definition at the current location.
     def parse_link_definition
-      result = @state.src.scan(LINK_DEFINITION_MATCH)
+      @state.src.pos += @state.src.matched_size
       link_id, link_url, link_title = @state.src[1].downcase, @state.src[2], @state.src[4]
       add_warning("Duplicate link ID #{link_id}") if @doc.options[:link_defs][link_id]
       @doc.options[:link_defs][link_id] = [link_url, link_title]
