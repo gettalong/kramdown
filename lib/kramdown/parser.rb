@@ -75,6 +75,10 @@ module Kramdown
           parse_html(:html_block)
         elsif @state.src.check(LINK_DEFINITION_START)
           parse_link_definition
+        elsif @state.src.check(ALD_START)
+          parse_ald
+        elsif @state.src.check(IAL_BLOCK_START)
+          parse_block_ial
         elsif @state.src.check(EOB_MARKER)
           parse_eob_marker
         elsif @state.src.check(PARAGRAPH_START)
@@ -103,6 +107,8 @@ module Kramdown
             parse_html(:html_inline)
           elsif @state.src.check(LINK_START)
             parse_link
+          elsif @state.src.check(IAL_SPAN_START)
+            parse_span_ial
           elsif @state.src.check(SPECIAL_HTML_CHARS)
             parse_special_html_chars
           elsif @state.src.check(ESCAPED_CHAR)
@@ -162,18 +168,29 @@ module Kramdown
     LINK_ID_NON_CHARS = /[^a-zA-Z0-9 _.,!?-]/
     LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*([^\s]+)[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\3[ \t]*?)?\n/
 
+    ALD_ID_CHARS = /[\w\d-]/
+    ALD_ANY_CHARS = /\\\}|[^\}]/
+    ALD_ID_NAME = /(?:\w|\d)#{ALD_ID_CHARS}*/
+    ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])+?)\2/
+    ALD_TYPE_CLASS_NAME = /\.(#{ALD_ID_NAME})/
+    ALD_TYPE_ID_NAME = /#(#{ALD_ID_NAME})/
+    ALD_TYPE_REF = /(#{ALD_ID_NAME})/
+    ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}|#{ALD_TYPE_REF})(?=\s|\Z)/
+    ALD_START = /^#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}\s*?\n/
+
+    IAL_BLOCK_START = /^#{OPT_SPACE}\{:(#{ALD_ANY_CHARS}+)\}\s*?\n/
+
     LIST_START_UL = /^#{OPT_SPACE}[+*-][\t| ]/
     LIST_START_OL = /^#{OPT_SPACE}\d+\.[\t| ]/
     LIST_START = /#{LIST_START_UL}|#{LIST_START_OL}/
     LIST_END_UL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
                                SETEXT_HEADER_START, HTML_BLOCK_START,
-                               LINK_DEFINITION_START, LIST_START_OL)
+                               LINK_DEFINITION_START, LIST_START_OL, ALD_START, IAL_BLOCK_START)
     LIST_END_OL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
                                SETEXT_HEADER_START, HTML_BLOCK_START,
-                               LINK_DEFINITION_START, LIST_START_UL)
+                               LINK_DEFINITION_START, LIST_START_UL, ALD_START, IAL_BLOCK_START)
     LIST_ITEM_START_UL = /#{LIST_START_UL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_UL}|#{CODEBLOCK_START}|#{LIST_END_UL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
     LIST_ITEM_START_OL = /#{LIST_START_OL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_OL}|#{CODEBLOCK_START}|#{LIST_END_OL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
-
 
 
     # Parse the blank line at the current postition.
@@ -368,6 +385,36 @@ module Kramdown
       @doc.options[:link_defs][link_id] = [link_url, link_title]
     end
 
+    # Parse the attribute list definition at the current location.
+    def parse_ald
+      @state.src.pos += @state.src.matched_size
+      write_al_content(@state.src[2], @doc.options[:alds][@state.src[1]] ||= {})
+    end
+
+    # Parse the inline attribute list at the current location.
+    def parse_block_ial
+      @state.src.pos += @state.src.matched_size
+      if @state.tree.children.last
+        write_al_content(@state.src[1], @state.tree.children.last.options[:ial] = {})
+      end
+    end
+
+    # Parse the string +str+ and add all found attributes to the hash +opts+.
+    def write_al_content(str, opts)
+      #TODO: add warning on empty scan
+      str.scan(ALD_TYPE_ANY).each do |key, sep, val, id_attr, class_attr, ref|
+        if ref
+          (opts[:refs] ||= []) << ref
+        elsif class_attr
+          opts['class'] = ((opts['class'] || '') + " #{class_attr}").lstrip
+        elsif id_attr
+          opts['id'] = id_attr
+        else
+          opts[key] = val.gsub(/\\(\}|#{sep})/, "\\1")
+        end
+      end
+    end
+
     # Add the given warning +text+ to the warning array of the Kramdown document.
     def add_warning(text)
       @doc.options[:warnings] << text
@@ -391,8 +438,10 @@ module Kramdown
 
     LINE_BREAK = /  (?=$)/
 
+    IAL_SPAN_START = /\{:(#{ALD_ANY_CHARS}+)\}/
+
     SPAN_START = Regexp.union(/(?=#{EMPHASIS_DELIMITER}|#{CODESPAN_DELIMITER}|#{AUTOLINK_START}|
-                                  #{HTML_SPAN_START}|#{LINK_START}|
+                                  #{HTML_SPAN_START}|#{LINK_START}|#{IAL_SPAN_START}|
                                   #{HTML_ENTITY}|#{SPECIAL_HTML_CHARS}|#{ESCAPED_CHAR}|#{LINE_BREAK})/x)
 
     # Parse the backslash-escaped character at the current location.
@@ -602,6 +651,15 @@ module Kramdown
       end
     end
 
+    # Parse the inline attribute list at the current location.
+    def parse_span_ial
+      @state.src.pos += @state.src.matched_size
+      if @state.tree.children.last && @state.tree.children.last.type != :text
+        write_al_content(@state.src[1], @state.tree.children.last.options[:ial] = {})
+      else
+        add_text(@state.src.matched)
+      end
+    end
 
     # This helper method adds a link with the text +link_text+, the URL +href+ and the optional
     # +title+ to the tree and parses the link_text as span level text if +parse_text+ is +true+.
@@ -642,7 +700,7 @@ module Kramdown
     def add_text(text)
       if @state.tree.children.last && @state.tree.children.last.type == :text
         @state.tree.children.last.value += text
-      else
+      elsif !text.empty?
         @state.tree.children << Element.new(:text, text)
       end
     end

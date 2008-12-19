@@ -78,6 +78,7 @@ desc "Build the whole user documentation"
 task :doc => [:rdoc, :htmldoc]
 
 tt = Rake::TestTask.new do |test|
+  test.warning = true
   test.libs << 'test'
 end
 
@@ -294,7 +295,7 @@ module Kramdown
     # Convert the content in +context+ to HTML.
     def call(context)
       require 'kramdown'
-      context.content = ::Kramdown::Document.new(context.content).to_html
+      context.content = ::Kramdown::Document.new(context.content, :auto_ids => true).to_html
       context
     end
 

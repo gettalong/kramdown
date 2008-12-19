@@ -1,0 +1,24 @@
+Some paragraph.
+{:.class id}
+
+> quote
+{: #id}
+
+* list
+{: key="val"}
+
+    code block
+  {: #other}
+
+## A header
+{:#myid}
+
+Another header
+==============
+{: .class #other}
+
+{:id: #id}
+{:id: #other .myclass other}
+{:other: key1="val\""  - ig.nored as_is#this key2='val\'' .other-class}
+
+{:.invalid}

@@ -82,6 +82,7 @@ By using an EOB marker, you can make two lists with each one item:
 > The EOB marker is not part of the standard Markdown syntax.
 {: .markdown-difference}
 
+
 ## Paragraphs
 
 These are the most used block level elements. One or more consecutive lines of text are interpreted
@@ -298,13 +299,13 @@ separated by spaces or tabs, on an otherwise blank line. The first asterisk, das
 optionally be indented up to three spaces. The following examples show different possibilities to
 create a horizontal rule:
 
-   * * *
+    * * *
 
-   ---
+    ---
 
-   _  _  _  _
+    _  _  _  _
 
-   ---------------
+    ---------------
 
 
 ## Lists
@@ -567,6 +568,95 @@ processing instructions or comments is not processed:
 TODO: allow processing of syntax in HTML blocks, mention it in differences
 
 
+## Attribute List Definitions
+
+This is an implementation of [Maruku]'s feature for adding attributes to block and span level
+elements (the naming and syntax is taken from Maruku). This block level element is used to define
+attributes which can be referenced later. The [Block Inline Attribute
+List](#block_inline_attribute_lists) is used to attach attributes to a block level element and the
+[Span Inline Attribute List](#span_inline_attribute_lists) is used to attach attributes to a span
+level element.
+
+Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
+explanation:
+
+    {:ref-name: #myid .my-class}
+    {:other: ref-name #id-of-other title="hallo you"}
+    {:test: key="value \" with quote" and other='quote brace \}'}
+
+An ALD line has the following structure:
+
+* a left brace, optionally preceded by up to three spaces,
+* followed by a colon, the reference name and another colon,
+* followed by attribute definitions (allowed characters are backslash-escaped closing braces or any
+  character except an unescaped closing brace),
+* followed by a closing brace and optional spaces till the end of the line.
+
+The reference name needs to start with a word character or a digit, optionally followed by other word
+characters, digits or dashes.
+
+There are four different types of attribute definitions which have to be separated by one or more
+spaces:
+
+*   references
+
+    This must be a valid reference name. It is used to reference an other ALD sothat the attributes
+    of the other ALD are also included in this one. The reference name is ignored when collecting the
+    attributes if no attribute definition list with this reference name exists. For example, a
+    simple reference looks like `id`.
+
+*   key-value pairs
+
+    A key value is defined by a key name which must follow the rules for reference names, then an
+    equal sign and then the value in single or double quotes. If you need to use the value delimiter
+    (a single or a double quote) inside the value, you need to escape it with a backslash. Key-value
+    pairs can be used to specify arbitray attributes for block or span level elements. For example,
+    a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
+
+*   ID name
+
+    An ID name is defined by using a hash and then the identifier name which must follow the rules
+    for reference names. This is a short hand for the key-value pair `id="IDNAME"` since this is
+    often used. The ID name specifies the unique ID of a block or span level element. For example,
+    an ID name looks like `#myid`.
+
+*   class names
+
+    A class name is definied by using a dot and then the class name. This is (almost, but not quite)
+    a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
+    the class name should be appended to the current value of the `class` attribute. The following
+    ALDs are all equivalent:
+
+        {:id: .cls1 .cls2}
+        {:id: class="cls1" .cls2}
+        {:id: class="something" class="cls1" .cls2}
+        {:id: class="cls1 cls2}
+
+As can be seen from the example of the class names attributes that are defined earlier are
+overwritten by ones with the same name defined later. Also, everything in the attribute definitions
+part that does not match one of the above four types is ignored.
+
+
+## Block Inline Attribute Lists
+
+This block level element is used to attach attributes to a block level element. A block inline
+attribute list (block IAL) has the same structure as an [ALD](#attribute_list_definitions) except
+that the colon/reference name/colon part is replaced by a colon. A block IAL has to be put directly
+after the block level element to which the attributes should be attached, otherwise it is ignored.
+This is, for example, the case when there is a newline between the block level element and the IAL.
+
+Here are some examples for block IALs:
+
+    A simple paragraph with an ID attribute.
+    {: #para-one}
+
+    > A blockquote with a title
+    {:title="The blockquote title"}
+
+        Some code here
+    {:.ruby}
+
+
 # Span Level Elements
 
 These elements are used inside block level elements to markup text fragments. For example, one can
@@ -575,6 +665,7 @@ easily create links or apply emphasis to certain text parts.
 Empty span level elements are not converted to empty HTML tags but are copied as-is to the output.
 
 TODO: check the above claim for all span level elements
+
 
 ## Links and Images
 
@@ -723,6 +814,19 @@ literal meaning of a backtick you can backslash-escape it:
 
     This is a ` literal backtick.
     As \`are\` these!
+
+
+## Span Inline Attribute Lists
+
+This is a version of the [block inline attribute list](#block_inline_attribute_lists) for span level
+elements. It has the same structure as the block IAL except that leading and trailing spaces are not
+allowed. The span IAL has to be put directly after the span level element, no additional character
+is allowed between.
+
+Here are some examples for span IALs:
+
+    This *is*{:.underline} some `code`{:#id}.
+    A [link](test.html){:rel='something'} and some **tools**{:.tools}.
 
 
 # Miscellaneous
