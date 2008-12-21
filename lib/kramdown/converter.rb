@@ -48,10 +48,8 @@ module Kramdown
           output = ' '*indent + "<li" + options_for_element(el) + ">"
           if el.options[:first_as_para]
             output += "\n" + inner + ' '*indent
-          elsif el.children.length > 1
-            output += inner + ' '*indent
           else
-            output += inner
+            output += inner + (inner =~ /\n\Z/ ? ' '*indent : '')
           end
           output + "</li>\n"
         when :em, :strong
