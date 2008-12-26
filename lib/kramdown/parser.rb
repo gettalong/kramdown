@@ -26,6 +26,10 @@ module Kramdown
       #parse_email_header
       parse_blocks
       parse_text_elements(@doc.tree)
+      @doc.options[:footnotes].each do |name, data|
+        next unless name.kind_of?(String)
+        parse_text_elements(data[:content])
+      end
     end
 
     #######
@@ -75,6 +79,8 @@ module Kramdown
           parse_html(:html_block)
         elsif @state.src.check(LINK_DEFINITION_START)
           parse_link_definition
+        elsif @state.src.check(FOOTNOTE_DEFINITION_START)
+          parse_footnote_definition
         elsif @state.src.check(ALD_START)
           parse_ald
         elsif @state.src.check(IAL_BLOCK_START)
@@ -105,6 +111,8 @@ module Kramdown
             parse_html_entity
           elsif @state.src.check(HTML_SPAN_START)
             parse_html(:html_inline)
+          elsif @state.src.check(FOOTNOTE_MARKER_START)
+            parse_footnote_marker
           elsif @state.src.check(LINK_START)
             parse_link
           elsif @state.src.check(IAL_SPAN_START)
@@ -138,7 +146,7 @@ module Kramdown
 
     INDENT = /^(?:\t| {4})/
     OPT_SPACE = / {0,3}/
-    BLANK_LINE = /(^\s*\n)+/
+    BLANK_LINE = /(?:^\s*\n)+/
 
     EOB_MARKER = /^\^\s*?\n/
 
@@ -147,7 +155,7 @@ module Kramdown
     HR_START = /^#{OPT_SPACE}((\*|-|_) *?){3,}\n/
 
     CODEBLOCK_START = INDENT
-    CODEBLOCK_MATCH = /(#{INDENT}.*?\n)+/
+    CODEBLOCK_MATCH = /(?:#{INDENT}.*?\n)+/
 
     TILDE_CODEBLOCK_START = /^~{3,}/
     TILDE_CODEBLOCK_MATCH = /^(~{3,})\s*?\n(.*?)^\1~*\s*?\n/m
@@ -180,14 +188,16 @@ module Kramdown
 
     IAL_BLOCK_START = /^#{OPT_SPACE}\{:(#{ALD_ANY_CHARS}+)\}\s*?\n/
 
+    FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n(?:#{BLANK_LINE}?#{CODEBLOCK_MATCH})*)/
+
     LIST_START_UL = /^#{OPT_SPACE}[+*-][\t| ]/
     LIST_START_OL = /^#{OPT_SPACE}\d+\.[\t| ]/
     LIST_START = /#{LIST_START_UL}|#{LIST_START_OL}/
     LIST_END_UL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
-                               SETEXT_HEADER_START, HTML_BLOCK_START,
+                               SETEXT_HEADER_START, HTML_BLOCK_START, FOOTNOTE_DEFINITION_START,
                                LINK_DEFINITION_START, LIST_START_OL, ALD_START, IAL_BLOCK_START)
     LIST_END_OL = Regexp.union(HR_START, BLOCKQUOTE_START, ATX_HEADER_START,
-                               SETEXT_HEADER_START, HTML_BLOCK_START,
+                               SETEXT_HEADER_START, HTML_BLOCK_START, FOOTNOTE_DEFINITION_START,
                                LINK_DEFINITION_START, LIST_START_UL, ALD_START, IAL_BLOCK_START)
     LIST_ITEM_START_UL = /#{LIST_START_UL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_UL}|#{CODEBLOCK_START}|#{LIST_END_UL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
     LIST_ITEM_START_OL = /#{LIST_START_OL}.*?\n(#{PARAGRAPH_START})*?(?=#{LIST_START_OL}|#{CODEBLOCK_START}|#{LIST_END_OL}|#{EOB_MARKER}|#{BLANK_LINE}|\Z)/m
@@ -336,7 +346,7 @@ module Kramdown
           text.value += "\n" if !item.children.empty? && item.children[0].type != :blank
           item.children.unshift(text)
         else
-          item.options[:first_as_para] = true
+          item.options[:first_as_block] = true
         end
 
         if item.children.last.type == :blank
@@ -399,6 +409,19 @@ module Kramdown
       end
     end
 
+    # Parse the foot note definition at the current location.
+    def parse_footnote_definition
+      @state.src.pos += @state.src.matched_size
+
+      el = Element.new(:root)
+      @stack.push @state
+      @state = State.new(el, StringScanner.new(@state.src[2].gsub(INDENT, '')))
+      parse_blocks
+      @state = @stack.pop
+
+      (@doc.options[:footnotes][@state.src[1]] ||= {})[:content] = el
+    end
+
     # Parse the string +str+ and add all found attributes to the hash +opts+.
     def write_al_content(str, opts)
       #TODO: add warning on empty scan
@@ -440,8 +463,10 @@ module Kramdown
 
     IAL_SPAN_START = /\{:(#{ALD_ANY_CHARS}+)\}/
 
+    FOOTNOTE_MARKER_START = /\[\^(#{ALD_ID_NAME})\]/
+
     SPAN_START = Regexp.union(/(?=#{EMPHASIS_DELIMITER}|#{CODESPAN_DELIMITER}|#{AUTOLINK_START}|
-                                  #{HTML_SPAN_START}|#{LINK_START}|#{IAL_SPAN_START}|
+                                  #{HTML_SPAN_START}|#{FOOTNOTE_MARKER_START}|#{LINK_START}|#{IAL_SPAN_START}|
                                   #{HTML_ENTITY}|#{SPECIAL_HTML_CHARS}|#{ESCAPED_CHAR}|#{LINE_BREAK})/x)
 
     # Parse the backslash-escaped character at the current location.
@@ -656,6 +681,19 @@ module Kramdown
       @state.src.pos += @state.src.matched_size
       if @state.tree.children.last && @state.tree.children.last.type != :text
         write_al_content(@state.src[1], @state.tree.children.last.options[:ial] = {})
+      else
+        add_text(@state.src.matched)
+      end
+    end
+
+    # Parse the footnote marker at the current location.
+    def parse_footnote_marker
+      @state.src.pos += @state.src.matched_size
+      fn_def = @doc.options[:footnotes][@state.src[1]]
+      if fn_def && !fn_def[:number]
+        fn_def[:number] = @doc.options[:footnotes][:number]
+        @doc.options[:footnotes][:number] += 1
+        @state.tree.children << Element.new(:footnote, nil, :name => @state.src[1])
       else
         add_text(@state.src.matched)
       end

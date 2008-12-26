@@ -98,19 +98,18 @@ acronym {
   border-bottom: 1px solid #777;
 }
 
-blockquote.exclamation, blockquote.error, blockquote.information {
+blockquote.exclamation, blockquote.error, blockquote.information, blockquote.markdown-difference {
   margin: 10px 0px;
   padding: 0 0 0 40px;
   min-height: 40px;
   border: 1px solid #91AA9D;
   font: 'Trebuchet MS', Sans-serif;
-  background-color: #D1DBBD;
   background-image: url(images/quote.gif);
   background-repeat: no-repeat;
   background-position: 5px 5px;
 }
 
-blockquote.exclamation {
+blockquote.exclamation, blockquote.markdown-difference {
   background-image: url(images/exclamation.gif);
 }
 
@@ -120,6 +119,13 @@ blockquote.error {
 
 blockquote.information {
   background-image: url(images/information.gif);
+}
+
+blockquote.markdown-difference:before {
+  content: "Difference to Standard Markdown";
+  display: block;
+  font-weight: bold;
+  margin-top: 5px;
 }
 
 blockquote pre {
@@ -327,21 +333,6 @@ table.examples {
 table.examples td, table.examples th {
   border: 1px solid black;
   padding: 3px;
-}
-
-
-
-/* plugin documentation classes */
-.plugin-info .param-name {
-  color: #193441;
-}
-
-.plugin-info .param-default-value {
-  color: #A0080D;
-}
-
-.plugin-info p.param {
-  padding: 0px 0px 5px;
 }
 
 

@@ -1,0 +1,17 @@
+Some para.
+[^footnote]: Some footnote text
+> blockquote
+[^other]: some
+    foot
+
+    note text
+
+* a list
+  with some text
+[^tnote]: foot note
+* other list
+^
+    code
+[^1]:
+    > a blockquote
+    and some para

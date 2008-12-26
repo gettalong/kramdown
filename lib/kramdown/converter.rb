@@ -7,6 +7,7 @@ module Kramdown
       # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
       def initialize(tree, doc)
         @tree, @doc = tree, doc
+        @footnote_counter = 0
       end
 
       # Convert the element +tree+ of the Kramdown document +doc+ to HTML.
@@ -46,7 +47,7 @@ module Kramdown
           ' '*indent + "<#{el.type}" + options_for_element(el) + ">\n" + inner + ' '*indent + "</#{el.type}>\n"
         when :li
           output = ' '*indent + "<li" + options_for_element(el) + ">"
-          if el.options[:first_as_para]
+          if el.options[:first_as_block]
             output += "\n" + inner + ' '*indent
           else
             output += inner + (inner =~ /\n\Z/ ? ' '*indent : '')
@@ -60,19 +61,41 @@ module Kramdown
           "<img" + options_for_element(el) + " />"
         when :codespan
           "<code" + options_for_element(el) + '>' + escape_html(el.value) + "</code>"
-        when :root
-          inner.chomp("\n")
         when :html_inline
           el.value
         when :html_block
           el.value + "\n"
         when :br
           "<br />"
+        when :footnote
+          "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{@doc.options[:footnotes][el.options[:name]][:number]}</a></sup>"
         when :eob
           ''
+        when :root
+          inner.chomp("\n") + add_footnote_content
         else
           raise "Conversion of element #{el.type} not implemented"
         end
+      end
+
+      # Return a HTML list with the footnote content for the used footnotes.
+      def add_footnote_content
+        ol = Element.new(:ol)
+        @doc.options[:footnotes].select {|k,v| k.kind_of?(String) && v[:number]}.
+          sort {|(ak,av),(bk,bv)| av[:number] <=> bv[:number]}.each do |name, data|
+          li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
+          li.children = data[:content].children
+          ol.children << li
+
+          ref = Element.new(:html_inline, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
+          if li.children.last.type == :p
+            para = li.children.last
+          else
+            li.children << (para = Element.new(:p))
+          end
+          para.children << ref
+        end
+        (ol.children.empty? ? '' : "\n<div class=\"footnotes\">\n" + convert(ol, 2) + "</div>\n")
       end
 
       # Return the string with the attributes of the element +el+.

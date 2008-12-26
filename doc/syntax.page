@@ -1,8 +1,8 @@
 # kramdown Syntax
 
 The kramdown syntax is based on the Markdown syntax and the original Markdown.pl implementation and
-has been enhanced with features that are found in other Markdown implementations like Maruku, PHP
-Markdown Extra and Pandoc. However, it strives to provide a strict syntax with definite rules and
+has been enhanced with features that are found in other Markdown implementations like [Maruku], [PHP
+Markdown Extra] and [Pandoc]. However, it strives to provide a strict syntax with definite rules and
 therefore isn't completely compatible with Markdown. Nonetheless, most Markdown documents should
 work fine when parsed with kramdown. All places where the kramdown syntax differes from the Markdown
 syntax are highlighted.
@@ -14,10 +14,15 @@ TODO: think about comment syntax (block comments, inline comments)
 TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
 TODO: what exactly are the punctuation characters????
 
+[Maruku]: http://maruku.rubyforge.org
+[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
+[Pandoc]: http://johnmacfarlane.net/pandoc/
+
 ## General
 
 There are two types of elements: block level elements (paragraphs, blockquotes, ...) and span level
 elements.
+
 
 ### Blank lines
 
@@ -26,7 +31,9 @@ line by kramdown. Blank lines have normally no semantic meaning but are used to 
 block level elements from each other. The one case where blank lines have a meaning is when they are
 used in lists -- see the [lists section](#lists) for more information.
 
+
 ### Error Behaviour
+
 
 ### Automatic Escaping
 
@@ -287,8 +294,8 @@ example:
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
 
-> The alternative syntax is not part of the original Markdown syntax. The idea was taken from the
-> PHP Markdown Extra package.
+> The alternative syntax is not part of the original Markdown syntax. The idea and syntax comes from
+> the [PHP Markdown Extra] package.
 {: .markdown-difference}
 
 
@@ -570,8 +577,12 @@ TODO: allow processing of syntax in HTML blocks, mention it in differences
 
 ## Attribute List Definitions
 
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [Maruku] package.
+{: .markdown-difference}
+
 This is an implementation of [Maruku]'s feature for adding attributes to block and span level
-elements (the naming and syntax is taken from Maruku). This block level element is used to define
+elements (the naming is also taken from Maruku). This block level element is used to define
 attributes which can be referenced later. The [Block Inline Attribute
 List](#block_inline_attribute_lists) is used to attach attributes to a block level element and the
 [Span Inline Attribute List](#span_inline_attribute_lists) is used to attach attributes to a span
@@ -638,6 +649,10 @@ part that does not match one of the above four types is ignored.
 
 
 ## Block Inline Attribute Lists
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [Maruku] package.
+{: .markdown-difference}
 
 This block level element is used to attach attributes to a block level element. A block inline
 attribute list (block IAL) has the same structure as an [ALD](#attribute_list_definitions) except
@@ -718,6 +733,9 @@ The link definition can be put anywhere in the document. It does not appear in t
 definition looks like this:
 
     [linkid]: http://www.example.com/ "Optional Title"
+
+> Link definitions are, despite being described here, block level elements.
+{: .information}
 
 The link definition has the following structure:
 
@@ -815,8 +833,65 @@ literal meaning of a backtick you can backslash-escape it:
     This is a ` literal backtick.
     As \`are\` these!
 
+## Footnotes
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [PHP Markdown Extra] package.
+{: .markdown-difference}
+
+footnotes in kramdown are simliar to reference style links and link definitions. You need to place
+the footnote marker in the correct position in the text and the actual footnote content can be
+defined anywhere in the document.
+
+More exactly, a footnote marker can be created by placing the footnote name in square brackets.
+The footnote name has to start with a caret (`^`), followed by a word character or a digit and then
+optionally followed by other word characters, digits or dashes. For example:
+
+    This is some text.[^1]. Other text.[^footnote].
+
+The footnote name has to be unique in the whole kramdown document. Therefore you can't link to the
+same footnote definition twice. The actual naming of a footnote does not matter since the
+numbering of footnotes is controlled via the position of the footnote markers in the document (the
+first found footnote marker will get the number 1, the second footnote marker the number 2 and so
+on). Also note that all attributes set via a span IAL are ignored for a footnote marker!
+
+A footnote definition is used to define the content of a footnote and has the following structure:
+
+* The footnote name in square brackets, optionally indented up to three spaces,
+* then a colon and one or more optional spaces,
+* then the text of the footnote
+* and optionally more text in the following lines which have have to be indented by four spaces or
+  one tab (like with list items).
+
+> Footnote definitions are, despite being described here, block level elements.
+{: .information}
+
+The whole footnote content is treated like block level text and can therefore contain any valid
+block level element (also, any block level element can be the first element). If you want to have a
+code block as first element, note that all leading spaces/tabs on the first line are stripped away.
+Here are some example footnote definitions:
+
+    [^1]: Some *crazy* footnote definition.
+
+    [^footnote]:
+        > Blockquotes can be in a footnote.
+            as well as code blocks
+        or, naturally, simple paragraphs.
+
+    [^other-note]:       no code block here (spaces are stripped away)
+
+    [^codeblock-note]:
+            this is now a code block (8 spaces indentation)
+
+It does not matter where you put a footnote definition in a kramdown document; the content of all
+referenced footnote definitions will be placed at the end of the kramdown document.
+
 
 ## Span Inline Attribute Lists
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [Maruku] package.
+{: .markdown-difference}
 
 This is a version of the [block inline attribute list](#block_inline_attribute_lists) for span level
 elements. It has the same structure as the block IAL except that leading and trailing spaces are not
