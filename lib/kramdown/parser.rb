@@ -13,6 +13,7 @@ module Kramdown
       @doc = doc
       @state = State.new(doc.tree, StringScanner.new(adapt_source(source)))
       @stack = []
+      @used_ids = {}
     end
 
     # Parse the string +source+ provided by the Kramdown::Document +doc+. See Parser#parse.
@@ -286,7 +287,14 @@ module Kramdown
 
     # Generate an ID from the the string +str+.
     def generate_id(str)
-      str.gsub(/[^a-zA-Z0-9 _]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '_').downcase
+      gen_id = str.gsub(/[^a-zA-Z0-9 -]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '-').downcase
+      gen_id = 'section' if gen_id.length == 0
+      if @used_ids.has_key?(gen_id)
+        gen_id += '-' + (@used_ids[gen_id] += 1).to_s
+      else
+        @used_ids[gen_id] = 0
+      end
+      gen_id
     end
 
     # Parse the horizontal rule at the current location.

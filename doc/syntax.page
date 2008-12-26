@@ -177,10 +177,13 @@ number of hashes at the end of the line to close the header. For example:
 Kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`.
 This is done by converting the untransformed header text via the following steps:
 
-* All characters except letters, numbers, spaces and underscores are removed.
+* All characters except letters, numbers, spaces and dashes are removed.
 * All characters from the start of the line till the first letter are removed.
-* All spaces are converted to underscores.
+* Everything except letters and numbers is converted to dashes.
 * Everything is downcased.
+* If nothing is left, the identifier `section` is used.
+* If such an identifier already exists, a dash and a sequential number is added (first `-1`,
+  then `-2` and so on).
 
 So, for example, the following text snippet with `:auto_ids` set to `true`
 
@@ -196,17 +199,29 @@ So, for example, the following text snippet with `:auto_ids` set to `true`
     Not now
     -------
 
+    # Hallo
+
+    # 123456789
+
 gets converted to:
 
-    <h1 id="this_is_a_header">This is a header</h1>
+    <h1 id="this-is-a-header">This is a header</h1>
 
-    <h2 id="another_one_1_here">12. Another one 1 here</h2>
+    <h2 id="another-one-1-here">12. Another one 1 here</h2>
 
-    <h3 id="do__it_now">Do ^&amp; it now</h3>
+    <h3 id="do--it-now">Do ^&amp; it now</h3>
 
     <h1 id="hallo">Hallo</h1>
 
-    <h2 id="not_now">Not now</h2>
+    <h2 id="not-now">Not now</h2>
+
+    <h1 id="hallo-1">Hallo</h1>
+
+    <h1 id="section">123456789</h1>
+
+> The automatic creation of header IDs is not part of standard Markdown. The rules on how header
+> text is converted to an identifier are based on the rules specified by [Pandoc].
+{: .markdown-difference}
 
 
 ## Blockquotes
