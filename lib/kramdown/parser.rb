@@ -467,7 +467,7 @@ module Kramdown
 
     CODESPAN_DELIMITER = /`+/
 
-    LINE_BREAK = /  (?=$)/
+    LINE_BREAK = /  (?=\n)/
 
     IAL_SPAN_START = /\{:(#{ALD_ANY_CHARS}+)\}/
 

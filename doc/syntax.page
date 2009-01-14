@@ -96,7 +96,8 @@ These are the most used block level elements. One or more consecutive lines of t
 as one paragraph. Each line of a paragraph may be indented up to three spaces. You can separate two
 paragraphs from each other by using one or more blank lines. Notice that a line break in the source
 does not mean a line break in the output. If you want to have an explicit line break (ie. a `<br />`
-tag) you need to end a line with two spaces!
+tag) you need to end a line with two spaces! Note, however, that a line break on the last text line
+of a paragraph is not possible.
 
 The following gives you an example of how paragraphs look like:
 
