@@ -1,6 +1,8 @@
 $:.unshift File.dirname(__FILE__) + '/../lib'
 require 'kramdown'
 require 'test/unit/assertions'
+require 'yaml'
+require 'pp'
 
 include Test::Unit::Assertions
 
@@ -12,14 +14,17 @@ arg = if File.directory?(arg)
         arg + '.text'
       end
 
-Dir[arg].each do |file|
-  print 'Testing file ' + file + '   '
+width = 60;
+Dir[arg].each {|f| width = [width, f.length].max }.each do |file|
+  print(('Testing file ' + file + '   ').ljust(width))
   $stdout.flush
 
   html_file = file.sub('.text', '.html')
-  output = Kramdown::Document.new(File.read(file)).to_html
+  options = YAML::load(File.read(file.sub('.text', '.options'))) rescue {}
+  doc = Kramdown::Document.new(File.read(file), options)
+  #pp doc if $VERBOSE
   begin
-    assert_equal(File.read(html_file), output)
+    assert_equal(File.read(html_file), doc.to_html)
     puts 'PASSED'
   rescue
     puts 'FAILED'

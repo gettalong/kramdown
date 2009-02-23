@@ -19,7 +19,11 @@ module Kramdown
     # Create a new Kramdown document from the string +source+ and with the +options+.
     def initialize(source, options = {})
       @tree = Element.new(:root)
-      @options = options.merge(:link_defs => {}, :alds => {}, :footnotes => {:number => 1}, :warnings => [])
+      @options = {:link_defs => {}, :alds => {},
+        :footnotes => {:number => 1},
+        :warnings => [],
+        :filter_html => [], :auto_parse_span_html => true, :auto_parse_block_html => true,
+      }.merge(options)
       Parser.parse(source, self)
     end
 

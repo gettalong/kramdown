@@ -1,10 +1,12 @@
 require 'strscan'
-require 'rexml/parsers/pullparser'
 require 'stringio'
+require 'kramdown/parser/html'
 
 module Kramdown
 
   class Parser
+
+    include HTMLParser
 
     State = Struct.new(:tree, :src)
 
@@ -36,6 +38,20 @@ module Kramdown
     #######
     private
     #######
+
+    def sub_parse_blocks(el, text)
+      @stack.push @state
+      @state = State.new(el, StringScanner.new(text))
+      parse_blocks
+      @state = @stack.pop
+    end
+
+    def sub_parse_spans(el, text)
+      @stack.push @state
+      @state = State.new(el, StringScanner.new(text))
+      parse_spans
+      @state = @stack.pop
+    end
 
     # Modify the string +source+ to be usable by the parser.
     def adapt_source(source)
@@ -77,7 +93,7 @@ module Kramdown
         elsif @state.src.check(LIST_START)
           parse_list
         elsif @state.src.check(HTML_BLOCK_START)
-          parse_html(:html_block)
+          parse_html(:block)
         elsif @state.src.check(LINK_DEFINITION_START)
           parse_link_definition
         elsif @state.src.check(FOOTNOTE_DEFINITION_START)
@@ -111,7 +127,7 @@ module Kramdown
           elsif @state.src.check(HTML_ENTITY)
             parse_html_entity
           elsif @state.src.check(HTML_SPAN_START)
-            parse_html(:html_inline)
+            parse_html(:inline)
           elsif @state.src.check(FOOTNOTE_MARKER_START)
             parse_footnote_marker
           elsif @state.src.check(LINK_START)
@@ -169,7 +185,7 @@ module Kramdown
 
     SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)\n(-|=)+\s*?\n/
 
-    HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form script ul ol table ins del]
+    HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl ul ol table ins del blockquote address]
     HTML_BLOCK_ELEMENTS_RE = Regexp.union(*HTML_BLOCK_ELEMENTS)
     HTML_BLOCK_START = /^#{OPT_SPACE}<(#{HTML_BLOCK_ELEMENTS_RE}|\?|!--)/
 
@@ -254,11 +270,7 @@ module Kramdown
       result = @state.src.scan(BLOCKQUOTE_MATCH).gsub(BLOCKQUOTE_START, '')
       el = Element.new(:blockquote)
       @state.tree.children << el
-
-      @stack.push @state
-      @state = State.new(el, StringScanner.new(result))
-      parse_blocks
-      @state = @stack.pop
+      sub_parse_blocks(el, result)
     end
 
     # Parse the Atx header at the current location.
@@ -343,10 +355,7 @@ module Kramdown
       last = nil
       list.children.each do |item|
         str = item.children.pop.value
-        @stack.push @state
-        @state = State.new(item, StringScanner.new(str))
-        parse_blocks
-        @state = @stack.pop
+        sub_parse_blocks(item, str)
 
         if item.children.first.type == :p && (item.children.length < 2 || item.children[1].type != :blank ||
                                               (item == list.children.last && item.children.length == 2 && !eob_found))
@@ -367,32 +376,6 @@ module Kramdown
 
       @state.tree.children << list
       @state.tree.children << Element.new(:blank, "") if last == :blank && !eob_found
-    end
-
-    # Parse the HTML tag, XML processing instruction or XML comment at the current location.
-    def parse_html(element_type)
-      parser = REXML::Parsers::BaseParser.new(@state.src.string[@state.src.pos..-1])
-      element = nil
-      count = 0
-      while parser.has_next?
-        res = REXML::Parsers::PullEvent.new(parser.pull) rescue REXML::Parsers::PullEvent.new([:error])
-        if res.start_element?
-          element = res[0] unless element
-          count += 1 if element == res[0]
-        elsif res.end_element? && element == res[0]
-          count -= 1
-          break if count == 0
-        elsif element.nil? && (res.comment? || res.instruction?)
-          break
-        elsif res.error?
-          break
-        end
-      end
-      el = Element.new(element_type, @state.src.string[@state.src.pos..(parser.position == 0 ? -1 : @state.src.pos + parser.position - 1)])
-      #TODO: ignore invalid HTML?? Right thing to do?
-      @state.tree.children << el
-      @state.src.pos = (parser.position == 0 ? @state.src.string.length : @state.src.pos + parser.position)
-      @state.src.scan(/\n/)
     end
 
     # Parse the link definition at the current location.
@@ -422,10 +405,7 @@ module Kramdown
       @state.src.pos += @state.src.matched_size
 
       el = Element.new(:root)
-      @stack.push @state
-      @state = State.new(el, StringScanner.new(@state.src[2].gsub(INDENT, '')))
-      parse_blocks
-      @state = @stack.pop
+      sub_parse_blocks(el, @state.src[2].gsub(INDENT, ''))
 
       (@doc.options[:footnotes][@state.src[1]] ||= {})[:content] = el
     end
@@ -558,10 +538,7 @@ module Kramdown
           text += @state.src.scan(/#{Regexp.escape(type)}/)
         end
 
-        @stack.push @state
-        @state = State.new(el, StringScanner.new(text.sub(remove_re, '')))
-        parse_spans
-        @state = @stack.pop
+        sub_parse_spans(el, text.sub(remove_re, ''))
       else
         @state.src.pos = reset_pos
         add_text(result)
@@ -719,10 +696,7 @@ module Kramdown
       @state.tree.children << el
 
       if parse_text
-        @stack.push @state
-        @state = State.new(el, StringScanner.new(link_text))
-        parse_spans
-        @state = @stack.pop
+        sub_parse_spans(el, link_text)
       else
         el.children << Element.new(:text, link_text)
       end

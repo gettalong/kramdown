@@ -65,6 +65,18 @@ module Kramdown
           el.value
         when :html_block
           el.value + "\n"
+        when :html_raw
+          el.value + (el.options[:type] == :block ? "\n" : '')
+        when :html_element
+          if @doc.options[:filter_html].include?(el.value)
+            inner + (el.options[:type] == :block ? "\n" : '')
+          elsif el.options[:type] == :inline || el.options[:type] == :unknown
+            "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
+          else
+            ' '*indent + "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}" + ' '*indent + "</#{el.value}>" : " />") + "\n"
+          end
+        when :html_text
+          el.value
         when :br
           "<br />"
         when :footnote
