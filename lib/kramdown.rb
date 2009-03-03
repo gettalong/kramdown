@@ -23,8 +23,16 @@ module Kramdown
         :footnotes => {:number => 1},
         :warnings => [],
         :filter_html => [], :auto_parse_span_html => true, :auto_parse_block_html => true,
+        :parser => {
+          :block => [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
+                     :setext_header, :horizontal_rule, :list, :block_html, :link_definition,
+                     :footnote_definition, :ald, :block_ial, :eob_marker, :paragraph],
+          :span => [:emphasis, :codespan, :autolink, :html_entity, :span_html,
+                    :footnote_marker, :link, :span_ial, :special_html_chars, :escaped_chars,
+                    :line_break]
+        }
       }.merge(options)
-      Parser.parse(source, self)
+      Parser::UniversalParser.parse(source, self)
     end
 
     # Convert the document to HTML. Uses the Converter::ToHtml class for doing the conversion.

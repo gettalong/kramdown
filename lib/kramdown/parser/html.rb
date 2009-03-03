@@ -4,7 +4,7 @@ require 'stringio'
 
 module Kramdown
 
-  class Parser
+  module Parser
 
     module HTMLParser
 
