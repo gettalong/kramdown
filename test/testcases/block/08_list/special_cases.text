@@ -15,5 +15,5 @@ here
 ^
 
 A paragraph
-  1. followed by ol
-- followed by ul
+  1. followed not by ol
+- followed not by ul
