@@ -106,19 +106,20 @@ By using an EOB marker, you can make two lists with each one item:
 ## Paragraphs
 
 Paragraphs are the most used block level elements. One or more consecutive lines of text are
-interpreted as one paragraph. Each line of a paragraph may be indented up to three spaces. You can
-separate two consecutive paragraphs from each other by using one or more blank lines. Notice that a
-line break in the source does not mean a line break in the output. If you want to have an explicit
-line break (ie. a `<br />` tag) you need to end a line with two spaces! Note, however, that a line
-break on the last text line of a paragraph is not possible and will be ignored.
+interpreted as one paragraph. The first line of a paragraph may be indented up to three spaces, the
+directly following lines can have be indented any number of spaces or tabs. You can separate two
+consecutive paragraphs from each other by using one or more blank lines. Notice that a line break in
+the source does not mean a line break in the output. If you want to have an explicit line break (ie.
+a `<br />` tag) you need to end a line with two spaces! Note, however, that a line break on the last
+text line of a paragraph is not possible and will be ignored.
 
 The following gives you an example of how paragraphs look like:
 
     This para line starts at the first column. However,
-       it may be indented up to three spaces.
+           the other lines can be indented any number of spaces/tabs.
     The para continues here.
 
-    This is another paragraph, not connected to the above one. But  
+      This is another paragraph, not connected to the above one. But  
     with a hard line break.
 {: .show-whitespaces}
 
@@ -191,7 +192,7 @@ close the header. Any leading or trailing spaces are stripped from the header te
 > Again, the original Markdown syntax allows one to omit the blank line before an atx style header.
 {: .markdown-difference}
 
-Kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`.
+kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`.
 This is done by converting the untransformed, ie. plain, header text via the following steps:
 
 * All characters except letters, numbers, spaces and dashes are removed.
@@ -262,6 +263,7 @@ the indentation of the block level elements inside the blockquote! So code block
 indented with five spaces or one space and one tab, like this:
 
     > A code block:
+    >
     >     ruby -e 'puts :works'
 
 > The original Markdown syntax allowed "lazy" blockquotes, ie. blockquotes where only the first line
@@ -283,10 +285,11 @@ Code blocks can be used to represent verbatim text like markup, HTML or a progra
 syntax is parsed within a code block, only `<`, `>` and `&` are substituted by their respective HTML
 counterparts. A code block is wrapped in both `<pre>` and  `<code>` tags.
 
-A code block can be started by using four spaces or one tab and then the text of the code block. All
-following lines that adhere to this syntax belong to the same code block. The indentation (four
-spaces or one tab) is stripped from the text. Note that blank lines don't separate consecutive code
-blocks:
+A code block can be started by using four spaces or one tab and then the text of the code block. If
+the last block level element was a paragraph, then there needs to be blank line between the pargraph
+and the code block. All following lines that adhere to this syntax belong to the same code block. The
+indentation (four spaces or one tab) is stripped from the text. Note that blank lines don't separate
+consecutive code blocks:
 
         Here comes some code
 
@@ -444,7 +447,7 @@ problem when you want to have a code block as first element. The solution to thi
 following construct:
 
     * 
-            This is a code block (indentation needs to be 4+4 spaces or 1+1 tab).
+            This is a code block (indentation needs to be 4(1)+4(1) spaces (tabs)).
 {: .show-whitespaces}
 
 Note that the list marker needs to be followed with at least one space or tab! Otherwise the line is
@@ -514,6 +517,90 @@ paragraph starts with something looking like a list item marker):
     \- others say that, too!
 
 
+## HTML Blocks
+
+There is no problem mixing HTML tags into a kramdown document. An HTML block is started when
+kramdown encounters a line beginning with a block level HTML tag (`div`, `p`, `pre`, ...) which may
+be indented up to three spaces. The HTML block continues till the matching end tag of the first HTML
+tag that is encountered (i.e. if a HTML block line with the matching end tag is found). kramdown
+syntax is processed in HTML blocks. The first column of the new indentation level is set to the
+number of spaces used to indent the HTML tag. Note that only correct XHTML is supported! This means
+that you have to use, for example, `<br/>` instead of `<br>`.
+
+> The original Markdown syntax specifies that an HTML block must start at the left margin, ie. no
+> indentation is allowed. Also, the HTML block has to be surrounded by blank lines. Both
+> restrictions are lifted for kramdown documents. Additionally, the original syntax does not allow
+> you to use Markdown syntax in HTML blocks.
+{: .markdown-difference}
+
+Here is a simple example:
+
+    This is a para.
+    <div>
+      Something in here.
+    </div>
+    Other para.
+^
+    <p>This is a para.</p>
+    <div>
+    <p>Something in here.</p>
+    </div>
+    <p>Other para.</p>
+
+See how the content of the `div` tag is wrapped in a paragraph!
+
+You can also use several HTML tags at once:
+
+    <div id="content"><div id="layers"><div id="layer1">
+    This is a para in the `layer1` div.
+    </div>
+    This is a para in the `layers` div.
+    </div></div>
+    This is a para outside the HTML block.
+
+When you specify an HTML block don't forget that the first column changes with the indentation of
+the HTML start tag:
+
+    This is a para.
+    <div>
+        code block (indented four spaces)
+      <div>
+        normal text (only indented 2 spaces because the current first column is text column 3)
+
+          code block
+      </div>
+    </div>
+
+If you don't use valid XHTML tags, you won't get expected result (note the invalid `<br>` tag):
+
+    This is a para.
+    <div>
+      Something is<br>
+      broken here.
+    </div>
+    This won't be a para.
+^
+    <p>This is a para.</p>
+    <div>
+      Something is&lt;br&gt;
+      broken here.
+    </div>
+    This won't be a para.
+
+The parsing of processing instructions and XML comments is also supported. kramdown syntax in such
+processing instructions or comments is not processed:
+
+    This is a para.
+    <!-- a *comment* -->
+    <? a processing `instruction` ?>
+    Another para.
+^
+    <p>This is a para.</p>
+    <!-- a *comment* -->
+    <? a processing `instruction` ?>
+    <p>Another para.</p>
+
+
 ## Sections
 
 Sections (`div` elements in HTML) can be used to separate content into various structural parts. A
@@ -539,67 +626,6 @@ Two nested divisions:
         <p>And another para.</p>
       </div>
     </div>
-
-
-## HTML Blocks
-
-There is no problem mixing HTML tags into a kramdown document. An HTML block is started when
-kramdown encounters a line with a block level HTML tag (`div`, `p`, `pre`, ...) which may be
-indented up to three spaces. The HTML block continues till the matching end tag of that first HTML
-tag is encountered. Note that only correct XHTML is supported! This means that you have to use, for
-example, `<br/>` instead of `<br>`.
-
-> The original Markdown syntax specifies that an HTML block must start at the left margin, ie. no
-> indentation is allowed. Also, the HTML block has to be surrounded by blank lines. Both
-> restrictions are lifted for kramdown documents.
-{: .markdown-difference}
-
-This fragment
-
-    This is a para.
-    <div>
-      Something in here.
-    </div>
-    Other para.
-
-gives you this output:
-
-    <p>This is a para.</p>
-    <div>
-      Something in here.
-    </div>
-    <p>Other para.</p>
-
-If you don't use valid XHTML tags, you won't get expected result (note the invalid `<br>` tag):
-
-    This is a para.
-    <div>
-      Something is<br>
-      broken here.
-    </div>
-    This won't be a para.
-^
-    <p>This is a para.</p>
-    <div>
-      Something is<br>
-      broken here.
-    </div>
-    This won't be a para.
-
-The parsing of processing instructions and XML comments is also supported. kramdown syntax in such
-processing instructions or comments is not processed:
-
-    This is a para.
-    <!-- a *comment* -->
-    <? a processing `instruction` ?>
-    Another para.
-^
-    <p>This is a para.</p>
-    <!-- a *comment* -->
-    <? a processing `instruction` ?>
-    <p>Another para.</p>
-
-TODO: allow processing of syntax in HTML blocks, mention it in differences
 
 
 ## Attribute List Definitions
