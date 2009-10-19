@@ -1,5 +1,3 @@
-para1<br />
-
   <div>
 test<br />
 </div>
@@ -17,7 +15,7 @@ para4
 <div>
 foo
 </div>
-       <div style="&nbsp;"/>
+   <div style="&nbsp;"/>
 </div>
 <div>bar&nbsp;</div>
 </div>
