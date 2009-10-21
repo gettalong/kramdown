@@ -1,0 +1,5 @@
+This is a simple paragraph.
+{::comment:}
+This is a comment which is ignored.
+{::comment:}
+And another paragraph
