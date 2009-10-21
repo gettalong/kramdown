@@ -606,9 +606,9 @@ processing instructions or comments is not processed:
 Sections (`div` elements in HTML) can be used to separate content into various structural parts. A
 section is started by using a plus character followed by two or more equal signs. The end of a
 section can be specified by using a minus character followed again by two or more equal signs. These
-start and end markers may be indented up to three spaces. Note that you don't need to (more
-precisely: you shouldn't) indent the content of a section! This allows you to easily add sections
-after writing the text. Nesting of sections is also possible.
+start and end markers may be indented up to three spaces. Note that a section does not start a new
+indentation level! This allows you to easily add sections after writing the text. Nesting of
+sections is also possible.
 
 Two nested divisions:
 
@@ -671,11 +671,11 @@ spaces:
 
 *   key-value pairs
 
-    A key value is defined by a key name which must follow the rules for reference names, then an
-    equal sign and then the value in single or double quotes. If you need to use the value delimiter
-    (a single or a double quote) inside the value, you need to escape it with a backslash. Key-value
-    pairs can be used to specify arbitray attributes for block or span level elements. For example,
-    a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
+    A key-value pair is defined by a key name, which must follow the rules for reference names, then
+    an equal sign and then the value in single or double quotes. If you need to use the value
+    delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
+    Key-value pairs can be used to specify arbitray attributes for block or span level elements. For
+    example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
 
 *   ID name
 
@@ -696,7 +696,7 @@ spaces:
         {:id: class="something" class="cls1" .cls2}
         {:id: class="cls1 cls2}
 
-As can be seen from the example of the class names attributes that are defined earlier are
+As can be seen from the example of the class names, attributes that are defined earlier are
 overwritten by ones with the same name defined later. Also, everything in the attribute definitions
 part that does not match one of the above four types is ignored.
 
@@ -724,15 +724,59 @@ Here are some examples for block IALs:
         Some code here
     {:.ruby}
 
+TODO: special case for atx style headers.
+
+
+## Extension Blocks
+
+Extension blocks can be used, for example, to treat whole sections of text specially. For example,
+one could write an extension that highlights a code fragment specified in an extension block.
+
+An extension block has two forms, one with a body and one without a body:
+
+*   Without a body
+
+    The extension block line has the same structure as an [ALD](#attribute_list_definitions) except
+    that the reference name needs to prefixed and postfixed with `:` and identifies the extension to
+    be used. Attributes can be defined like it is done for an ALD.
+
+*   With a body
+
+    The starting and ending lines of an extension block with a body have the same structure as an
+    [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
+    identifies the extension to be used; attributes can be defined on the starting or ending line.
+    The text between the starting and ending line is passed to the extension and not parsed by
+    Kramdown.
+
+An error is raised in both cases if the specified extension is not found. The following extensions
+are available with any Kramdown processor:
+
+*   `comment`
+
+    Can only be used with a body. Treats the body text as a comment which does not show in the
+    output.
+
+Here are some examples for extension blocks:
+
+    {::toc::}
+
+    The above extension block could be replaced by a table of contents.
+
+    {::comment:}
+    This text is completely ignored by kramdown - a comment in the text.
+    {::comment:}
+
+
 
 # Span Level Elements
 
 These elements are used inside block level elements to markup text fragments. For example, one can
 easily create links or apply emphasis to certain text parts.
 
-Empty span level elements are not converted to empty HTML tags but are copied as-is to the output.
+Note that empty span level elements are not converted to empty HTML tags but are copied as-is to the
+output.
 
-TODO: check the above claim for all span level elements
+{::TODO:: check the above claim for all span level elements}
 
 
 ## Links and Images
@@ -744,8 +788,8 @@ style links only provide the link text in the text flow and everything else is d
 elsewhere. This also allows you to reuse link definitions.
 
 An inline style link can be created by surrounding the link text with square brackets, followed
-immediately by the link URL (and an optional title in single or double quotes surrounded by optional
-spaces/tabs) in normal parentheses. For example:
+immediately by the link URL (and an optional title in single or double quotes preceded by at least
+one space) in normal parentheses. For example:
 
     This is [a link](http://rubyforge.org) to a page.
     A [link](../test "local URI") can also have a title.
@@ -817,10 +861,12 @@ The link definition for images is exactly the same as the link definition for no
 
 kramdown uses the HTML elements `em` and `strong` to style emphasized text parts. Text parts that
 are surrounded with single asterisks `*` or underscores `_` are wrapped in `em` tags, text parts
-surrounded with two asterisks or underscores are wrapped in `strong` tags. For example:
+surrounded with two asterisks or underscores are wrapped in `strong` tags. Surrounded means that the
+starting delimiter needs to be right before a word starts and that the stopping delimiter needs to be
+right after a word ends. For example:
 
     *some text*
-    _some text*
+    _some text_
     **some text**
     __some text__
 
@@ -831,9 +877,9 @@ will produce the following output:
     <strong>some text</strong>
     <strong>some text</strong>
 
-This also works when used within a single word:
+The asterisk form is also allowed within a single word:
 
-    This is un*believe*able!
+    This is un*believe*able! This d_oe_s not work!
 
 Text emphasized with different delimiters can be nested but you can't nest emphasized text with the
 same delimiters:
@@ -886,13 +932,14 @@ literal meaning of a backtick you can backslash-escape it:
     This is a ` literal backtick.
     As \`are\` these!
 
+
 ## Footnotes
 
 > This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
 > the [PHP Markdown Extra] package.
 {: .markdown-difference}
 
-footnotes in kramdown are simliar to reference style links and link definitions. You need to place
+Footnotes in kramdown are simliar to reference style links and link definitions. You need to place
 the footnote marker in the correct position in the text and the actual footnote content can be
 defined anywhere in the document.
 
@@ -928,7 +975,9 @@ Here are some example footnote definitions:
 
     [^footnote]:
         > Blockquotes can be in a footnote.
+
             as well as code blocks
+
         or, naturally, simple paragraphs.
 
     [^other-note]:       no code block here (spaces are stripped away)
@@ -937,7 +986,8 @@ Here are some example footnote definitions:
             this is now a code block (8 spaces indentation)
 
 It does not matter where you put a footnote definition in a kramdown document; the content of all
-referenced footnote definitions will be placed at the end of the kramdown document.
+referenced footnote definitions will be placed at the end of the kramdown document. Not referenced
+foot note definitions are ignored.
 
 
 ## Span Inline Attribute Lists
@@ -969,10 +1019,11 @@ escapes. For example, you can use a literal backtick like this:
 
 Following is a list of all those characters that can be escaped:
 
-    \\ backslash
-    .  period
-    *  asterisk
-    _  underscore
-    `  backtick
+    \         backslash
+    .         period
+    *         asterisk
+    _         underscore
+    `         backtick
+    []{}      brackets
 
-TODO: complete list
+{::TODO:: complete list}
