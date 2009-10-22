@@ -106,17 +106,16 @@ By using an EOB marker, you can make two lists with each one item:
 ## Paragraphs
 
 Paragraphs are the most used block level elements. One or more consecutive lines of text are
-interpreted as one paragraph. The first line of a paragraph may be indented up to three spaces, the
-directly following lines can have be indented any number of spaces or tabs. You can separate two
-consecutive paragraphs from each other by using one or more blank lines. Notice that a line break in
-the source does not mean a line break in the output. If you want to have an explicit line break (ie.
-a `<br />` tag) you need to end a line with two spaces! Note, however, that a line break on the last
-text line of a paragraph is not possible and will be ignored.
+interpreted as one paragraph. Every line of a paragraph may be indented up to three spaces. You can
+separate two consecutive paragraphs from each other by using one or more blank lines. Notice that a
+line break in the source does not mean a line break in the output. If you want to have an explicit
+line break (ie. a `<br />` tag) you need to end a line with two spaces! Note, however, that a line
+break on the last text line of a paragraph is not possible and will be ignored.
 
 The following gives you an example of how paragraphs look like:
 
     This para line starts at the first column. However,
-           the other lines can be indented any number of spaces/tabs.
+       the lines can be indented up to three spaces.
     The para continues here.
 
       This is another paragraph, not connected to the above one. But  
@@ -285,11 +284,10 @@ Code blocks can be used to represent verbatim text like markup, HTML or a progra
 syntax is parsed within a code block, only `<`, `>` and `&` are substituted by their respective HTML
 counterparts. A code block is wrapped in both `<pre>` and  `<code>` tags.
 
-A code block can be started by using four spaces or one tab and then the text of the code block. If
-the last block level element was a paragraph, then there needs to be blank line between the pargraph
-and the code block. All following lines that adhere to this syntax belong to the same code block. The
-indentation (four spaces or one tab) is stripped from the text. Note that blank lines don't separate
-consecutive code blocks:
+A code block can be started by using four spaces or one tab and then the text of the code block. All
+following lines that adhere to this syntax belong to the same code block. The indentation (four
+spaces or one tab) is stripped from the text. Note that blank lines don't separate consecutive code
+blocks:
 
         Here comes some code
 
