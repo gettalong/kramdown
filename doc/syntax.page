@@ -27,6 +27,12 @@ elements.
 
 ### Error Behaviour
 
+### Tabs
+
+Kramdown assumes that tab stops are set at multiples of four. This is especially important when
+using tabs for indentation in lists. Also, tabs may only be used at the beginning of a line when
+indenting text and must not be preceded by spaces. Otherwise the results may be unexpected.
+
 
 ### Automatic Escaping
 
@@ -49,6 +55,7 @@ will be converted to:
 
     <p>This is the A&amp;O. &copy; 2008 by me
     0 &lt; 1 &lt; 2 and 2 &gt; 1 &gt; 0</p>
+
 
 
 # Block Level Elements
@@ -350,8 +357,8 @@ Both ordered and unordered lists follow the same rules.
 A list is started with a list marker (in case of unordered lists one of `+`, `-` or `*` -- you can
 mix them -- and in case of ordered lists a number followed by a period) followed by one tab or at
 least one space and then the first part of the content of the list item. The leading tabs or spaces
-are stripped away from this first line of content (to allow for a nice alignment with the following
-content of a list item, see below). All following list items with the same marker type (unordered or
+are stripped away from this first line of content to allow for a nice alignment with the following
+content of a list item (see below). All following list items with the same marker type (unordered or
 ordered) are put into the same list. The numbers used for ordered lists are irrelevant, an ordered
 list always starts at 1.
 
@@ -371,15 +378,44 @@ The following gives you an unordered list and an ordered list:
 > only one unordered list in Markdown.
 {: .markdown-difference}
 
-Each list marker may be indented up to three spaces. So, while the following is possible and creates
-one list with two items, it is not advised to use different indents for same level list items:
+The first list marker in a list may be indented up to three spaces. The column number of the first
+non-space character which appears after the list item marker on the same line specifies the
+indentation that has to be used for the following lines of content of the list item. If there is no
+such character, the indentation that needs to be used is four spaces or one tab. If a line does not
+have the needed amount of indentation, it is not treated as list item content. The indentation is
+stripped from the content and the content (note that the content naturally also contains the content
+of the line with the item marker) is processed as text containing block level elements. All other
+list markers in the list may be indented up to three spaces or the number of spaces used for the
+indentation of the last list item minus one, whichever number is smaller. For example:
 
-    * kram
-       + down
+    * This is the first line. Since the first non-space characters appears in column 3, all other
+      lines have to be indented 2 spaces sothat they first characters align. This tells kramdown
+      that the lines belong to the list item.
+    *       This is the another item of the list. It uses a different number of spaces for
+            indentation which is okay but should generally be avoided.
+       * The list item marker is indented 3 spaces which is allowed but should also be avoided.
+
+So, while the above is possible and creates one list with three items, it is not advised to use
+different (marker and list content) indents for same level list items!
 
 > The original Markdown syntax also allows you to indent the marker, however, the behaviour of what
 > happens with the list items is not clearly specified and may surprise you.
+>
+> Also, Markdown uses a fixed number of spaces/tabs to indent the lines that belong to a list item!
 {: .markdown-difference}
+
+When using tabs for indenting the content of a list item, remember that tab stops occur at multiples
+of four. Tabs are converted to spaces for calculating the indentation. For example:
+
+    *   Using a tab to indent this line, the tab only counts as three spaces and therefore the
+        overall indentation is four spaces.
+
+       1.   The tab after the marker counts here as two spaces. Since the indentation of the marker
+            is three spaces and the marker itself takes two characters, the overall indentation
+            needed for the following lines is eight spaces or two tabs.
+
+It is clear that you might get unexpected results if you mix tabs and spaces and don't have the tab
+stops set to multiples of four! Therefore this should be avoided!
 
 The content of a list item is made up of either text or block level elements. Simple list items only
 contain text like in the above examples. They are not even wrapped in a paragraph tag. If the first
@@ -411,15 +447,7 @@ using an EOB marker:
 
 As seen in the examples above, blank lines between list items are allowed.
 
-The first element in a list item is normally just text or a paragraph but you can also have any
-other block level element as first element in a list item. This is made possible due to the
-following: every line after a list item which is blank or indented with one tab or four spaces is
-part of the list item content. The first four spaces or one tab are stripped away from each line and
-the result (note that the result naturally also contains the content of the line with the item
-marker) is processed as text containing block level elements.
-
-This allows you to add block level elements to list items as well as continue the content of a list
-item after a blank line. For example:
+Since the content of a list item can contain block level elements, you can do the following:
 
     *   First item
 
@@ -430,8 +458,8 @@ item after a blank line. For example:
 
     *   Second item
 
-But this obviously results in a problem when you want to follow a list item immediately with a code
-block. You can use an EOB marker to circumvent this problem:
+However, there is a problem when you want to follow a list item with an indentation of four or less
+immediately with a code block. You can use an EOB marker to circumvent this problem:
 
     *   This is a list item.
 
@@ -452,35 +480,16 @@ Note that the list marker needs to be followed with at least one space or tab! O
 not recognized as the start of a list item but interpreted as a paragraph containing the list
 marker.
 
-The original Markdown syntax allows you to be lazy when you just use text for a list item. So the
-following is possible:
-
-    * First list item
-    continued here
-    *   Second list item
-        continued here.
-
-Although this kind of syntax is disallowed in blockquotes because of ambiguities, kramdown allows
-you to be lazy when writing lists. However, this is only allowed for the lines immediately following
-the line with the list item marker, ie. for the first paragraph.
-
-> The original Markdown syntax page also allows you to be lazy in all paragraphs of a list item --
-> this is not allowed in kramdown!
+> The original Markdown syntax allows you to be lazy when you just use text for a list item. So the
+> following is possible with Markdown:
+>
+>     * First list item
+>     continued here
+>     *   Second list item
+>       continued here.
+>
+> This kind of syntax is disallowed in kramdown.
 {: .markdown-difference}
-
-This rule is an exception to the design of the kramdown syntax and is only used because writing
-lists in this manner seems to be very common.
-
-However, this rule also means that you will need to insert a blank line (or an EOB marker) if you
-want to follow a list item immediately with a paragraph:
-
-    * This is a list
-
-    Followed by a paragraph.
-
-    * Another list
-    ^
-    Followed by another paragraph.
 
 If you want to have one list directly after another one (both with the same list type, ie. ordered
 or unordered), you need to use an EOB marker to separate the two:
@@ -502,14 +511,14 @@ list where the text is not wrapped in paragraphs:
 
     *   This is just text.
         * this is a sub list item
-            * this is a sub sub list item
+          * this is a sub sub list item
     * This is just text,
-    spanning two lines
-        * this is a nested list item.
+        spanning two lines
+      * this is a nested list item.
 
-Another way to remedy the problem with the list item marker in text is by escaping the period in an
-ordered list or the list item marker in an unordered list (this is especially useful when the
-paragraph starts with something looking like a list item marker):
+Another way to remedy the problem with the list item marker appearing in plain text is by escaping
+the period in an ordered list or the list item marker in an unordered list (this is especially
+useful when the paragraph starts with something looking like a list item marker):
 
     1984\. It was great
     \- others say that, too!
