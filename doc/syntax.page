@@ -116,8 +116,9 @@ Paragraphs are the most used block level elements. One or more consecutive lines
 interpreted as one paragraph. Every line of a paragraph may be indented up to three spaces. You can
 separate two consecutive paragraphs from each other by using one or more blank lines. Notice that a
 line break in the source does not mean a line break in the output. If you want to have an explicit
-line break (ie. a `<br />` tag) you need to end a line with two spaces! Note, however, that a line
-break on the last text line of a paragraph is not possible and will be ignored.
+line break (ie. a `<br />` tag) you need to end a line with two or more spaces or two backslashes!
+Note, however, that a line break on the last text line of a paragraph is not possible and will be
+ignored.
 
 The following gives you an example of how paragraphs look like:
 
@@ -126,7 +127,8 @@ The following gives you an example of how paragraphs look like:
     The para continues here.
 
       This is another paragraph, not connected to the above one. But  
-    with a hard line break.
+    with a hard line break. \\
+    and another one.
 {: .show-whitespaces}
 
 
@@ -527,12 +529,13 @@ useful when the paragraph starts with something looking like a list item marker)
 ## HTML Blocks
 
 There is no problem mixing HTML tags into a kramdown document. An HTML block is started when
-kramdown encounters a line beginning with a block level HTML tag (`div`, `p`, `pre`, ...) which may
-be indented up to three spaces. The HTML block continues till the matching end tag of the first HTML
-tag that is encountered (i.e. if a HTML block line with the matching end tag is found). kramdown
-syntax is processed in HTML blocks. The first column of the new indentation level is set to the
-number of spaces used to indent the HTML tag. Note that only correct XHTML is supported! This means
-that you have to use, for example, `<br/>` instead of `<br>`.
+kramdown encounters a line beginning with a block level HTML tag (`div`, `p`, `pre`, ...) -- or with
+a general XML tag -- which may be indented up to three spaces. The line may contain multiple block
+level HTML tags (no span level HTML tags) but each tag must appear completely on the line! The HTML
+block continues till the matching end tag of the first HTML tag is encountered (i.e. till an HTML
+block line with the matching end tag is found). kramdown syntax is processed in HTML blocks. Note
+that only correct XHTML is supported! This means that you have to use, for example, `<br/>` instead
+of `<br>`.
 
 > The original Markdown syntax specifies that an HTML block must start at the left margin, ie. no
 > indentation is allowed. Also, the HTML block has to be surrounded by blank lines. Both
@@ -544,7 +547,7 @@ Here is a simple example:
 
     This is a para.
     <div>
-      Something in here.
+    Something in here.
     </div>
     Other para.
 ^
@@ -565,16 +568,13 @@ You can also use several HTML tags at once:
     </div></div>
     This is a para outside the HTML block.
 
-When you specify an HTML block don't forget that the first column changes with the indentation of
-the HTML start tag:
+When you specify an HTML block don't forget that the first column does not change:
 
     This is a para.
-    <div>
+    <div><h1>some header</h1>
         code block (indented four spaces)
       <div>
-        normal text (only indented 2 spaces because the current first column is text column 3)
-
-          code block
+        also a code block
       </div>
     </div>
 
@@ -582,30 +582,44 @@ If you don't use valid XHTML tags, you won't get expected result (note the inval
 
     This is a para.
     <div>
-      Something is<br>
-      broken here.
+    Something is<br>
+    broken here.
     </div>
     This won't be a para.
 ^
     <p>This is a para.</p>
     <div>
-      Something is&lt;br&gt;
-      broken here.
+    <p>Something is&lt;br&gt;
+    broken here.</p>
     </div>
     This won't be a para.
 
-The parsing of processing instructions and XML comments is also supported. kramdown syntax in such
-processing instructions or comments is not processed:
+Unclosed block level HTML tags are correctly closed at the end of the document to ensure correct
+nesting and invalidly used end tags are escaped:
+
+    This is a para.
+    <div><div class="clear"/>
+    Another para.
+    </p>
+^
+    <p>This is a para.</p>
+    <div><div class="clear"/>
+      <p>Another para.</p>
+    &lt;/p&gt;
+    </div>
+
+The parsing of processing instructions and XML comments is also supported. The content of both, PIs
+and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
+beginning of a line, optionally indented up to three spaces. All characters from the end of a PI/XML
+comment till the end of the line are ignored. kramdown syntax in PIs/XML comments is not processed:
 
     This is a para.
     <!-- a *comment* -->
-    <? a processing `instruction` ?>
+    <? a processing `instruction`
+       spanning multiple lines
+    ?>
     Another para.
-^
-    <p>This is a para.</p>
-    <!-- a *comment* -->
-    <? a processing `instruction` ?>
-    <p>Another para.</p>
+
 
 
 ## Sections
@@ -719,9 +733,10 @@ ALDs are processed like they are defined in one ALD.
 
 This block level element is used to attach attributes to a block level element. A block inline
 attribute list (block IAL) has the same structure as an [ALD](#attribute_list_definitions) except
-that the colon/reference name/colon part is replaced by a colon. A block IAL has to be put directly
-after the block level element to which the attributes should be attached, otherwise it is ignored.
-This is, for example, the case when there is a newline between the block level element and the IAL.
+that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
+IALs) has to be put directly after the block level element to which the attributes should be
+attached, otherwise it is ignored. This is, for example, the case when there is a newline between
+the block level element and the IAL.
 
 Here are some examples for block IALs:
 
@@ -730,6 +745,7 @@ Here are some examples for block IALs:
 
     > A blockquote with a title
     {:title="The blockquote title"}
+    {: #myid}
 
         Some code here
     {:.ruby}
@@ -872,8 +888,8 @@ The link definition for images is exactly the same as the link definition for no
 kramdown uses the HTML elements `em` and `strong` to style emphasized text parts. Text parts that
 are surrounded with single asterisks `*` or underscores `_` are wrapped in `em` tags, text parts
 surrounded with two asterisks or underscores are wrapped in `strong` tags. Surrounded means that the
-starting delimiter needs to be right before a word starts and that the stopping delimiter needs to be
-right after a word ends. For example:
+starting delimiter must not be followed by a space and that the stopping delimiter must not be
+preceeded by a space. For example:
 
     *some text*
     _some text_
@@ -950,6 +966,14 @@ can only be used inside one block level element, it is not possible to use a sta
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br/>` instead of `<br>`.
 
+Processing instructions and XML comments can also be used (their content is not parsed).
+
+Span level HTML tags (opening or closing), span level PIs and span level XML comments have to be
+preceded by at least one non whitespace character on the same line sothat kramdown correctly
+recognizes them as span level element and not as block level element.
+
+Unclosed HTML tags as well as invalidly used end tags are escaped.
+
 
 ## Footnotes
 
@@ -971,9 +995,9 @@ The footnote name has to be unique in the whole kramdown document. Therefore you
 same footnote definition twice. The actual naming of a footnote does not matter since the numbering
 of footnotes is controlled via the position of the footnote markers in the document (the first found
 footnote marker will get the number 1, the second footnote marker the number 2 and so on). If there
-is a footnote definition found for the identifier, a footnote will be created. Otherwise the text is
-not converted to a footnote. Also note that all attributes set via a span IAL are ignored for a
-footnote marker!
+is a footnote definition found for the identifier, a footnote will be created. Otherwise the
+footnote marker is not converted to a footnote link. Also note that all attributes set via a span
+IAL are ignored for a footnote marker!
 
 A footnote definition is used to define the content of a footnote and has the following structure:
 
@@ -1018,12 +1042,12 @@ foot note definitions are ignored.
 
 This is a version of the [block inline attribute list](#block_inline_attribute_lists) for span level
 elements. It has the same structure as the block IAL except that leading and trailing spaces are not
-allowed. The span IAL has to be put directly after the span level element, no additional character
-is allowed between.
+allowed. A span IAL (or two or more span IALs) has to be put directly after the span level element,
+no additional character is allowed between.
 
 Here are some examples for span IALs:
 
-    This *is*{:.underline} some `code`{:#id}.
+    This *is*{:.underline} some `code`{:#id}{:.class}.
     A [link](test.html){:rel='something'} and some **tools**{:.tools}.
 
 
@@ -1043,7 +1067,11 @@ Following is a list of all those characters that can be escaped:
     .         period
     *         asterisk
     _         underscore
+    +         plus
+    -         minus
     `         backtick
-    []{}      brackets
+    ()[]{}    parens/brackets/braces
+    #         hash
+    !         bang
 
 {::TODO:: complete list}
