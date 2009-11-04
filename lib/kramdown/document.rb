@@ -12,32 +12,31 @@ module Kramdown
     # The element tree of the document.
     attr_accessor :tree
 
-    # The options hash which holds the options for the Kramdown document as well as parsed
-    # information like the link definitions.
+    # The options hash which holds the options for the Kramdown document.
     attr_accessor :options
+
+    # An array of warning messages.
+    attr_reader :warnings
+
+    # Holds needed parse information like ALDs, link definitions, ...
+    attr_reader :parse_infos
 
     # Create a new Kramdown document from the string +source+ and with the +options+.
     def initialize(source, options = {})
-      @tree = Element.new(:root)
-      @options = {:link_defs => {}, :alds => {},
-        :footnotes => {:number => 1},
-        :warnings => [],
-        :filter_html => [], :auto_parse_span_html => true, :auto_parse_block_html => true,
-        :parser => {
-          :block => [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
-                     :setext_header, :horizontal_rule, :list, :block_html, :link_definition,
-                     :footnote_definition, :ald, :block_ial, :eob_marker, :paragraph],
-          :span => [:emphasis, :codespan, :autolink, :html_entity, :span_html,
-                    :footnote_marker, :link, :span_ial, :special_html_chars, :escaped_chars,
-                    :line_break]
-        }
+      @options = {
+        :footnote_nr => 1,
+        :filter_html => [],
+        :parse_span_html => true,
+        :parse_block_html => true,
       }.merge(options)
-      Parser::UniversalParser.parse(source, self)
+      @warnings = []
+      @parse_infos = {}
+      @tree = Parser::Kramdown.parse(source, self)
     end
 
     # Convert the document to HTML. Uses the Converter::ToHtml class for doing the conversion.
     def to_html
-      Converter::ToHtml.convert(@tree, self)
+      Converter::Html.convert(@tree, self)
     end
 
   end

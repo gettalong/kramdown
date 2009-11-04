@@ -22,6 +22,9 @@ module Kramdown
         @@parsers[name] && (type.nil? || @@parsers[name].type == type)
       end
 
+      def self.parsers
+        @@parsers
+      end
     end
 
   end

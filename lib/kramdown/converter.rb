@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+
+require 'rexml/parsers/baseparser'
+
 module Kramdown
 
   module Converter
 
-    class ToHtml
+    class Html
 
       # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
       def initialize(tree, doc)
@@ -19,87 +23,114 @@ module Kramdown
       def convert(el = @tree, indent = -2)
         result = ''
         el.children.each do |inner_el|
-          result += convert(inner_el, indent + 2)
+          result << convert(inner_el, indent + 2)
         end
-        convert_element(el, result, indent)
+        send("convert_#{el.type}", el, result, indent)
       end
 
-      # Convert the element +el+. The result of the already converted inner elements is stored in
-      # +inner+ and the current indentation level in +indent+.
-      def convert_element(el, inner, indent)
-        case el.type
-        when :blank
-          "\n"
-        when :text
-          escape_html(el.value, false)
-        when :p
-          ' '*indent + '<p' + options_for_element(el) + '>' + inner + "</p>\n"
-        when :codeblock
-          ' '*indent + '<pre' + options_for_element(el) + '><code>' + escape_html(el.value) + (el.value =~ /\n\Z/ ? '' : "\n") + "</code></pre>\n"
-        when :blockquote
-          ' '*indent + '<blockquote' + options_for_element(el) + ">\n" + inner + ' '*indent + "</blockquote>\n"
-        when :header
-          ' '*indent + '<h' + el.options[:level].to_s + options_for_element(el) + '>' +
-            inner + "</h" + el.options[:level].to_s + ">\n"
-        when :hr
-          ' '*indent + "<hr />\n"
-        when :ul, :ol
-          ' '*indent + "<#{el.type}" + options_for_element(el) + ">\n" + inner + ' '*indent + "</#{el.type}>\n"
-        when :li
-          output = ' '*indent + "<li" + options_for_element(el) + ">"
-          if el.options[:first_as_block]
-            output += "\n" + inner + ' '*indent
-          else
-            output += inner + (inner =~ /\n\Z/ ? ' '*indent : '')
-          end
-          output + "</li>\n"
-        when :em, :strong
-          "<#{el.type}" + options_for_element(el) + '>' + inner + "</#{el.type}>"
-        when :a
-          "<a" + options_for_element(el) + '>' + inner + "</a>"
-        when :img
-          "<img" + options_for_element(el) + " />"
-        when :codespan
-          "<code" + options_for_element(el) + '>' + escape_html(el.value) + "</code>"
-        when :html_inline
-          el.value
-        when :html_block
-          el.value + "\n"
-        when :html_raw
-          el.value + (el.options[:type] == :block ? "\n" : '')
-        when :html_element
-          if @doc.options[:filter_html].include?(el.value)
-            inner + (el.options[:type] == :block ? "\n" : '')
-          elsif el.options[:type] == :inline || el.options[:type] == :unknown
-            "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
-          else
-            ' '*indent + "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}" + ' '*indent + "</#{el.value}>" : " />") + "\n"
-          end
-        when :html_text
-          el.value
-        when :br
-          "<br />"
-        when :footnote
-          "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{@doc.options[:footnotes][el.options[:name]][:number]}</a></sup>"
-        when :eob
-          ''
-        when :root
-          inner.chomp("\n") + add_footnote_content
+      def convert_blank(el, inner, indent)
+        "\n"
+      end
+
+      def convert_text(el, inner, indent)
+        escape_html(el.value, false)
+      end
+
+      def convert_p(el, inner, indent)
+        ' '*indent << '<p' << options_for_element(el) << '>' << inner << "</p>\n"
+      end
+
+      def convert_codeblock(el, inner, indent)
+        ' '*indent << '<pre' << options_for_element(el) << '><code>' << escape_html(el.value) << (el.value =~ /\n\Z/ ? '' : "\n") << "</code></pre>\n"
+      end
+
+      def convert_blockquote(el, inner, indent)
+        ' '*indent << '<blockquote' << options_for_element(el) << ">\n" << inner << ' '*indent << "</blockquote>\n"
+      end
+
+      def convert_header(el, inner, indent)
+        ' '*indent << '<h' << el.options[:level].to_s << options_for_element(el) << '>' <<
+          inner << "</h" << el.options[:level].to_s << ">\n"
+      end
+
+      def convert_hr(el, inner, indent)
+        ' '*indent << "<hr />\n"
+      end
+
+      def convert_ul(el, inner, indent)
+        ' '*indent << "<#{el.type}" << options_for_element(el) << ">\n" << inner << ' '*indent << "</#{el.type}>\n"
+      end
+      alias :convert_ol :convert_ul
+
+      def convert_li(el, inner, indent)
+        output = ' '*indent << "<li" << options_for_element(el) << ">"
+        if el.options[:first_as_block]
+          output << "\n" << inner << ' '*indent
         else
-          raise "Conversion of element #{el.type} not implemented"
+          output << inner << (inner =~ /\n\Z/ ? ' '*indent : '')
+        end
+        output << "</li>\n"
+      end
+
+      def convert_html_raw(el, inner, indent)
+        el.value + (el.options[:type] == :block ? "\n" : '')
+      end
+
+      def convert_html_element(el, inner, indent)
+        if @doc.options[:filter_html].include?(el.value)
+          inner + (el.options[:type] == :block ? "\n" : '')
+        elsif el.options[:type] == :span
+          "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
+        else
+          ' '*indent + "<#{el.value}#{options_for_element(el)}" +
+            (!inner.empty? ? ">\n#{inner.chomp}\n" + ' '*indent + "</#{el.value}>" : " />") + "\n"
         end
       end
+
+      def convert_br(el, inner, indent)
+        "<br />"
+      end
+
+      def convert_a(el, inner, indent)
+        "<a" + options_for_element(el) + '>' + inner + "</a>"
+      end
+
+      def convert_img(el, inner, indent)
+        "<img" + options_for_element(el) + " />"
+      end
+
+      def convert_codespan(el, inner, indent)
+        "<code" + options_for_element(el) + '>' + escape_html(el.value) + "</code>"
+      end
+
+      def convert_footnote(el, inner, indent)
+        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{@doc.parse_infos[:footnotes][el.options[:name]][:number]}</a></sup>"
+      end
+
+      def convert_raw(el, inner, indent)
+        el.value
+      end
+
+      def convert_em(el, inner, indent)
+        "<#{el.type}" + options_for_element(el) + '>' + inner + "</#{el.type}>"
+      end
+      alias :convert_strong :convert_em
+
+      def convert_root(el, inner, indent)
+        inner << footnote_content
+      end
+
 
       # Return a HTML list with the footnote content for the used footnotes.
-      def add_footnote_content
+      def footnote_content
         ol = Element.new(:ol)
-        @doc.options[:footnotes].select {|k,v| k.kind_of?(String) && v[:number]}.
+        @doc.parse_infos[:footnotes].select {|k,v| v[:number]}.
           sort {|(ak,av),(bk,bv)| av[:number] <=> bv[:number]}.each do |name, data|
           li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
           li.children = data[:content].children
           ol.children << li
 
-          ref = Element.new(:html_inline, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
+          ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
           if li.children.last.type == :p
             para = li.children.last
           else
@@ -107,7 +138,7 @@ module Kramdown
           end
           para.children << ref
         end
-        (ol.children.empty? ? '' : "\n<div class=\"footnotes\">\n" + convert(ol, 2) + "</div>\n")
+        (ol.children.empty? ? '' : "<div class=\"kramdown-footnotes\">\n" + convert(ol, 2) + "</div>\n")
       end
 
       # Return the string with the attributes of the element +el+.
@@ -121,7 +152,7 @@ module Kramdown
       def ial_to_options(ial)
         ial = ial.dup
         (ial.delete(:refs) || []).each do |ref|
-          if ref_ial = @doc.options[:alds][ref]
+          if ref_ial = @doc.parse_infos[:ald][ref]
             ref_opts = ial_to_options(ref_ial)
             ial['class'] = ((ial['class'] || '') + " #{ref_opts.delete('class')}").lstrip if ref_opts['class']
             ial.merge!(ref_opts)
@@ -130,7 +161,6 @@ module Kramdown
         ial
       end
 
-      ENTITY = /\&([\w\d]+|\#x?[\w\d]+);/
       ESCAPE_MAP = {
         '<' => '&lt;',
         '>' => '&gt;',
@@ -138,7 +168,7 @@ module Kramdown
         '&' => '&amp;'
       }
       ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| Regexp.escape(k)})
-      ESCAPE_ALL_NOT_ENTITIES_RE = Regexp.union(ENTITY, ESCAPE_ALL_RE)
+      ESCAPE_ALL_NOT_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
 
       # Escape the special HTML characters in the string +str+. If +all+ is +true+ then all
       # characters are escaped, if +all+ is +false+
