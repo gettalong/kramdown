@@ -4,6 +4,6 @@ As should <john.doe@example.com> this.
 Another ampersand <http://www.example.com/?doit&x=y> link.
 More entities  <http://www.example.com/?doit&amp;x=&quot;y&z=y>.
 
-A namespaced HTML tag like <webgen:block name='test' /> doit.
-
 Autolink with underscore: <http://www.example.com/with_under_score>
+
+<http://www.example.com/>

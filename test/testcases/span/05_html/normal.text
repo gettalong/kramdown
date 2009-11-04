@@ -8,8 +8,10 @@ This is <!-- a
 --> multiline comment.
 
 This is <span>tag
-</span>.
+now </span>.
 
 This is _something<span test="do_it" /> strange_.
 
 An invalid tag: <hr>
+
+An invalid </closing> tag.
