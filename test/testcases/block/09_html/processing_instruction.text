@@ -1,4 +1,12 @@
+<?xml version="1.0"?>
+
 para
 
-<?  test  ?>
+<?  test  ?> ignored characters
+
 other
+
+<?
+multiline *text*
+is allowed
+?>

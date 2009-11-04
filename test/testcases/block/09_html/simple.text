@@ -1,11 +1,17 @@
   <div>
-test<br />
+test
 </div>
 
+<p>
 para2
+</p>
 
 <div id='test'>
   <p>tes</p>
+
+  <p>test
+weiter
+</p>
 </div>
 
 para4
@@ -27,6 +33,22 @@ para5
 <div>id
 </div> test
 
+<div>hallo</p><div>test</div>
+hallo
+</div>
+
+<div>hallo<div>test</div>
+hallo
+</div></p>
+
+<div>
+hallo
+</div> <div>
+hallo
+</div>
+
 <webgen:block name="test" />
 
 <some:url name:spac='hallo'>doit</some:url>
+
+<em>Test</em>

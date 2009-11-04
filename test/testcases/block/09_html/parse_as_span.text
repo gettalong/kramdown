@@ -1,0 +1,7 @@
+<p>This *text
+should* be parsed
+as span
+</p>
+
+<p>This *text* too</p><p>
+some text
