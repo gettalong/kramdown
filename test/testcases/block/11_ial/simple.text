@@ -3,6 +3,7 @@ Some paragraph.
 
 > quote
 {: #id}
+{: .class}
 
 * list
 {: key="val"}
