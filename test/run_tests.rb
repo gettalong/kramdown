@@ -14,9 +14,11 @@ arg = if File.directory?(arg)
         arg + '.text'
       end
 
-width = 60;
-Dir[arg].each {|f| width = [width, f.length].max }.each do |file|
-  print(('Testing file ' + file + '   ').ljust(width))
+width = ((size = %x{stty size 2>/dev/null}).length > 0 ? size.split.last.to_i : 72) rescue 72
+width -= 8
+fwidth = 0
+Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
+  print(('Testing ' + file + ' ').ljust([fwidth, width].min))
   $stdout.flush
 
   html_file = file.sub('.text', '.html')
@@ -26,8 +28,9 @@ Dir[arg].each {|f| width = [width, f.length].max }.each do |file|
   begin
     assert_equal(File.read(html_file), doc.to_html)
     puts 'PASSED'
-  rescue
-    puts 'FAILED'
+  rescue Exception => e
+    puts '  FAILED'
     puts $!.message if $VERBOSE
+    puts $!.backtrace if $DEBUG
   end
 end
