@@ -18,11 +18,6 @@ rescue LoadError
 end
 
 begin
-  require 'dcov'
-rescue LoadError
-end
-
-begin
   require 'webgen/webgentask'
   require 'webgen/page'
 rescue LoadError
@@ -86,7 +81,7 @@ end
 
 namespace :dev do
 
-  SUMMARY = 'Kramdown is a fast pure-Ruby Markdown converter.'
+  SUMMARY = 'Kramdown is a fast, pure-Ruby converter for Markdown-like markup.'
   DESCRIPTION = <<EOF
 Kramdown is yet-another-markdown-parser but fast, pure Ruby,
 using a strict syntax definition and supporting several common extensions.
@@ -253,15 +248,6 @@ The official version is called 'kramdown' and can be installed via
   if defined? Rcov
     Rcov::RcovTask.new do |rcov|
       rcov.libs << 'test'
-    end
-  end
-
-  if defined? Dcov
-    desc "Analyze documentation coverage"
-    task :dcov do
-      class Dcov::Analyzer; def generate; end; end
-      class NilClass; def file_absolute_name; nil; end; end
-      Dcov::Analyzer.new(:path => Dir.getwd, :files => Dir.glob('lib/**'))
     end
   end
 
