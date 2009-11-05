@@ -905,7 +905,7 @@ module Kramdown
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
           link_id = (@src[1] || conv_link_id).downcase
           if @doc.parse_infos[:link_defs].has_key?(link_id)
-            add_link(el, *@doc.parse_infos[:link_defs][link_id], alt_text)
+            add_link(el, @doc.parse_infos[:link_defs][link_id].first, @doc.parse_infos[:link_defs][link_id].last, alt_text)
           else
             @src.pos = reset_pos
             add_text(result)
