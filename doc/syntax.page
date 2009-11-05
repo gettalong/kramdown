@@ -772,6 +772,7 @@ An extension block has two forms, one with a body and one without a body:
     [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
     identifies the extension to be used; attributes can be defined on the starting or ending line.
     The text between the starting and ending line is passed to the extension and not parsed by
+    Kramdown. If no ending line is found, the starting line is ignored and the body is parsed by
     Kramdown.
 
 An error is raised in both cases if the specified extension is not found. The following extensions
@@ -779,10 +780,9 @@ are available with any Kramdown processor:
 
 *   `comment`
 
-    Can only be used with a body. Treats the body text as a comment which does not show in the
-    output.
+    Treats the body text as a comment which does not show in the output.
 
-Here are some examples for extension blocks:
+Here are some examples for how extension blocks look like:
 
     {::toc::}
 
