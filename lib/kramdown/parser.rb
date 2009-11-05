@@ -56,7 +56,7 @@ module Kramdown
 
       BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
                        :setext_header, :horizontal_rule, :list, :link_definition, :block_html,
-                       :footnote_definition, :ald, :block_ial, :eob_marker, :paragraph]
+                       :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
                        :span_ial, :html_entity, :special_html_chars, :line_break, :escaped_chars]
 
@@ -500,7 +500,7 @@ module Kramdown
       Registry.define_parser(:block, :ald, ALD_START, self)
 
 
-      IAL_BLOCK_START = /^#{OPT_SPACE}\{:(#{ALD_ANY_CHARS}+)\}\s*?\n/
+      IAL_BLOCK_START = /^#{OPT_SPACE}\{:(?!:)(#{ALD_ANY_CHARS}+)\}\s*?\n/
 
       # Parse the inline attribute list at the current location.
       def parse_block_ial
@@ -510,6 +510,38 @@ module Kramdown
         end
       end
       Registry.define_parser(:block, :block_ial, IAL_BLOCK_START, self)
+
+
+      EXT_BLOCK_START_STR = "^#{OPT_SPACE}\\{::(%s):(:)?(#{ALD_ANY_CHARS}*)\\}\s*?\n"
+      EXT_BLOCK_START = /#{EXT_BLOCK_START_STR % ALD_ID_NAME}/
+
+      # Parse the extension block at the current location.
+      def parse_extension_block
+        @src.pos += @src.matched_size
+
+        ext = @src[1]
+        opts = {}
+        parse_attribute_list(@src[3], opts)
+
+        if !@doc.extension.public_methods.map {|m| m.to_s}.include?("parse_#{ext}")
+          raise "No extension named #{ext} found"
+        end
+
+        if !@src[2]
+          stop_re = /#{EXT_BLOCK_START_STR % ext}/
+          if result = @src.scan_until(stop_re)
+            parse_attribute_list(@src[3], opts)
+            @doc.extension.send("parse_#{ext}", @tree, opts, result.sub!(stop_re, ''))
+          else
+            warning("No ending line for extension block #{ext} found")
+          end
+        else
+          @doc.extension.send("parse_#{ext}", @tree, opts, nil)
+        end
+
+        true
+      end
+      Registry.define_parser(:block, :extension_block, EXT_BLOCK_START, self)
 
 
       FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n(?:#{BLANK_LINE}?#{CODEBLOCK_MATCH})*)/

@@ -1,5 +1,6 @@
 require 'kramdown/parser'
 require 'kramdown/converter'
+require 'kramdown/extension'
 
 module Kramdown
 
@@ -21,6 +22,9 @@ module Kramdown
     # Holds needed parse information like ALDs, link definitions, ...
     attr_reader :parse_infos
 
+    # Holds the extension class.
+    attr_reader :extension
+
     # Create a new Kramdown document from the string +source+ and with the +options+.
     def initialize(source, options = {})
       @options = {
@@ -31,6 +35,7 @@ module Kramdown
       }.merge(options)
       @warnings = []
       @parse_infos = {}
+      @extension = Kramdown::Extension.new
       @tree = Parser::Kramdown.parse(source, self)
     end
 
