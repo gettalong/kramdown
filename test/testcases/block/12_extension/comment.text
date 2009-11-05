@@ -3,3 +3,9 @@ This is a simple paragraph.
 This is a comment which is ignored.
 {::comment:}
 And another paragraph
+
+{::comment:: this='is' .ignore}
+
+Paragraph
+{::comment:}
+Another paragraph
