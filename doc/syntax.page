@@ -1069,5 +1069,3 @@ Following is a list of all those characters that can be escaped:
     ()[]{}    parens/brackets/braces
     #         hash
     !         bang
-
-{::TODO:: complete list}
