@@ -13,7 +13,6 @@ document is converted to HTML.
 TODO: side-by-side examples of syntax and output
 TODO: think about comment syntax (block comments, inline comments)
 TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
-TODO: what exactly are the punctuation characters????
 
 [Maruku]: http://maruku.rubyforge.org
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
@@ -802,7 +801,6 @@ easily create links or apply emphasis to certain text parts.
 Note that empty span level elements are not converted to empty HTML tags but are copied as-is to the
 output.
 
-{::TODO:: check the above claim for all span level elements}
 
 
 ## Links and Images
@@ -836,13 +834,11 @@ Notes:
 > neither in inline links nor in link definitions.
 {: .markdown-difference}
 
-{::TODO:: maybe lift the above restraints}
-{::TODO:: specify exactly the allowed punctuation characters}
-
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
 another set of square brackets with the link identifier in them. A link indentifier may only contain
-numbers, letters, spaces and punctuation characters and is not case sensitive. For example:
+numbers, letters, spaces and punctuation characters (ie. `_.:,;!?-`) and is not case sensitive. For
+example:
 
     This is a [reference style link][linkid] to a page. And [this]
     [linkid] is also a link. As is [this][] and [THIS].

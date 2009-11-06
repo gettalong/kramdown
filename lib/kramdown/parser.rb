@@ -467,8 +467,9 @@ module Kramdown
       Registry.define_parser(:block, :list, LIST_START, self)
 
 
-      LINK_ID_CHARS = /[a-zA-Z0-9 _.,!?-]/
-      LINK_ID_NON_CHARS = /[^a-zA-Z0-9 _.,!?-]/
+      PUNCTUATION_CHARS = "_.:,;!?-"
+      LINK_ID_CHARS = /[a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
+      LINK_ID_NON_CHARS = /[^a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
       LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*([^\s]+)[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\3[ \t]*?)?\n/
 
       # Parse the link definition at the current location.

@@ -13,3 +13,7 @@ This is a para.
     [4]: nourl
 
 Points to [1] and [2] and [3] but not [4]
+
+[_.:,;!?-]: http://example.com
+
+Points to [_.:,;!?-]
