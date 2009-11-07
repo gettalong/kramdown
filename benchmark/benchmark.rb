@@ -13,11 +13,11 @@ module MaRuKu::Errors
 end
 
 
-RUNS=50
+RUNS=20
 
 FILES=['mdsyntax.text', 'mdbasics.text']
 
-puts "Running tests under #{RUBY_DESCRIPTION}"
+puts "Running tests on #{Time.now.strftime("%Y-%M-%d")} under #{RUBY_DESCRIPTION}"
 
 FILES.each do |file|
   data = File.read(File.join(File.dirname(__FILE__), file))
