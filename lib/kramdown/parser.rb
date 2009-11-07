@@ -360,7 +360,7 @@ module Kramdown
       Registry.define_parser(:block, :codeblock_fenced, FENCED_CODEBLOCK_START, self)
 
 
-      HR_START = /^#{OPT_SPACE}((\*|-|_) *?){3,}\n/
+      HR_START = /^#{OPT_SPACE}(\*|-|_) *\1 *\1 *(\1| )*\n/
 
       # Parse the horizontal rule at the current location.
       def parse_horizontal_rule
