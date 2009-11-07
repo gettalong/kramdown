@@ -8,6 +8,10 @@ module Kramdown
       nil
     end
 
+    def parse_nokramdown(tree, opts, body)
+      tree.children << Element.new(:raw, body)
+    end
+
   end
 
 end

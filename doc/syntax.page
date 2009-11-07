@@ -1,3 +1,9 @@
+---
+title: Syntax
+in_menu: true
+sort_info: 10
+---
+
 # kramdown Syntax
 
 The kramdown syntax is based on the Markdown syntax and the original Markdown.pl implementation and
@@ -11,7 +17,6 @@ Following is the complete syntax definition so that you know what you will get w
 document is converted to HTML.
 
 TODO: side-by-side examples of syntax and output
-TODO: think about comment syntax (block comments, inline comments)
 TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
 
 [Maruku]: http://maruku.rubyforge.org
@@ -28,7 +33,7 @@ elements.
 
 ### Tabs
 
-Kramdown assumes that tab stops are set at multiples of four. This is especially important when
+kramdown assumes that tab stops are set at multiples of four. This is especially important when
 using tabs for indentation in lists. Also, tabs may only be used at the beginning of a line when
 indenting text and must not be preceded by spaces. Otherwise the results may be unexpected.
 
@@ -771,15 +776,19 @@ An extension block has two forms, one with a body and one without a body:
     [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
     identifies the extension to be used; attributes can be defined on the starting or ending line.
     The text between the starting and ending line is passed to the extension and not parsed by
-    Kramdown. If no ending line is found, the starting line is ignored and the body is parsed by
-    Kramdown.
+    kramdown. If no ending line is found, the starting line is ignored and the body is parsed by
+    kramdown.
 
 An error is raised in both cases if the specified extension is not found. The following extensions
-are available with any Kramdown processor:
+are available with any kramdown processor:
 
 *   `comment`
 
     Treats the body text as a comment which does not show in the output.
+
+*   `nokramdown`
+
+    The body is not processed with kramdown but output as-is.
 
 Here are some examples for how extension blocks look like:
 
