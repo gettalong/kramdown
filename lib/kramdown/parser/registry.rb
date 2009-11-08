@@ -1,4 +1,4 @@
-require 'kramdown/parser'
+# -*- coding: utf-8 -*-
 
 module Kramdown
   module Parser
