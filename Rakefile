@@ -8,6 +8,16 @@ rescue LoadError
 end
 
 begin
+  require 'webgen/webgentask'
+  require 'webgen/page'
+rescue LoadError
+end
+
+require 'rdoc/task'
+require 'rdoc/rdoc'
+
+
+begin
   require 'rubyforge'
 rescue LoadError
 end
@@ -17,17 +27,10 @@ begin
 rescue LoadError
 end
 
-begin
-  require 'webgen/webgentask'
-  require 'webgen/page'
-rescue LoadError
-end
-
 require 'fileutils'
 require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
-require 'rake/rdoctask'
 
 $:.unshift('lib')
 require 'kramdown'
@@ -47,30 +50,31 @@ task :clobber do
   ruby "setup.rb clean"
 end
 
-desc "Generate the HTML documentation"
-Webgen::WebgenTask.new('htmldoc') do |site|
-  site.clobber_outdir = true
-  site.config_block = lambda do |config|
-    config['sources'] = [['/', "Webgen::Source::FileSystem", 'doc'],
-                         ['/', "Webgen::Source::FileSystem", 'misc', 'default.*'],
-                         ['/', "Webgen::Source::FileSystem", 'misc', 'htmldoc.*'],
-                         ['/', "Webgen::Source::FileSystem", 'misc', 'images/**/*']]
-    config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
-    config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
-    config['contentprocessor.map']['kramdown'] = 'Kramdown::KDConverter'
+
+if defined? Webgen
+  desc "Generate the HTML documentation"
+  Webgen::WebgenTask.new('htmldoc') do |site|
+    site.clobber_outdir = true
+    site.config_block = lambda do |config|
+      config['sources'] = [['/', "Webgen::Source::FileSystem", 'doc']]
+      config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
+      config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
+      config['contentprocessor.map']['kramdown'] = 'Kramdown::KDConverter'
+    end
   end
+  task :doc => :htmldoc
 end
 
 rd = Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'htmldoc/rdoc'
-  rdoc.title = 'Kramdown'
+  rdoc.title = 'kramdown'
   rdoc.main = 'Kramdown'
   rdoc.options << '--line-numbers' << '--inline-source' << '--promiscuous'
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
 desc "Build the whole user documentation"
-task :doc => [:rdoc, :htmldoc]
+task :doc => :rdoc
 
 tt = Rake::TestTask.new do |test|
   test.warning = true
@@ -81,14 +85,14 @@ end
 
 namespace :dev do
 
-  SUMMARY = 'Kramdown is a fast, pure-Ruby converter for Markdown-like markup.'
+  SUMMARY = 'kramdown is a fast, pure-Ruby converter for Markdown-like markup.'
   DESCRIPTION = <<EOF
-Kramdown is yet-another-markdown-parser but fast, pure Ruby,
+kramdown is yet-another-markdown-parser but fast, pure Ruby,
 using a strict syntax definition and supporting several common extensions.
 EOF
 
   begin
-    REL_PAGE = Webgen::Page.from_data(File.read('website/src/news/release_' + Kramdown::VERSION.split('.').join('_') + '.page'))
+    REL_PAGE = Webgen::Page.from_data(File.read('doc/news/release_' + Kramdown::VERSION.split('.').join('_') + '.page'))
   rescue
     puts 'NO RELEASE NOTES/CHANGES FILE'
   end
@@ -96,14 +100,11 @@ EOF
   PKG_FILES = FileList.new([
                             'Rakefile',
                             'setup.rb',
-                            'COPYING',
-                            'GPL',
-                            'VERSION',
-                            'ChangeLog',
+                            'COPYING', 'GPL',
+                            'VERSION', 'AUTHORS', 'ChangeLog',
                             'bin/*',
                             'lib/**/*.rb',
                             'doc/**',
-                            'misc/**',
                             'test/**/*'
                            ])
 
@@ -137,10 +138,7 @@ EOF
       #### Dependencies, requirements and files
       s.files = PKG_FILES.to_a
 
-      s.add_development_dependency('webgen', '~> 0.5.6')
-
       s.require_path = 'lib'
-
       s.executables = ['kramdown']
       s.default_executable = 'kramdown'
 
@@ -162,34 +160,10 @@ EOF
       pkg.need_tar = true
     end
 
-    desc 'Generate gemspec file for github'
-    task :gemspec do
-      spec.version = Kramdown::VERSION + '.' + Time.now.strftime('%Y%m%d')
-      spec.summary = 'Kramdown beta build, not supported!!!'
-      spec.files = spec.files.reject {|f| f == 'VERSION' || f == 'ChangeLog'}
-      spec.post_install_message = "
-
-
-WARNING: This is an unsupported BETA version of Kramdown which may
-still contain bugs!
-
-The official version is called 'kramdown' and can be installed via
-
-    gem install kramdown
-
-
-
-"
-      File.open('kramdown.gemspec', 'w+') {|f| f.write(spec.to_yaml)}
-    end
-
   end
 
   desc 'Release Kramdown version ' + Kramdown::VERSION
-  task :release => [:clobber, :package, :publish_files]
-
-  desc 'Announce Kramdown version ' + Kramdown::VERSION
-  task :announce => [:clobber, :post_news, :website, :publish_website]
+  task :release => [:clobber, :package, :publish_files, :publish_doc, :post_news]
 
   if defined? RubyForge
     desc "Upload the release to Rubyforge"
@@ -202,7 +176,6 @@ The official version is called 'kramdown' and can be installed via
       rf.login
 
       rf.userconfig["release_notes"] = REL_PAGE.blocks['notes'].content
-      rf.userconfig["release_changes"] = REL_PAGE.blocks['changes'].content
       rf.userconfig["preformatted"] = false
 
       files = %w[.gem .tgz .zip].collect {|ext| "pkg/kramdown-#{Kramdown::VERSION}" + ext}
@@ -219,51 +192,22 @@ The official version is called 'kramdown' and can be installed via
       rf.configure
       rf.login
 
-      rf.post_news('kramdown', "Kramdown #{Kramdown::VERSION} released", REL_PAGE.blocks['notes'].content)
+      content = REL_PAGE.blocks['content'].content
+      content += "\n\n\nAbout kramdown\n\n#{SUMMARY}\n\n#{DESCRIPTION}"
+      rf.post_news('kramdown', "kramdown #{Kramdown::VERSION} released", content)
       puts "done"
-    end
-  end
-
-  desc 'Generates the webgen website'
-  Webgen::WebgenTask.new(:website) do |site|
-    site.directory = 'website'
-    site.clobber_outdir = true
-    site.config_block = lambda do |config|
-      config['sources'] += [['/', 'Webgen::Source::FileSystem', '../doc'],
-                            ['/', "Webgen::Source::FileSystem", '../misc', 'default.css'],
-                            ['/', "Webgen::Source::FileSystem", '../misc', 'htmldoc.*'],
-                            ['/', "Webgen::Source::FileSystem", '../misc', 'images/**/*']]
-      config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
-      config['contentprocessor.map']['kramdown'] = 'Kramdown::KDConverter'
     end
   end
 
   desc "Upload the website to Rubyforge"
   task :publish_website => ['rdoc', :website] do
-    sh "rsync -avc --delete --exclude rdoc --exclude 'robots.txt'  website/out/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
-    sh "rsync -avc --delete htmldoc/rdoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/rdoc"
+    sh "rsync -avc --delete --exclude 'wiki' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
   end
 
 
   if defined? Rcov
     Rcov::RcovTask.new do |rcov|
       rcov.libs << 'test'
-    end
-  end
-
-  task :benchmark, :count, :types do |t, args|
-    require 'maruku'
-    require 'bluecloth'
-    require 'benchmark'
-    text = File.read('doc/syntax.page')
-    count = args[:count] ? args[:count].to_s.to_i : 10
-    tms = Benchmark.bm(50) do |b|
-      GC.start; GC.start
-      b.report('BlueCloth') { count.times { BlueCloth.new(text).to_html } } if args[:types].to_s =~ /bluecloth/
-      GC.start; GC.start
-      b.report('Maruku') { count.times { Maruku.new(text, :on_error => :ignore).to_html } } if args[:types].to_s =~ /maruku/
-      GC.start; GC.start
-      b.report('Kramdown') { count.times { Kramdown::Document.new(text).to_html } }
     end
   end
 
@@ -280,9 +224,19 @@ module Kramdown
 
     # Convert the content in +context+ to HTML.
     def call(context)
-      require 'kramdown'
       context.content = ::Kramdown::Document.new(context.content, :auto_ids => true).to_html
       context
+    end
+
+  end
+
+  class Extension
+
+    def parse_kdexample(tree, opts, body)
+      wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
+      wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
+      wrap.children << Element.new(:codeblock, ::Kramdown::Document.new(body).to_html,  :attr => {'class' => 'kdexample-after'})
+      tree.children << wrap
     end
 
   end
