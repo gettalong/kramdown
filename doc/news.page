@@ -1,0 +1,27 @@
+---
+title: News
+in_menu: true
+sort_info: 30
+--- pipeline:tags,blocks,fragments
+
+<h1>News</h1>
+
+<a href="{relocatable: news.atom}">Atom-Feed</a>
+
+<webgen:block name="newsdata" node="current" />
+
+--- name:newsdata pipeline:erb
+<%
+context.content_node.tree.node_access[:alcn].select do |na,no|
+   na =~ /\/news\/.+/ && no.is_file?
+end.collect {|na,no| no}.sort.reverse.each do |node|
+%>
+
+<div class='news-item'>
+<div class="news-date f-right">
+  Published on <%= node['created_at'].strftime("%A, %d %B %Y") %>
+</div>
+<%= context.render_block(:name => 'content', :chain => [node]) %>
+</div>
+
+<% end %>

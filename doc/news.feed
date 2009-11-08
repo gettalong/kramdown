@@ -1,10 +1,10 @@
 ---
-title: Kramdown News
-description: Kramdown - A fast, pure Ruby Markdown+extensions converter
+title: kramdown News
+description: kramdown - a fast, pure Ruby Markdown+extensions converter
 site_url: http://kramdown.rubyforge.org/
 author: Thomas Leitner
 author_url: http://kramdown.rubyforge.org
 number_of_entries: 10
 rss: false
-entries: [rel*.html]
+entries: [news/*.html]
 

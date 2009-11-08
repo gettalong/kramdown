@@ -4,17 +4,24 @@ in_menu: true
 sort_info: 10
 ---
 
+Table of Contents:
+
+{::nokramdown:}
+{menu: {used_nodes: fragments, min_levels: 3}}
+{::nokramdown:}
+
 # kramdown Syntax
 
-The kramdown syntax is based on the Markdown syntax and the original Markdown.pl implementation and
-has been enhanced with features that are found in other Markdown implementations like [Maruku], [PHP
-Markdown Extra] and [Pandoc]. However, it strives to provide a strict syntax with definite rules and
-therefore isn't completely compatible with Markdown. Nonetheless, most Markdown documents should
-work fine when parsed with kramdown. All places where the kramdown syntax differes from the Markdown
-syntax are highlighted.
+The kramdown syntax is based on the Markdown syntax and has been enhanced with features that are
+found in other Markdown implementations like [Maruku], [PHP Markdown Extra] and [Pandoc]. However,
+it strives to provide a strict syntax with definite rules and therefore isn't completely compatible
+with Markdown. Nonetheless, most Markdown documents should work fine when parsed with kramdown. All
+places where the kramdown syntax differes from the Markdown syntax are highlighted.
 
 Following is the complete syntax definition so that you know what you will get when a kramdown
-document is converted to HTML.
+document is converted to HTML. There are basically two types of elements: block level elements
+(paragraphs, blockquotes, ...) and span level elements (emphasis, links, ...). Each has its own
+section.
 
 TODO: side-by-side examples of syntax and output
 TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
@@ -23,22 +30,17 @@ TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Pandoc]: http://johnmacfarlane.net/pandoc/
 
-## General
 
-There are two types of elements: block level elements (paragraphs, blockquotes, ...) and span level
-elements.
+## Error Behaviour
 
-
-### Error Behaviour
-
-### Tabs
+## Tabs
 
 kramdown assumes that tab stops are set at multiples of four. This is especially important when
 using tabs for indentation in lists. Also, tabs may only be used at the beginning of a line when
 indenting text and must not be preceded by spaces. Otherwise the results may be unexpected.
 
 
-### Automatic Escaping
+## Automatic Escaping and Escaping
 
 There are three characters in HTML syntax that need special treatment: `<`, `>` and `&`. When these
 characters are used inside a code block or code span, they are always automatically escaped to their
@@ -59,6 +61,25 @@ will be converted to:
 
     <p>This is the A&amp;O. &copy; 2008 by me
     0 &lt; 1 &lt; 2 and 2 &gt; 1 &gt; 0</p>
+
+Since kramdown also uses some characters to mark-up the text, there need to be a way to escape these
+special characters sothat they can have their normal meaning. This can be done by using backslash
+escapes. For example, you can use a literal backtick like this:
+
+    This \`is not a code\` span!
+
+Following is a list of all those characters that can be escaped:
+
+    \         backslash
+    .         period
+    *         asterisk
+    _         underscore
+    +         plus
+    -         minus
+    `         backtick
+    ()[]{}    parens/brackets/braces
+    #         hash
+    !         bang
 
 
 
@@ -1054,27 +1075,3 @@ Here are some examples for span IALs:
 
     This *is*{:.underline} some `code`{:#id}{:.class}.
     A [link](test.html){:rel='something'} and some **tools**{:.tools}.
-
-
-# Miscellaneous
-
-## Escaping
-
-Since kramdown uses some characters to mark-up the text, there need to be a way to escape these
-special characters sothat they have their normal meaning. This can be done by using backslash
-escapes. For example, you can use a literal backtick like this:
-
-    This \`is not a code\` span!
-
-Following is a list of all those characters that can be escaped:
-
-    \         backslash
-    .         period
-    *         asterisk
-    _         underscore
-    +         plus
-    -         minus
-    `         backtick
-    ()[]{}    parens/brackets/braces
-    #         hash
-    !         bang

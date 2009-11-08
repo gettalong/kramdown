@@ -1,20 +1,44 @@
+---
+title: Tests and Benchmark
+---
+
+# Tests
+
 There exist several test suites for testing the correctness of a Markdown implementation. The
-original [Markdown Test Suite](TODO) is the standard which one needs to test against. The [PHP
-Markdown suite](TODO) contains the original test suite and several more tests (some specifically
-geared towards the extension of the PHP Markdown Extra package). I have used the latter test tool to
-verify the correctness of the Kramdown implementation. However, since the syntax used by Kramdown
-varies slightly from standard Markdown some of the tests fail -- which is fine. When looking at the
-differences one can see that the failures result from these differences.
+original [Markdown Test Suite] is the standard which one needs to test against. The [PHP Markdown
+suite][MDTest] contains the original test suite and several more tests (some specifically geared
+towards the extension of the PHP Markdown Extra package). I have used the latter test tool to
+roughly verify that kramdown is able to parse standard Markdown. However, since the syntax used by
+kramdown varies slightly from standard Markdown most of the tests fail - which is fine. When looking
+at the differences one can see that the failures result from these differences.
 
-Besides using the above mentioned test suite Kramdown comes with its own set of tests. These tests
-are also used to verify the implementation and to spot regressions.
+Besides using the above mentioned test suite kramdown comes with its own set of tests which is used
+to verify that the implementation matches the kramdown specification.
 
-If you believe you have found a bug in the implementation, follow the outlined steps:
+If you believe you have found a bug in the implementation, please follow these steps:
 
 * Check the syntax page and see if the behaviour is not intended.
 
-* If the behaviour is not intended and it seems that Kramdown should parse some text in another
+* If the behaviour is not intended and it seems that kramdown should parse some text in another
   fashion, please open a bug report and attach two files: one with the text and one with the HTML
   conversion you think is correct.
 
 ^
+
+# Benchmark
+
+kramdown comes with a small benchmark to test how fast it is in regard to four other Ruby Markdown
+implementations: Maruku, BlueFeather, BlueCloth and RDiscount. The first two are written using only
+Ruby, the latter two use the C discount library for the actual hard work (which makes them really
+fast but they do not provide additional syntax elements). As one can see below, kramdown is
+currently (November 2009) ~5x faster than Maruku, ~10x faster than BlueFeather but ~30x slower than
+BlueCloth and rdiscount:
+
+{::nokramdown:}
+<pre><code>
+{execute_cmd: {command: "ruby -Ilib -rubygems benchmark/benchmark.rb", process_output: false, escape_html: true}}
+</code></pre>
+{::nokramdown:}
+
+[Markdown Test Suite]: http://daringfireball.net/projects/downloads/MarkdownTest_1.0.zip
+[MDTest]: http://www.michelf.com/docs/projets/mdtest-1.0.zip

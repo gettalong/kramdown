@@ -1,7 +1,0 @@
---- name:content pipeline:blocks
-<webgen:block name='content' />
---- name:sidebar pipeline:tags
-<h1>News Feed</h1>
-<p>
-  <a href="{relocatable: news.atom}"><img src="{relocatable: /images/feed.gif}" alt='feed icon' />&nbsp;Subscribe to kramdown news feed</a>
-<p>

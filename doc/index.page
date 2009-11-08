@@ -1,0 +1,89 @@
+---
+title: Home
+in_menu: true
+sort_info: 1
+---
+## Syntax
+
+The kramdown syntax is based on Markdown, a very easy to write, easy to read markup for writing HTML
+documents in plain text. Since the basic Markdown syntax has some shortcomings, implementations
+(especially the [PHP Markdown Extra] package) have tried to overcome this shortcomings with
+additional syntax. kramdown supports all features of the original Markdown syntax (albeit with some
+minor corrections) as well as newer features implemented in the [PHP Markdown Extra] package and
+[Maruku].
+
+For a complete description of the implemented syntax, have a look at the [Syntax page]({relocatable:
+syntax.html}).
+
+
+## Usage
+
+The kramdown package provides two ways for using it:
+
+* **As a library**
+
+  kramdown uses basically the same API as [RedCloth], [BlueCloth] and [Maruku]:
+
+      require 'kramdown'
+
+      Kramdown::Document.new(text).to_html
+
+  The second parameter to the `new` call is an options hash for (de)activating certain features. For
+  more information have a look at the [API documentation]({relocatable: rdoc/index.html}).
+
+* **As an application**
+
+  Together with the library files a binary called `kramdown` is shipped which can be used to convert
+  text in kramdown syntax to HTML. It either reads from the files specified as the command line
+  arguments or from the standard input. For example:
+
+      kramdown path/to/kramdown/doc/syntax.page
+
+
+## Tests
+
+kramdown uses various test suites to verify the correct working of the parser and the HTML
+converter. For more information, have a look at the [tests document](tests.html).
+
+
+## Bugs, Forums, Mailing Lists
+
+If you have found a bug, you should [report it here][bug_report]. Also, there are [forums][forum]
+and [mailing lists][ml] available if you have any questions!
+
+[bug_report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
+[forum]: http://rubyforge.org/forum/?group_id=7403
+[ml]: http://rubyforge.org/mail/?group_id=7403
+
+
+## Author
+
+* Thomas Leitner
+* e-Mail: <t_leitner@gmx.at>
+* GPG Key-Id: 0xB2D0A854
+
+
+[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
+[Maruku]:             http://maruku.rubyforge.org
+[RedCloth]: http://whytheluckystiff.net/ruby/redcloth/
+[BlueCloth]: http://www.deveiate.org/projects/BlueCloth
+
+
+--- name:intro
+
+## Welcome to the kramdown site
+
+kramdown is a *free* GPL-licensed [Ruby](http://www.ruby-lang.org) library for parsing Markdown-like
+syntax. It is completely written in Ruby, supports standard Markdown (with some minor modifications)
+and various extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
+
+It is probably the fastest pure-Ruby Markdown converter available (November 2009), being 5x faster
+than [Maruku] and about 10x faster than [BlueFeather].
+
+<div class="a-center">
+The latest version of kramdown is <b>0.1.0</b> and it was released on <b>2009-11-??</b>.
+</div>
+
+[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
+[Maruku]: http://maruku.rubyforge.org
+[BlueFeather]: http://ruby.morphball.net/bluefeather/index_en.html

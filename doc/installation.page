@@ -1,0 +1,92 @@
+---
+title: Download &amp; Installation
+in_menu: true
+sort_info: 5
+---
+# Download & Installation
+
+## Compatibility Notes
+
+kramdown should work on any platform which supports Ruby. It has been successfully tested on the
+following platforms:
+
+* Linux with Ruby 1.8.6
+* Mac OSX with Ruby 1.8.6, 1.8.7 and 1.9.1
+
+See the platform specific installation notes for more information!
+
+Furthermore, kramdown should probably also run on jruby but that has not been tested.
+
+
+## Platform Specific Installation Instructions
+
+### Linux
+
+There are a variety of Linux distributions out there with different package management systems. So I
+will focus on instructions for Ubuntu 9.04 here (which should probably also work for any recent
+Debian based distribution).
+
+After running the following commands, kramdown is installed and ready to use:
+
+    sudo aptitude install ruby rubygems
+    sudo gem1.8 install kramdown
+
+> You will also need to add `export PATH=$PATH:/var/lib/gems/1.8/bin` to your `~/.bashrc` because
+> this is the binary path the executable files get installed.
+
+
+### Mac OS X
+
+Mac OS Snow Leopard comes with Ruby and Rubygems preinstalled. So installing kramdown is as easy as
+running:
+
+    sudo gem install kramdown
+
+
+### Windows
+
+You need to install Ruby first. This can easily be done by using the One-Click-Installer - just
+download the *latest* installation binary from the [files section][1] of the One-Click-Installer
+homepage and run it. After that open a command shell (select `Start -> Run...`, then enter `cmd` and
+click on `Ok`) and type in the following:
+
+    gem install kramdown
+
+[1]: http://rubyforge.org/frs/?group_id=167
+
+
+## Generic Installation Instructions
+
+
+### Using Rubygems {#rubygems}
+
+If you are using Rubygems, installing the latest version of kramdown is as simple as executing
+
+    gem install kramdown
+
+
+### Manual Installation
+
+The latest version of kramdown can always be downloaded as `.tar.gz` or `.zip` from [its files
+section on Rubyforge](http://rubyforge.org/frs/?group_id=7403). After the download the package needs
+to be decompressed and then you can install kramdown using the included `setup.rb` installation
+method:
+
+    $ ruby setup.rb config
+    $ ruby setup.rb setup
+    $ ruby setup.rb install
+
+
+### Using the repository version
+
+kramdown uses git as its versioning system and kramdown's repository is hosted on GitHub. The
+repository always contains a clean state of the current development version of kramdown. To check
+out kramdown use the following command:
+
+     git clone git://github.com/gettalong/kramdown.git
+
+
+## Dependencies
+
+Since kramdown is written in Ruby, you need the [Ruby interpreter](http://www.ruby-lang.org)
+versions 1.8.6, 1.8.7 or 1.9.1. There are no other dependencies.
