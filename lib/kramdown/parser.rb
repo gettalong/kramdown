@@ -253,7 +253,6 @@ module Kramdown
       # Parse the EOB marker at the current location.
       def parse_eob_marker
         @src.pos += @src.matched_size
-        #TODO: think if we need this line @tree.children << Element.new(:eob)
         true
       end
       Registry.define_parser(:block, :eob_marker, EOB_MARKER, self)
@@ -263,7 +262,7 @@ module Kramdown
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        result = @src.scan(PARAGRAPH_START) # need to scan because we may be called from anywhere
+        result = @src.scan(PARAGRAPH_START)
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << result.chomp
         else
@@ -557,22 +556,6 @@ module Kramdown
         (@doc.parse_infos[:footnotes][@src[1]] ||= {})[:content] = el
       end
       Registry.define_parser(:block, :footnote_definition, FOOTNOTE_DEFINITION_START, self)
-
-
-=begin
-#This may be better but tests show that it is not always...
-      a = Regexp.union(*Registry.parsers.select {|n,par| par.type == :block && par.name != :paragraph}.collect {|n,par| par.start_re})
-      p /(#{a})|(#{PARAGRAPH_START})/
-      Registry.define_parser(:block, :paragraph_first, /(#{a})|(#{PARAGRAPH_START})/, self)
-      def parse_paragraph_first
-        if @src[1]
-          false
-        else
-          parse_paragraph
-        end
-      end
-=end
-
 
 
       require 'rexml/parsers/baseparser'
