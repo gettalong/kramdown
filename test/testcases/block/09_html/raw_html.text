@@ -1,6 +1,0 @@
-This is some para.
-<script type="javascript">
-This *text* must not be converted.
-</script>
-
-<script>Not *parsed* here</script>

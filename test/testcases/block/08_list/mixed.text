@@ -59,3 +59,8 @@ Ordered, with paras:
     * now
 
 3. item3
+
+Mixed tabs and spaces:
+
+* 	  	some text
+        * nested

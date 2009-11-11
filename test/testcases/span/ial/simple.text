@@ -1,3 +1,5 @@
 This is a `span`{: .hund #dog}.
 
 This is a `span`{: .hund #dog}{: .katz key='val'}.
+
+This is an{: .ignored} span ial.

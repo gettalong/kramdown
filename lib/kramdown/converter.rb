@@ -11,7 +11,6 @@ module Kramdown
       # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
       def initialize(tree, doc)
         @tree, @doc = tree, doc
-        @footnote_counter = 0
       end
 
       # Convert the element +tree+ of the Kramdown document +doc+ to HTML.
@@ -21,6 +20,8 @@ module Kramdown
 
       # Convert the element tree +el+, setting the indentation level to +indent+.
       def convert(el = @tree, indent = -2)
+        @footnote_counter = @doc.options[:footnote_nr]
+        @footnotes = []
         result = ''
         el.children.each do |inner_el|
           result << convert(inner_el, indent + 2)
@@ -104,7 +105,10 @@ module Kramdown
       end
 
       def convert_footnote(el, inner, indent)
-        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{@doc.parse_infos[:footnotes][el.options[:name]][:number]}</a></sup>"
+        number = @footnote_counter
+        @footnote_counter += 1
+        @footnotes << @doc.parse_infos[:footnotes][el.options[:name]]
+        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{number}</a></sup>"
       end
 
       def convert_raw(el, inner, indent)
@@ -124,8 +128,7 @@ module Kramdown
       # Return a HTML list with the footnote content for the used footnotes.
       def footnote_content
         ol = Element.new(:ol)
-        @doc.parse_infos[:footnotes].select {|k,v| v[:number]}.
-          sort {|(ak,av),(bk,bv)| av[:number] <=> bv[:number]}.each do |name, data|
+        @footnotes.each do |name, data|
           li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
           li.children = data[:content].children
           ol.children << li

@@ -1,4 +1,5 @@
 Some para.
+[^footnote]: ignored definition
 [^footnote]: Some footnote text
 > blockquote
 [^other]: some

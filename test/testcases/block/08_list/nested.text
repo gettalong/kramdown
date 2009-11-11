@@ -1,3 +1,7 @@
 * some item
     * nested
 * last item
+^
+*	some text
+
+	* nested

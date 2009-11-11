@@ -7,6 +7,7 @@ This is a para.
 [break]:	http://www.example.com/test/asdf.html
                 'Another title'
 
+[1]: ignored.url
  [1]: one.url
   [2]: two.url
    [3]: three.url

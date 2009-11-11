@@ -6,8 +6,6 @@ require 'kramdown/parser/registry'
 
 #TODO: use [[:alpha:]] in all regexp to allow parsing of international values in 1.9.1
 #NOTE: use @src.pre_match only before other check/match?/... operations, otherwise the content is changed
-#TODO: set footnote_nr in converter, not in parser due to possible reparsing of text span (e.g. emphasis)
-#TODO: allow nested em/strong tags? look at w3c spec for content model
 
 module Kramdown
 
@@ -46,7 +44,6 @@ module Kramdown
         @doc.parse_infos[:footnotes].each do |name, data|
           parse_text_elements(data[:content])
         end
-        p tree if $DEBUG
         tree
       end
 
@@ -97,13 +94,13 @@ module Kramdown
               false
             end
           end || begin
-            warning('Warning: unhandled line')
+            warning('Warning: no block parser handled the line')
             @tree.children << Element.new(:text, @src.scan(/.*\n/))
           end
         end
 
         @unclosed_html_tags.each do |tag|
-          warning("Automatically closing unclosed html tag #{tag.value}")
+          warning("Automatically closing unclosed html tag '#{tag.value}'")
         end
 
         @tree, @src, @unclosed_html_tags = *@stack.pop
@@ -137,7 +134,6 @@ module Kramdown
             if stop_re && (stop_re_matched = @src.check(stop_re))
               stop_re_found = (block_given? ? yield : true)
             end
-            #p [:spans, @src.peek(20)]
             processed = SPAN_PARSERS.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
@@ -197,7 +193,6 @@ module Kramdown
       # Parse the string +str+ and extract all attributes and add all found attributes to the hash
       # +opts+.
       def parse_attribute_list(str, opts)
-        #TODO: add warning on empty scan
         str.scan(ALD_TYPE_ANY).each do |key, sep, val, id_attr, class_attr, ref|
           if ref
             (opts[:refs] ||= []) << ref
@@ -262,12 +257,12 @@ module Kramdown
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        result = @src.scan(PARAGRAPH_START)
+        @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type == :p
-          @tree.children.last.children.first.value << "\n" << result.chomp
+          @tree.children.last.children.first.value << "\n" << @src.matched.chomp
         else
           @tree.children << Element.new(:p)
-          @tree.children.last.children << Element.new(:text, result.lstrip.chomp)
+          @tree.children.last.children << Element.new(:text, @src.matched.lstrip.chomp)
         end
         true
       end
@@ -281,7 +276,7 @@ module Kramdown
         if @tree.children.last && @tree.children.last.type != :blank
           return false
         end
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         text, level = @src[1].strip, @src[2]
         el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
         el.children << Element.new(:text, text)
@@ -349,7 +344,7 @@ module Kramdown
       # Parse the fenced codeblock at the current location.
       def parse_codeblock_fenced
         if @src.check(FENCED_CODEBLOCK_MATCH)
-          @src.pointer += @src.matched_size
+          @src.pos += @src.matched_size
           @tree.children << Element.new(:codeblock, @src[2])
           true
         else
@@ -363,7 +358,7 @@ module Kramdown
 
       # Parse the horizontal rule at the current location.
       def parse_horizontal_rule
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         @tree.children << Element.new(:hr)
         true
       end
@@ -398,8 +393,10 @@ module Kramdown
             if content =~ /^\s*\n/
               indentation = 4
             else
-              content.sub!(/^\t/, " "*(4 - (indentation % 4)))
-              content.gsub!(/^( *)(\t+)/) {$1 + " "*$2.length*4} while content =~ /^ *\t/
+              while content =~ /^ *\t/
+                temp = content.scan(/^ */).first.length + indentation
+                content.sub!(/^( *)(\t+)/) {$1 + " "*(4 - (temp % 4)) + " "*($2.length - 1)*4}
+              end
               indentation += content.scan(/^ */).first.length
             end
             content.sub!(/^\s*/, '')
@@ -424,6 +421,7 @@ module Kramdown
             end
             item.value << result
           elsif result = @src.scan(BLANK_LINE)
+            nested_list_found = true
             item.value << result
           elsif @src.scan(EOB_MARKER)
             eob_found = true
@@ -475,8 +473,9 @@ module Kramdown
       def parse_link_definition
         @src.pos += @src.matched_size
         link_id, link_url, link_title = @src[1].downcase, @src[2], @src[4]
-        warning("Duplicate link ID #{link_id} - overwriting") if @doc.parse_infos[:link_defs][link_id]
+        warning("Duplicate link ID '#{link_id}' - overwriting") if @doc.parse_infos[:link_defs][link_id]
         @doc.parse_infos[:link_defs][link_id] = [link_url, link_title]
+        true
       end
       Registry.define_parser(:block, :link_definition, LINK_DEFINITION_START, self)
 
@@ -505,9 +504,10 @@ module Kramdown
       # Parse the inline attribute list at the current location.
       def parse_block_ial
         @src.pos += @src.matched_size
-        if @tree.children.last
+        if @tree.children.last && @tree.children.last.type != :blank
           parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
         end
+        true
       end
       Registry.define_parser(:block, :block_ial, IAL_BLOCK_START, self)
 
@@ -524,18 +524,19 @@ module Kramdown
         parse_attribute_list(@src[3], opts)
 
         if !@doc.extension.public_methods.map {|m| m.to_s}.include?("parse_#{ext}")
-          raise "No extension named #{ext} found"
+          warning("No extension named '#{ext}' found - ignoring extension block")
+          ignore = true
         end
 
         if !@src[2]
           stop_re = /#{EXT_BLOCK_START_STR % ext}/
           if result = @src.scan_until(stop_re)
             parse_attribute_list(@src[3], opts)
-            @doc.extension.send("parse_#{ext}", @tree, opts, result.sub!(stop_re, ''))
+            @doc.extension.send("parse_#{ext}", @tree, opts, result.sub!(stop_re, '')) unless ignore
           else
-            warning("No ending line for extension block #{ext} found")
+            warning("No ending line for extension block '#{ext}' found")
           end
-        else
+        elsif !ignore
           @doc.extension.send("parse_#{ext}", @tree, opts, nil)
         end
 
@@ -550,10 +551,10 @@ module Kramdown
       def parse_footnote_definition
         @src.pos += @src.matched_size
 
-        el = Element.new(:root)
+        el = Element.new(:footnote_def)
         parse_blocks(el, @src[2].gsub(INDENT, ''))
-
-        (@doc.parse_infos[:footnotes][@src[1]] ||= {})[:content] = el
+        warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @doc.parse_infos[:footnotes][@src[1]]
+        (@doc.parse_infos[:footnotes][@src[1]] = {})[:content] = el
       end
       Registry.define_parser(:block, :footnote_definition, FOOTNOTE_DEFINITION_START, self)
 
@@ -570,8 +571,8 @@ module Kramdown
       HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/
 
 
-      HTML_PARSE_AS_BLOCK = %w{div blockquote pre table dl ol ul form fieldset}
-      HTML_PARSE_AS_SPAN  = %w{a address b dd dt em h1 h2 h3 h4 h5 h6 legend li p span td th}
+      HTML_PARSE_AS_BLOCK = %w{div blockquote table dl ol ul form fieldset}
+      HTML_PARSE_AS_SPAN  = %w{a address b dd dt em h1 h2 h3 h4 h5 h6 legend li p pre span td th}
       HTML_PARSE_AS_RAW   = %w{script math}
       HTML_PARSE_AS = Hash.new {|h,k| h[k] = :span}
       HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}
@@ -581,8 +582,6 @@ module Kramdown
       HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl ul ol table ins del blockquote address]
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
-
-      #TODO: add warnings when invalid end tags/start tags...
 
       # Parse the HTML at the current position as block level HTML.
       def parse_block_html
@@ -600,15 +599,15 @@ module Kramdown
             return false
           end
 
-          @src.scan(/^( *)(.*?)\n/)
-          indent, line = @src[1].length, @src[2]
+          @src.scan(/^(.*?)\n/)
+          line = @src[1]
           temp = nil
           stack = []
 
           while line.size > 0
-            itag, iclose = line.index(HTML_TAG_RE), line.index(HTML_TAG_CLOSE_RE)
-            if itag && (!iclose || itag < iclose) && (!temp || temp.options[:ctype] == :block)
-              md =  line.match(HTML_TAG_RE)
+            index_start_tag, index_close_tag = line.index(HTML_TAG_RE), line.index(HTML_TAG_CLOSE_RE)
+            if index_start_tag && (!index_close_tag || index_start_tag < index_close_tag) && (!temp || temp.options[:parse_type] == :block)
+              md = line.match(HTML_TAG_RE)
               break if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/)
 
               add_text(md.pre_match + "\n", temp) if temp
@@ -617,7 +616,7 @@ module Kramdown
               attrs = {}
               md[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val}
               el = Element.new(:html_element, md[1], :attr => attrs, :type => :block,
-                               :ctype => HTML_PARSE_AS[md[1]])
+                               :parse_type => HTML_PARSE_AS[md[1]])
 
               (temp || @tree).children << el
               if !md[4]
@@ -625,7 +624,7 @@ module Kramdown
                 stack << temp
                 temp = el
               end
-            elsif iclose
+            elsif index_close_tag
               md = line.match(HTML_TAG_CLOSE_RE)
               add_text(md.pre_match, temp) if temp
 
@@ -634,14 +633,19 @@ module Kramdown
                 el = @unclosed_html_tags.pop
                 @tree = @stack.pop unless temp
                 temp = stack.pop
-                if el.options[:ctype] == :raw
+                if el.options[:parse_type] == :raw
                   raise "Bug: please report" if el.children.size > 1
                   el.children.first.type = :raw if el.children.first
                 end
-              elsif temp
-                add_text(md.to_s, temp)
               else
-                @tree.children << Element.new(:text, md.to_s + (line.empty? ? "\n" : ''))
+                if HTML_BLOCK_ELEMENTS.include?(md[1]) && (temp || @tree).options[:parse_type] == :block
+                  warning("Found invalidly nested HTML closing tag for '#{md[1]}'")
+                end
+                if temp
+                  add_text(md.to_s, temp)
+                else
+                  add_text(md.to_s + "\n")
+                end
               end
             else
               if temp
@@ -656,13 +660,9 @@ module Kramdown
             temp.children.last.value << "\n"
           end
           if temp
-            if temp.options[:ctype] == :span || temp.options[:ctype] == :raw
-              result = @src.scan_until(/(?=^#{OPT_SPACE}<\/#{temp.value}\s*>)|\Z/)
-              result.sub!(Regexp.escape(@src[1], '')) if @src[1]
+            if temp.options[:parse_type] == :span || temp.options[:parse_type] == :raw
+              result = @src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/)
               add_text(result, temp)
-              if temp.options[:ctype] == :raw && temp.children.first
-                temp.children.first.type = :raw
-              end
             end
             @stack.push(@tree)
             @tree = temp
@@ -675,12 +675,11 @@ module Kramdown
 
 
 
-
       ESCAPED_CHARS = /\\([\\.*_+-`()\[\]{}#!])/
 
       # Parse the backslash-escaped character at the current location.
       def parse_escaped_chars
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         add_text(@src[1])
       end
       Registry.define_parser(:span, :escaped_chars, ESCAPED_CHARS, self)
@@ -688,7 +687,7 @@ module Kramdown
 
       # Parse the HTML entity at the current location.
       def parse_html_entity
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         add_text(@src.matched)
       end
       Registry.define_parser(:span, :html_entity, REXML::Parsers::BaseParser::REFERENCE_RE, self)
@@ -698,7 +697,7 @@ module Kramdown
 
       # Parse the special HTML characters at the current location.
       def parse_special_html_chars
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         add_text(@src.matched)
       end
       Registry.define_parser(:span, :special_html_chars, SPECIAL_HTML_CHARS, self)
@@ -708,7 +707,7 @@ module Kramdown
 
       # Parse the line break at the current location.
       def parse_line_break
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
         @tree.children << Element.new(:br)
       end
       Registry.define_parser(:span, :line_break, LINE_BREAK, self)
@@ -718,7 +717,7 @@ module Kramdown
 
       # Parse the autolink at the current location.
       def parse_autolink
-        @src.pointer += @src.matched_size
+        @src.pos += @src.matched_size
 
         text = href = @src[1]
         if @src[2].nil? || @src[2] == 'mailto'
@@ -770,6 +769,7 @@ module Kramdown
         if @tree.children.last && @tree.children.last.type != :text
           parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
         else
+          warning("Ignoring span IAL because preceding element is just text")
           add_text(@src.matched)
         end
       end
@@ -782,13 +782,17 @@ module Kramdown
       def parse_footnote_marker
         @src.pos += @src.matched_size
         fn_def = @doc.parse_infos[:footnotes][@src[1]]
-        if fn_def && !fn_def[:number]
-          @doc.parse_infos[:footnote_nr] ||= @doc.options[:footnote_nr]
-          fn_def[:number] = @doc.parse_infos[:footnote_nr]
-          @doc.parse_infos[:footnote_nr] += 1
-          @tree.children << Element.new(:footnote, nil, :name => @src[1])
+        if fn_def
+          #TODO: problem when marker appears in text that is reparsed
+          if !fn_def[:marker]
+            fn_def[:marker] = Element.new(:footnote, nil, :name => @src[1])
+            @tree.children << fn_def[:marker]
+          else
+            warning("Footnote marker '#{@src[1]}' already appeared in document, ignoring newly found marker")
+            add_text(@src.matched)
+          end
         else
-          warning("Footnote definition for #{@src[1]} not found")
+          warning("Footnote definition for '#{@src[1]}' not found")
           add_text(@src.matched)
         end
       end
@@ -923,6 +927,7 @@ module Kramdown
           if @doc.parse_infos[:link_defs].has_key?(link_id)
             add_link(el, @doc.parse_infos[:link_defs][link_id].first, @doc.parse_infos[:link_defs][link_id].last, alt_text)
           else
+            warning("No link definition for link ID '#{link_id}' found")
             @src.pos = reset_pos
             add_text(result)
           end
