@@ -84,7 +84,7 @@ module Kramdown
       # element +el+.
       def parse_blocks(el, text)
         @stack.push([@tree, @src, @unclosed_html_tags])
-        @tree, @src, @unclosed_html_tags = el, (text.kind_of?(StringScanner) ? text : StringScanner.new(text)), []
+        @tree, @src, @unclosed_html_tags = el, StringScanner.new(text), []
 
         while !@src.eos?
           BLOCK_PARSERS.any? do |name|
@@ -95,7 +95,7 @@ module Kramdown
             end
           end || begin
             warning('Warning: no block parser handled the line')
-            @tree.children << Element.new(:text, @src.scan(/.*\n/))
+            add_text(@src.scan(/.*\n/))
           end
         end
 
@@ -111,8 +111,9 @@ module Kramdown
       def parse_text_elements(element)
         element.children.map! do |child|
           if child.type == :text
-            @stack = []
-            parse_spans(child, child.value)
+            @stack, @tree = [], nil
+            @src = StringScanner.new(child.value)
+            parse_spans(child)
             child.children
           else
             parse_text_elements(child)
@@ -122,9 +123,9 @@ module Kramdown
       end
 
       # Parse all span level elements in the source string.
-      def parse_spans(el, text, stop_re = nil)
-        @stack.push([@tree, @src])
-        @tree, @src = el, (text.kind_of?(StringScanner) ? text : StringScanner.new(text))
+      def parse_spans(el, stop_re = nil)
+        @stack.push(@tree)
+        @tree = el
 
         used_re = (stop_re.nil? ? @span_start_re : /(?=#{Regexp.union(stop_re, @span_start)})/)
         stop_re_found = false
@@ -155,7 +156,7 @@ module Kramdown
           end
         end
 
-        @tree, @src = *@stack.pop
+        @tree = @stack.pop
 
         stop_re_found
       end
@@ -262,7 +263,7 @@ module Kramdown
           @tree.children.last.children.first.value << "\n" << @src.matched.chomp
         else
           @tree.children << Element.new(:p)
-          @tree.children.last.children << Element.new(:text, @src.matched.lstrip.chomp)
+          add_text(@src.matched.lstrip.chomp, @tree.children.last)
         end
         true
       end
@@ -279,7 +280,7 @@ module Kramdown
         @src.pos += @src.matched_size
         text, level = @src[1].strip, @src[2]
         el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
-        el.children << Element.new(:text, text)
+        add_text(text, el)
         el.options[:attr] = {:id => generate_id(text)} if @doc.options[:auto_ids]
         @tree.children << el
         true
@@ -298,7 +299,7 @@ module Kramdown
         result = @src.scan(ATX_HEADER_MATCH)
         level, text = @src[1], @src[2].strip
         el = Element.new(:header, nil, :level => level.length)
-        el.children << Element.new(:text, text)
+        add_text(text, el)
         el.options[:attr] = {:id => generate_id(text)} if @doc.options[:auto_ids]
         @tree.children << el
         true
@@ -726,7 +727,7 @@ module Kramdown
           href = "#{mailto}:#{text}"
         end
         el = Element.new(:a, nil, {:attr => {'href' => href}})
-        el.children << Element.new(:text, text)
+        add_text(text, el)
         @tree.children << el
       end
       Registry.define_parser(:span, :autolink, AUTOLINK_START, self)
@@ -783,9 +784,12 @@ module Kramdown
         @src.pos += @src.matched_size
         fn_def = @doc.parse_infos[:footnotes][@src[1]]
         if fn_def
-          #TODO: problem when marker appears in text that is reparsed
-          if !fn_def[:marker]
+          valid = fn_def[:marker] && fn_def[:marker].options[:stack][0..-2].zip(fn_def[:marker].options[:stack][1..-1]).all? do |par, child|
+            par.children.include?(child)
+          end
+          if !fn_def[:marker] || !valid
             fn_def[:marker] = Element.new(:footnote, nil, :name => @src[1])
+            fn_def[:marker].options[:stack] = [@stack, @tree, fn_def[:marker]].flatten.compact
             @tree.children << fn_def[:marker]
           else
             warning("Footnote marker '#{@src[1]}' already appeared in document, ignoring newly found marker")
@@ -818,7 +822,7 @@ module Kramdown
           #p [:bef, @stack.size, delim, elem, @src.pos, @src.peek(20), run]
           el = Element.new(elem)
           stop_re = /#{Regexp.escape(delim)}/
-          found = parse_spans(el, @src, stop_re) do
+          found = parse_spans(el, stop_re) do
             tempp = (@src.string[@src.pos-1, 1] !~ /\s/) &&
               (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
               (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alpha:]]/)) && el.children.size > 0
@@ -864,7 +868,7 @@ module Kramdown
             @tree.children << el
           else
             stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
-            if parse_spans(el, @src, stop_re)
+            if parse_spans(el, stop_re)
               @src.scan(stop_re)
               @tree.children << el
             else
@@ -902,7 +906,7 @@ module Kramdown
 
         stop_re = /\]|!?\[/
         count = 1
-        found = parse_spans(el, @src, stop_re) do
+        found = parse_spans(el, stop_re) do
           case @src.matched
           when "[", "!["
             count += 1

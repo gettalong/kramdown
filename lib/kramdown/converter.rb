@@ -11,17 +11,18 @@ module Kramdown
       # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
       def initialize(tree, doc)
         @tree, @doc = tree, doc
+        @footnote_counter = @doc.options[:footnote_nr]
+        @footnotes = []
       end
+      private_class_method(:new, :allocate)
 
       # Convert the element +tree+ of the Kramdown document +doc+ to HTML.
       def self.convert(tree, doc)
-        self.new(tree, doc).convert
+        new(tree, doc).convert
       end
 
       # Convert the element tree +el+, setting the indentation level to +indent+.
       def convert(el = @tree, indent = -2)
-        @footnote_counter = @doc.options[:footnote_nr]
-        @footnotes = []
         result = ''
         el.children.each do |inner_el|
           result << convert(inner_el, indent + 2)
@@ -107,7 +108,7 @@ module Kramdown
       def convert_footnote(el, inner, indent)
         number = @footnote_counter
         @footnote_counter += 1
-        @footnotes << @doc.parse_infos[:footnotes][el.options[:name]]
+        @footnotes << [el.options[:name], @doc.parse_infos[:footnotes][el.options[:name]]]
         "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{number}</a></sup>"
       end
 
