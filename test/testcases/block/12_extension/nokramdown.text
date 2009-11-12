@@ -1,0 +1,11 @@
+This is a simple paragraph.
+{::nokramdown:}
+This *is* not processed 
+{::nokramdown:}
+And another paragraph
+
+{::nokramdown:: this='is' .ignore}
+
+Paragraph
+{::nokramdown:}
+Another paragraph

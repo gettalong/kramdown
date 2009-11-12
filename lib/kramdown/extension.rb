@@ -9,7 +9,7 @@ module Kramdown
     end
 
     def parse_nokramdown(tree, opts, body)
-      tree.children << Element.new(:raw, body)
+      tree.children << Element.new(:raw, body) if body.kind_of?(String)
     end
 
   end
