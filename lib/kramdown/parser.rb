@@ -468,12 +468,12 @@ module Kramdown
       PUNCTUATION_CHARS = "_.:,;!?-"
       LINK_ID_CHARS = /[a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
       LINK_ID_NON_CHARS = /[^a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
-      LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*([^\s]+)[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\3[ \t]*?)?\n/
+      LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*(?:<(.*?)>|([^\s]+))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
 
       # Parse the link definition at the current location.
       def parse_link_definition
         @src.pos += @src.matched_size
-        link_id, link_url, link_title = @src[1].downcase, @src[2], @src[4]
+        link_id, link_url, link_title = @src[1].downcase, @src[2] || @src[3], @src[5]
         warning("Duplicate link ID '#{link_id}' - overwriting") if @doc.parse_infos[:link_defs][link_id]
         @doc.parse_infos[:link_defs][link_id] = [link_url, link_title]
         true
@@ -938,26 +938,35 @@ module Kramdown
           return
         end
 
-        link_url = ''
-        re = /\(|\)|\s/
-        nr_of_brackets = 0
-        while temp = @src.scan_until(re)
-          link_url += temp
-          case @src.matched
-          when /\s/
-            break
-          when '('
-            nr_of_brackets += 1
-          when ')'
-            nr_of_brackets -= 1
-            break if nr_of_brackets == 0
+        # link url in parentheses
+        if @src.scan(/\(<(.*?)>/)
+          link_url = @src[1]
+          if @src.scan(/\)/)
+            add_link(el, link_url, nil, alt_text)
+            return
           end
-        end
-        link_url = link_url[1..-2]
+        else
+          link_url = ''
+          re = /\(|\)|\s/
+          nr_of_brackets = 0
+          while temp = @src.scan_until(re)
+            link_url += temp
+            case @src.matched
+            when /\s/
+              break
+            when '('
+              nr_of_brackets += 1
+            when ')'
+              nr_of_brackets -= 1
+              break if nr_of_brackets == 0
+            end
+          end
+          link_url = link_url[1..-2]
 
-        if nr_of_brackets == 0
-          add_link(el, link_url, nil, alt_text)
-          return
+          if nr_of_brackets == 0
+            add_link(el, link_url, nil, alt_text)
+            return
+          end
         end
 
         if @src.scan(LINK_INLINE_TITLE_RE)

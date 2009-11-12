@@ -3,6 +3,8 @@ This is a para.
 
 [otherid1]: http://wwww.example.com/ "title 1"
 [otherid2]: http://wwww.example.com/ 'title 2'
+[otherid3]: <some spaces.html>
+[otherid4]: <some spaces.html> 'title'
 
 [break]:	http://www.example.com/test/asdf.html
                 'Another title'

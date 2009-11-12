@@ -852,6 +852,7 @@ one space) in normal parentheses. For example:
 
     This is [a link](http://rubyforge.org) to a page.
     A [link](../test "local URI") can also have a title.
+    And [spaces](<link with spaces.html>)!
 
 Notes:
 
@@ -860,14 +861,11 @@ Notes:
   to escape them. It is not possible to create nested links!
 
 * The link URL must not contain any spaces and it has to contain properly nested parentheses if no
-  title is specified. There must not be any spaces before the link URL, and if no title is
-  specified, no spaces are allowed between the link URL and the closing parenthesis.
+  title is specified, or the link URL must be contained in angle brackets (then spaces and
+  incorrectly nested parentheses are allowed). There must not be any spaces before the link URL, and
+  if no title is specified, no spaces are allowed between the link URL and the closing parenthesis.
 
 * The link title may not contain its delimiters and may not be empty.
-
-> In contrast to the original Markdown syntax, the link URL may not be enclosed in angle brackets,
-> neither in inline links nor in link definitions.
-{: .markdown-difference}
 
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
@@ -895,7 +893,8 @@ The link definition has the following structure:
 
 * The link identifier in square brackets, optionally indented up to three spaces,
 * then a colon and one or more spaces/tabs,
-* then the link URL,
+* then the link URL which must not contain any spaces or a left angle bracket, the link URL which may
+  contain spaces and a right angle bracket,
 * then optionally the title in single or double quotes, separated from the link URL by one or more
   spaces or on the next line by itself indented any number of spaces/tabs.
 
