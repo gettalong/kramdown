@@ -633,6 +633,11 @@ nesting and invalidly used end tags are escaped:
     &lt;/p&gt;
     </div>
 
+The content of a HTML tag is either parsed as block level elements, span level elements or is not
+parsed at all depending on the tag encountered. For example, a `<div>` tag contains block level
+elements, a `<p>` tag contains span level elements and the contents of a `<script>` tag is not
+parsed at all.
+
 The parsing of processing instructions and XML comments is also supported. The content of both, PIs
 and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
 beginning of a line, optionally indented up to three spaces. All characters from the end of a PI/XML
@@ -760,7 +765,7 @@ This block level element is used to attach attributes to a block level element. 
 attribute list (block IAL) has the same structure as an [ALD](#attribute_list_definitions) except
 that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
 IALs) has to be put directly after the block level element to which the attributes should be
-attached, otherwise it is ignored. This is, for example, the case when there is a newline between
+attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
 the block level element and the IAL.
 
 Here are some examples for block IALs:
@@ -797,11 +802,11 @@ An extension block has two forms, one with a body and one without a body:
     [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
     identifies the extension to be used; attributes can be defined on the starting or ending line.
     The text between the starting and ending line is passed to the extension and not parsed by
-    kramdown. If no ending line is found, the starting line is ignored and the body is parsed by
-    kramdown.
+    kramdown. If no ending line is found, the starting line is ignored and the body is parsed
+    normally by kramdown.
 
-An error is raised in both cases if the specified extension is not found. The following extensions
-are available with any kramdown processor:
+If the specified extension is not found, a warning is shown and the whole extension block including
+the body is ignored. The following extensions are available with any kramdown processor:
 
 *   `comment`
 
@@ -1030,7 +1035,7 @@ A footnote definition is used to define the content of a footnote and has the fo
 * The footnote name in square brackets, optionally indented up to three spaces,
 * then a colon and one or more optional spaces,
 * then the text of the footnote
-* and optionally more text in the following lines which have have to be indented by four spaces or
+* and optionally more text on the following lines which have have to be indented by four spaces or
   one tab (like with list items).
 
 > Footnote definitions are, despite being described here, block level elements.
@@ -1057,7 +1062,8 @@ Here are some example footnote definitions:
 
 It does not matter where you put a footnote definition in a kramdown document; the content of all
 referenced footnote definitions will be placed at the end of the kramdown document. Not referenced
-foot note definitions are ignored.
+foot note definitions are ignored. If more than one footnote definitions have the same footnote
+name, all footnote definitions but the last are ignored.
 
 
 ## Span Inline Attribute Lists
