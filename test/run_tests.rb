@@ -33,4 +33,5 @@ Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
     puts $!.message if $VERBOSE
     puts $!.backtrace if $DEBUG
   end
+  puts "Warnings:\n" + doc.warnings.join("\n") if !doc.warnings.empty? && $VERBOSE
 end
