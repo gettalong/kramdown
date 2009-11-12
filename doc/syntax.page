@@ -870,7 +870,8 @@ Notes:
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
 another set of square brackets with the link identifier in them. A link indentifier may only contain
-numbers, letters, spaces and punctuation characters (ie. `_.:,;!?-`) and is not case sensitive. For
+numbers, letters, spaces (line breaks and tabs are converted to spaces, multiple spaces are
+compressed to one) and punctuation characters (ie. `_.:,;!?-`) and is not case sensitive. For
 example:
 
     This is a [reference style link][linkid] to a page. And [this]

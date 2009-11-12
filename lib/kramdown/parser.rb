@@ -922,7 +922,7 @@ module Kramdown
         end
 
         alt_text = @src.string[reset_pos...@src.pos]
-        conv_link_id = alt_text.gsub(/\n/, ' ').gsub(LINK_ID_NON_CHARS, '').downcase
+        conv_link_id = alt_text.gsub(/(\s|\n)+/m, ' ').gsub(LINK_ID_NON_CHARS, '').downcase
         @src.scan(stop_re)
 
         # reference style link or no link url
