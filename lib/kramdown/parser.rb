@@ -55,7 +55,7 @@ module Kramdown
                        :setext_header, :horizontal_rule, :list, :link_definition, :block_html,
                        :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
-                       :span_ial, :html_entity, :special_html_chars, :line_break, :escaped_chars]
+                       :span_ial, :html_entity, :typographic_syms, :special_html_chars, :line_break, :escaped_chars,]
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
@@ -694,7 +694,7 @@ module Kramdown
       Registry.define_parser(:span, :html_entity, REXML::Parsers::BaseParser::REFERENCE_RE, self)
 
 
-      SPECIAL_HTML_CHARS = /\&|>|</
+      SPECIAL_HTML_CHARS = /&|>|</
 
       # Parse the special HTML characters at the current location.
       def parse_special_html_chars
@@ -712,6 +712,21 @@ module Kramdown
         @tree.children << Element.new(:br)
       end
       Registry.define_parser(:span, :line_break, LINE_BREAK, self)
+
+
+      TYPOGRAPHIC_SYMS = [['---', '&mdash;'], ['--', '&ndash;'], ['...', '&hellip;'],
+                          ['\\<<', '&lt;&lt;'], ['\\>>', '&gt;&gt;'],
+                          ['<< ', '&laquo;&nbsp;'], [' >>', '&nbsp;&raquo;'],
+                          ['<<', '&laquo;'], ['>>', '&raquo;']]
+      TYPOGRAPHIC_SYMS_SUBST = Hash[*TYPOGRAPHIC_SYMS.flatten]
+      TYPOGRAPHIC_SYMS_RE = /#{TYPOGRAPHIC_SYMS.map {|k,v| Regexp.escape(k)}.join('|')}/
+
+      # Parse the typographic symbols at the current location.
+      def parse_typographic_syms
+        @src.pos += @src.matched_size
+        add_text(TYPOGRAPHIC_SYMS_SUBST[@src.matched].dup)
+      end
+      Registry.define_parser(:span, :typographic_syms, TYPOGRAPHIC_SYMS_RE, self)
 
 
       AUTOLINK_START = /<((mailto|https?|ftps?):.*?|.*?@.*?)>/

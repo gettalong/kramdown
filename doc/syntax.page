@@ -31,8 +31,6 @@ TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
 [Pandoc]: http://johnmacfarlane.net/pandoc/
 
 
-## Error Behaviour
-
 ## Tabs
 
 kramdown assumes that tab stops are set at multiples of four. This is especially important when
@@ -68,7 +66,7 @@ escapes. For example, you can use a literal backtick like this:
 
     This \`is not a code\` span!
 
-Following is a list of all those characters that can be escaped:
+Following is a list of all those characters (character sequences) that can be escaped:
 
     \         backslash
     .         period
@@ -80,7 +78,23 @@ Following is a list of all those characters that can be escaped:
     ()[]{}    parens/brackets/braces
     #         hash
     !         bang
+    <<        left guillemet
+    >>        right guillemet
 
+## Typographic Symbols
+
+kramdown converts the following plain ASCII character into their corresponding typographic symbols:
+
+* `---` will become an em-dash (like this ---)
+* `--` will become an en-dash (like this --)
+* `...` will become an ellipsis (like this ...)
+* `<<` will become a left guillemet (like this <<) -- an optional following space will become a
+  non-breakable space
+* `>>` will become a right guillemet (like this >>) -- an optional leading space will become a
+  non-breakable space
+
+> The original Markdown program does not do this transformations.
+{: .markdown-difference}
 
 
 # Block Level Elements
