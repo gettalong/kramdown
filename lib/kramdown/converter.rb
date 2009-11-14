@@ -39,7 +39,7 @@ module Kramdown
       end
 
       def convert_p(el, inner, indent)
-        ' '*indent << '<p' << options_for_element(el) << '>' << inner << "</p>\n"
+        "#{' '*indent}<p#{options_for_element(el)}>#{inner}</p>\n"
       end
 
       def convert_codeblock(el, inner, indent)
@@ -56,24 +56,23 @@ module Kramdown
             end.join('')
           end
         end
-        ' '*indent << '<pre' << options_for_element(el) << '><code>' << result << (result =~ /\n\Z/ ? '' : "\n") << "</code></pre>\n"
+        "#{' '*indent}<pre#{options_for_element(el)}><code>#{result}#{result =~ /\n\Z/ ? '' : "\n"}</code></pre>\n"
       end
 
       def convert_blockquote(el, inner, indent)
-        ' '*indent << '<blockquote' << options_for_element(el) << ">\n" << inner << ' '*indent << "</blockquote>\n"
+        "#{' '*indent}<blockquote#{options_for_element(el)}>\n#{inner}#{' '*indent}</blockquote>\n"
       end
 
       def convert_header(el, inner, indent)
-        ' '*indent << '<h' << el.options[:level].to_s << options_for_element(el) << '>' <<
-          inner << "</h" << el.options[:level].to_s << ">\n"
+        "#{' '*indent}<h#{el.options[:level]}#{options_for_element(el)}>#{inner}</h#{el.options[:level]}>\n"
       end
 
       def convert_hr(el, inner, indent)
-        ' '*indent << "<hr />\n"
+        "#{' '*indent}<hr />\n"
       end
 
       def convert_ul(el, inner, indent)
-        ' '*indent << "<#{el.type}" << options_for_element(el) << ">\n" << inner << ' '*indent << "</#{el.type}>\n"
+        "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner}#{' '*indent}</#{el.type}>\n"
       end
       alias :convert_ol :convert_ul
 
@@ -95,10 +94,10 @@ module Kramdown
         if @doc.options[:filter_html].include?(el.value)
           inner + (el.options[:type] == :block ? "\n" : '')
         elsif el.options[:type] == :span
-          "<#{el.value}#{options_for_element(el)}" + (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
+          "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
-          ' '*indent + "<#{el.value}#{options_for_element(el)}" +
-            (!inner.empty? ? ">\n#{inner.chomp}\n" + ' '*indent + "</#{el.value}>" : " />") + "\n"
+          ' '*indent << "<#{el.value}#{options_for_element(el)}" <<
+            (!inner.empty? ? ">\n#{inner.chomp}\n" << ' '*indent << "</#{el.value}>" : " />") + "\n"
         end
       end
 
@@ -107,15 +106,15 @@ module Kramdown
       end
 
       def convert_a(el, inner, indent)
-        "<a" + options_for_element(el) + '>' + inner + "</a>"
+        "<a#{options_for_element(el)}>#{inner}</a>"
       end
 
       def convert_img(el, inner, indent)
-        "<img" + options_for_element(el) + " />"
+        "<img#{options_for_element(el)} />"
       end
 
       def convert_codespan(el, inner, indent)
-        "<code" + options_for_element(el) + '>' + escape_html(el.value) + "</code>"
+        "<code#{options_for_element(el)}>#{escape_html(el.value)}</code>"
       end
 
       def convert_footnote(el, inner, indent)
@@ -130,7 +129,7 @@ module Kramdown
       end
 
       def convert_em(el, inner, indent)
-        "<#{el.type}" + options_for_element(el) + '>' + inner + "</#{el.type}>"
+        "<#{el.type}#{options_for_element(el)}>#{inner}</#{el.type}>"
       end
       alias :convert_strong :convert_em
 
@@ -155,7 +154,7 @@ module Kramdown
           end
           para.children << ref
         end
-        (ol.children.empty? ? '' : "<div class=\"kramdown-footnotes\">\n" + convert(ol, 2) + "</div>\n")
+        (ol.children.empty? ? '' : "<div class=\"kramdown-footnotes\">\n#{convert(ol, 2)}</div>\n")
       end
 
       # Return the string with the attributes of the element +el+.
