@@ -836,7 +836,7 @@ An extension block has two forms, one with a body and one without a body:
     normally by kramdown.
 
 If the specified extension is not found, a warning is shown and the whole extension block including
-the body is ignored. The following extensions are available with any kramdown processor:
+the body is ignored. The following extensions are builtin:
 
 *   `comment`
 
@@ -845,6 +845,11 @@ the body is ignored. The following extensions are available with any kramdown pr
 *   `nokramdown`
 
     The body is not processed with kramdown but output as-is.
+
+*   `kdoptions`
+
+    Should be used without a body since the body is ignored. Is used for setting options for the
+    kramdown processor (for example, to enable automatic header ID generation).
 
 Here are some examples for how extension blocks look like:
 

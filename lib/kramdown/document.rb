@@ -35,7 +35,7 @@ module Kramdown
       }.merge(options)
       @warnings = []
       @parse_infos = {}
-      @extension = Kramdown::Extension.new
+      @extension = Kramdown::Extension.new(self)
       @tree = Parser::Kramdown.parse(source, self)
     end
 
