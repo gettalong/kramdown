@@ -796,6 +796,8 @@ IALs) has to be put directly after the block level element to which the attribut
 attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
 the block level element and the IAL.
 
+Key-value pairs of an IAL take precedence over equally named key-value pairs in referenced ALDs.
+
 Here are some examples for block IALs:
 
     A simple paragraph with an ID attribute.

@@ -1,5 +1,5 @@
 Some paragraph.
-{:.class id}
+{:.class id key="val"}
 
 > quote
 {: #id}
@@ -18,7 +18,7 @@ Another header
 ==============
 {: .class #other}
 
-{:id: #id}
+{:id: #id key="valo"}
 {:id: #other .myclass other}
 {:other: key1="val\""  - ig.nored as_is#this key2='val\'' .other-class}
 

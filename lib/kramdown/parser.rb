@@ -40,9 +40,9 @@ module Kramdown
         configure_parser
         tree = Element.new(:root)
         parse_blocks(tree, adapt_source(source))
-        parse_text_elements(tree)
+        update_tree(tree)
         @doc.parse_infos[:footnotes].each do |name, data|
-          parse_text_elements(data[:content])
+          update_tree(data[:content])
         end
         tree
       end
@@ -106,9 +106,9 @@ module Kramdown
         @tree, @src, @unclosed_html_tags = *@stack.pop
       end
 
-      # Parse all <tt>:text</tt> elements with the span level parser. Resets +@tree+, +@src+ and the
-      # +@stack+.
-      def parse_text_elements(element)
+      # Update the tree by parsing all <tt>:text</tt> elements with the span level parser (resets
+      # +@tree+, +@src+ and the +@stack+) and by updating the attributes from the IALs.
+      def update_tree(element)
         element.children.map! do |child|
           if child.type == :text
             @stack, @tree = [], nil
@@ -116,7 +116,8 @@ module Kramdown
             parse_spans(child)
             child.children
           else
-            parse_text_elements(child)
+            update_tree(child)
+            update_attr_with_ial(child.options[:attr] ||= {}, child.options[:ial]) if child.options[:ial]
             child
           end
         end.flatten!
@@ -205,6 +206,22 @@ module Kramdown
             opts[key] = val.gsub(/\\(\}|#{sep})/, "\\1")
           end
         end
+      end
+
+      # Update the +ial+ with the information from the inline attribute list +opts+.
+      def update_ial_with_ial(ial, opts)
+        (ial[:refs] ||= []) << opts[:refs]
+        ial['class'] = ((ial['class'] || '') + " #{opts['class']}").lstrip if opts['class']
+        opts.each {|k,v| ial[k] = v if k != :refs && k != 'class' }
+      end
+
+      # Update the attributes with the information from the inline attribute list and all referenced ALDs.
+      def update_attr_with_ial(attr, ial)
+        ial[:refs].each do |ref|
+          update_attr_with_ial(attr, ref) if ref = @doc.parse_infos[:ald][ref]
+        end if ial[:refs]
+        attr['class'] = ((attr['class'] || '') + " #{ial['class']}").lstrip if ial['class']
+        ial.each {|k,v| attr[k] = v if k.kind_of?(String) && k != 'class' }
       end
 
       # Generate an alpha-numeric ID from the the string +str+.
@@ -783,7 +800,10 @@ module Kramdown
       def parse_span_ial
         @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type != :text
-          parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
+          attr = {}
+          parse_attribute_list(@src[1], attr)
+          update_ial_with_ial(@tree.children.last.options[:ial] ||= {}, attr)
+          update_attr_with_ial(@tree.children.last.options[:attr] ||= {}, attr)
         else
           warning("Ignoring span IAL because preceding element is just text")
           add_text(@src.matched)

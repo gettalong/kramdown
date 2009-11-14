@@ -160,22 +160,7 @@ module Kramdown
 
       # Return the string with the attributes of the element +el+.
       def options_for_element(el)
-        opts = (el.options[:attr] || {})
-        opts = opts.merge(ial_to_options(el.options[:ial])) if el.options[:ial]
-        opts.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v, false)}\"" }.sort.join('')
-      end
-
-      # Return a hash with the HTML attributes of the inline attribute list.
-      def ial_to_options(ial)
-        ial = ial.dup
-        (ial.delete(:refs) || []).each do |ref|
-          if ref_ial = @doc.parse_infos[:ald][ref]
-            ref_opts = ial_to_options(ref_ial)
-            ial['class'] = ((ial['class'] || '') + " #{ref_opts.delete('class')}").lstrip if ref_opts['class']
-            ial.merge!(ref_opts)
-          end
-        end
-        ial
+        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v, false)}\"" }.sort.join('')
       end
 
       ESCAPE_MAP = {
