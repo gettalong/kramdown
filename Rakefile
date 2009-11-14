@@ -62,6 +62,7 @@ if defined? Webgen
       config['contentprocessor.map']['kramdown'] = 'Kramdown::KDConverter'
     end
   end
+
   task :doc => :htmldoc
 end
 
@@ -235,7 +236,18 @@ module Kramdown
     def parse_kdexample(tree, opts, body)
       wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
       wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
-      wrap.children << Element.new(:codeblock, ::Kramdown::Document.new(body).to_html,  :attr => {'class' => 'kdexample-after'})
+      doc = ::Kramdown::Document.new(body)
+      wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
+      wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
+      wrap.children.last.children << doc.tree
+      tree.children << wrap
+      tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
+    end
+
+    def parse_kdlink(tree, opts, body)
+      wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdsyntaxlink'})
+      wrap.children << Element.new(:a, nil, :attr => {'href' => "syntax.html##{opts['id']}"})
+      wrap.children.last.children << Element.new(:text, "&rarr; Syntax for #{opts['part']}")
       tree.children << wrap
     end
 

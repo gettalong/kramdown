@@ -1,0 +1,125 @@
+---
+title: Quick Reference
+in_menu: true
+sort_info: 12
+---
+# Quick Reference
+
+All examples below feature the kramdown source, the converted HTML source and the output as it
+appears in the browser. This looks like this:
+
+{::nokramdown:}
+<div class="kdexample">
+<pre class="kdexample-before"><code>kramdown example code
+</code></pre>
+<pre class="kdexample-after-source"><code>Example code converted to HTML
+</code></pre>
+<div class="kdexample-after-live">
+Live browser view of example code
+</div>
+</div>
+<div class="clear"></div>
+{::nokramdown:}
+
+
+## Paragraphs
+
+{::kdlink:: #paragraphs part="paragraphs"}
+
+Paragraphs are separated by one or more blank lines:
+
+{::kdexample:}
+The first paragraph.
+
+Another paragraph
+{::kdexample:}
+
+Explicit line breaks in a paragraph can be made by using two spaces or two backslashes at the end of a line:
+
+{::kdexample:}
+This is a paragraph  
+which contains a hard line break.
+{::kdexample:}
+
+
+## Headers
+
+{::kdlink:: #headers part="headers"}
+
+kramdown supports Setext style headers and atx style headers. A header must always be preceeded by a
+blank line except at the beginning of the document:
+
+{::kdexample:}
+First level header
+==================
+
+Second level header
+-------------------
+{::kdexample:}
+
+{::kdexample:}
+# H1 header
+
+## H2 header
+
+### H3 header
+
+#### H4 header
+
+##### H5 header
+
+###### H6 header
+{::kdexample:}
+
+If you set the option `auto_ids` to `true` (for example, by using the `kdoptions` extension, see
+TODO), then all headers are automatically given header IDs based on the header text:
+
+{::kdexample:}
+# A header without an ID
+
+{::kdoptions:: auto_ids="true"}
+
+# A header with an ID
+{::kdexample:}
+
+
+## Blockquotes
+
+{::kdlink:: #blockquotes part="blockquotes"}
+
+A blockquote is started using the `>` marker followed by an optional space; all following lines that
+are also started with the blockquote marker belong to the blockquote. You can use any block level
+elements inside a blockquote:
+
+{::kdexample:}
+> A sample blockquote.
+> >Nested blockquotes are
+> >also possible.
+>
+> ## Headers work too
+> This is the outer quote again.
+{::kdexample:}
+
+
+## Code Blocks
+
+{::kdlink:: #code-blocks part="code blocks"}
+
+kramdown supports two different code block styles. One uses lines indented with either four spaces
+or one tab whereas the other uses lines with tilde characters as delimiters -- therefore the content
+does not need to be indented:
+
+{::kdexample:}
+    This is a sample code block.
+
+    Continued here.
+{::kdexample:}
+
+{::kdexample:}
+~~~~~~
+This is also a code block.
+~~~
+Ending lines must have at least as
+many tildes as the starting line.
+~~~~~~~~~~~~
+{::kdexample:}
