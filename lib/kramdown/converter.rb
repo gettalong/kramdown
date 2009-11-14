@@ -90,6 +90,8 @@ module Kramdown
         el.value + (el.options[:type] == :block ? "\n" : '')
       end
 
+      HTML_TAGS_WITH_BODY=['div']
+
       def convert_html_element(el, inner, indent)
         if @doc.options[:filter_html].include?(el.value)
           inner + (el.options[:type] == :block ? "\n" : '')
@@ -97,7 +99,7 @@ module Kramdown
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
           ' '*indent << "<#{el.value}#{options_for_element(el)}" <<
-            (!inner.empty? ? ">\n#{inner.chomp}\n" << ' '*indent << "</#{el.value}>" : " />") + "\n"
+            (!inner.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">\n#{inner.chomp}\n" << ' '*indent << "</#{el.value}>" : " />") + "\n"
         end
       end
 
