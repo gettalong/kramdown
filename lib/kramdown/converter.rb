@@ -43,7 +43,20 @@ module Kramdown
       end
 
       def convert_codeblock(el, inner, indent)
-        ' '*indent << '<pre' << options_for_element(el) << '><code>' << escape_html(el.value) << (el.value =~ /\n\Z/ ? '' : "\n") << "</code></pre>\n"
+        result = escape_html(el.value)
+        #if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
+        if options_for_element(el) =~ /\bshow-whitespaces\b/
+          result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
+            suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
+            m.scan(/./).map do |c|
+              case c
+              when "\t" then "<span class=\"ws-tab#{suffix}\">\t</span>"
+              when " " then "<span class=\"ws-space#{suffix}\">&sdot;</span>"
+              end
+            end.join('')
+          end
+        end
+        ' '*indent << '<pre' << options_for_element(el) << '><code>' << result << (result =~ /\n\Z/ ? '' : "\n") << "</code></pre>\n"
       end
 
       def convert_blockquote(el, inner, indent)

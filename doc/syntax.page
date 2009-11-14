@@ -374,6 +374,20 @@ code.
 > the [PHP Markdown Extra] package.
 {: .markdown-difference}
 
+If you add the class `show-whitespaces` to a code block (using a [block
+IAL](#block_inline_attribute_lists)), all spaces are replaced with `&sdot;` and additionally spaces
+and tabs in the code block are marked up using HTML `span` tags and the CSS classes:
+
+* `ws-space-l`, `ws-tab-l`: leading spaces/tabs
+* `ws-space-r`, `ws-tab-r`: trailing spaces/tabs
+* `ws-space`, `ws-tab`: spaces/tabs in between
+
+Here is an example:
+
+    	  leading tab	and space
+    trailing   tab and space    	
+{: .show-whitespaces}
+
 
 ## Horizontal Rules
 
