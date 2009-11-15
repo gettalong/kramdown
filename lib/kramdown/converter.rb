@@ -145,7 +145,7 @@ module Kramdown
         ol = Element.new(:ol)
         @footnotes.each do |name, data|
           li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
-          li.children = data[:content].children
+          li.children = Marshal.load(Marshal.dump(data[:content].children)) #TODO: probably remove this!!!!
           ol.children << li
 
           ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
