@@ -23,7 +23,6 @@ document is converted to HTML. There are basically two types of elements: block 
 (paragraphs, blockquotes, ...) and span level elements (emphasis, links, ...). Each has its own
 section.
 
-TODO: side-by-side examples of syntax and output
 TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
 
 [Maruku]: http://maruku.rubyforge.org
@@ -80,6 +79,7 @@ Following is a list of all those characters (character sequences) that can be es
     !         bang
     <<        left guillemet
     >>        right guillemet
+
 
 ## Typographic Symbols
 
@@ -168,7 +168,7 @@ The following gives you an example of how paragraphs look like:
       This is another paragraph, not connected to the above one. But  
     with a hard line break. \\
     and another one.
-{: .show-whitespaces}
+{: .show-whitespaces .ws-lr}
 
 
 ## Headers
@@ -529,7 +529,7 @@ following construct:
 
     * 
             This is a code block (indentation needs to be 4(1)+4(1) spaces (tabs)).
-{: .show-whitespaces}
+{: .show-whitespaces .ws-lr}
 
 Note that the list marker needs to be followed with at least one space or tab! Otherwise the line is
 not recognized as the start of a list item but interpreted as a paragraph containing the list
@@ -678,33 +678,6 @@ comment till the end of the line are ignored. kramdown syntax in PIs/XML comment
     ?>
     Another para.
 
-
-
-## Sections
-
-Sections (`div` elements in HTML) can be used to separate content into various structural parts. A
-section is started by using a plus character followed by two or more equal signs. The end of a
-section can be specified by using a minus character followed again by two or more equal signs. These
-start and end markers may be indented up to three spaces. Note that a section does not start a new
-indentation level! This allows you to easily add sections after writing the text. Nesting of
-sections is also possible.
-
-Two nested divisions:
-
-    +====
-    A para here.
-      +==
-    And another para.
-    -========
-       -==
-^
-    <div>
-      <p>A para here.</p>
-
-      <div>
-        <p>And another para.</p>
-      </div>
-    </div>
 
 
 ## Attribute List Definitions
