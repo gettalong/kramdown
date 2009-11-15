@@ -239,7 +239,7 @@ module Kramdown
       doc = ::Kramdown::Document.new(body)
       wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
       wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
-      wrap.children.last.children << doc.tree
+      wrap.children.last.children << Element.new(:raw, doc.to_html)
       tree.children << wrap
       tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
     end

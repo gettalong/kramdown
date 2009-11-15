@@ -1,9 +1,17 @@
 ---
 title: Quick Reference
 in_menu: true
-sort_info: 12
+sort_info: 9
 ---
 # Quick Reference
+
+Below are examples of all available structural elements that can be used in kramdown text. Note,
+that only the most basic syntax information is given. However, a link to the detailed syntax for
+each element is provided.
+
+kramdown has two main classes of elements: block and span level elements. Block level elements are
+used to create paragraphs, headers, lists and so on whereas span level elements are used to markup
+text phrases as emphasized, as a link and so on.
 
 All examples below feature the kramdown source, the converted HTML source and the output as it
 appears in the browser. This looks like this:
@@ -21,6 +29,8 @@ Live browser view of example code
 <div class="clear"></div>
 {::nokramdown:}
 
+
+# Block Level Elements - Main Structural Elements
 
 ## Paragraphs
 
@@ -122,4 +132,342 @@ This is also a code block.
 Ending lines must have at least as
 many tildes as the starting line.
 ~~~~~~~~~~~~
+{::kdexample:}
+
+
+## Horizontal Rules
+
+{::kdlink:: #horizontal-rules part="horizontal rules"}
+
+It is easy to insert a horizontal rule in kramdown: just use three or more asterisks, dashes or
+underscores, optionally separated by spaces or tabs, on an otherwise blank line:
+
+{::kdexample:}
+* * *
+
+\---
+
+  _  _  _  _
+
+---------------
+{::kdexample:}
+
+
+## Lists
+
+{::kdlink:: #lists part="lists"}
+
+kramdown supports ordered and unordered lists. Ordered lists are started by using a number followed
+by a period, a space and then the list item text. The content of a list item consists of block level
+elements. All lines which have the same indent as the text of the line with the list marker belong
+to the list item:
+
+{::kdexample:}
+1. This is a list item
+2. And another item
+2. And the third one
+   with additional. text
+{::kdexample:}
+
+As the content consists of block level elements you can do things like the following:
+
+{::kdexample:}
+1.  This is a list item
+
+    > with a blockquote
+
+    # And a header
+
+2.  Followed by another item
+{::kdexample:}
+
+Nested lists are also easy to create:
+
+{::kdexample:}
+1. Item one
+   1. sub item one
+   2. sub item two
+   3. sub item three
+2. Item two
+{::kdexample:}
+
+Lists can occur directly after other block level elements, however, there has to be at least one
+blank line if you want to follow a paragraph with a list:
+
+{::kdexample:}
+This is a paragraph.
+1. This is NOT a list.
+
+1. This is a list!
+{::kdexample:}
+
+Unordered lists are started by using an asterisk, a dash or a plus sign (they can be mixed) and a
+space. Apart from that unordered lists follow the same rules as ordered lists:
+
+{::kdexample:}
+* Item one
++ Item two
+- Item three
+{::kdexample:}
+
+
+## HTML elements
+
+kramdown allows you to use block level HTML tags (`div`, `p`, `pre`, ...) to markup whole blocks of
+text -- just start a line with a block level HTML tag. The content of a block level HTML tag is
+parsed by kramdown either as block level or span level text, depending on the tag:
+
+{::kdexample:}
+<div style="float: right">
+Something that stays right.
+</div>
+Normal text flow.
+<p>
+This can contain only *span* level elements.
+</p>
+{::kdexample:}
+
+
+## Block Attributes
+
+{::kdlink:: #block-inline-attribute-lists part="block IALs"}
+{::kdlink:: #attribute-list-definitions part="ALDs"}
+
+You can assign any attribute to a block level element. Just directly follow the block with a *block
+inline attribute list* (or short: block IAL). A block IAL consists of a left curly brace, followed
+by a colon, the attribute definitions and a right curly brace. Here is a simple example which sets the
+`title` attribute of a block quote:
+
+{::kdexample:}
+> A nice blockquote
+{: title="Blockquote title"}
+{::kdexample:}
+
+As one often wants to set one or more CSS classes on an element, there is an easy shortcut:
+
+{::kdexample:}
+> A nice blockquote
+{: .class1 .class2}
+{::kdexample:}
+
+A shortcut for setting the ID is also provided. Just prefix the ID with a hash symbol:
+
+{::kdexample:}
+> A nice blockquote
+{: #with-an-id}
+{::kdexample:}
+
+Sometimes one wants to use the same attributes for many elements. kramdown allows you to define the
+attributes in one place with an *attribute list definition* (or short: ALD) and just reference this
+definition in a block IAL. An ALD has the same structure as a block IAL but the colon has to be
+replace with a colon, the reference name and another colon. By just using the reference name as-is
+in a block IAL, one can include the attributes of the referenced ALD:
+
+{::kdexample:}
+{:refdef: .c1 #id .c2 title="title"}
+paragraph
+{: refdef}
+{::kdexample:}
+
+The order in a block IAL or ALD is important because later defined attributes overwrite (with the
+exception of the shortcut for CSS classes) prior defined attributes:
+
+{::kdexample:}
+{:refdef: .c1 #id .c2 title="title"}
+paragraph
+{: refdef .c3 title="t" #para}
+{::kdexample:}
+
+
+## Extension Blocks
+
+{::kdlink:: #extension-blocks part="extension blocks"}
+
+Extension blocks can be used to add custom behaviour to kramdown. For more information on how to do
+this have a look at the [API documentation]({relocatable: /rdoc/index.html}). kramdown comes with
+some built-in extensions for ignoring text (i.e. treating text as comment), for inserting arbitrary
+text into the output and for setting kramdown options.
+
+Here is an example that shows how to insert comments into text:
+
+{::kdexample:}
+This is a paragraph
+{::comment:}
+This is a comment which is
+completely ignored.
+{::comment:}
+... paragraph continues here.
+
+{::nokramdown:}
+This is not parsed *by* kramdown
+{::nokramdown:}
+{::kdexample:}
+
+As one can see from the above example, the syntax for extension blocks is virtually the same as for
+block IALs and ALDs, except that the colon of a block IAL has to be replaced by two colons, the name
+of the extension and then one or two colons. If one colon is used, it means that the extension has
+body text and continues until a matching ending line (as in the example above). If two colons are
+used, then the extension does not have a body, for example:
+
+{::kdexample:}
+# Header without id
+{::kdoptions:: auto_ids="true"}
+
+# Header with id
+{::kdoptions:: auto_ids="false"}
+
+# Header without id
+{::kdexample:}
+
+
+
+
+# Span Level Elements - Text Modifiers
+
+## Emphasis
+
+{::kdlink:: #emphasis part="emphasis"}
+
+Emphasis can be added to text by surrounding the text with either asterisks or underscores:
+
+{::kdexample:}
+This is *emphasized*,
+_this_ too!
+{::kdexample:}
+
+Strong emphasis can be done by doubling the delimiters:
+
+{::kdexample:}
+This is **strong**,
+__this__ too!
+{::kdexample:}
+
+The form with the asterisks can also be used to markup parts of words:
+
+{::kdexample:}
+This w**ork**s as expected!
+{::kdexample:}
+
+
+## Links and Images
+
+{::kdlink:: #links-and-images part="links and images"}
+
+A simple link can be created by surrounding the text with square brackets and the link URL with
+parentheses:
+
+{::kdexample:}
+A [link](http://kramdown.rubyforge.org)
+to the kramdown homepage.
+{::kdexample:}
+
+You can also add title information to the link:
+
+{::kdexample:}
+A [link](http://kramdown.rubyforge.org "hp")
+to the homepage.
+{::kdexample:}
+
+There is another way to create links which does not interrupt the text flow. The URL and title are
+defined using a reference name and this reference name is then used in square brackets instead of
+the link URL:
+
+{::kdexample:}
+A [link][kramdown hp]
+to the homepage.
+
+[kramdown hp]: http://kramdown.rubyforge.org "hp"
+{::kdexample:}
+
+If the link text itself is the reference name, the second set of square brackets can be omitted:
+
+{::kdexample:}
+A link to the [kramdown hp].
+
+[kramdown hp]: http://kramdown.rubyforge.org "hp"
+{::kdexample:}
+
+Images can be created in a similar way: just use an exclamation mark before the square brackets. The
+link text will become the alternative text of the image and the link URL specifies the image source:
+
+{::kdexample:}
+An image: ![gras](img/image.jpg)
+{::kdexample:}
+
+
+## Inline Code
+
+{::kdlink:: #code-spans part="code spans"}
+
+Text phrases can be easily marked up as code by surrounding them with backticks:
+
+{::kdexample:}
+Use `Kramdown::Document.new(text).to_html`
+to convert the `text` in kramdown
+syntax to HTML.
+{::kdexample:}
+
+If you want to use literal backticks in your code, just use two or more backticks as delimiters. The
+space right after the beginning delimiter and the one right before the closing delimiter are ignore:
+
+{::kdexample:}
+Use backticks to markup code,
+e.g. `` `code` ``.
+{::kdexample:}
+
+
+## Footnotes
+
+{::kdlink:: #footnotes part="footnotes"}
+
+Footnotes can easily be used in kramdown. Just set a footnote marker (consists of square brackets
+with a caret and the footname inside) in the text and somewhere else the footnote definition (which
+basically looks like a reference link definition):
+
+{::kdexample:}
+This is a text with a
+footnote[^1].
+
+[^1]: And here is the definition.
+{::kdexample:}
+
+The footnote definition can contain any block level element, all lines following a footnote
+definition indented with four spaces or one tab belong to the definition:
+
+{::kdexample:}
+This is a text with a
+footnote[^2].
+
+[^2]:
+    And here is the definition.
+
+    > With a quote!
+{::kdexample:}
+
+As can be seen above the footnote name is only used for the anchors and the numbering is done
+automatically in document order.
+
+
+## HTML Elements
+
+{::kdlink:: #html-spans part="HTML spans"}
+
+HTML is not only supported on the block level but also on the span level:
+
+{::kdexample:}
+This is <span style="color: red">written in
+red</span>.
+{::kdexample:}
+
+
+## Inline Attributes
+
+{::kdlink:: #span-inline-attribute-lists part="span IALs"}
+
+As with a block level element you can assign any attribute to a span level elements using a *span
+inline attribute list* (or short: span IAL). A span IAL has the same syntax as a block IAL and must
+immediately follow the span level element:
+
+{::kdexample:}
+This is *red*{: style="color: red"}.
 {::kdexample:}
