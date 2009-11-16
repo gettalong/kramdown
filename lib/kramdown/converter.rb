@@ -12,20 +12,20 @@ module Kramdown
     class Html
 
       # Initialize the HTML converter with the given Kramdown document +doc+.
-      def initialize(tree, doc)
-        @tree, @doc = tree, doc
+      def initialize(doc)
+        @doc = doc
         @footnote_counter = @doc.options[:footnote_nr]
         @footnotes = []
       end
       private_class_method(:new, :allocate)
 
       # Convert the Kramdown document +doc+ to HTML.
-      def self.convert(tree, doc)
-        new(tree, doc).convert
+      def self.convert(doc)
+        new(doc).convert(doc.tree)
       end
 
       # Convert the element tree +el+, setting the indentation level to +indent+.
-      def convert(el = @tree, indent = -2)
+      def convert(el, indent = -2)
         result = ''
         el.children.each do |inner_el|
           result << convert(inner_el, indent + 2)

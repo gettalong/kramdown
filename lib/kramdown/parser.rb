@@ -30,11 +30,12 @@ module Kramdown
         @doc.parse_infos[:link_defs] = {}
         @doc.parse_infos[:footnotes] = {}
       end
-      private :initialize
+      private_class_method(:new, :allocate)
+
 
       # Parse the string +source+ using the Kramdown::Document +doc+ and return the parse tree.
       def self.parse(source, doc)
-        self.new(doc).parse(source)
+        new(doc).parse(source)
       end
 
       # The source string provided on initialization is parsed and the created +tree+ is returned.

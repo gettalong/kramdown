@@ -77,7 +77,7 @@ module Kramdown
 
     # Convert the document to HTML. Uses the Converter::ToHtml class for doing the conversion.
     def to_html
-      Converter::Html.convert(@tree, self)
+      Converter::Html.convert(self)
     end
 
   end
