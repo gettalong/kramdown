@@ -4,11 +4,14 @@ require 'rexml/parsers/baseparser'
 
 module Kramdown
 
+  # This module contains all available converters, i.e. classes that take a document and convert the
+  # document tree to a string in a specific format, for example, HTML.
   module Converter
 
+    # Converts a Kramdown::Document to HTML.
     class Html
 
-      # Initialize the HTML converter with the given Kramdown document +doc+ and the element +tree+.
+      # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(tree, doc)
         @tree, @doc = tree, doc
         @footnote_counter = @doc.options[:footnote_nr]
@@ -16,7 +19,7 @@ module Kramdown
       end
       private_class_method(:new, :allocate)
 
-      # Convert the element +tree+ of the Kramdown document +doc+ to HTML.
+      # Convert the Kramdown document +doc+ to HTML.
       def self.convert(tree, doc)
         new(tree, doc).convert
       end

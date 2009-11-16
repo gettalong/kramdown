@@ -9,13 +9,16 @@ require 'kramdown/parser/registry'
 
 module Kramdown
 
+  # This module contains all available parsers. Currently, there is only one parser for parsing
+  # documents in kramdown format.
   module Parser
 
+    # Used for parsing a document in kramdown format.
     class Kramdown
 
       include ::Kramdown
 
-      # Create a new Kramdown parser object for the Kramdown::Document +doc+ and the string +source+.
+      # Create a new Kramdown parser object for the Kramdown::Document +doc+.
       def initialize(doc)
         @doc = doc
         @src = nil
@@ -29,13 +32,12 @@ module Kramdown
       end
       private :initialize
 
-      # Parse the string +source+, respecting the given +options+.
+      # Parse the string +source+ using the Kramdown::Document +doc+ and return the parse tree.
       def self.parse(source, doc)
         self.new(doc).parse(source)
       end
 
-      # The source string provided on initialization is parsed and the +tree+ of the associated
-      # document is updated with the result.
+      # The source string provided on initialization is parsed and the created +tree+ is returned.
       def parse(source)
         configure_parser
         tree = Element.new(:root)
