@@ -21,7 +21,7 @@ para4
 <div>
 foo
 </div>
-   <div style="&nbsp;"/>
+   <div style="&nbsp;"></div>
 </div>
 <div>bar&nbsp;</div>
 </div>

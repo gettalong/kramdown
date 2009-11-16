@@ -101,8 +101,15 @@ module Kramdown
         elsif el.options[:type] == :span
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
-          ' '*indent << "<#{el.value}#{options_for_element(el)}" <<
-            (!inner.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">\n#{inner.chomp}\n" << ' '*indent << "</#{el.value}>" : " />") + "\n"
+          output = ' '*indent << "<#{el.value}#{options_for_element(el)}"
+          if !inner.empty?
+            output << ">\n#{inner.chomp}\n"  << ' '*indent << "</#{el.value}>"
+          elsif HTML_TAGS_WITH_BODY.include?(el.value)
+            output << "></#{el.value}>"
+          else
+            output << " />"
+          end
+          output << "\n"
         end
       end
 
