@@ -70,7 +70,7 @@ rd = Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'htmldoc/rdoc'
   rdoc.title = 'kramdown'
   rdoc.main = 'Kramdown'
-  rdoc.options << '--line-numbers' << '--inline-source' << '--promiscuous'
+  rdoc.options << '--line-numbers'
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
@@ -146,7 +146,7 @@ EOF
       #### Documentation
 
       s.has_rdoc = true
-      s.rdoc_options = ['--line-numbers', '--inline-source', '--promiscuous', '--main', 'Kramdown']
+      s.rdoc_options = ['--line-numbers', '--main', 'Kramdown']
 
       #### Author and project details
 
