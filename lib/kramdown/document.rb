@@ -29,12 +29,16 @@ module Kramdown
     #
     # [:auto_ids (used by the parser)]
     #    A boolean value deciding whether automatic header ID generation is used. Default: +false+.
+    #    When using the +kdoptions+ extension, the string 'false' will be the value +false+, every
+    #    other non-empty string will be +true+.
     # [:filter_html (used by the HTML converter)]
     #    An array of HTML tag names that defines which tags should be filtered from the output. For
     #    example, if the value contains +iframe+, then all HTML +iframe+ tags are filtered out and
-    #    only the body is displayed. Default: empty array.
+    #    only the body is displayed. Default: empty array. When using the +kdoptions+ extension, the
+    #    string value needs to hold the HTML tag names separated by one or more spaces.
     # [:footnote_nr (used by the HTML converter)]
-    #    The initial number used for creating the link to the first footnote. Default: +1+.
+    #    The initial number used for creating the link to the first footnote. Default: +1+. When
+    #    using the +kdoptions+ extension, the string value needs to be a valid number.
     DEFAULT_OPTIONS={
       :footnote_nr => 1,
       :filter_html => [],
@@ -66,12 +70,12 @@ module Kramdown
     # kramdown parser sothat after this call the output can be generated.
     #
     # The parameter +ext+ can be used to set a custom extension class. Note that the default
-    # kramdown extension should be available in the custom extension class.
+    # kramdown extensions should be available in the custom extension class.
     def initialize(source, options = {}, ext = nil)
       @options = DEFAULT_OPTIONS.merge(options)
       @warnings = []
       @parse_infos = {}
-      @extension = extension || Kramdown::Extension.new(self)
+      @extension = extension || Kramdown::Extension.new
       @tree = Parser::Kramdown.parse(source, self)
     end
 

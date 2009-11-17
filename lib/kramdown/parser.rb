@@ -18,6 +18,9 @@ module Kramdown
 
       include ::Kramdown
 
+      attr_reader :tree
+      attr_reader :doc
+
       # Create a new Kramdown parser object for the Kramdown::Document +doc+.
       def initialize(doc)
         @doc = doc
@@ -48,6 +51,12 @@ module Kramdown
           update_tree(data[:content])
         end
         tree
+      end
+
+      # Add the given warning +text+ to the warning array of the Kramdown document.
+      def warning(text)
+        @doc.warnings << text
+        #TODO: add position information
       end
 
       #######
@@ -168,12 +177,6 @@ module Kramdown
       # Modify the string +source+ to be usable by the parser.
       def adapt_source(source)
         source.gsub(/\r\n?/, "\n").chomp + "\n"
-      end
-
-      # Add the given warning +text+ to the warning array of the Kramdown document.
-      def warning(text)
-        @doc.warnings << text
-        #TODO: add position information
       end
 
       # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
@@ -553,12 +556,12 @@ module Kramdown
           stop_re = /#{EXT_BLOCK_START_STR % ext}/
           if result = @src.scan_until(stop_re)
             parse_attribute_list(@src[3], opts)
-            @doc.extension.send("parse_#{ext}", @tree, opts, result.sub!(stop_re, '')) unless ignore
+            @doc.extension.send("parse_#{ext}", self, opts, result.sub!(stop_re, '')) unless ignore
           else
             warning("No ending line for extension block '#{ext}' found")
           end
         elsif !ignore
-          @doc.extension.send("parse_#{ext}", @tree, opts, nil)
+          @doc.extension.send("parse_#{ext}", self, opts, nil)
         end
 
         true
