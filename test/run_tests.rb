@@ -2,11 +2,10 @@ $:.unshift File.dirname(__FILE__) + '/../lib'
 require 'kramdown'
 require 'test/unit/assertions'
 require 'yaml'
-require 'pp'
 
 include Test::Unit::Assertions
 
-arg = ARGV[0] || File.dirname(__FILE__) + '/testcases'
+arg = ARGV[0] || File.join(File.dirname(__FILE__), 'testcases')
 
 arg = if File.directory?(arg)
         File.join(arg, '**/*.text')
@@ -22,9 +21,9 @@ Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
   $stdout.flush
 
   html_file = file.sub('.text', '.html')
-  options = YAML::load(File.read(file.sub('.text', '.options'))) rescue {}
+  opts_file = file.sub('.text', '.options')
+  options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {}
   doc = Kramdown::Document.new(File.read(file), options)
-  #pp doc if $VERBOSE
   begin
     assert_equal(File.read(html_file), doc.to_html)
     puts 'PASSED'
