@@ -97,7 +97,7 @@ module Kramdown
 
       def convert_html_element(el, inner, indent)
         if @doc.options[:filter_html].include?(el.value)
-          inner + (el.options[:type] == :block ? "\n" : '')
+          inner.chomp + (el.options[:type] == :block ? "\n" : '')
         elsif el.options[:type] == :span
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
