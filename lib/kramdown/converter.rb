@@ -14,7 +14,7 @@ module Kramdown
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
-        @footnote_counter = @doc.options[:footnote_nr]
+        @footnote_counter = @footnote_start = @doc.options[:footnote_nr]
         @footnotes = []
       end
       private_class_method(:new, :allocate)
@@ -153,6 +153,7 @@ module Kramdown
       # Return a HTML list with the footnote content for the used footnotes.
       def footnote_content
         ol = Element.new(:ol)
+        ol.options[:attr] = {'start' => @footnote_start} if @footnote_start != 1
         @footnotes.each do |name, data|
           li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
           li.children = Marshal.load(Marshal.dump(data[:content].children)) #TODO: probably remove this!!!!
@@ -171,7 +172,7 @@ module Kramdown
 
       # Return the string with the attributes of the element +el+.
       def options_for_element(el)
-        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v, false)}\"" }.sort.join('')
+        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, false)}\"" }.sort.join('')
       end
 
       ESCAPE_MAP = {
