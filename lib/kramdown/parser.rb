@@ -77,7 +77,7 @@ module Kramdown
             extend(Registry.parser(name).module)
             @parsers[name] = Registry.parser(name)
           else
-            raise "Unknown block parser: #{name}"
+            raise Kramdown::Error, "Unknown block parser: #{name}"
           end
         end
         SPAN_PARSERS.each do |name|
@@ -85,7 +85,7 @@ module Kramdown
             extend(Registry.parser(name).module)
             @parsers[name] = Registry.parser(name)
           else
-            raise "Unknown span parser: #{name}"
+            raise Kramdown::Error, "Unknown span parser: #{name}"
           end
         end
         @span_start = Regexp.union(*SPAN_PARSERS.map {|name| @parsers[name].start_re})
@@ -106,7 +106,7 @@ module Kramdown
               false
             end
           end || begin
-            warning('Warning: no block parser handled the line')
+            warning('Warning: this should not occur - no block parser handled the line')
             add_text(@src.scan(/.*\n/))
           end
         end
@@ -160,7 +160,7 @@ module Kramdown
               if stop_re_matched
                 add_text(@src.scan(/./))
               else
-                raise('Bug: this should not occur - please report!')
+                raise Kramdown::Error, 'Bug: please report!'
               end
             end
           else
@@ -558,7 +558,7 @@ module Kramdown
             parse_attribute_list(@src[3], opts)
             @doc.extension.send("parse_#{ext}", self, opts, result.sub!(stop_re, '')) unless ignore
           else
-            warning("No ending line for extension block '#{ext}' found")
+            warning("No ending line for extension block '#{ext}' found - ignoring extension block")
           end
         elsif !ignore
           @doc.extension.send("parse_#{ext}", self, opts, nil)
@@ -658,7 +658,7 @@ module Kramdown
                 @tree = @stack.pop unless temp
                 temp = stack.pop
                 if el.options[:parse_type] == :raw
-                  raise "Bug: please report" if el.children.size > 1
+                  raise Kramdown::Error, "Bug: please report!" if el.children.size > 1
                   el.children.first.type = :raw if el.children.first
                 end
               else
@@ -860,27 +860,23 @@ module Kramdown
 
         delim, elem, run = result, element, 1
         begin
-          #p [:bef, @stack.size, delim, elem, @src.pos, @src.peek(20), run]
           el = Element.new(elem)
           stop_re = /#{Regexp.escape(delim)}/
           found = parse_spans(el, stop_re) do
             tempp = (@src.string[@src.pos-1, 1] !~ /\s/) &&
               (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
               (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alpha:]]/)) && el.children.size > 0
-            #p [:stp, @stack.size, delim, elem, @src.pos, @src.peek(20), run, tempp]
             tempp
           end
           if !found && elem == :strong
             @src.pos = reset_pos - 1
             delim = type
             elem = :em
-            #p [:dat, @stack.size, delim, elem, @src.pos, @src.peek(20), run]
             run += 1
           else
             run = 3
           end
         end until found || run > 2
-        #p [:aft, @stack.size, found, delim, elem, run, el]
         if found
           @src.scan(stop_re)
           @tree.children << el

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
 require 'kramdown/extension'
@@ -55,7 +56,7 @@ module Kramdown
     attr_accessor :options
 
     # An array of warning messages. It is filled with warnings during the parsing phase (i.e. in
-    # #new).
+    # #new) and the converting phase.
     attr_reader :warnings
 
     # Holds needed parse information like ALDs, link definitions and so on.
@@ -82,6 +83,10 @@ module Kramdown
     # Convert the document to HTML. Uses the Converter::ToHtml class for doing the conversion.
     def to_html
       Converter::Html.convert(self)
+    end
+
+    def inspect #:nodoc:
+      "<KD:Document: options=#{@options.inspect} tree=#{@tree.inspect} warnings=#{@warnings.inspect}>"
     end
 
   end
@@ -113,6 +118,10 @@ module Kramdown
     def initialize(type, value = nil, options = {})
       @type, @value, @options = type, value, options
       @children = []
+    end
+
+    def inspect #:nodoc:
+      "<kd:#{@type}#{@value.nil? ? '' : ' ' + @value.inspect}#{options.empty? ? '' : ' ' + @options.inspect}#{@children.empty? ? '' : ' ' + @children.inspect}>"
     end
 
   end
