@@ -47,8 +47,7 @@ module Kramdown
 
       def convert_codeblock(el, inner, indent)
         result = escape_html(el.value)
-        #if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
-        if options_for_element(el) =~ /\bshow-whitespaces\b/
+        if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
           result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
             suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
             m.scan(/./).map do |c|

@@ -111,7 +111,7 @@ module Kramdown
           end
         end
 
-        @unclosed_html_tags.each do |tag|
+        @unclosed_html_tags.reverse.each do |tag|
           warning("Automatically closing unclosed html tag '#{tag.value}'")
         end
 
@@ -545,24 +545,26 @@ module Kramdown
 
         ext = @src[1]
         opts = {}
+        body = nil
         parse_attribute_list(@src[3], opts)
 
         if !@doc.extension.public_methods.map {|m| m.to_s}.include?("parse_#{ext}")
           warning("No extension named '#{ext}' found - ignoring extension block")
-          ignore = true
+          body = :invalid
         end
 
         if !@src[2]
           stop_re = /#{EXT_BLOCK_START_STR % ext}/
           if result = @src.scan_until(stop_re)
             parse_attribute_list(@src[3], opts)
-            @doc.extension.send("parse_#{ext}", self, opts, result.sub!(stop_re, '')) unless ignore
+            body = result.sub!(stop_re, '') if body != :invalid
           else
+            body = :invalid
             warning("No ending line for extension block '#{ext}' found - ignoring extension block")
           end
-        elsif !ignore
-          @doc.extension.send("parse_#{ext}", self, opts, nil)
         end
+
+        @doc.extension.send("parse_#{ext}", self, opts, body) if body != :invalid
 
         true
       end
@@ -858,25 +860,22 @@ module Kramdown
           return
         end
 
-        delim, elem, run = result, element, 1
-        begin
+        sub_parse = lambda do |delim, elem|
           el = Element.new(elem)
           stop_re = /#{Regexp.escape(delim)}/
           found = parse_spans(el, stop_re) do
-            tempp = (@src.string[@src.pos-1, 1] !~ /\s/) &&
+            (@src.string[@src.pos-1, 1] !~ /\s/) &&
               (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
               (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alpha:]]/)) && el.children.size > 0
-            tempp
           end
-          if !found && elem == :strong
-            @src.pos = reset_pos - 1
-            delim = type
-            elem = :em
-            run += 1
-          else
-            run = 3
-          end
-        end until found || run > 2
+          [found, el, stop_re]
+        end
+
+        found, el, stop_re = sub_parse.call(result, element)
+        if !found && element == :strong
+          @src.pos = reset_pos - 1
+          found, el, stop_re = sub_parse.call(type, :em)
+        end
         if found
           @src.scan(stop_re)
           @tree.children << el
@@ -932,13 +931,13 @@ module Kramdown
         result = @src.scan(LINK_START)
         reset_pos = @src.pos
 
+        link_type = (result =~ /^!/ ? :img : :a)
+
         # no nested links allowed
-        if @tree.type == :img || @tree.type == :a || @stack.any? {|t,s| t && (t.type == :img || t.type == :a)}
+        if link_type == :a && (@tree.type == :img || @tree.type == :a || @stack.any? {|t,s| t && (t.type == :img || t.type == :a)})
           add_text(result)
           return
         end
-
-        link_type = (result =~ /^!/ ? :img : :a)
         el = Element.new(link_type)
 
         stop_re = /\]|!?\[/
@@ -950,14 +949,13 @@ module Kramdown
           when "]"
             count -= 1
           end
-          count == 0
+          count - el.children.select {|c| c.type == :img}.size == 0
         end
         if !found || el.children.empty?
           @src.pos = reset_pos
           add_text(result)
           return
         end
-
         alt_text = @src.string[reset_pos...@src.pos]
         conv_link_id = alt_text.gsub(/(\s|\n)+/m, ' ').gsub(LINK_ID_NON_CHARS, '').downcase
         @src.scan(stop_re)
@@ -1026,6 +1024,7 @@ module Kramdown
         else
           el.options[:attr]['src'] = href
           el.options[:attr]['alt'] = alt_text
+          el.children.clear
         end
         @tree.children << el
       end
