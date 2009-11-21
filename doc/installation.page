@@ -11,18 +11,16 @@ kramdown should work on any platform which supports Ruby. It has been successful
 following platforms:
 
 * Linux with Ruby 1.8.6
-* Mac OSX with Ruby 1.8.6, 1.8.7 and 1.9.1
+* Mac OSX with Ruby 1.8.6, 1.8.7, 1.9.1, 1.9.2-preview1 and jruby 1.4.0.
 
 See the platform specific installation notes for more information!
-
-Furthermore, kramdown should probably also run on jruby but that has not been tested.
 
 
 ## Platform Specific Installation Instructions
 
 ### Linux
 
-There are a variety of Linux distributions out there with different package management systems. So I
+There are a variety of Linux distributions out there with different package management systems. So we
 will focus on instructions for Ubuntu 9.04 here (which should probably also work for any recent
 Debian based distribution).
 
@@ -37,8 +35,8 @@ After running the following commands, kramdown is installed and ready to use:
 
 ### Mac OS X
 
-Mac OS Snow Leopard comes with Ruby and Rubygems preinstalled. So installing kramdown is as easy as
-running:
+Mac OS X Snow Leopard comes with Ruby and Rubygems preinstalled. So installing kramdown is as easy
+as running:
 
     sudo gem install kramdown
 
@@ -88,5 +86,5 @@ out kramdown use the following command:
 
 ## Dependencies
 
-Since kramdown is written in Ruby, you need the [Ruby interpreter](http://www.ruby-lang.org)
+Since kramdown is written in Ruby, you just need the [Ruby interpreter](http://www.ruby-lang.org)
 versions 1.8.6, 1.8.7 or 1.9.1. There are no other dependencies.

@@ -23,8 +23,6 @@ document is converted to HTML. There are basically two types of elements: block 
 (paragraphs, blockquotes, ...) and span level elements (emphasis, links, ...). Each has its own
 section.
 
-TODO: allow HTML sanitizing (excluding of attrs and/or tags from output)
-
 [Maruku]: http://maruku.rubyforge.org
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Pandoc]: http://johnmacfarlane.net/pandoc/
