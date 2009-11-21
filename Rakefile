@@ -165,7 +165,7 @@ EOF
   end
 
   desc 'Release Kramdown version ' + Kramdown::VERSION
-  task :release => [:clobber, :package, :publish_files, :publish_doc, :post_news]
+  task :release => [:clobber, :package, :publish_files, :publish_website, :post_news]
 
   if defined? RubyForge
     desc "Upload the release to Rubyforge"
@@ -177,7 +177,7 @@ EOF
       rf.configure
       rf.login
 
-      rf.userconfig["release_notes"] = REL_PAGE.blocks['notes'].content
+      rf.userconfig["release_notes"] = REL_PAGE.blocks['content'].content
       rf.userconfig["preformatted"] = false
 
       files = %w[.gem .tgz .zip].collect {|ext| "pkg/kramdown-#{Kramdown::VERSION}" + ext}
@@ -202,7 +202,7 @@ EOF
   end
 
   desc "Upload the website to Rubyforge"
-  task :publish_website => ['rdoc', :website] do
+  task :publish_website => ['doc'] do
     sh "rsync -avc --delete --exclude 'wiki' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
   end
 
