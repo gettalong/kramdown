@@ -101,8 +101,8 @@ EOF
   PKG_FILES = FileList.new([
                             'Rakefile',
                             'setup.rb',
-                            'COPYING', 'GPL',
-                            'VERSION', 'AUTHORS', 'ChangeLog',
+                            'COPYING', 'GPL', 'README', 'AUTHORS',
+                            'VERSION', 'ChangeLog',
                             'bin/*',
                             'lib/**/*.rb',
                             'doc/**',
@@ -212,6 +212,44 @@ EOF
     end
   end
 
+  COPYRIGHT=<<EOF
+# -*- coding: utf-8 -*-
+#
+#--
+# Copyright (C) 2009 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown.
+#
+# kramdown is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+#
+EOF
+
+  desc "Insert copyright notice"
+  task :insert_copyright do
+    inserted = false
+    Dir["lib/**/*.rb"].each do |file|
+      if !File.read(file).start_with?(COPYRIGHT)
+        inserted = true
+        puts "Updating file #{file}"
+        data = COPYRIGHT + "\n" + File.read(file)
+        File.open(file, 'w+') {|f| f.puts(data)}
+      end
+    end
+    puts "Look through the above mentioned files and correct all problems" if inserted
+  end
+
 end
 
 task :clobber => ['dev:clobber']
@@ -225,7 +263,12 @@ module Kramdown
 
     # Convert the content in +context+ to HTML.
     def call(context)
-      context.content = ::Kramdown::Document.new(context.content, :auto_ids => true).to_html
+      extend Webgen::Loggable
+      doc = ::Kramdown::Document.new(context.content, :auto_ids => true)
+      context.content = doc.to_html
+      doc.warnings.each do |warn|
+        log(:warn) { "Warning while parsing #{context.ref_node} with kramdown: #{warn}" }
+      end
       context
     end
 
@@ -233,22 +276,22 @@ module Kramdown
 
   class Extension
 
-    def parse_kdexample(tree, opts, body)
+    def parse_kdexample(parser, opts, body)
       wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
       wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
       doc = ::Kramdown::Document.new(body)
       wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
       wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
       wrap.children.last.children << Element.new(:raw, doc.to_html)
-      tree.children << wrap
-      tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
+      parser.tree.children << wrap
+      parser.tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
     end
 
-    def parse_kdlink(tree, opts, body)
+    def parse_kdlink(parser, opts, body)
       wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdsyntaxlink'})
       wrap.children << Element.new(:a, nil, :attr => {'href' => "syntax.html##{opts['id']}"})
       wrap.children.last.children << Element.new(:text, "&rarr; Syntax for #{opts['part']}")
-      tree.children << wrap
+      parser.tree.children << wrap
     end
 
   end
