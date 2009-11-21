@@ -1,0 +1,20 @@
+# kramdown
+
+kramdown is yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition and
+supporting several common extensions.
+
+The syntax definition can be found in doc/syntax.page, a quick reference in doc/quickref.page. All
+the documentation is available online at http://kramdown.rubyforge.org.
+
+# Usage
+
+kramdown has a basic *Cloth API, so using kramdown is as easy as
+
+    require 'kramdown'
+
+    Kramdown::Document.new(text).to_html
+
+
+# License
+
+See the COPYING file.
