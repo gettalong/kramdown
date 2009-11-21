@@ -4,19 +4,19 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="Thomas Leitner" />
     <meta name="copyright" content="2009 Thomas Leitner" />
-    <meta name="description" content="ruby-amt is a library for accessing Intel AMT via SOAP" />
-    <meta name="keywords" content="ruby-amt,ruby amt,ruby vpro" />
+    <meta name="description" content="kramdown is a fast, pure-Ruby converter for Markdown-like markup." />
+    <meta name="keywords" content="ruby, kramdown, markdown, text markup" />
     <link href="{relocatable: default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="{relocatable: news.atom}" type="application/atom+xml" rel="alternate" />
 
-    <title>{title:} | ruby-amt</title>
+    <title>{title:} | kramdown</title>
   </head>
   <body>
     <div id="layout">
 
       <div id="header">
 
-        <h1 id="logo"><a href="{relocatable: /}" title="Homepage">ruby-amt <span class='slogan'>library for controlling Intel AMT devies via SOAP</span></a></h1>
+        <h1 id="logo"><a href="{relocatable: /}" title="Homepage">kramdown <span class='slogan'>fast, pure-Ruby converter for Markdown-like markup.</span></a></h1>
         <hr class="noscreen" />
 
       </div>
