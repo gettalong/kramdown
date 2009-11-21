@@ -104,6 +104,7 @@ EOF
                             'COPYING', 'GPL', 'README', 'AUTHORS',
                             'VERSION', 'ChangeLog',
                             'bin/*',
+                            'benchmark/*',
                             'lib/**/*.rb',
                             'doc/**',
                             'test/**/*'
