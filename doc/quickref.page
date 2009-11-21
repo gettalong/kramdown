@@ -82,7 +82,8 @@ Second level header
 {::kdexample:}
 
 If you set the option `auto_ids` to `true` (for example, by using the `kdoptions` extension, see
-TODO), then all headers are automatically given header IDs based on the header text:
+[Extension Blocks](#extension-blocks)), then all headers are automatically given header IDs based on
+the header text:
 
 {::kdexample:}
 # A header without an ID
