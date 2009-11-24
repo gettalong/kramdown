@@ -20,15 +20,13 @@
 #++
 #
 
+require 'kramdown/version'
 require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
 require 'kramdown/extension'
 
 module Kramdown
-
-  # The kramdown version.
-  VERSION = '0.1.0'
 
   # The main interface to kramdown.
   #

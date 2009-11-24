@@ -1,0 +1,15 @@
+---
+title: kramdown 0.2.0 released
+no_output: true
+sort_info: r0000
+created_at: 2009-11-21 08:35:00 +02:00
+modified_at: 2009-11-21 08:35:00 +02:00
+---
+## kramdown 0.2.0 released
+
+
+## Changes
+
+* Bug fixes:
+
+  - Fixed bug that occured when using `:auto_ids=true` and an IAL for assigning an ID to a header
