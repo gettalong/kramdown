@@ -324,7 +324,7 @@ module Kramdown
         text, level = @src[1].strip, @src[2]
         el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
         add_text(text, el)
-        el.options[:attr] = {:id => generate_id(text)} if @doc.options[:auto_ids]
+        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids]
         @tree.children << el
         true
       end
@@ -343,7 +343,7 @@ module Kramdown
         level, text = @src[1], @src[2].strip
         el = Element.new(:header, nil, :level => level.length)
         add_text(text, el)
-        el.options[:attr] = {:id => generate_id(text)} if @doc.options[:auto_ids]
+        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids]
         @tree.children << el
         true
       end
