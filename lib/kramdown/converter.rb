@@ -121,7 +121,9 @@ module Kramdown
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
           output = ' '*indent << "<#{el.value}#{options_for_element(el)}"
-          if !inner.empty?
+          if !inner.empty? && el.options[:on_one_line]
+            output << ">#{inner.chomp}</#{el.value}>"
+          elsif !inner.empty?
             output << ">\n#{inner.chomp}\n"  << ' '*indent << "</#{el.value}>"
           elsif HTML_TAGS_WITH_BODY.include?(el.value)
             output << "></#{el.value}>"

@@ -650,12 +650,13 @@ Unclosed block level HTML tags are correctly closed at the end of the document t
 nesting and invalidly used end tags are escaped:
 
     This is a para.
-    <div><div class="clear"/>
+    <div><div class="clear"></div>
     Another para.
     </p>
 ^
     <p>This is a para.</p>
-    <div><div class="clear"/>
+    <div>
+      <div class="clear"></div>
       <p>Another para.</p>
     &lt;/p&gt;
     </div>
@@ -663,7 +664,7 @@ nesting and invalidly used end tags are escaped:
 The content of a HTML tag is either parsed as block level elements, span level elements or is not
 parsed at all depending on the tag encountered. For example, a `<div>` tag contains block level
 elements, a `<p>` tag contains span level elements and the contents of a `<script>` tag is not
-parsed at all.
+parsed at all. General XML tags are not parsed at all by default.
 
 The parsing of processing instructions and XML comments is also supported. The content of both, PIs
 and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the

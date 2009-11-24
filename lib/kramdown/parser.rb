@@ -617,15 +617,15 @@ module Kramdown
       HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/
 
 
-      HTML_PARSE_AS_BLOCK = %w{div blockquote table dl ol ul form fieldset}
-      HTML_PARSE_AS_SPAN  = %w{a address b dd dt em h1 h2 h3 h4 h5 h6 legend li p pre span td th}
-      HTML_PARSE_AS_RAW   = %w{script math}
-      HTML_PARSE_AS = Hash.new {|h,k| h[k] = :span}
+      HTML_PARSE_AS_BLOCK = %w{div blockquote table thead tbody tfoot col colgroup tr dl ol ul form fieldset}
+      HTML_PARSE_AS_SPAN  = %w{a address b caption dd dt em h1 h2 h3 h4 h5 h6 legend li p span td th}
+      HTML_PARSE_AS_RAW   = %w{script math pre}
+      HTML_PARSE_AS = Hash.new {|h,k| h[k] = :raw}
       HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}
       HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
-      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl ul ol table ins del blockquote address]
+      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl ul ol table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
@@ -677,7 +677,11 @@ module Kramdown
               line = md.post_match
               if @unclosed_html_tags.size > 0 && md[1] == @unclosed_html_tags.last.value
                 el = @unclosed_html_tags.pop
-                @tree = @stack.pop unless temp
+                if temp
+                  temp.options[:on_one_line] = true
+                else
+                  @tree = @stack.pop
+                end
                 temp = stack.pop
                 if el.options[:parse_type] == :raw
                   raise Kramdown::Error, "Bug: please report!" if el.children.size > 1
