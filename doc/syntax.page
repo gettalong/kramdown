@@ -237,8 +237,9 @@ close the header. Any leading or trailing spaces are stripped from the header te
 > Again, the original Markdown syntax allows one to omit the blank line before an atx style header.
 {: .markdown-difference}
 
-kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`.
-This is done by converting the untransformed, ie. plain, header text via the following steps:
+kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`
+(which is the default). This is done by converting the untransformed, ie. plain, header text via the
+following steps:
 
 * All characters except letters, numbers, spaces and dashes are removed.
 * All characters from the start of the line till the first letter are removed.

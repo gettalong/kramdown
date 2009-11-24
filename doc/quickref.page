@@ -81,16 +81,15 @@ Second level header
 ###### H6 header
 {::kdexample:}
 
-If you set the option `auto_ids` to `true` (for example, by using the `kdoptions` extension, see
-[Extension Blocks](#extension-blocks)), then all headers are automatically given header IDs based on
-the header text:
+If you set the option `auto_ids` to `false` (for example, by using the `kdoptions` extension, see
+[Extension Blocks](#extension-blocks)), then the automatic header ID generation is turned off:
 
 {::kdexample:}
-# A header without an ID
-
-{::kdoptions:: auto_ids="true"}
-
 # A header with an ID
+
+{::kdoptions:: auto_ids="false"}
+
+# A header without an ID
 {::kdexample:}
 
 
@@ -311,13 +310,13 @@ body text and continues until a matching ending line (as in the example above). 
 used, then the extension does not have a body, for example:
 
 {::kdexample:}
-# Header without id
-{::kdoptions:: auto_ids="true"}
-
 # Header with id
 {::kdoptions:: auto_ids="false"}
 
 # Header without id
+{::kdoptions:: auto_ids="true"}
+
+# Header with id
 {::kdexample:}
 
 

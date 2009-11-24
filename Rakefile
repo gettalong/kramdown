@@ -265,7 +265,7 @@ module Kramdown
     # Convert the content in +context+ to HTML.
     def call(context)
       extend Webgen::Loggable
-      doc = ::Kramdown::Document.new(context.content, :auto_ids => true)
+      doc = ::Kramdown::Document.new(context.content)
       context.content = doc.to_html
       doc.warnings.each do |warn|
         log(:warn) { "Warning while parsing #{context.ref_node} with kramdown: #{warn}" }

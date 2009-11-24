@@ -61,7 +61,7 @@ module Kramdown
     DEFAULT_OPTIONS={
       :footnote_nr => 1,
       :filter_html => [],
-      :auto_ids => false
+      :auto_ids => true
     }
 
 
