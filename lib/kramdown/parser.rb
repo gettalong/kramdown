@@ -778,7 +778,7 @@ module Kramdown
       Registry.define_parser(:span, :typographic_syms, TYPOGRAPHIC_SYMS_RE, self)
 
 
-      AUTOLINK_START = /<((mailto|https?|ftps?):.*?|.*?@.*?)>/
+      AUTOLINK_START = /<((mailto|https?|ftps?):.*?|\S*?@\S*?)>/
 
       # Parse the autolink at the current location.
       def parse_autolink
