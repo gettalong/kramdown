@@ -10,6 +10,9 @@ This is <!-- a
 This is <span>tag
 now </span>.
 
+This is <span>tag
+</span> now.
+
 This is _something<span test="do_it" /> strange_.
 
 An invalid tag: <hr>

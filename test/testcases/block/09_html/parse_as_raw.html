@@ -1,20 +1,29 @@
 <p>This is some para.</p>
 <script type="javascript">
 This *text* must not be converted.
-</script>
+  </script>
 
 <script>Not *parsed* here</script>
 
 <script>*not*</script>
-<p>
-<em>parsed</em>
+<p><em>parsed</em>
 This too
 </p>
 
-<script>
-*not*<p>*parsed*
+<script>*not*<p>*parsed*
 This too
-</p>
-</script>
+</p></script>
 
 <script>something<p>*not*</p></script>
+
+<script></script>
+
+<script>
+This should be output
+<p> as is
+</p> and nothing should be done
+about it
+<script>
+</not>
+</p>
+</script>

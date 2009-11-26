@@ -155,7 +155,7 @@ separate two consecutive paragraphs from each other by using one or more blank l
 line break in the source does not mean a line break in the output. If you want to have an explicit
 line break (ie. a `<br />` tag) you need to end a line with two or more spaces or two backslashes!
 Note, however, that a line break on the last text line of a paragraph is not possible and will be
-ignored.
+ignored. Leading and trailing spaces will be stripped from the paragraph text.
 
 The following gives you an example of how paragraphs look like:
 
@@ -581,18 +581,24 @@ useful when the paragraph starts with something looking like a list item marker)
 ## HTML Blocks
 
 There is no problem mixing HTML tags into a kramdown document. An HTML block is started when
-kramdown encounters a line beginning with a block level HTML tag (`div`, `p`, `pre`, ...) -- or with
-a general XML tag -- which may be indented up to three spaces. The line may contain multiple block
-level HTML tags (no span level HTML tags) but each tag must appear completely on the line! The HTML
-block continues till the matching end tag of the first HTML tag is encountered (i.e. till an HTML
-block line with the matching end tag is found). kramdown syntax is processed in HTML blocks. Note
-that only correct XHTML is supported! This means that you have to use, for example, `<br/>` instead
-of `<br>`.
+kramdown encounters a line beginning with an opening or closing block level HTML tag (`div`, `p`,
+`pre`, ...) -- or with a general XML tag -- which may be indented up to three spaces. After that any
+combination of text and HTML tags are allowed, with HTML span tags being treated as text. Each HTML
+block tag must appear completely on the line, it may not be broken across several lines! If a block
+HTML tag is not closed on the same line, the HTML block continues till the HTML block line with the
+corresponding closing tag. kramdown syntax is processed in HTML blocks. Note that only correct XHTML
+is supported! This means that you have to use, for example, `<br/>` instead of `<br>`.
+
+Text that appears on an HTML block starting or ending line is not wrapped in a paragraph but it is
+parsed as span level text nonetheless.
+
+If an invalid closing tag is found on an HTML block line while no HTML block is active, it is
+ignored.
 
 > The original Markdown syntax specifies that an HTML block must start at the left margin, ie. no
 > indentation is allowed. Also, the HTML block has to be surrounded by blank lines. Both
 > restrictions are lifted for kramdown documents. Additionally, the original syntax does not allow
-> you to use Markdown syntax in HTML blocks.
+> you to use Markdown syntax in HTML blocks which is allowed with kramdown.
 {: .markdown-difference}
 
 Here is a simple example:
@@ -605,7 +611,7 @@ Here is a simple example:
 ^
     <p>This is a para.</p>
     <div>
-    <p>Something in here.</p>
+      <p>Something in here.</p>
     </div>
     <p>Other para.</p>
 
@@ -637,17 +643,17 @@ If you don't use valid XHTML tags, you won't get expected result (note the inval
     Something is<br>
     broken here.
     </div>
-    This won't be a para.
+    This is a para.
 ^
     <p>This is a para.</p>
     <div>
-    <p>Something is&lt;br&gt;
+      <p>Something is&lt;br&gt;
     broken here.</p>
     </div>
-    This won't be a para.
+    <p>This is a para.</p>
 
 Unclosed block level HTML tags are correctly closed at the end of the document to ensure correct
-nesting and invalidly used end tags are escaped:
+nesting and invalidly used end tags are escaped if they are found inside an HTML block element:
 
     This is a para.
     <div><div class="clear"></div>
@@ -655,8 +661,7 @@ nesting and invalidly used end tags are escaped:
     </p>
 ^
     <p>This is a para.</p>
-    <div>
-      <div class="clear"></div>
+    <div><div class="clear"></div>
       <p>Another para.</p>
     &lt;/p&gt;
     </div>
@@ -664,7 +669,13 @@ nesting and invalidly used end tags are escaped:
 The content of a HTML tag is either parsed as block level elements, span level elements or is not
 parsed at all depending on the tag encountered. For example, a `<div>` tag contains block level
 elements, a `<p>` tag contains span level elements and the contents of a `<script>` tag is not
-parsed at all. General XML tags are not parsed at all by default.
+parsed at all. General XML tags are also not parsed at all by default.
+
+The following HTML tags count as block level HTML tags and start an HTML block if found on an HTML
+block line:
+
+    div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li
+    table caption thead tbody tfoot col colgroup tr td th ins del blockquote address
 
 The parsing of processing instructions and XML comments is also supported. The content of both, PIs
 and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
@@ -677,7 +688,6 @@ comment till the end of the line are ignored. kramdown syntax in PIs/XML comment
        spanning multiple lines
     ?>
     Another para.
-
 
 
 ## Attribute List Definitions
@@ -787,6 +797,9 @@ TODO: special case for atx style headers.
 
 
 ## Extension Blocks
+
+> This syntax feature is not part of the original Markdown syntax.
+{: .markdown-difference}
 
 Extension blocks can be used, for example, to treat whole sections of text specially. For example,
 one could write an extension that highlights a code fragment specified in an extension block.
@@ -1000,18 +1013,32 @@ literal meaning of a backtick you can backslash-escape it:
 
 ## HTML Spans
 
+> The original Markdown syntax does not allow you to use Markdown syntax in HTML spans which is
+> allowed with kramdown.
+{: .markdown-difference}
+
 HTML tags cannot only be used on the block level but also on the span level. Span level HTML tags
 can only be used inside one block level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br/>` instead of `<br>`.
 
-Processing instructions and XML comments can also be used (their content is not parsed).
+Processing instructions and XML comments can also be used (their content is not parsed). However, as
+with HTML tags the start and the end have to appear in the same block level element.
 
-Span level HTML tags (opening or closing), span level PIs and span level XML comments have to be
-preceded by at least one non whitespace character on the same line sothat kramdown correctly
-recognizes them as span level element and not as block level element.
+Span level PIs and span level XML comments as well as general span level HTML and XML tags have to
+be preceded by at least one non whitespace character on the same line sothat kramdown correctly
+recognizes them as span level element and not as block level element. However, all span HTML tags,
+i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
 
 Unclosed HTML tags as well as invalidly used end tags are escaped.
+
+Also note that one or more consecutive new line characters in an HTML span tag are replaced by a
+single space, for example:
+
+    Link: <a href="some
+    link">text</a>
+^
+    <p>Link: <a href="some link">text</a>
 
 
 ## Footnotes

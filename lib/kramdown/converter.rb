@@ -112,7 +112,7 @@ module Kramdown
         el.value + (el.options[:type] == :block ? "\n" : '')
       end
 
-      HTML_TAGS_WITH_BODY=['div']
+      HTML_TAGS_WITH_BODY=['div', 'script']
 
       def convert_html_element(el, inner, indent)
         if @doc.options[:filter_html].include?(el.value)
@@ -120,11 +120,15 @@ module Kramdown
         elsif el.options[:type] == :span
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
-          output = ' '*indent << "<#{el.value}#{options_for_element(el)}"
-          if !inner.empty? && el.options[:on_one_line]
-            output << ">#{inner.chomp}</#{el.value}>"
+          output = ''
+          output << ' '*indent unless el.options[:no_start_indent]
+          output << "<#{el.value}#{options_for_element(el)}"
+          if !inner.empty? && (el.options[:compact] || el.options[:parse_type] != :block)
+            output << ">#{inner}</#{el.value}>"
+          elsif !inner.empty? && (el.children.first.type == :text || el.children.first.options[:no_start_indent])
+            output << ">#{inner}" << ' '*indent << "</#{el.value}>"
           elsif !inner.empty?
-            output << ">\n#{inner.chomp}\n"  << ' '*indent << "</#{el.value}>"
+            output << ">\n#{inner}"  << ' '*indent << "</#{el.value}>"
           elsif HTML_TAGS_WITH_BODY.include?(el.value)
             output << "></#{el.value}>"
           else

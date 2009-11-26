@@ -612,8 +612,8 @@ module Kramdown
       #:startdoc:
       HTML_COMMENT_RE = /<!--(.*?)-->/m
       HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
-      HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})\s*=\s*(["'])(.*?)\2/
-      HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\3)*)\s*(\/)?>/
+      HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})\s*=\s*(["'])(.*?)\2/m
+      HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\3)*)\s*(\/)?>/m
       HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/
 
 
@@ -625,7 +625,7 @@ module Kramdown
       HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
-      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl ul ol table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
+      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
@@ -640,82 +640,82 @@ module Kramdown
           @src.scan(/.*?\n/)
           true
         else
-          if !((@src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && (HTML_BLOCK_ELEMENTS.include?(@src[1]) || @src[1] =~ /:/)) ||
-               @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/))
-            return false
+          if !((@src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) || @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/)) &&
+               (HTML_BLOCK_ELEMENTS.include?(@src[1]) || @src[1] =~ /:/))
+            if @tree.type == :html_element && @tree.options[:parse_type] != :block
+              add_text(@src.scan(/.*?\n/))
+              add_text(@src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/))
+              return true
+            else
+              return false
+            end
           end
 
-          @src.scan(/^(.*?)\n/)
-          line = @src[1]
-          temp = nil
+          current_el = (@tree.type == :html_element ? @tree : nil)
+          @src.scan(/^(#{OPT_SPACE})(.*?)\n/)
+          if current_el && current_el.options[:parse_type] == :raw
+            add_text(@src[1], current_el)
+          end
+          line = @src[2]
           stack = []
 
           while line.size > 0
             index_start_tag, index_close_tag = line.index(HTML_TAG_RE), line.index(HTML_TAG_CLOSE_RE)
-            if index_start_tag && (!index_close_tag || index_start_tag < index_close_tag) && (!temp || temp.options[:parse_type] == :block)
+            if index_start_tag && (!index_close_tag || index_start_tag < index_close_tag)
               md = line.match(HTML_TAG_RE)
-              break if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/)
-
-              add_text(md.pre_match + "\n", temp) if temp
               line = md.post_match
+              add_text(md.pre_match, current_el) if current_el
+              if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/) || (current_el && current_el.options[:parse_type] != :block)
+                add_text(md.to_s, current_el) if current_el
+                next
+              end
 
               attrs = {}
               md[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val}
-              el = Element.new(:html_element, md[1], :attr => attrs, :type => :block,
-                               :parse_type => HTML_PARSE_AS[md[1]])
+              el = Element.new(:html_element, md[1], :attr => attrs, :type => :block, :parse_type => HTML_PARSE_AS[md[1]])
+              el.options[:no_start_indent] = true if !stack.empty?
 
-              (temp || @tree).children << el
+              @tree.children << el
               if !md[4]
                 @unclosed_html_tags.push(el)
-                stack << temp
-                temp = el
+                @stack.push(@tree)
+                stack.push(current_el)
+                @tree = current_el = el
               end
             elsif index_close_tag
               md = line.match(HTML_TAG_CLOSE_RE)
-              add_text(md.pre_match, temp) if temp
-
               line = md.post_match
+              add_text(md.pre_match, current_el) if current_el
+
               if @unclosed_html_tags.size > 0 && md[1] == @unclosed_html_tags.last.value
                 el = @unclosed_html_tags.pop
-                if temp
-                  temp.options[:on_one_line] = true
-                else
-                  @tree = @stack.pop
-                end
-                temp = stack.pop
+                @tree = @stack.pop
+                current_el.options[:compact] = true if stack.size > 0
+                current_el = stack.pop
                 if el.options[:parse_type] == :raw
                   raise Kramdown::Error, "Bug: please report!" if el.children.size > 1
                   el.children.first.type = :raw if el.children.first
                 end
               else
-                if HTML_BLOCK_ELEMENTS.include?(md[1]) && (temp || @tree).options[:parse_type] == :block
+                if HTML_BLOCK_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] == :block
                   warning("Found invalidly nested HTML closing tag for '#{md[1]}'")
                 end
-                if temp
-                  add_text(md.to_s, temp)
-                else
-                  add_text(md.to_s + "\n")
-                end
+                add_text(md.to_s, current_el) if current_el
               end
             else
-              if temp
-                add_text(line, temp)
+              if current_el
+                line.rstrip! if current_el.options[:parse_type] == :block
+                add_text(line + "\n", current_el)
               else
-                warning("Ignoring characters at the end of an HTML block line")
+                add_text(line + "\n")
               end
               line = ''
             end
           end
-          if temp && temp.children.last && temp.children.last.type == :text
-            temp.children.last.value << "\n"
-          end
-          if temp
-            if temp.options[:parse_type] == :span || temp.options[:parse_type] == :raw
-              result = @src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/)
-              add_text(result, temp)
-            end
-            @stack.push(@tree)
-            @tree = temp
+          if current_el && (current_el.options[:parse_type] == :span || current_el.options[:parse_type] == :raw)
+            result = @src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/)
+            result = "\n" + result if current_el.children.size == 0 || current_el.children.first.value !~ /\n\Z/
+            add_text(result, current_el)
           end
           true
         end
@@ -922,7 +922,7 @@ module Kramdown
         elsif result = @src.scan(HTML_TAG_RE)
           reset_pos = @src.pos
           attrs = {}
-          @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val}
+          @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
           el = Element.new(:html_element, @src[1], :attr => attrs, :type => :span)
           if @src[4]
             @tree.children << el

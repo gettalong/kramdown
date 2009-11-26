@@ -1,4 +1,4 @@
-  <div>
+  <div>   
 test
 </div>
 
@@ -37,14 +37,21 @@ para5
 hallo
 </div>
 
-<div>hallo<div>test</div>
+<div>hallo<div>test
 hallo
+</div>
 </div></p>
 
 <div>
 hallo
 </div> <div>
 hallo
+</div>
+
+para6
+
+<div><div class="clear"></div>
+Another para.
 </div>
 
 <webgen:block name="test" />
@@ -54,3 +61,7 @@ hallo
 <em>Test</em>
 
 <p><em>Test</em></p>
+
+<p><em>Test
+</em>
+</p>
