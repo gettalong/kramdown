@@ -13,7 +13,7 @@ modified_at: 2009-11-21 08:35:00 +02:00
 * Major changes:
 
   - Option `:auto_ids` now defaults to `true`
-  - kramdown syntax is not processed anymore by default in HTML block/span tags
+  - kramdown syntax is not processed anymore by default in HTML block tags
   - Added option for enabling/disabling parsing of HTML blocks/spans
   - Added recognition and usage of the "markdown" attribute for HTML block/span tags
 

@@ -1032,19 +1032,15 @@ literal meaning of a backtick you can backslash-escape it:
 
 ## HTML Spans
 
-> The original Markdown syntax does not allow you to use Markdown syntax in HTML spans which is
-> allowed with kramdown.
-{: .markdown-difference}
-
 HTML tags cannot only be used on the block level but also on the span level. Span level HTML tags
 can only be used inside one block level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br/>` instead of `<br>`.
 
-By default, kramdown does not parse HTML spans. However, this can be configured with the
-`:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML spans is enabled.
-It is also possible to enable/disable syntax parsing on a tag per tag basis using the `markdown`
-attribute:
+By default, kramdown parses kramdown syntax inside HTML spans. However, this behaviour can be
+configured with the `:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML
+spans is enabled, if it is set to `false`, parsing is disabled. It is also possible to
+enable/disable syntax parsing on a tag per tag basis using the `markdown` attribute:
 
 * If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag. This
   also means that nested HTML tags can't reenable kramdown syntax processing since they are not

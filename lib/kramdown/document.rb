@@ -57,9 +57,11 @@ module Kramdown
     #    The initial number used for creating the link to the first footnote. Default: +1+. When
     #    using the +kdoptions+ extension, the string value needs to be a valid number.
     # [:parse_block_html (used by the parser)]
-    #    A boolean value deciding whether kramdown syntax is processed in block HTML tags.
+    #    A boolean value deciding whether kramdown syntax is processed in block HTML tags. Default:
+    #    +false+.
     # [:parse_span_html (used by the parser)]
-    #    A boolean value deciding whether kramdown syntax is processed in span HTML tags.
+    #    A boolean value deciding whether kramdown syntax is processed in span HTML tags. Default:
+    #    +true+.
     #
     # When using the +kdoptions+ extension, all boolean values can be set to false by using the
     # string 'false' or an empty string, any other non-empty string will be converted to the value
@@ -69,7 +71,7 @@ module Kramdown
       :filter_html => [],
       :auto_ids => true,
       :parse_block_html => false,
-      :parse_span_html => false
+      :parse_span_html => true
     }
 
 
