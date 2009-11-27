@@ -3,6 +3,7 @@ title: Syntax
 in_menu: true
 sort_info: 10
 ---
+This is version **<%= Kramdown::VERSION %>** of the syntax documentation.
 
 Table of Contents:
 

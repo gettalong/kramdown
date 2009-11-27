@@ -7,7 +7,8 @@ sort_info: 9
 
 Below are examples of all available structural elements that can be used in kramdown text. Note,
 that only the most basic syntax information is given. However, a link to the detailed syntax for
-each element is provided.
+each element is provided. The quick reference is for version **<%= Kramdown::VERSION %>** of the
+syntax documentation.
 
 kramdown has two main classes of elements: block and span level elements. Block level elements are
 used to create paragraphs, headers, lists and so on whereas span level elements are used to markup
