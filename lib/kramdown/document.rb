@@ -48,8 +48,6 @@ module Kramdown
     #
     # [:auto_ids (used by the parser)]
     #    A boolean value deciding whether automatic header ID generation is used. Default: +false+.
-    #    When using the +kdoptions+ extension, the string 'false' will be the value +false+, every
-    #    other non-empty string will be +true+.
     # [:filter_html (used by the HTML converter)]
     #    An array of HTML tag names that defines which tags should be filtered from the output. For
     #    example, if the value contains +iframe+, then all HTML +iframe+ tags are filtered out and
@@ -58,10 +56,20 @@ module Kramdown
     # [:footnote_nr (used by the HTML converter)]
     #    The initial number used for creating the link to the first footnote. Default: +1+. When
     #    using the +kdoptions+ extension, the string value needs to be a valid number.
+    # [:parse_block_html (used by the parser)]
+    #    A boolean value deciding whether kramdown syntax is processed in block HTML tags.
+    # [:parse_span_html (used by the parser)]
+    #    A boolean value deciding whether kramdown syntax is processed in span HTML tags.
+    #
+    # When using the +kdoptions+ extension, all boolean values can be set to false by using the
+    # string 'false' or an empty string, any other non-empty string will be converted to the value
+    # +true+.
     DEFAULT_OPTIONS={
       :footnote_nr => 1,
       :filter_html => [],
-      :auto_ids => true
+      :auto_ids => true,
+      :parse_block_html => false,
+      :parse_span_html => false
     }
 
 

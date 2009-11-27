@@ -13,6 +13,8 @@ This too
 This too
 </p></script>
 
+{::kdoptions:: parse_block_html="true"}
+
 <script>something<p>*not*</p></script>
 
 <script></script>

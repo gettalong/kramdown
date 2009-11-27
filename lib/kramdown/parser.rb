@@ -672,7 +672,12 @@ module Kramdown
 
               attrs = {}
               md[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val}
-              el = Element.new(:html_element, md[1], :attr => attrs, :type => :block, :parse_type => HTML_PARSE_AS[md[1]])
+
+              parse_type = (@doc.options[:parse_block_html] ? HTML_PARSE_AS[md[1]] : :raw)
+              if val = get_parse_type(attrs.delete('markdown'))
+                parse_type = (val == :default ? HTML_PARSE_AS[md[1]] : val)
+              end
+              el = Element.new(:html_element, md[1], :attr => attrs, :type => :block, :parse_type => parse_type)
               el.options[:no_start_indent] = true if !stack.empty?
 
               @tree.children << el
@@ -722,6 +727,21 @@ module Kramdown
       end
       Registry.define_parser(:block, :block_html, HTML_BLOCK_START, self)
 
+      # Return the HTML parse type defined by the string +val+, i.e. raw when "0", default parsing
+      # (return value +nil+) when "1", span parsing when "span" and block parsing when "block". If
+      # +val+ is nil, then the default parsing mode is used.
+      def get_parse_type(val)
+        case val
+        when "0" then :raw
+        when "1" then :default
+        when "span" then :span
+        when "block" then :block
+        when NilClass then nil
+        else
+          warning("Invalid markdown attribute val '#{val}', using default")
+          nil
+        end
+      end
 
 
 
@@ -923,14 +943,29 @@ module Kramdown
           reset_pos = @src.pos
           attrs = {}
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
+          do_parsing = @doc.options[:parse_span_html]
+          if val = get_parse_type(attrs.delete('markdown'))
+            if val == :block
+              warning("Cannot use block level parsing in span level HTML tag - using default mode")
+            elsif val == :span || val == :default
+              do_parsing = true
+            elsif val == :raw
+              do_parsing = false
+            end
+          end
           el = Element.new(:html_element, @src[1], :attr => attrs, :type => :span)
+          stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
           if @src[4]
             @tree.children << el
           else
-            stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
             if parse_spans(el, stop_re)
+              end_pos = @src.pos
               @src.scan(stop_re)
               @tree.children << el
+              if !do_parsing
+                el.children.clear
+                el.children << Element.new(:raw, @src.string[reset_pos...end_pos])
+              end
             else
               @src.pos = reset_pos
               add_text(result)

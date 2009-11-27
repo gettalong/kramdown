@@ -5,6 +5,16 @@
 
 # with header id
 
+<div>
+some <span>*para*</span>
+</div>
+
+{::kdoptions:: parse_block_html="true" parse_span_html="true"}
+
+<div>
+some <span>*para*</span>
+</div>
+
 {::kdoptions:: auto_ids="false" filter_html="p em"}
 
 <p>

@@ -587,8 +587,26 @@ kramdown encounters a line beginning with an opening or closing block level HTML
 combination of text and HTML tags are allowed, with HTML span tags being treated as text. Each HTML
 block tag must appear completely on the line, it may not be broken across several lines! If a block
 HTML tag is not closed on the same line, the HTML block continues till the HTML block line with the
-corresponding closing tag. kramdown syntax is processed in HTML blocks. Note that only correct XHTML
-is supported! This means that you have to use, for example, `<br/>` instead of `<br>`.
+corresponding closing tag. Note that only correct XHTML is supported! This means that you have to
+use, for example, `<br/>` instead of `<br>`.
+
+By default, kramdown does not parse HTML blocks. However, this can be configured with the
+`:parse_block_html` option. If this is set to `true`, then syntax parsing in HTML blocks is enabled.
+All the examples below assume that `:parse_block_html` is set to `true`. It is also possible to
+enable/disable syntax parsing on a tag per tag basis using the `markdown` attribute:
+
+* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag. This
+  also means that nested HTML tags can't reenable kramdown syntax processing since they are not
+  processed!
+
+* If an HTML tag has an attribute `markdown="1"`, then the default mechanism for parsing syntax in
+  this tag is used.
+
+* If an HTML tag has an attribute `markdown="block"`, then the content of the tag is parsed as block
+  level elements.
+
+* If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
+  level elements.
 
 Text that appears on an HTML block starting or ending line is not wrapped in a paragraph but it is
 parsed as span level text nonetheless.
@@ -1022,6 +1040,24 @@ HTML tags cannot only be used on the block level but also on the span level. Spa
 can only be used inside one block level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br/>` instead of `<br>`.
+
+By default, kramdown does not parse HTML spans. However, this can be configured with the
+`:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML spans is enabled.
+It is also possible to enable/disable syntax parsing on a tag per tag basis using the `markdown`
+attribute:
+
+* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag. This
+  also means that nested HTML tags can't reenable kramdown syntax processing since they are not
+  processed!
+
+* If an HTML tag has an attribute `markdown="1"`, then the content of the tag is parsed as span
+  level elements.
+
+* If an HTML tag has an attribute `markdown="block"`, then a warning is issued because HTML spans
+  cannot contain block level elements and the attribute is ignored.
+
+* If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
+  level elements.
 
 Processing instructions and XML comments can also be used (their content is not parsed). However, as
 with HTML tags the start and the end have to appear in the same block level element.

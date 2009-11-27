@@ -51,11 +51,7 @@ module Kramdown
     # Update the document options with the options set in +opts+.
     def parse_kdoptions(parser, opts, body)
       if val = opts.delete('auto_ids')
-        if val.downcase.strip == 'false'
-          parser.doc.options[:auto_ids] = false
-        elsif !val.empty?
-          parser.doc.options[:auto_ids] = true
-        end
+        parser.doc.options[:auto_ids] = boolean_value(val)
       end
       if val = opts.delete('filter_html')
         parser.doc.options[:filter_html] = val.split(/\s+/)
@@ -63,7 +59,17 @@ module Kramdown
       if val = opts.delete('footnote_nr')
         parser.doc.options[:footnote_nr] = Integer(val) rescue parser.doc.options[:footnote_nr]
       end
+      if val = opts.delete('parse_block_html')
+        parser.doc.options[:parse_block_html] = boolean_value(val)
+      end
+      if val = opts.delete('parse_span_html')
+        parser.doc.options[:parse_span_html] = boolean_value(val)
+      end
       opts.each {|k,v| parser.warning("Unknown kramdown options '#{k}'")}
+    end
+
+    def boolean_value(val)
+      val.downcase.strip != 'false' && !val.empty?
     end
 
   end

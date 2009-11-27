@@ -215,14 +215,19 @@ space. Apart from that unordered lists follow the same rules as ordered lists:
 ## HTML elements
 
 kramdown allows you to use block level HTML tags (`div`, `p`, `pre`, ...) to markup whole blocks of
-text -- just start a line with a block level HTML tag. The content of a block level HTML tag is
-parsed by kramdown either as block level or span level text, depending on the tag:
+text -- just start a line with a block level HTML tag. kramdown syntax is normally not processed
+inside an HTML tag but this can be changed with the `parse_block_html` option. If this options is
+set to `true`, then the content of a block level HTML tag is parsed by kramdown either as block
+level or span level text, depending on the tag:
 
 {::kdexample:}
 <div style="float: right">
-Something that stays right.
+Something that stays right and is not wrapped in a para.
 </div>
-Normal text flow.
+{::kdoptions:: parse_block_html="true"}
+<div>
+This is wrapped in a para.
+</div>
 <p>
 This can contain only *span* level elements.
 </p>
