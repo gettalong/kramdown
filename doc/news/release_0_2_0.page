@@ -10,11 +10,16 @@ modified_at: 2009-11-21 08:35:00 +02:00
 
 ## Changes
 
-* Minor changes:
+* Major changes:
 
   - Option `:auto_ids` now defaults to `true`
+  - kramdown syntax is not processed anymore by default in HTML block/span tags
+  - Added option for enabling/disabling parsing of HTML blocks/spans
+  - Added recognition and usage of the "markdown" attribute for HTML block/span tags
 
 * Bug fixes:
 
   - Fixed bug that occured when using `:auto_ids=true` and an IAL for assigning an ID to a header
   - Fixed bug with parsing of autolinks (reported by Eric Sunshine)
+  - Fixed some bugs regarding HTML parsing -- HTML parsing should work much better now (reported by
+    Eric Sunshine)
