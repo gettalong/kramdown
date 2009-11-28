@@ -268,7 +268,7 @@ module Kramdown
       doc = ::Kramdown::Document.new(context.content)
       context.content = doc.to_html
       doc.warnings.each do |warn|
-        log(:warn) { "Warning while parsing #{context.ref_node} with kramdown: #{warn}" }
+        log(:warn) { "Warning while parsing #{context.ref_node.alcn} with kramdown: #{warn}" }
       end
       context
     end
