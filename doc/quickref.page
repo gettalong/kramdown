@@ -17,7 +17,7 @@ text phrases as emphasized, as a link and so on.
 All examples below feature the kramdown source, the converted HTML source and the output as it
 appears in the browser. This looks like this:
 
-{::nokramdown:}
+{::nomarkdown:}
 <div class="kdexample">
 <pre class="kdexample-before"><code>kramdown example code
 </code></pre>
@@ -28,7 +28,7 @@ Live browser view of example code
 </div>
 </div>
 <div class="clear"></div>
-{::nokramdown:}
+{::nomarkdown:}
 
 
 # Block Level Elements - Main Structural Elements
@@ -82,13 +82,13 @@ Second level header
 ###### H6 header
 {::kdexample:}
 
-If you set the option `auto_ids` to `false` (for example, by using the `kdoptions` extension, see
+If you set the option `auto_ids` to `false` (for example, by using the `options` extension, see
 [Extension Blocks](#extension-blocks)), then the automatic header ID generation is turned off:
 
 {::kdexample:}
 # A header with an ID
 
-{::kdoptions:: auto_ids="false"}
+{::options:: auto_ids="false"}
 
 # A header without an ID
 {::kdexample:}
@@ -224,7 +224,7 @@ level or span level text, depending on the tag:
 <div style="float: right">
 Something that stays right and is not wrapped in a para.
 </div>
-{::kdoptions:: parse_block_html="true"}
+{::options:: parse_block_html="true"}
 <div>
 This is wrapped in a para.
 </div>
@@ -304,9 +304,9 @@ completely ignored.
 {::comment:}
 ... paragraph continues here.
 
-{::nokramdown:}
+{::nomarkdown:}
 This is not parsed *by* kramdown
-{::nokramdown:}
+{::nomarkdown:}
 {::kdexample:}
 
 As one can see from the above example, the syntax for extension blocks is virtually the same as for
@@ -317,10 +317,10 @@ used, then the extension does not have a body, for example:
 
 {::kdexample:}
 # Header with id
-{::kdoptions:: auto_ids="false"}
+{::options:: auto_ids="false"}
 
 # Header without id
-{::kdoptions:: auto_ids="true"}
+{::options:: auto_ids="true"}
 
 # Header with id
 {::kdexample:}

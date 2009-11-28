@@ -16,6 +16,8 @@ modified_at: 2009-11-21 08:35:00 +02:00
   - kramdown syntax is not processed anymore by default in HTML block tags
   - Added option for enabling/disabling parsing of HTML blocks/spans
   - Added recognition and usage of the "markdown" attribute for HTML block/span tags
+  - Renamed extensions `kdoptions` to `options` and `nokramdown` to `nomarkdown` (suggested by Eric
+    Sunshine)
 
 * Bug fixes:
 
@@ -23,3 +25,8 @@ modified_at: 2009-11-21 08:35:00 +02:00
   - Fixed bug with parsing of autolinks (reported by Eric Sunshine)
   - Fixed some bugs regarding HTML parsing -- HTML parsing should work much better now (reported by
     Eric Sunshine)
+
+* Deprecation notes:
+
+  - The old extension names `kdoptions` and `nokramdown` will be removed in one of the next
+    versions, use the new names `options` and `nomarkdown`.

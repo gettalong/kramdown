@@ -7,9 +7,9 @@ This is version **<%= Kramdown::VERSION %>** of the syntax documentation.
 
 Table of Contents:
 
-{::nokramdown:}
+{::nomarkdown:}
 {menu: {used_nodes: fragments, min_levels: 3}}
-{::nokramdown:}
+{::nomarkdown:}
 
 # kramdown Syntax
 
@@ -847,11 +847,11 @@ the body is ignored. The following extensions are builtin:
 
     Treats the body text as a comment which does not show in the output.
 
-*   `nokramdown`
+*   `nomarkown`
 
     The body is not processed with kramdown but output as-is.
 
-*   `kdoptions`
+*   `options`
 
     Should be used without a body since the body is ignored. Is used for setting options for the
     kramdown processor (for example, to enable automatic header ID generation).

@@ -25,6 +25,7 @@ require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
 require 'kramdown/extension'
+require 'kramdown/deprecated'
 
 module Kramdown
 
@@ -51,11 +52,11 @@ module Kramdown
     # [:filter_html (used by the HTML converter)]
     #    An array of HTML tag names that defines which tags should be filtered from the output. For
     #    example, if the value contains +iframe+, then all HTML +iframe+ tags are filtered out and
-    #    only the body is displayed. Default: empty array. When using the +kdoptions+ extension, the
+    #    only the body is displayed. Default: empty array. When using the +options+ extension, the
     #    string value needs to hold the HTML tag names separated by one or more spaces.
     # [:footnote_nr (used by the HTML converter)]
     #    The initial number used for creating the link to the first footnote. Default: +1+. When
-    #    using the +kdoptions+ extension, the string value needs to be a valid number.
+    #    using the +options+ extension, the string value needs to be a valid number.
     # [:parse_block_html (used by the parser)]
     #    A boolean value deciding whether kramdown syntax is processed in block HTML tags. Default:
     #    +false+.
@@ -63,7 +64,7 @@ module Kramdown
     #    A boolean value deciding whether kramdown syntax is processed in span HTML tags. Default:
     #    +true+.
     #
-    # When using the +kdoptions+ extension, all boolean values can be set to false by using the
+    # When using the +options+ extension, all boolean values can be set to false by using the
     # string 'false' or an empty string, any other non-empty string will be converted to the value
     # +true+.
     DEFAULT_OPTIONS={

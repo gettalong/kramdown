@@ -1,4 +1,4 @@
-{::kdoptions:: footnote_nr="da10"}
+{::options:: footnote_nr="da10"}
 
 Some text[^ab].
 

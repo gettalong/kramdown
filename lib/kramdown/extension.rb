@@ -44,12 +44,12 @@ module Kramdown
     end
 
     # Add the body (if available) as <tt>:raw</tt> Element to the +parser.tree+.
-    def parse_nokramdown(parser, opts, body)
+    def parse_nomarkdown(parser, opts, body)
       parser.tree.children << Element.new(:raw, body) if body.kind_of?(String)
     end
 
     # Update the document options with the options set in +opts+.
-    def parse_kdoptions(parser, opts, body)
+    def parse_options(parser, opts, body)
       if val = opts.delete('auto_ids')
         parser.doc.options[:auto_ids] = boolean_value(val)
       end
