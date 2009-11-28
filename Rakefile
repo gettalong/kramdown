@@ -86,7 +86,7 @@ end
 
 namespace :dev do
 
-  SUMMARY = 'kramdown is a fast, pure-Ruby converter for Markdown-like markup.'
+  SUMMARY = 'kramdown is a fast, pure-Ruby Markdown-superset converter.'
   DESCRIPTION = <<EOF
 kramdown is yet-another-markdown-parser but fast, pure Ruby,
 using a strict syntax definition and supporting several common extensions.

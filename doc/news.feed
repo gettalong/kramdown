@@ -1,6 +1,6 @@
 ---
 title: kramdown News
-description: kramdown - a fast, pure Ruby Markdown+extensions converter
+description: kramdown - a fast, pure Ruby Markdown-superset converter
 site_url: http://kramdown.rubyforge.org/
 author: Thomas Leitner
 author_url: http://kramdown.rubyforge.org

@@ -1,4 +1,4 @@
-kramdown - fast, pure-Ruby converter for Markdown-like markup
+kramdown - fast, pure-Ruby Markdown-superset converter
 Copyright (C) 2009 Thomas Leitner <t_leitner@gmx.at>
 
 kramdown is free software: you can redistribute it and/or modify

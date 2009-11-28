@@ -34,11 +34,10 @@ fast but they do not provide additional syntax elements). As one can see below, 
 currently (November 2009) ~5x faster than Maruku, ~10x faster than BlueFeather but ~30x slower than
 BlueCloth and rdiscount:
 
-{::nomarkdown:}
 <pre><code>
 {execute_cmd: {command: "ruby -Ilib -rubygems benchmark/benchmark.rb", process_output: false, escape_html: true}}
-</code></pre>
-{::nomarkdown:}
+</code>
+</pre>
 
 [Markdown Test Suite]: http://daringfireball.net/projects/downloads/MarkdownTest_1.0.zip
 [MDTest]: http://www.michelf.com/docs/projets/mdtest-1.0.zip
