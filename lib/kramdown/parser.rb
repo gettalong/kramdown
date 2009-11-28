@@ -617,8 +617,8 @@ module Kramdown
       HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/
 
 
-      HTML_PARSE_AS_BLOCK = %w{div blockquote table thead tbody tfoot col colgroup tr dl dd ol ul form fieldset}
-      HTML_PARSE_AS_SPAN  = %w{a address b caption dt em h1 h2 h3 h4 h5 h6 legend li p span td th}
+      HTML_PARSE_AS_BLOCK = %w{div blockquote table thead tbody tfoot col colgroup tr th td dl dd ol ul form fieldset}
+      HTML_PARSE_AS_SPAN  = %w{a address b caption dt em h1 h2 h3 h4 h5 h6 legend li p span}
       HTML_PARSE_AS_RAW   = %w{script math pre}
       HTML_PARSE_AS = Hash.new {|h,k| h[k] = :raw}
       HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}
