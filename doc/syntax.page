@@ -608,8 +608,9 @@ enable/disable syntax parsing on a tag per tag basis using the `markdown` attrib
 * If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
   level elements.
 
-Text that appears on an HTML block starting or ending line is not wrapped in a paragraph but it is
-parsed as span level text nonetheless.
+Note, however, that text that appears on an HTML block starting or ending line is not parsed as
+block level element even if the rest of the HTML block is! It is parsed as span level text
+nonetheless.
 
 If an invalid closing tag is found on an HTML block line while no HTML block is active, it is
 ignored.
