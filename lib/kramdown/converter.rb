@@ -100,7 +100,7 @@ module Kramdown
 
       def convert_li(el, inner, indent)
         output = ' '*indent << "<li" << options_for_element(el) << ">"
-        if el.options[:first_as_block]
+        if el.options[:first_is_block]
           output << "\n" << inner << ' '*indent
         else
           output << inner << (inner =~ /\n\Z/ ? ' '*indent : '')
@@ -180,7 +180,7 @@ module Kramdown
         ol = Element.new(:ol)
         ol.options[:attr] = {'start' => @footnote_start} if @footnote_start != 1
         @footnotes.each do |name, data|
-          li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_as_block => true})
+          li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_is_block => true})
           li.children = Marshal.load(Marshal.dump(data[:content].children)) #TODO: probably remove this!!!!
           ol.children << li
 

@@ -491,7 +491,7 @@ module Kramdown
             text.value += "\n" if !item.children.empty? && item.children[0].type != :blank
             item.children.unshift(text)
           else
-            item.options[:first_as_block] = true
+            item.options[:first_is_block] = true
           end
 
           if item.children.last.type == :blank
