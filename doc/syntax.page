@@ -391,10 +391,10 @@ Here is an example:
 
 ## Horizontal Rules
 
-A horizontal rule is created by using three or more asterisks, dashes or underscores, optionally
-separated by spaces or tabs, on an otherwise blank line. The first asterisk, dash or underscore may
-optionally be indented up to three spaces. The following examples show different possibilities to
-create a horizontal rule:
+A horizontal rule is created by using three or more asterisks, dashes or underscores (these may not
+be mixed on one line), optionally separated by spaces or tabs, on an otherwise blank line. The first
+asterisk, dash or underscore may optionally be indented up to three spaces. The following examples
+show different possibilities to create a horizontal rule:
 
     * * *
 

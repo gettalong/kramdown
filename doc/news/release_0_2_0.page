@@ -25,6 +25,7 @@ modified_at: 2009-11-21 08:35:00 +02:00
   - Fixed bug with parsing of autolinks (reported by Eric Sunshine)
   - Fixed some bugs regarding HTML parsing -- HTML parsing should work much better now (reported by
     Eric Sunshine)
+  - Fixed bug with parsing of horizontal rules which contain tabs
 
 * Deprecation notes:
 
