@@ -479,11 +479,12 @@ list text is followed by one or more blank lines, it will be wrapped in a paragr
     * kram
 
     * down
+    * now
 
 In the above example, the first list item text will be wrapped in a paragraph tag since it is
-followed by a blank line. There is obviously a problem for doing this with the last list item when
-it contains only text. You can circumvent this by leaving a blank line after the last list item and
-using an EOB marker:
+followed by a blank line whereas the second list item contains just text. There is obviously a
+problem for doing this with the last list item when it contains only text. You can circumvent this
+by leaving a blank line after the last list item and using an EOB marker:
 
     * Not wrapped in a paragraph
     * Wrapped in a paragraph due to the following blank line.
