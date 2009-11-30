@@ -170,6 +170,19 @@ module Kramdown
       end
       alias :convert_strong :convert_em
 
+      def convert_entity(el, inner, indent)
+        el.value
+      end
+
+      TYPOGRAPHIC_SYMS = {
+        :mdash => '&mdash;', :ndash => '&ndash;', :ellipsis => '&hellip;',
+        :laquo_space => '&laquo;&nbsp;', :raquo_space => '&nbsp;&raquo;',
+        :laquo => '&laquo;', :raquo => '&raquo;'
+      }
+      def convert_typographic_sym(el, inner, indent)
+        TYPOGRAPHIC_SYMS[el.value]
+      end
+
       def convert_root(el, inner, indent)
         inner << footnote_content
       end
@@ -210,7 +223,8 @@ module Kramdown
       ESCAPE_ALL_NOT_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
 
       # Escape the special HTML characters in the string +str+. If +all+ is +true+ then all
-      # characters are escaped, if +all+ is +false+
+      # characters are escaped, if +all+ is +false+ then only those characters are escaped that are
+      # not part on an HTML entity.
       def escape_html(str, all = true)
         str.gsub(all ? ESCAPE_ALL_RE : ESCAPE_ALL_NOT_ENTITIES_RE) {|m| ESCAPE_MAP[m] || m}
       end

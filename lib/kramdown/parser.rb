@@ -87,7 +87,7 @@ module Kramdown
                        :setext_header, :horizontal_rule, :list, :link_definition, :block_html,
                        :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
-                       :span_ial, :html_entity, :typographic_syms, :special_html_chars, :line_break, :escaped_chars,]
+                       :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
@@ -625,7 +625,8 @@ module Kramdown
       HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
-      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
+      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li
+                               table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
@@ -758,19 +759,9 @@ module Kramdown
       # Parse the HTML entity at the current location.
       def parse_html_entity
         @src.pos += @src.matched_size
-        add_text(@src.matched)
+        @tree.children << Element.new(:entity, @src.matched)
       end
       Registry.define_parser(:span, :html_entity, REXML::Parsers::BaseParser::REFERENCE_RE, self)
-
-
-      SPECIAL_HTML_CHARS = /&|>|</
-
-      # Parse the special HTML characters at the current location.
-      def parse_special_html_chars
-        @src.pos += @src.matched_size
-        add_text(@src.matched)
-      end
-      Registry.define_parser(:span, :special_html_chars, SPECIAL_HTML_CHARS, self)
 
 
       LINE_BREAK = /(  |\\\\)(?=\n)/
@@ -783,17 +774,22 @@ module Kramdown
       Registry.define_parser(:span, :line_break, LINE_BREAK, self)
 
 
-      TYPOGRAPHIC_SYMS = [['---', '&mdash;'], ['--', '&ndash;'], ['...', '&hellip;'],
+      TYPOGRAPHIC_SYMS = [['---', :mdash], ['--', :ndash], ['...', :ellipsis],
                           ['\\<<', '&lt;&lt;'], ['\\>>', '&gt;&gt;'],
-                          ['<< ', '&laquo;&nbsp;'], [' >>', '&nbsp;&raquo;'],
-                          ['<<', '&laquo;'], ['>>', '&raquo;']]
+                          ['<< ', :laquo_space], [' >>', :raquo_space],
+                          ['<<', :laquo], ['>>', :raquo]]
       TYPOGRAPHIC_SYMS_SUBST = Hash[*TYPOGRAPHIC_SYMS.flatten]
       TYPOGRAPHIC_SYMS_RE = /#{TYPOGRAPHIC_SYMS.map {|k,v| Regexp.escape(k)}.join('|')}/
 
       # Parse the typographic symbols at the current location.
       def parse_typographic_syms
         @src.pos += @src.matched_size
-        add_text(TYPOGRAPHIC_SYMS_SUBST[@src.matched].dup)
+        val = TYPOGRAPHIC_SYMS_SUBST[@src.matched]
+        if val.kind_of?(Symbol)
+          @tree.children << Element.new(:typographic_sym, val)
+        else
+          add_text(val.dup)
+        end
       end
       Registry.define_parser(:span, :typographic_syms, TYPOGRAPHIC_SYMS_RE, self)
 
@@ -975,7 +971,7 @@ module Kramdown
           add_text(@src.scan(/./))
         end
       end
-      Registry.define_parser(:span, :span_html, HTML_BLOCK_START, self)
+      Registry.define_parser(:span, :span_html, HTML_SPAN_START, self)
 
 
       LINK_TEXT_BRACKET_RE = /\\\[|\\\]|\[|\]/
