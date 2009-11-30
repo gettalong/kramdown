@@ -21,4 +21,12 @@ paragraph
 > blockquote
 ### not a header
 
+### Header {#id}
+
+### Header ## {#id}
+
+### Header{#noid}
+
+### Header ##{#noid}
+
 ### Last

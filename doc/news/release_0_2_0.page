@@ -18,6 +18,7 @@ modified_at: 2009-11-21 08:35:00 +02:00
   - Added recognition and usage of the "markdown" attribute for HTML block/span tags
   - Renamed extensions `kdoptions` to `options` and `nokramdown` to `nomarkdown` (suggested by Eric
     Sunshine)
+  - Added support for setting header IDs via the syntax available in PHP Markdown Extra and Maruku
 
 * Bug fixes:
 

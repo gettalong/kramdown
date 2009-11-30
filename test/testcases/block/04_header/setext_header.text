@@ -23,5 +23,14 @@ And not a header.
 Not a Header
 ---
 
+header {#id}  
+------------
+
+header        {#id}
+======
+
+header{#noid}
+-----
+
 header
 ------

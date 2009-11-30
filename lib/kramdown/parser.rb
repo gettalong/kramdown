@@ -312,8 +312,8 @@ module Kramdown
       end
       Registry.define_parser(:block, :paragraph, PARAGRAPH_START, self)
 
-
-      SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)\n(-|=)+\s*?\n/
+      HEADER_ID=/(?:[ \t]\{#((?:\w|\d)[\w\d-]*)\})?/
+      SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)#{HEADER_ID}[ \t]*?\n(-|=)+\s*?\n/
 
       # Parse the Setext header at the current location.
       def parse_setext_header
@@ -321,10 +321,11 @@ module Kramdown
           return false
         end
         @src.pos += @src.matched_size
-        text, level = @src[1].strip, @src[2]
+        text, id, level = @src[1].strip, @src[2], @src[3]
         el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
         add_text(text, el)
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids]
+        el.options[:attr] = {'id' => id} if id
+        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
         @tree.children << el
         true
       end
@@ -332,7 +333,7 @@ module Kramdown
 
 
       ATX_HEADER_START = /^\#{1,6}/
-      ATX_HEADER_MATCH = /^(\#{1,6})(.+?)\s*?#*\s*?\n/
+      ATX_HEADER_MATCH = /^(\#{1,6})(.+?)\s*?#*#{HEADER_ID}\s*?\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header
@@ -340,10 +341,11 @@ module Kramdown
           return false
         end
         result = @src.scan(ATX_HEADER_MATCH)
-        level, text = @src[1], @src[2].strip
+        level, text, id = @src[1], @src[2].strip, @src[3]
         el = Element.new(:header, nil, :level => level.length)
         add_text(text, el)
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids]
+        el.options[:attr] = {'id' => id} if id
+        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
         @tree.children << el
         true
       end

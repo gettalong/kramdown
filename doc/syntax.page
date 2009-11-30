@@ -279,6 +279,21 @@ Following are some examples of header texts and their respective generated IDs:
 > text is converted to an identifier are based on the rules specified by [Pandoc].
 {: .markdown-difference}
 
+Additionally, kramdown supports a nice way for setting the header ID which is available in [PHP
+Markdown Extra] and [Maruku]: If you follow the header text with an opening curly bracket (separated
+from the text with a least one space), a hash, the ID and a closing curly bracket, the ID is set on
+the header. If you use the trailing hash feature of atx style headers, the header ID has to go after
+the trailing hashes. For example:
+
+    Hello        {#id}
+    -----
+
+    # Hello      {#id}
+
+    # Hello #    {#id}
+
+> This additional syntax is not part of standard Markdown.
+{: .markdown-difference}
 
 ## Blockquotes
 
@@ -813,8 +828,6 @@ Here are some examples for block IALs:
 
         Some code here
     {:.ruby}
-
-TODO: special case for atx style headers.
 
 
 ## Extension Blocks
