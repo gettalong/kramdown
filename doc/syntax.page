@@ -862,7 +862,7 @@ the body is ignored. The following extensions are builtin:
 
     Treats the body text as a comment which does not show in the output.
 
-*   `nomarkown`
+*   `nomarkdown`
 
     The body is not processed with kramdown but output as-is.
 
