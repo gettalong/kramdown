@@ -606,14 +606,15 @@ HTML tag is not closed on the same line, the HTML block continues till the HTML 
 corresponding closing tag. Note that only correct XHTML is supported! This means that you have to
 use, for example, `<br/>` instead of `<br>`.
 
-By default, kramdown does not parse HTML blocks. However, this can be configured with the
-`:parse_block_html` option. If this is set to `true`, then syntax parsing in HTML blocks is enabled.
-All the examples below assume that `:parse_block_html` is set to `true`. It is also possible to
-enable/disable syntax parsing on a tag per tag basis using the `markdown` attribute:
+By default, kramdown does not parse HTML blocks, i.e. when a block level HTML tag is encountered
+only HTML block lines are parsed and everything else is treated as raw text. This will be done until
+the closing tag for the outermost HTML tag is found (or until the end of the document if the closing
+HTML tag does not exist). However, this can be configured with the `:parse_block_html` option. If
+this is set to `true`, then syntax parsing in HTML blocks is enabled. All the examples below assume
+that `:parse_block_html` is set to `true`. It is also possible to enable/disable syntax parsing on a
+tag per tag basis using the `markdown` attribute:
 
-* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag. This
-  also means that nested HTML tags can't reenable kramdown syntax processing since they are not
-  processed!
+* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag.
 
 * If an HTML tag has an attribute `markdown="1"`, then the default mechanism for parsing syntax in
   this tag is used.
@@ -689,7 +690,7 @@ If you don't use valid XHTML tags, you won't get expected result (note the inval
     <p>This is a para.</p>
 
 Unclosed block level HTML tags are correctly closed at the end of the document to ensure correct
-nesting and invalidly used end tags are escaped if they are found inside an HTML block element:
+nesting and invalidly used end tags are removed from the output:
 
     This is a para.
     <div><div class="clear"></div>
@@ -699,7 +700,6 @@ nesting and invalidly used end tags are escaped if they are found inside an HTML
     <p>This is a para.</p>
     <div><div class="clear"></div>
       <p>Another para.</p>
-    &lt;/p&gt;
     </div>
 
 The content of a HTML tag is either parsed as block level elements, span level elements or is not

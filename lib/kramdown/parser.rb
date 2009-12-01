@@ -646,8 +646,8 @@ module Kramdown
           if !((@src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) || @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/)) &&
                (HTML_BLOCK_ELEMENTS.include?(@src[1]) || @src[1] =~ /:/))
             if @tree.type == :html_element && @tree.options[:parse_type] != :block
-              add_text(@src.scan(/.*?\n/))
-              add_text(@src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/))
+              add_html_text(@src.scan(/.*?\n/), @tree)
+              add_html_text(@src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/), @tree)
               return true
             else
               return false
@@ -657,7 +657,7 @@ module Kramdown
           current_el = (@tree.type == :html_element ? @tree : nil)
           @src.scan(/^(#{OPT_SPACE})(.*?)\n/)
           if current_el && current_el.options[:parse_type] == :raw
-            add_text(@src[1], current_el)
+            add_html_text(@src[1], current_el)
           end
           line = @src[2]
           stack = []
@@ -667,21 +667,27 @@ module Kramdown
             if index_start_tag && (!index_close_tag || index_start_tag < index_close_tag)
               md = line.match(HTML_TAG_RE)
               line = md.post_match
-              add_text(md.pre_match, current_el) if current_el
-              if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/) || (current_el && current_el.options[:parse_type] != :block)
-                add_text(md.to_s, current_el) if current_el
+              add_html_text(md.pre_match, current_el) if current_el
+              if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/) || (current_el && current_el.options[:parse_type] == :span)
+                add_html_text(md.to_s, current_el) if current_el
                 next
               end
 
               attrs = {}
               md[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val}
 
-              parse_type = (@doc.options[:parse_block_html] ? HTML_PARSE_AS[md[1]] : :raw)
+              parse_type = if !current_el || current_el.options[:parse_type] != :raw
+                             (@doc.options[:parse_block_html] ? HTML_PARSE_AS[md[1]] : :raw)
+                           else
+                             :raw
+                           end
               if val = get_parse_type(attrs.delete('markdown'))
                 parse_type = (val == :default ? HTML_PARSE_AS[md[1]] : val)
               end
               el = Element.new(:html_element, md[1], :attr => attrs, :type => :block, :parse_type => parse_type)
               el.options[:no_start_indent] = true if !stack.empty?
+              el.options[:outer_element] = true if !current_el
+              el.options[:parent_is_raw] = true if current_el && current_el.options[:parse_type] == :raw
 
               @tree.children << el
               if !md[4]
@@ -693,27 +699,23 @@ module Kramdown
             elsif index_close_tag
               md = line.match(HTML_TAG_CLOSE_RE)
               line = md.post_match
-              add_text(md.pre_match, current_el) if current_el
+              add_html_text(md.pre_match, current_el) if current_el
 
               if @unclosed_html_tags.size > 0 && md[1] == @unclosed_html_tags.last.value
                 el = @unclosed_html_tags.pop
                 @tree = @stack.pop
                 current_el.options[:compact] = true if stack.size > 0
-                current_el = stack.pop
-                if el.options[:parse_type] == :raw
-                  raise Kramdown::Error, "Bug: please report!" if el.children.size > 1
-                  el.children.first.type = :raw if el.children.first
-                end
+                current_el = stack.pop || (@tree.type == :html_element ? @tree : nil)
               else
-                if HTML_BLOCK_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] == :block
-                  warning("Found invalidly nested HTML closing tag for '#{md[1]}'")
+                if HTML_BLOCK_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] != :span
+                  warning("Found invalidly used HTML closing tag for '#{md[1]}'")
                 end
-                add_text(md.to_s, current_el) if current_el
+                add_html_text(md.to_s, current_el) if current_el && current_el.options[:parse_type] == :span
               end
             else
               if current_el
                 line.rstrip! if current_el.options[:parse_type] == :block
-                add_text(line + "\n", current_el)
+                add_html_text(line + "\n", current_el)
               else
                 add_text(line + "\n")
               end
@@ -722,8 +724,9 @@ module Kramdown
           end
           if current_el && (current_el.options[:parse_type] == :span || current_el.options[:parse_type] == :raw)
             result = @src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/)
-            result = "\n" + result if current_el.children.size == 0 || current_el.children.first.value !~ /\n\Z/
-            add_text(result, current_el)
+            last = current_el.children.last
+            result = "\n" + result if last.nil? || (last.type != :text && last.type != :raw) || last.value !~ /\n\Z/
+            add_html_text(result, current_el)
           end
           true
         end
@@ -746,6 +749,16 @@ module Kramdown
         end
       end
 
+      # Special version of #add_text which either creates a :text element or a :raw element,
+      # depending on the HTML element type.
+      def add_html_text(text, tree)
+        type = (tree.options[:parse_type] == :raw ? :raw : :text)
+        if tree.children.last && tree.children.last.type == type
+          tree.children.last.value << text
+        elsif !text.empty?
+          tree.children << Element.new(type, text)
+        end
+      end
 
 
       ESCAPED_CHARS = /\\([\\.*_+-`()\[\]{}#!])/

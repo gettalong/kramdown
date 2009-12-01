@@ -13,15 +13,13 @@ This too
 This too
 </p></script>
 
-{::options:: parse_block_html="true"}
-
 <script>something<p>*not*</p></script>
 
 <script></script>
 
 <script>
 This should be output
-<p> as is
+<p> *as* is
 </p> and nothing should be done
 about it
 <script>

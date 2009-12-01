@@ -30,3 +30,9 @@
 *para*
 </p>
 
+<dl>
+  <dt markdown="1">*emphasize*</dt>
+  <dd markdown="1">
+para
+</dd>
+</dl>
