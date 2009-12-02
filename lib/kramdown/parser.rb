@@ -709,8 +709,9 @@ module Kramdown
               else
                 if HTML_BLOCK_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] != :span
                   warning("Found invalidly used HTML closing tag for '#{md[1]}'")
+                elsif current_el
+                  add_html_text(md.to_s, current_el)
                 end
-                add_html_text(md.to_s, current_el) if current_el && current_el.options[:parse_type] == :span
               end
             else
               if current_el

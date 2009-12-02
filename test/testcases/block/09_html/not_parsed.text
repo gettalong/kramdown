@@ -9,3 +9,7 @@ This is some text
 <div>
 </p>
 </div>
+
+<div>
+<p><a href="/">Foo</a></p>
+</div>
