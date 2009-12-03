@@ -422,6 +422,11 @@ show different possibilities to create a horizontal rule:
 
 ## Lists
 
+kramdown provides syntax elements for creating ordered and unordered lists as well as definition
+lists.
+
+### Ordered and Unordered lists
+
 Both ordered and unordered lists follow the same rules.
 
 A list is started with a list marker (in case of unordered lists one of `+`, `-` or `*` -- you can
@@ -593,6 +598,69 @@ useful when the paragraph starts with something looking like a list item marker)
 
     1984\. It was great
     \- others say that, too!
+
+
+### Definition Lists
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [PHP Markdown Extra] package.
+{: .markdown-difference}
+
+Definition lists allow you to assign one or more definitions to one or more terms.
+
+A definition list is started when a normal paragraph is followed by a line with a definition marker
+(a colon which may be optionally indented up to three spaces), then at least one tab or one space
+and then the first part of the definition. The line with the definition marker may optionally be
+separated from the preceding paragraph by a blank line. The leading tabs or spaces are stripped away
+from this first line of the definition to allow for a nice alignment with the following definition
+content. Each line of the preceding paragraph is taken to be a term and the lines separately parsed
+as span level elements.
+
+The following is a simple definition list:
+
+    kramdown
+    : A Markdown-superset converter
+
+    Maruku
+    :     Another Markdown-superset converter
+
+The column number of the first non-space character which appears after a definition marker on the
+same line specifies the indentation that has to be used for the following lines of the definition.
+If there is no such character, the indentation that needs to be used is four spaces or one tab. If
+one of the following lines does not have the needed amount of indentation, it is not treated as part
+of the defintion. The indentation is stripped from the definition and it (note that the definition
+naturally also contains the content of the line with the definition marker) is processed as text
+containing block level elements. If there is more than one definition, all other definition markers
+for the term may be indented up to three spaces or the number of spaces used for the indentation of
+the last definition minus one, whichever number is smaller. For example:
+
+    definition term 1
+    definition term 2
+    : This is the first line. Since the first non-space characters appears in column 3, all other
+      lines have to be indented 2 spaces sothat they first characters align. This tells kramdown
+      that the lines belong to the definition.
+    :       This is the another defintion for the same term. It uses a different number of spaces
+            for indentation which is okay but should generally be avoided.
+       : The definition marker is indented 3 spaces which is allowed but should also be avoided.
+
+So, while the above is possible and creates a definition list with two terms and three definitions
+for them, it is not advised to use different (definition marker and definition) indents in the same
+definition list!
+
+The definition for a term is made up of text and/or block level elements. If a definition is *not*
+preceded by a blank line, the first part of the definition will just be text if it would be a
+paragraph otherwise:
+
+    definition term
+    : This definition will just be text because it would normally be a paragraph and the there is
+      no preceding blank line.
+
+      > although the defintion contains other block level elements
+
+    : This definition *will* be a paragraph since it is preceded by a blank line.
+
+The rules about having any block level element as first element in a list item also apply to a
+definition.
 
 
 ## HTML Blocks

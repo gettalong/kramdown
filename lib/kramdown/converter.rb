@@ -61,6 +61,10 @@ module Kramdown
         escape_html(el.value, false)
       end
 
+      def convert_eob(el, inner, indent)
+        ''
+      end
+
       def convert_p(el, inner, indent)
         "#{' '*indent}<p#{options_for_element(el)}>#{inner}</p>\n"
       end
@@ -97,15 +101,21 @@ module Kramdown
         "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner}#{' '*indent}</#{el.type}>\n"
       end
       alias :convert_ol :convert_ul
+      alias :convert_dl :convert_ul
 
       def convert_li(el, inner, indent)
-        output = ' '*indent << "<li" << options_for_element(el) << ">"
+        output = ' '*indent << "<#{el.type}" << options_for_element(el) << ">"
         if el.options[:first_is_block]
           output << "\n" << inner << ' '*indent
         else
           output << inner << (inner =~ /\n\Z/ ? ' '*indent : '')
         end
-        output << "</li>\n"
+        output << "</#{el.type}>\n"
+      end
+      alias :convert_dd :convert_li
+
+      def convert_dt(el, inner, indent)
+        "#{' '*indent}<dt#{options_for_element(el)}>#{inner}</dt>\n"
       end
 
       def convert_html_raw(el, inner, indent)

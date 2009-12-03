@@ -84,7 +84,7 @@ module Kramdown
       #######
 
       BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
-                       :setext_header, :horizontal_rule, :list, :link_definition, :block_html,
+                       :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
                        :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
                        :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
@@ -292,6 +292,7 @@ module Kramdown
       # Parse the EOB marker at the current location.
       def parse_eob_marker
         @src.pos += @src.matched_size
+        @tree.children << Element.new(:eob)
         true
       end
       Registry.define_parser(:block, :eob_marker, EOB_MARKER, self)
@@ -433,23 +434,10 @@ module Kramdown
           if @src.check(HR_START)
             break
           elsif @src.scan(list_start_re)
-            indentation, content = @src[1].length, @src[2]
             item = Element.new(:li)
+            item.value, indentation, content_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
-            if content =~ /^\s*\n/
-              indentation = 4
-            else
-              while content =~ /^ *\t/
-                temp = content.scan(/^ */).first.length + indentation
-                content.sub!(/^( *)(\t+)/) {$1 + " "*(4 - (temp % 4)) + " "*($2.length - 1)*4}
-              end
-              indentation += content.scan(/^ */).first.length
-            end
-            content.sub!(/^\s*/, '')
-            item.value = content
 
-            indent_re = /^ {#{indentation}}/
-            content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*?\n/
             list_start_re = (type == :ul ? /^( {0,#{[3, indentation - 1].min}}[+*-])([\t| ].*?\n)/ :
                              /^( {0,#{[3, indentation - 1].min}}\d+\.)([\t| ].*?\n)/)
             nested_list_found = false
@@ -508,6 +496,110 @@ module Kramdown
         true
       end
       Registry.define_parser(:block, :list, LIST_START, self)
+
+      def parse_first_list_line(indentation, content)
+        if content =~ /^\s*\n/
+          indentation = 4
+        else
+          while content =~ /^ *\t/
+            temp = content.scan(/^ */).first.length + indentation
+            content.sub!(/^( *)(\t+)/) {$1 + " "*(4 - (temp % 4)) + " "*($2.length - 1)*4}
+          end
+          indentation += content.scan(/^ */).first.length
+        end
+        content.sub!(/^\s*/, '')
+
+        indent_re = /^ {#{indentation}}/
+        content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*?\n/
+        [content, indentation, content_re, indent_re]
+      end
+
+
+      DEFINITION_LIST_START = /^(#{OPT_SPACE}:)([\t| ].*?\n)/
+
+      # Parse the ordered or unordered list at the current location.
+      def parse_definition_list
+        children = @tree.children
+        if !children.last || (children.length == 1 && children.last.type != :p ) ||
+            (children.length >= 2 && children[-1].type != :p && (children[-1].type != :blank || children[-1].value != "\n" || children[-2].type != :p))
+          return false
+        end
+
+        first_as_para = false
+        deflist = Element.new(:dl)
+        para = @tree.children.pop
+        if para.type == :blank
+          para = @tree.children.pop
+          first_as_para = true
+        end
+        para.children.first.value.split("\n").each do |term|
+          el = Element.new(:dt)
+          el.children << Element.new(:text, term)
+          deflist.children << el
+        end
+
+        item = nil
+        indent_re = nil
+        content_re = nil
+        def_start_re = DEFINITION_LIST_START
+        while !@src.eos?
+          if @src.scan(def_start_re)
+            item = Element.new(:dd)
+            item.options[:first_as_para] = first_as_para
+            item.value, indentation, content_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
+            deflist.children << item
+
+            def_start_re = /^( {0,#{[3, indentation - 1].min}}:)([\t| ].*?\n)/
+            first_as_para = false
+          elsif result = @src.scan(content_re)
+            result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
+            result.sub!(indent_re, '')
+            item.value << result
+            first_as_para = false
+          elsif result = @src.scan(BLANK_LINE)
+            first_as_para = true
+            item.value << result
+          else
+            break
+          end
+        end
+
+        last = nil
+        deflist.children.each do |item|
+          next if item.type == :dt
+
+          parse_blocks(item, item.value)
+          item.value = nil
+          next if item.children.size == 0
+
+          if item.children.last.type == :blank
+            last = item.children.pop
+          else
+            last = nil
+          end
+          if item.children.first.type == :p && !item.options.delete(:first_as_para)
+            text = item.children.shift.children.first
+            text.value += "\n" if !item.children.empty?
+            item.children.unshift(text)
+          else
+            item.options[:first_is_block] = true
+          end
+        end
+
+        if @tree.children.length >= 1 && @tree.children.last.type == :dl
+          @tree.children[-1].children += deflist.children
+        elsif @tree.children.length >= 2 && @tree.children[-1].type == :blank && @tree.children[-2].type == :dl
+          @tree.children.pop
+          @tree.children[-1].children += deflist.children
+        else
+          @tree.children << deflist
+        end
+
+        @tree.children << last if !last.nil?
+
+        true
+      end
+      Registry.define_parser(:block, :definition_list, DEFINITION_LIST_START, self)
 
 
       PUNCTUATION_CHARS = "_.:,;!?-"
