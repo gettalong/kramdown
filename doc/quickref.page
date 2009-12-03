@@ -20,10 +20,8 @@ All examples below feature the kramdown source, the converted HTML source and th
 appears in the browser. This looks like this:
 
 <div class="kdexample">
-<pre class="kdexample-before"><code>kramdown example code
-</code></pre>
-<pre class="kdexample-after-source"><code>Example code converted to HTML
-</code></pre>
+<pre class="kdexample-before"><code>kramdown example code</code></pre>
+<pre class="kdexample-after-source"><code>Example code converted to HTML</code></pre>
 <div class="kdexample-after-live">
 Live browser view of example code
 </div>
@@ -211,8 +209,52 @@ space. Apart from that unordered lists follow the same rules as ordered lists:
 - Item three
 {::kdexample:}
 
+## Definition Lists
+
+{::kdlink:: #definition-lists part="definition lists"}
+
+A definition list works similar to a normal list and is used to associate definitions with terms.
+Definition lists are started when a normal paragraph is followed by a line starting with a colon and
+then the definition text. One term can have many definitions and multiple terms can have the same
+definition. Each line of the preceding paragraph is assumed to contain one term, for example:
+
+{::kdexample:}
+term
+: definition
+: another definition
+
+another term
+and another term
+: and a definition for the term
+{::kdexample:}
+
+If you insert a blank line before a definition (note: there must only be one blank line between the
+terms and the first definition), the definition will be wrapped in a paragraph:
+
+{::kdexample:}
+term
+
+: definition
+: definition
+{::kdexample:}
+
+Each term can be styled using span level elements and each definition is parsed as block level
+elements, ie. you can use any block level in a definition. Just use the same indent for the lines
+following the definition line:
+
+{::kdexample:}
+This *is* a term
+
+: This will be a para
+  > a blockquote
+
+  # A header
+{::kdexample:}
+
 
 ## HTML elements
+
+{::kdlink:: #html-blocks part="HTML blocks"}
 
 kramdown allows you to use block level HTML tags (`div`, `p`, `pre`, ...) to markup whole blocks of
 text -- just start a line with a block level HTML tag. kramdown syntax is normally not processed

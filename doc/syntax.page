@@ -121,13 +121,11 @@ meaning:
 * When used in lists -- see the [lists section](#lists)
 
 
-
 ## End-Of-Block Marker
 
 The End-Of-Block (EOB) marker -- a `^` as first character on an otherwise empty line -- can be used
 to specify the end of a block level element even if the block level element, after which it is used,
-would continue otherwise. If there is no block to end, the EOB marker is simply ignored and the line
-is considered a blank line.
+would continue otherwise. If there is no block to end, the EOB marker is simply ignored.
 
 You won't find an EOB marker in most kramdown documents but sometimes it is necessary to use it to
 achieve the wanted results which would be impossible otherwise.
@@ -173,6 +171,8 @@ The following gives you an example of how paragraphs look like:
 ## Headers
 
 kramdown supports Setext style and atx style headers.
+
+### Setext Style
 
 Setext style headers are specified by a blank line (except at the beginning of a document), a line
 of text (the header text) followed by a line with only equal signs (for a first level header) or
@@ -222,6 +222,8 @@ One might ask if this represents two paragraphs separated by a horizontal line o
 header and a paragraph. As suggested by the wording in the example, the latter is the case. The
 general rule is that Setext headers are processed before horizontal rules.
 
+### atx Style
+
 atx style headers can be specified by a blank line (except at the beginning of a document), a line
 with one or more hash characters and then the header text. No spaces are allowed before the hash
 characters. The number of hash characters specifies the heading level: one hash character gives you
@@ -237,6 +239,8 @@ close the header. Any leading or trailing spaces are stripped from the header te
 
 > Again, the original Markdown syntax allows one to omit the blank line before an atx style header.
 {: .markdown-difference}
+
+### Automatic Generation of Header IDs
 
 kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`
 (which is the default). This is done by converting the untransformed, ie. plain, header text via the
@@ -279,6 +283,8 @@ Following are some examples of header texts and their respective generated IDs:
 > text is converted to an identifier are based on the rules specified by [Pandoc].
 {: .markdown-difference}
 
+### Manually Specifying a Header ID
+
 Additionally, kramdown supports a nice way for setting the header ID which is available in [PHP
 Markdown Extra] and [Maruku]: If you follow the header text with an opening curly bracket (separated
 from the text with a least one space), a hash, the ID and a closing curly bracket, the ID is set on
@@ -294,6 +300,7 @@ the trailing hashes. For example:
 
 > This additional syntax is not part of standard Markdown.
 {: .markdown-difference}
+
 
 ## Blockquotes
 
@@ -347,6 +354,8 @@ Code blocks can be used to represent verbatim text like markup, HTML or a progra
 syntax is parsed within a code block, only `<`, `>` and `&` are substituted by their respective HTML
 counterparts. A code block is wrapped in both `<pre>` and  `<code>` tags.
 
+### Standard Code Block
+
 A code block can be started by using four spaces or one tab and then the text of the code block. All
 following lines that adhere to this syntax belong to the same code block. The indentation (four
 spaces or one tab) is stripped from the text. Note that blank lines don't separate consecutive code
@@ -362,6 +371,12 @@ separate the two:
         Here comes some code
     ^
         This one is separate.
+
+### Fenced Code Block
+
+> This alternative syntax is not part of the original Markdown syntax. The idea and syntax comes
+> from the [PHP Markdown Extra] package.
+{: .markdown-difference}
 
 kramdown also supports an alternative syntax for code blocks which does not use indented blocks but
 delimiting lines. The starting line needs to begin with three or more tilde characters (`~`) and the
@@ -385,9 +400,7 @@ example:
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
 
-> The alternative syntax is not part of the original Markdown syntax. The idea and syntax comes from
-> the [PHP Markdown Extra] package.
-{: .markdown-difference}
+### Showing Whitespace in a Code Block
 
 If you add the class `show-whitespaces` to a code block (using a [block
 IAL](#block_inline_attribute_lists)), all spaces are replaced with `&sdot;` and additionally spaces
@@ -832,31 +845,31 @@ characters, digits or dashes.
 There are four different types of attribute definitions which have to be separated by one or more
 spaces:
 
-*   references
+references
 
-    This must be a valid reference name. It is used to reference an other ALD sothat the attributes
+:   This must be a valid reference name. It is used to reference an other ALD sothat the attributes
     of the other ALD are also included in this one. The reference name is ignored when collecting the
     attributes if no attribute definition list with this reference name exists. For example, a
     simple reference looks like `id`.
 
-*   key-value pairs
+key-value pairs
 
-    A key-value pair is defined by a key name, which must follow the rules for reference names, then
+:   A key-value pair is defined by a key name, which must follow the rules for reference names, then
     an equal sign and then the value in single or double quotes. If you need to use the value
     delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
     Key-value pairs can be used to specify arbitray attributes for block or span level elements. For
     example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
 
-*   ID name
+ID name
 
-    An ID name is defined by using a hash and then the identifier name which must follow the rules
+:   An ID name is defined by using a hash and then the identifier name which must follow the rules
     for reference names. This is a short hand for the key-value pair `id="IDNAME"` since this is
     often used. The ID name specifies the unique ID of a block or span level element. For example,
     an ID name looks like `#myid`.
 
-*   class names
+class names
 
-    A class name is definied by using a dot and then the class name. This is (almost, but not quite)
+:   A class name is definied by using a dot and then the class name. This is (almost, but not quite)
     a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
     the class name should be appended to the current value of the `class` attribute. The following
     ALDs are all equivalent:
@@ -912,15 +925,15 @@ one could write an extension that highlights a code fragment specified in an ext
 
 An extension block has two forms, one with a body and one without a body:
 
-*   Without a body
+Without a body
 
-    The extension block line has the same structure as an [ALD](#attribute_list_definitions) except
+:   The extension block line has the same structure as an [ALD](#attribute_list_definitions) except
     that the reference name needs to prefixed and postfixed with `:` and identifies the extension to
     be used. Attributes can be defined like it is done for an ALD.
 
-*   With a body
+With a body
 
-    The starting and ending lines of an extension block with a body have the same structure as an
+:   The starting and ending lines of an extension block with a body have the same structure as an
     [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
     identifies the extension to be used; attributes can be defined on the starting or ending line.
     The text between the starting and ending line is passed to the extension and not parsed by
@@ -930,17 +943,17 @@ An extension block has two forms, one with a body and one without a body:
 If the specified extension is not found, a warning is shown and the whole extension block including
 the body is ignored. The following extensions are builtin:
 
-*   `comment`
+`comment`
 
-    Treats the body text as a comment which does not show in the output.
+:   Treats the body text as a comment which does not show in the output.
 
-*   `nomarkdown`
+`nomarkdown`
 
-    The body is not processed with kramdown but output as-is.
+:   The body is not processed with kramdown but output as-is.
 
-*   `options`
+`options`
 
-    Should be used without a body since the body is ignored. Is used for setting options for the
+:   Should be used without a body since the body is ignored. Is used for setting options for the
     kramdown processor (for example, to enable automatic header ID generation).
 
 Here are some examples for how extension blocks look like:
@@ -969,6 +982,8 @@ output.
 
 Two styles of links are supported: inline and reference.
 
+### Inline Links
+
 As the wording suggests, inline links provide all information inline in the text flow. Reference
 style links only provide the link text in the text flow and everything else is defined
 elsewhere. This also allows you to reuse link definitions.
@@ -994,6 +1009,8 @@ Notes:
 
 * The link title may not contain its delimiters and may not be empty.
 
+### Reference Links
+
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
 another set of square brackets with the link identifier in them. A link indentifier may only contain
@@ -1008,6 +1025,8 @@ If you don't specify a link identifier (ie. only use empty square brackets) or c
 second pair of square brackets, the link text is converted to a valid link identifier by removing
 all invalid characters and inserting spaces for line breaks. If there is a link definition found for
 the link identifier, a link will be created. Otherwise the text is not converted to a link.
+
+### Link Definitions
 
 The link definition can be put anywhere in the document. It does not appear in the output. A link
 definition looks like this:
@@ -1029,6 +1048,8 @@ The link definition has the following structure:
 > The original Markdown syntax also allowed the title to be specified in parenthesis. This is not
 > allowed for consistency with the inline title.
 {: .markdown-difference}
+
+### Images
 
 Images can be specified via a syntax that is similar to the one used by links. The difference is
 that you have to use an exclamation mark before the first square bracket and that the link text of a
