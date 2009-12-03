@@ -598,13 +598,14 @@ useful when the paragraph starts with something looking like a list item marker)
 ## HTML Blocks
 
 There is no problem mixing HTML tags into a kramdown document. An HTML block is started when
-kramdown encounters a line beginning with an opening or closing block level HTML tag (`div`, `p`,
-`pre`, ...) -- or with a general XML tag -- which may be indented up to three spaces. After that any
-combination of text and HTML tags are allowed, with HTML span tags being treated as text. Each HTML
-block tag must appear completely on the line, it may not be broken across several lines! If a block
-HTML tag is not closed on the same line, the HTML block continues till the HTML block line with the
-corresponding closing tag. Note that only correct XHTML is supported! This means that you have to
-use, for example, `<br/>` instead of `<br>`.
+kramdown encounters a line beginning with an HTML tag that is *not* a span level HTML tag (`div`,
+`p`, `pre`, ...) -- or with a general XML tag -- which may be indented up to three spaces. After
+that any combination of text and HTML tags are allowed, with HTML span tags being treated as text.
+Each HTML block tag must appear completely on the line, it may not be broken across several lines!
+If a block HTML tag is not closed on the same line, the HTML block continues till the HTML block
+line with the corresponding closing tag. Note that only correct XHTML is supported! This means that
+you have to use, for example, `<hr />` instead of `<hr>` (although kramdown tries to fix such things
+if possible).
 
 By default, kramdown does not parse HTML blocks, i.e. when a block level HTML tag is encountered
 only HTML block lines are parsed and everything else is treated as raw text. This will be done until
@@ -614,7 +615,8 @@ this is set to `true`, then syntax parsing in HTML blocks is enabled. All the ex
 that `:parse_block_html` is set to `true`. It is also possible to enable/disable syntax parsing on a
 tag per tag basis using the `markdown` attribute:
 
-* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag.
+* If an HTML tag has an attribute `markdown="0"`, then no parsing (except parsing of HTML block
+  lines) is done inside that HTML tag.
 
 * If an HTML tag has an attribute `markdown="1"`, then the default mechanism for parsing syntax in
   this tag is used.
@@ -673,19 +675,20 @@ When you specify an HTML block don't forget that the first column does not chang
       </div>
     </div>
 
-If you don't use valid XHTML tags, you won't get expected result (note the invalid `<br>` tag):
+If you don't use valid XHTML tags, you sometimes won't get the expected result. However, kramdown
+tries to fix broken HTML if possible (note the automatically closed `<hr />` tag):
 
     This is a para.
     <div>
-    Something is<br>
-    broken here.
+    Something is broken here.
+    <hr>
     </div>
     This is a para.
 ^
     <p>This is a para.</p>
     <div>
-      <p>Something is&lt;br&gt;
-    broken here.</p>
+      <p>Something is broken here.</p>
+      <hr />
     </div>
     <p>This is a para.</p>
 
@@ -707,11 +710,12 @@ parsed at all depending on the tag encountered. For example, a `<div>` tag conta
 elements, a `<p>` tag contains span level elements and the contents of a `<script>` tag is not
 parsed at all. General XML tags are also not parsed at all by default.
 
-The following HTML tags count as block level HTML tags and start an HTML block if found on an HTML
-block line:
+The following HTML tags count as span level HTML tags and *won't* start an HTML block if found on an
+HTML block line. All other HTML tags and general XML tags will start an HTML block!
 
-    div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li
-    table caption thead tbody tfoot col colgroup tr td th ins del blockquote address
+    a abbr acronym b big bdo br button cite code del dfn em i img input
+    ins kbd label option q rb rbc rp rt rtc ruby samp select small span
+    strong sub sup textarea tt var
 
 The parsing of processing instructions and XML comments is also supported. The content of both, PIs
 and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
@@ -1050,16 +1054,15 @@ literal meaning of a backtick you can backslash-escape it:
 HTML tags cannot only be used on the block level but also on the span level. Span level HTML tags
 can only be used inside one block level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
-you have to use, for example, `<br/>` instead of `<br>`.
+you have to use, for example, `<br />` instead of `<br>`.
 
 By default, kramdown parses kramdown syntax inside HTML spans. However, this behaviour can be
 configured with the `:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML
 spans is enabled, if it is set to `false`, parsing is disabled. It is also possible to
 enable/disable syntax parsing on a tag per tag basis using the `markdown` attribute:
 
-* If an HTML tag has an attribute `markdown="0"`, then no parsing is done inside that HTML tag. This
-  also means that nested HTML tags can't reenable kramdown syntax processing since they are not
-  processed!
+* If an HTML tag has an attribute `markdown="0"`, then no parsing (except parsing of HTML span tags)
+  is done inside that HTML tag.
 
 * If an HTML tag has an attribute `markdown="1"`, then the content of the tag is parsed as span
   level elements.
@@ -1070,6 +1073,9 @@ enable/disable syntax parsing on a tag per tag basis using the `markdown` attrib
 * If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
   level elements.
 
+The content of a span level HTML tag is normally parsed as span level elements. Note, however, that
+some tags like `<script>` are not parsed, i.e. their content is not modified.
+
 Processing instructions and XML comments can also be used (their content is not parsed). However, as
 with HTML tags the start and the end have to appear in the same block level element.
 
@@ -1078,7 +1084,7 @@ be preceded by at least one non whitespace character on the same line sothat kra
 recognizes them as span level element and not as block level element. However, all span HTML tags,
 i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
 
-Unclosed HTML tags as well as invalidly used end tags are escaped.
+Unclosed HTML tags as well as invalidly used end tags or block HTML tags are escaped.
 
 Also note that one or more consecutive new line characters in an HTML span tag are replaced by a
 single space, for example:

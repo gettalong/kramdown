@@ -15,6 +15,10 @@ This is <span>tag
 
 This is _something<span test="do_it" /> strange_.
 
+Auto-closing: <br>
+
 An invalid tag: <hr>
 
 An invalid </closing> tag.
+
+A <script>*not*</script> tag.

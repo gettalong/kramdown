@@ -619,16 +619,29 @@ module Kramdown
       HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/
 
 
-      HTML_PARSE_AS_BLOCK = %w{div blockquote table thead tbody tfoot col colgroup tr th td dl dd ol ul form fieldset}
-      HTML_PARSE_AS_SPAN  = %w{a address b caption dt em h1 h2 h3 h4 h5 h6 legend li p span}
-      HTML_PARSE_AS_RAW   = %w{script math pre}
+      HTML_PARSE_AS_BLOCK = %w{applet button blockquote colgroup dd div dl fieldset form iframe li
+                               map noscript object ol table tbody td th thead tfoot tr ul}
+      HTML_PARSE_AS_SPAN  = %w{a abbr acronym address b bdo big cite caption code del dfn dt em
+                               h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p pre q rb rbc
+                               rp rt rtc ruby samp select small span strong sub sup tt var}
+      HTML_PARSE_AS_RAW   = %w{script math option textarea}
+
       HTML_PARSE_AS = Hash.new {|h,k| h[k] = :raw}
       HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}
       HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
-      HTML_BLOCK_ELEMENTS = %w[div p pre h1 h2 h3 h4 h5 h6 hr form fieldset iframe legend script dl dt dd ul ol li
-                               table caption thead tbody tfoot col colgroup tr td th ins del blockquote address]
+      #:stopdoc:
+      # Some HTML elements like script belong to both categories (i.e. are valid in block and
+      # span HTML) and don't appear therefore!
+      #:startdoc:
+      HTML_SPAN_ELEMENTS = %w{a abbr acronym b big bdo br button cite code del dfn em i img input
+                              ins kbd label option q rb rbc rp rt rtc ruby samp select small span
+                              strong sub sup textarea tt var}
+      HTML_BLOCK_ELEMENTS = %w{address applet button blockquote caption col colgroup dd div dl dt fieldset
+                               form h1 h2 h3 h4 h5 h6 hr iframe legend li map ol optgroup p pre table tbody
+                               td th thead tfoot tr ul}
+      HTML_ELEMENTS_WITHOUT_BODY = %w{area br col hr img input}
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
@@ -643,8 +656,8 @@ module Kramdown
           @src.scan(/.*?\n/)
           true
         else
-          if !((@src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) || @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/)) &&
-               (HTML_BLOCK_ELEMENTS.include?(@src[1]) || @src[1] =~ /:/))
+          if (!@src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !@src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/)) ||
+              HTML_SPAN_ELEMENTS.include?(@src[1])
             if @tree.type == :html_element && @tree.options[:parse_type] != :block
               add_html_text(@src.scan(/.*?\n/), @tree)
               add_html_text(@src.scan_until(/(?=#{HTML_BLOCK_START})|\Z/), @tree)
@@ -668,7 +681,7 @@ module Kramdown
               md = line.match(HTML_TAG_RE)
               line = md.post_match
               add_html_text(md.pre_match, current_el) if current_el
-              if !(HTML_BLOCK_ELEMENTS.include?(md[1]) || md[1] =~ /:/) || (current_el && current_el.options[:parse_type] == :span)
+              if HTML_SPAN_ELEMENTS.include?(md[1]) || (current_el && current_el.options[:parse_type] == :span)
                 add_html_text(md.to_s, current_el) if current_el
                 next
               end
@@ -690,7 +703,9 @@ module Kramdown
               el.options[:parent_is_raw] = true if current_el && current_el.options[:parse_type] == :raw
 
               @tree.children << el
-              if !md[4]
+              if !md[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
+                warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
+              elsif !md[4]
                 @unclosed_html_tags.push(el)
                 @stack.push(@tree)
                 stack.push(current_el)
@@ -707,7 +722,7 @@ module Kramdown
                 current_el.options[:compact] = true if stack.size > 0
                 current_el = stack.pop || (@tree.type == :html_element ? @tree : nil)
               else
-                if HTML_BLOCK_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] != :span
+                if !HTML_SPAN_ELEMENTS.include?(md[1]) && @tree.options[:parse_type] != :span
                   warning("Found invalidly used HTML closing tag for '#{md[1]}'")
                 elsif current_el
                   add_html_text(md.to_s, current_el)
@@ -952,9 +967,14 @@ module Kramdown
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
           @tree.children << Element.new(:html_raw, result, :type => :span)
         elsif result = @src.scan(HTML_TAG_RE)
+          if HTML_BLOCK_ELEMENTS.include?(@src[1])
+            add_text(result)
+            return
+          end
           reset_pos = @src.pos
           attrs = {}
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
+
           do_parsing = @doc.options[:parse_span_html]
           if val = get_parse_type(attrs.delete('markdown'))
             if val == :block
@@ -965,9 +985,14 @@ module Kramdown
               do_parsing = false
             end
           end
+          do_parsing = false if HTML_PARSE_AS_RAW.include?(@src[1])
+
           el = Element.new(:html_element, @src[1], :attr => attrs, :type => :span)
           stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
           if @src[4]
+            @tree.children << el
+          elsif HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
+            warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
             @tree.children << el
           else
             if parse_spans(el, stop_re)
