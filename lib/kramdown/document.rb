@@ -20,6 +20,8 @@
 #++
 #
 
+require 'kramdown/compatibility'
+
 require 'kramdown/version'
 require 'kramdown/error'
 require 'kramdown/parser'
