@@ -27,7 +27,6 @@ require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
 require 'kramdown/extension'
-require 'kramdown/deprecated'
 
 module Kramdown
 
