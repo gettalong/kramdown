@@ -1,0 +1,22 @@
+---
+title: kramdown 0.3.0 released
+no_output: true
+sort_info: r0002
+created_at: 2009-12-03 20:25:00 +02:00
+modified_at: 2009-12-03 20:25:00 +02:00
+---
+## kramdown 0.3.0 released
+
+
+## Changes
+
+* Major changes:
+
+  - Added a compatibility fix so that kramdown works under Ruby 1.8.5 (requested by Steve Huff)
+
+* Bug fixes:
+
+* Deprecation notes:
+
+  - The old extension names `kdoptions` and `nokramdown` have been removed, only the new names
+    `options` and `nomarkdown` will work from now on.
