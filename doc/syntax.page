@@ -17,7 +17,7 @@ The kramdown syntax is based on the Markdown syntax and has been enhanced with f
 found in other Markdown implementations like [Maruku], [PHP Markdown Extra] and [Pandoc]. However,
 it strives to provide a strict syntax with definite rules and therefore isn't completely compatible
 with Markdown. Nonetheless, most Markdown documents should work fine when parsed with kramdown. All
-places where the kramdown syntax differes from the Markdown syntax are highlighted.
+places where the kramdown syntax differs from the Markdown syntax are highlighted.
 
 Following is the complete syntax definition so that you know what you will get when a kramdown
 document is converted to HTML. There are basically two types of elements: block level elements
@@ -59,7 +59,7 @@ will be converted to:
     0 &lt; 1 &lt; 2 and 2 &gt; 1 &gt; 0</p>
 
 Since kramdown also uses some characters to mark-up the text, there need to be a way to escape these
-special characters sothat they can have their normal meaning. This can be done by using backslash
+special characters so that they can have their normal meaning. This can be done by using backslash
 escapes. For example, you can use a literal backtick like this:
 
     This \`is not a code\` span!
@@ -152,7 +152,7 @@ Paragraphs are the most used block level elements. One or more consecutive lines
 interpreted as one paragraph. Every line of a paragraph may be indented up to three spaces. You can
 separate two consecutive paragraphs from each other by using one or more blank lines. Notice that a
 line break in the source does not mean a line break in the output. If you want to have an explicit
-line break (ie. a `<br />` tag) you need to end a line with two or more spaces or two backslashes!
+line break (i.e. a `<br />` tag) you need to end a line with two or more spaces or two backslashes!
 Note, however, that a line break on the last text line of a paragraph is not possible and will be
 ignored. Leading and trailing spaces will be stripped from the paragraph text.
 
@@ -205,7 +205,7 @@ As mentioned you need to insert a blank line before a Setext header:
     ------------
 
 However, it is generally a good idea to also use a blank line after a Setext header because it looks
-more approriate.
+more appropriate.
 
 > The original Markdown syntax allows one to omit the blank line before a Setext header. However,
 > this makes reading the document harder than necessary and is therefore not allowed in a kramdown
@@ -243,13 +243,13 @@ close the header. Any leading or trailing spaces are stripped from the header te
 ### Automatic Generation of Header IDs
 
 kramdown supports the automatic generation of header IDs if the option `:auto_ids` is set to `true`
-(which is the default). This is done by converting the untransformed, ie. plain, header text via the
+(which is the default). This is done by converting the untransformed, i.e. plain, header text via the
 following steps:
 
 * All characters except letters, numbers, spaces and dashes are removed.
 * All characters from the start of the line till the first letter are removed.
 * Everything except letters and numbers is converted to dashes.
-* Everything is downcased.
+* Everything is lowercased.
 * If nothing is left, the identifier `section` is used.
 * If a such created identifier already exists, a dash and a sequential number is added (first `-1`,
   then `-2` and so on).
@@ -335,7 +335,7 @@ indented with five spaces or one space and one tab, like this:
     >
     >     ruby -e 'puts :works'
 
-> The original Markdown syntax allowed "lazy" blockquotes, ie. blockquotes where only the first line
+> The original Markdown syntax allowed "lazy" blockquotes, i.e. blockquotes where only the first line
 > needs a blockquote marker. This is disallowed in kramdown, you always need to use a blockquote
 > marker! The rational behind this is that most email programs and good text editors put the `>`
 > maker automatically before every quoted line and that things like the following work like
@@ -477,7 +477,7 @@ list markers in the list may be indented up to three spaces or the number of spa
 indentation of the last list item minus one, whichever number is smaller. For example:
 
     * This is the first line. Since the first non-space characters appears in column 3, all other
-      lines have to be indented 2 spaces sothat they first characters align. This tells kramdown
+      lines have to be indented 2 spaces so that the first characters align. This tells kramdown
       that the lines belong to the list item.
     *       This is the another item of the list. It uses a different number of spaces for
             indentation which is okay but should generally be avoided.
@@ -531,7 +531,7 @@ by leaving a blank line after the last list item and using an EOB marker:
 > blank lines are wrapped in paragraph tags. This means that the first text will also be wrapped in
 > a paragraph if you have block level elements in a list which are separated by blank lines. The
 > above rule is easy to remember and lets you exactly specify when the first list text should be
-> wrapped in a paragraph. The idea for the above rule comes from the [pandoc] package.
+> wrapped in a paragraph. The idea for the above rule comes from the [Pandoc] package.
 {: .markdown-difference}
 
 As seen in the examples above, blank lines between list items are allowed.
@@ -580,7 +580,7 @@ marker.
 > This kind of syntax is disallowed in kramdown.
 {: .markdown-difference}
 
-If you want to have one list directly after another one (both with the same list type, ie. ordered
+If you want to have one list directly after another one (both with the same list type, i.e. ordered
 or unordered), you need to use an EOB marker to separate the two:
 
     * List one
@@ -641,7 +641,7 @@ The column number of the first non-space character which appears after a definit
 same line specifies the indentation that has to be used for the following lines of the definition.
 If there is no such character, the indentation that needs to be used is four spaces or one tab. If
 one of the following lines does not have the needed amount of indentation, it is not treated as part
-of the defintion. The indentation is stripped from the definition and it (note that the definition
+of the definition. The indentation is stripped from the definition and it (note that the definition
 naturally also contains the content of the line with the definition marker) is processed as text
 containing block level elements. If there is more than one definition, all other definition markers
 for the term may be indented up to three spaces or the number of spaces used for the indentation of
@@ -650,9 +650,9 @@ the last definition minus one, whichever number is smaller. For example:
     definition term 1
     definition term 2
     : This is the first line. Since the first non-space characters appears in column 3, all other
-      lines have to be indented 2 spaces sothat they first characters align. This tells kramdown
+      lines have to be indented 2 spaces so that they first characters align. This tells kramdown
       that the lines belong to the definition.
-    :       This is the another defintion for the same term. It uses a different number of spaces
+    :       This is the another definition for the same term. It uses a different number of spaces
             for indentation which is okay but should generally be avoided.
        : The definition marker is indented 3 spaces which is allowed but should also be avoided.
 
@@ -668,7 +668,7 @@ paragraph otherwise:
     : This definition will just be text because it would normally be a paragraph and the there is
       no preceding blank line.
 
-      > although the defintion contains other block level elements
+      > although the definition contains other block level elements
 
     : This definition *will* be a paragraph since it is preceded by a blank line.
 
@@ -715,7 +715,7 @@ nonetheless.
 If an invalid closing tag is found on an HTML block line while no HTML block is active, it is
 ignored.
 
-> The original Markdown syntax specifies that an HTML block must start at the left margin, ie. no
+> The original Markdown syntax specifies that an HTML block must start at the left margin, i.e. no
 > indentation is allowed. Also, the HTML block has to be surrounded by blank lines. Both
 > restrictions are lifted for kramdown documents. Additionally, the original syntax does not allow
 > you to use Markdown syntax in HTML blocks which is allowed with kramdown.
@@ -836,7 +836,7 @@ An ALD line has the following structure:
 * a left brace, optionally preceded by up to three spaces,
 * followed by a colon, the reference name and another colon,
 * followed by attribute definitions (allowed characters are backslash-escaped closing braces or any
-  character except an unescaped closing brace),
+  character except a not escaped closing brace),
 * followed by a closing brace and optional spaces till the end of the line.
 
 The reference name needs to start with a word character or a digit, optionally followed by other word
@@ -847,7 +847,7 @@ spaces:
 
 references
 
-:   This must be a valid reference name. It is used to reference an other ALD sothat the attributes
+:   This must be a valid reference name. It is used to reference an other ALD so that the attributes
     of the other ALD are also included in this one. The reference name is ignored when collecting the
     attributes if no attribute definition list with this reference name exists. For example, a
     simple reference looks like `id`.
@@ -857,7 +857,7 @@ key-value pairs
 :   A key-value pair is defined by a key name, which must follow the rules for reference names, then
     an equal sign and then the value in single or double quotes. If you need to use the value
     delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
-    Key-value pairs can be used to specify arbitray attributes for block or span level elements. For
+    Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
     example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
 
 ID name
@@ -869,7 +869,7 @@ ID name
 
 class names
 
-:   A class name is definied by using a dot and then the class name. This is (almost, but not quite)
+:   A class name is defined by using a dot and then the class name. This is (almost, but not quite)
     a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
     the class name should be appended to the current value of the `class` attribute. The following
     ALDs are all equivalent:
@@ -941,7 +941,7 @@ With a body
     normally by kramdown.
 
 If the specified extension is not found, a warning is shown and the whole extension block including
-the body is ignored. The following extensions are builtin:
+the body is ignored. The following extensions are built-in:
 
 `comment`
 
@@ -1013,15 +1013,15 @@ Notes:
 
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
-another set of square brackets with the link identifier in them. A link indentifier may only contain
+another set of square brackets with the link identifier in them. A link identifier may only contain
 numbers, letters, spaces (line breaks and tabs are converted to spaces, multiple spaces are
-compressed to one) and punctuation characters (ie. `_.:,;!?-`) and is not case sensitive. For
+compressed to one) and punctuation characters (i.e. `_.:,;!?-`) and is not case sensitive. For
 example:
 
     This is a [reference style link][linkid] to a page. And [this]
     [linkid] is also a link. As is [this][] and [THIS].
 
-If you don't specify a link identifier (ie. only use empty square brackets) or completely omit the
+If you don't specify a link identifier (i.e. only use empty square brackets) or completely omit the
 second pair of square brackets, the link text is converted to a valid link identifier by removing
 all invalid characters and inserting spaces for line breaks. If there is a link definition found for
 the link identifier, a link will be created. Otherwise the text is not converted to a link.
@@ -1068,7 +1068,7 @@ kramdown uses the HTML elements `em` and `strong` to style emphasized text parts
 are surrounded with single asterisks `*` or underscores `_` are wrapped in `em` tags, text parts
 surrounded with two asterisks or underscores are wrapped in `strong` tags. Surrounded means that the
 starting delimiter must not be followed by a space and that the stopping delimiter must not be
-preceeded by a space. For example:
+preceded by a space. For example:
 
     *some text*
     _some text_
@@ -1169,7 +1169,7 @@ Processing instructions and XML comments can also be used (their content is not 
 with HTML tags the start and the end have to appear in the same block level element.
 
 Span level PIs and span level XML comments as well as general span level HTML and XML tags have to
-be preceded by at least one non whitespace character on the same line sothat kramdown correctly
+be preceded by at least one non whitespace character on the same line so that kramdown correctly
 recognizes them as span level element and not as block level element. However, all span HTML tags,
 i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
 
@@ -1190,7 +1190,7 @@ single space, for example:
 > the [PHP Markdown Extra] package.
 {: .markdown-difference}
 
-Footnotes in kramdown are simliar to reference style links and link definitions. You need to place
+Footnotes in kramdown are similar to reference style links and link definitions. You need to place
 the footnote marker in the correct position in the text and the actual footnote content can be
 defined anywhere in the document.
 

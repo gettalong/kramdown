@@ -55,7 +55,7 @@ which contains a hard line break.
 
 {::kdlink:: #headers part="headers"}
 
-kramdown supports Setext style headers and atx style headers. A header must always be preceeded by a
+kramdown supports Setext style headers and atx style headers. A header must always be preceded by a
 blank line except at the beginning of the document:
 
 {::kdexample:}
@@ -239,7 +239,7 @@ term
 {::kdexample:}
 
 Each term can be styled using span level elements and each definition is parsed as block level
-elements, ie. you can use any block level in a definition. Just use the same indent for the lines
+elements, i.e. you can use any block level in a definition. Just use the same indent for the lines
 following the definition line:
 
 {::kdexample:}
@@ -469,7 +469,7 @@ e.g. `` `code` ``.
 {::kdlink:: #footnotes part="footnotes"}
 
 Footnotes can easily be used in kramdown. Just set a footnote marker (consists of square brackets
-with a caret and the footname inside) in the text and somewhere else the footnote definition (which
+with a caret and the footnote name inside) in the text and somewhere else the footnote definition (which
 basically looks like a reference link definition):
 
 {::kdexample:}
