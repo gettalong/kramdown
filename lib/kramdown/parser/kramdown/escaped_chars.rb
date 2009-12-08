@@ -21,13 +21,18 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      ESCAPED_CHARS = /\\([\\.*_+-`()\[\]{}#!])/
 
+      # Parse the backslash-escaped character at the current location.
+      def parse_escaped_chars
+        @src.pos += @src.matched_size
+        add_text(@src[1])
+      end
+      define_parser(:escaped_chars, ESCAPED_CHARS)
+
+    end
   end
-
 end

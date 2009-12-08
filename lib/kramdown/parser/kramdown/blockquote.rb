@@ -21,13 +21,22 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      BLOCKQUOTE_START = /^#{OPT_SPACE}> ?/
+      BLOCKQUOTE_MATCH = /(^#{OPT_SPACE}>.*?\n)+/
 
+      # Parse the blockquote at the current location.
+      def parse_blockquote
+        result = @src.scan(BLOCKQUOTE_MATCH).gsub(BLOCKQUOTE_START, '')
+        el = Element.new(:blockquote)
+        @tree.children << el
+        parse_blocks(el, result)
+        true
+      end
+      define_parser(:blockquote, BLOCKQUOTE_START)
+
+    end
   end
-
 end

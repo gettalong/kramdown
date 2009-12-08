@@ -21,13 +21,19 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      HR_START = /^#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1[ \t]*(\1|[ \t])*\n/
 
+      # Parse the horizontal rule at the current location.
+      def parse_horizontal_rule
+        @src.pos += @src.matched_size
+        @tree.children << Element.new(:hr)
+        true
+      end
+      define_parser(:horizontal_rule, HR_START)
+
+    end
   end
-
 end

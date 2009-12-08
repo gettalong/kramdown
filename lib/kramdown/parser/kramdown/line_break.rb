@@ -21,13 +21,18 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      LINE_BREAK = /(  |\\\\)(?=\n)/
 
+      # Parse the line break at the current location.
+      def parse_line_break
+        @src.pos += @src.matched_size
+        @tree.children << Element.new(:br)
+      end
+      define_parser(:line_break, LINE_BREAK)
+
+    end
   end
-
 end

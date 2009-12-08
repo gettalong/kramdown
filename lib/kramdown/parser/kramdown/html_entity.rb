@@ -20,14 +20,20 @@
 #++
 #
 
+require 'rexml/parsers/baseparser'
+
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      # Parse the HTML entity at the current location.
+      def parse_html_entity
+        @src.pos += @src.matched_size
+        @tree.children << Element.new(:entity, @src.matched)
+      end
+      define_parser(:html_entity, REXML::Parsers::BaseParser::REFERENCE_RE)
 
+
+    end
   end
-
 end

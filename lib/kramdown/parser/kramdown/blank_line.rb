@@ -21,13 +21,23 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      BLANK_LINE = /(?:^\s*\n)+/
 
+      # Parse the blank line at the current postition.
+      def parse_blank_line
+        @src.pos += @src.matched_size
+        if @tree.children.last && @tree.children.last.type == :blank
+          @tree.children.last.value += @src.matched
+        else
+          @tree.children << Element.new(:blank, @src.matched)
+        end
+        true
+      end
+      define_parser(:blank_line, BLANK_LINE)
+
+    end
   end
-
 end

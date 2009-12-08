@@ -154,6 +154,13 @@ module Kramdown
       end
 
       def convert_a(el, inner, indent)
+        if el.options[:attr]['href'] =~ /^mailto:/
+          el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+          href = obfuscate(el.options[:attr]['href'].sub(/^mailto:/, ''))
+          mailto = obfuscate('mailto')
+          el.options[:attr]['href'] = "#{mailto}:#{href}"
+        end
+        inner = obfuscate(inner) if el.options[:obfuscate_text]
         "<a#{options_for_element(el)}>#{inner}</a>"
       end
 
@@ -198,6 +205,14 @@ module Kramdown
         inner << footnote_content
       end
 
+      # Helper method for obfuscating the +text+ by using HTML entities.
+      def obfuscate(text)
+        result = ""
+        text.each_byte do |b|
+          result += (b > 128 ? b.chr : "&#%03d;" % b)
+        end
+        result
+      end
 
       # Return a HTML list with the footnote content for the used footnotes.
       def footnote_content

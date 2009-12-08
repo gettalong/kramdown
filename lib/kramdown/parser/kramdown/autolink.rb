@@ -21,13 +21,22 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      AUTOLINK_START = /<((mailto|https?|ftps?):.*?|\S*?@\S*?)>/
 
+      # Parse the autolink at the current location.
+      def parse_autolink
+        @src.pos += @src.matched_size
+        href = @src[1]
+        href= "mailto:#{href}" if @src[2].nil?
+        el = Element.new(:a, nil, {:attr => {'href' => href}, :obfuscate_text => (@src[2].nil? || @src[2] == 'mailto')})
+        add_text(@src[1].sub(/^mailto:/, ''), el)
+        @tree.children << el
+      end
+      define_parser(:autolink, AUTOLINK_START)
+
+    end
   end
-
 end

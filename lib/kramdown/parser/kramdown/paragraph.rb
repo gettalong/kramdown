@@ -21,13 +21,24 @@
 #
 
 module Kramdown
-
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
   module Parser
+    class Kramdown
 
-    autoload :Kramdown, 'kramdown/parser/kramdown'
+      PARAGRAPH_START = /^#{OPT_SPACE}[^ \t].*?\n/
 
+      # Parse the paragraph at the current location.
+      def parse_paragraph
+        @src.pos += @src.matched_size
+        if @tree.children.last && @tree.children.last.type == :p
+          @tree.children.last.children.first.value << "\n" << @src.matched.chomp
+        else
+          @tree.children << Element.new(:p)
+          add_text(@src.matched.lstrip.chomp, @tree.children.last)
+        end
+        true
+      end
+      define_parser(:paragraph, PARAGRAPH_START)
+
+    end
   end
-
 end
