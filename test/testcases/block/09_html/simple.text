@@ -23,24 +23,14 @@ foo
 </div>
    <div style="&nbsp;"></div>
 </div>
-<div>bar&nbsp;</div>
+<div>bar&nbsp;
+</div>
 </div>
 
 para5
 
-<div>id</div>
-
 <div>id
 </div> test
-
-<div>hallo</p><div>test</div>
-hallo
-</div>
-
-<div>hallo<div>test
-hallo
-</div>
-</div></p>
 
 <div>
 hallo

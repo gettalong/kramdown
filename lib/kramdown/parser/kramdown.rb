@@ -44,9 +44,7 @@ module Kramdown
 
         @src = nil
         @tree = nil
-        @unclosed_html_tags = []
         @stack = []
-        @block_parsers = BLOCK_PARSERS
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
@@ -104,28 +102,27 @@ module Kramdown
       end
 
       # Parse all block level elements in +text+ into the element +el+.
-      def parse_blocks(el, text, block_parsers = BLOCK_PARSERS)
-        @stack.push([@tree, @src, @unclosed_html_tags, @block_parsers])
-        @tree, @src, @unclosed_html_tags, @block_parsers = el, StringScanner.new(text), [], block_parsers
+      def parse_blocks(el, text = nil)
+        @stack.push([@tree, @src])
+        @tree, @src = el, (text.nil? ? @src : StringScanner.new(text))
 
-        while !@src.eos?
-          @block_parsers.any? do |name|
-            if @src.check(@parsers[name].start_re)
-              send(@parsers[name].method)
-            else
-              false
+        status = catch(:stop_block_parsing) do
+          while !@src.eos?
+            BLOCK_PARSERS.any? do |name|
+              if @src.check(@parsers[name].start_re)
+                send(@parsers[name].method)
+              else
+                false
+              end
+            end || begin
+              warning('Warning: this should not occur - no block parser handled the line')
+              add_text(@src.scan(/.*\n/))
             end
-          end || begin
-            warning('Warning: this should not occur - no block parser handled the line')
-            add_text(@src.scan(/.*\n/))
           end
         end
 
-        @unclosed_html_tags.reverse.each do |tag|
-          warning("Automatically closing unclosed html tag '#{tag.value}'")
-        end
-
-        @tree, @src, @unclosed_html_tags, @block_parsers = *@stack.pop
+        @tree, @src = *@stack.pop
+        status
       end
 
       # Update the tree by parsing all <tt>:text</tt> elements with the span level parser (resets

@@ -131,12 +131,10 @@ module Kramdown
           "<#{el.value}#{options_for_element(el)}" << (!inner.empty? ? ">#{inner}</#{el.value}>" : " />")
         else
           output = ''
-          output << ' '*indent if !el.options[:no_start_indent] && el.options[:parse_type] != :raw && !el.options[:parent_is_raw]
+          output << ' '*indent if el.options[:parse_type] != :raw && !el.options[:parent_is_raw]
           output << "<#{el.value}#{options_for_element(el)}"
-          if !inner.empty? && (el.options[:compact] || el.options[:parse_type] != :block)
+          if !inner.empty? && el.options[:parse_type] != :block
             output << ">#{inner}</#{el.value}>"
-          elsif !inner.empty? && (el.children.first.type == :text || el.children.first.options[:no_start_indent])
-            output << ">#{inner}" << ' '*indent << "</#{el.value}>"
           elsif !inner.empty?
             output << ">\n#{inner}"  << ' '*indent << "</#{el.value}>"
           elsif HTML_TAGS_WITH_BODY.include?(el.value)
