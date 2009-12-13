@@ -104,24 +104,24 @@ module Kramdown
         @tree.children << list
 
         last = nil
-        list.children.each do |item|
+        list.children.each do |it|
           temp = Element.new(:temp)
-          parse_blocks(temp, item.value)
-          item.children += temp.children
-          item.value = nil
-          next if item.children.size == 0
+          parse_blocks(temp, it.value)
+          it.children += temp.children
+          it.value = nil
+          next if it.children.size == 0
 
-          if item.children.first.type == :p && (item.children.length < 2 || item.children[1].type != :blank ||
-                                                (item == list.children.last && item.children.length == 2 && !eob_found))
-            text = item.children.shift.children.first
-            text.value += "\n" if !item.children.empty? && item.children[0].type != :blank
-            item.children.unshift(text)
+          if it.children.first.type == :p && (it.children.length < 2 || it.children[1].type != :blank ||
+                                                (it == list.children.last && it.children.length == 2 && !eob_found))
+            text = it.children.shift.children.first
+            text.value += "\n" if !it.children.empty? && it.children[0].type != :blank
+            it.children.unshift(text)
           else
-            item.options[:first_is_block] = true
+            it.options[:first_is_block] = true
           end
 
-          if item.children.last.type == :blank
-            last = item.children.pop
+          if it.children.last.type == :blank
+            last = it.children.pop
           else
             last = nil
           end
@@ -184,24 +184,24 @@ module Kramdown
         end
 
         last = nil
-        deflist.children.each do |item|
-          next if item.type == :dt
+        deflist.children.each do |it|
+          next if it.type == :dt
 
-          parse_blocks(item, item.value)
-          item.value = nil
-          next if item.children.size == 0
+          parse_blocks(it, it.value)
+          it.value = nil
+          next if it.children.size == 0
 
-          if item.children.last.type == :blank
-            last = item.children.pop
+          if it.children.last.type == :blank
+            last = it.children.pop
           else
             last = nil
           end
-          if item.children.first.type == :p && !item.options.delete(:first_as_para)
-            text = item.children.shift.children.first
-            text.value += "\n" if !item.children.empty?
-            item.children.unshift(text)
+          if it.children.first.type == :p && !it.options.delete(:first_as_para)
+            text = it.children.shift.children.first
+            text.value += "\n" if !it.children.empty?
+            it.children.unshift(text)
           else
-            item.options[:first_is_block] = true
+            it.options[:first_is_block] = true
           end
         end
 
