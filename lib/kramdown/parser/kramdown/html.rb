@@ -66,11 +66,11 @@ module Kramdown
       # Parse the HTML at the current position as block level HTML.
       def parse_block_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:html_raw, result, :type => :block)
+          @tree.children << Element.new(:xml_comment, result, :type => :block)
           @src.scan(/[ \t]*\n/)
           true
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:html_raw, result, :type => :block)
+          @tree.children << Element.new(:xml_pi, result, :type => :block)
           @src.scan(/[ \t]*\n/)
           true
         else
@@ -159,17 +159,6 @@ module Kramdown
         end
       end
 
-      # Special version of #add_text which either creates a :text element or a :raw element,
-      # depending on the HTML element type.
-      def add_html_text(text, tree)
-        type = (tree.options[:parse_type] == :raw ? :raw : :text)
-        if tree.children.last && tree.children.last.type == type
-          tree.children.last.value << text
-        elsif !text.empty?
-          tree.children << Element.new(type, text)
-        end
-      end
-
       # Parse raw HTML until the matching end tag for +el+ is found or until the end of the
       # document.
       def parse_raw_html(el)
@@ -181,7 +170,7 @@ module Kramdown
         while !@src.eos? && !done
           if result = @src.scan_until(HTML_RAW_START)
             endpos = @src.pos
-            add_html_text(result, @tree)
+            add_text(result, @tree, :html_text)
             if @src.scan(HTML_TAG_RE)
               handle_html_start_tag
             elsif @src.scan(HTML_TAG_CLOSE_RE)
@@ -191,9 +180,11 @@ module Kramdown
                 warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
               end
             else
-              add_html_text(@src.scan(/./), @tree)
+              add_text(@src.scan(/./), @tree, :html_text)
             end
           else
+            result = @src.scan(/.*/m)
+            add_text(result, @tree, :html_text)
             warning("Found no end tag for '#{@tree.value}' - auto-closing it")
             done = true
           end
@@ -209,9 +200,9 @@ module Kramdown
       # Parse the HTML at the current position as span level HTML.
       def parse_span_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:html_raw, result, :type => :span)
+          @tree.children << Element.new(:xml_comment, result, :type => :span)
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:html_raw, result, :type => :span)
+          @tree.children << Element.new(:xml_pi, result, :type => :span)
         elsif result = @src.scan(HTML_TAG_RE)
           if HTML_BLOCK_ELEMENTS.include?(@src[1])
             add_text(result)
@@ -221,17 +212,18 @@ module Kramdown
           attrs = {}
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
-          do_parsing = @doc.options[:parse_span_html]
+          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) ? false : @doc.options[:parse_span_html])
           if val = get_parse_type(attrs.delete('markdown'))
             if val == :block
               warning("Cannot use block level parsing in span level HTML tag - using default mode")
-            elsif val == :span || val == :default
+            elsif val == :span
               do_parsing = true
+            elsif val == :default
+              (HTML_PARSE_AS_RAW.include?(@src[1]) ? false : true)
             elsif val == :raw
               do_parsing = false
             end
           end
-          do_parsing = false if HTML_PARSE_AS_RAW.include?(@src[1])
 
           el = Element.new(:html_element, @src[1], :attr => attrs, :type => :span)
           stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
@@ -241,14 +233,10 @@ module Kramdown
             warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
             @tree.children << el
           else
-            if parse_spans(el, stop_re)
+            if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]), (do_parsing ? :text : :html_text))
               end_pos = @src.pos
               @src.scan(stop_re)
               @tree.children << el
-              if !do_parsing
-                el.children.clear
-                el.children << Element.new(:raw, @src.string[reset_pos...end_pos])
-              end
             else
               @src.pos = reset_pos
               add_text(result)

@@ -45,6 +45,7 @@ module Kramdown
         @src = nil
         @tree = nil
         @stack = []
+        @text_type = :text
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
@@ -85,12 +86,11 @@ module Kramdown
                        :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
                        :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
-      OTHER_PARSERS = []
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
         @parsers = {}
-        (BLOCK_PARSERS + SPAN_PARSERS + OTHER_PARSERS).each do |name|
+        (BLOCK_PARSERS + SPAN_PARSERS).each do |name|
           if self.class.has_parser?(name)
             @parsers[name] = self.class.parser(name)
           else
@@ -143,11 +143,19 @@ module Kramdown
       end
 
       # Parse all span level elements in the source string.
-      def parse_spans(el, stop_re = nil)
-        @stack.push(@tree)
-        @tree = el
+      def parse_spans(el, stop_re = nil, parsers = nil, text_type = :text)
+        @stack.push([@tree, @text_type])
+        @tree, @text_type = el, text_type
 
-        used_re = (stop_re.nil? ? @span_start_re : /(?=#{Regexp.union(stop_re, @span_start)})/)
+        span_start = @span_start
+        span_start_re = @span_start_re
+        if parsers
+          span_start = Regexp.union(*parsers.map {|name| @parsers[name].start_re})
+          span_start_re = /(?=#{span_start})/
+        end
+        parsers = parsers || SPAN_PARSERS
+
+        used_re = (stop_re.nil? ? span_start_re : /(?=#{Regexp.union(stop_re, span_start)})/)
         stop_re_found = false
         while !@src.eos? && !stop_re_found
           if result = @src.scan_until(used_re)
@@ -155,7 +163,7 @@ module Kramdown
             if stop_re && (stop_re_matched = @src.check(stop_re))
               stop_re_found = (block_given? ? yield : true)
             end
-            processed = SPAN_PARSERS.any? do |name|
+            processed = parsers.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
                 true
@@ -176,7 +184,7 @@ module Kramdown
           end
         end
 
-        @tree = @stack.pop
+        @tree, @text_type = @stack.pop
 
         stop_re_found
       end
@@ -187,12 +195,12 @@ module Kramdown
       end
 
       # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
-      # text element or creates a new text element.
-      def add_text(text, tree = @tree)
-        if tree.children.last && tree.children.last.type == :text
+      # +type+ element or creates a new text element with the given +type+.
+      def add_text(text, tree = @tree, type = @text_type)
+        if tree.children.last && tree.children.last.type == type
           tree.children.last.value << text
         elsif !text.empty?
-          tree.children << Element.new(:text, text)
+          tree.children << Element.new(type, text)
         end
       end
 

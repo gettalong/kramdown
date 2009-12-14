@@ -118,10 +118,6 @@ module Kramdown
         "#{' '*indent}<dt#{options_for_element(el)}>#{inner}</dt>\n"
       end
 
-      def convert_html_raw(el, inner, indent)
-        el.value + (el.options[:type] == :block ? "\n" : '')
-      end
-
       HTML_TAGS_WITH_BODY=['div', 'script']
 
       def convert_html_element(el, inner, indent)
@@ -146,6 +142,15 @@ module Kramdown
           output
         end
       end
+
+      def convert_html_text(el, inner, indent)
+        escape_html(el.value, false)
+      end
+
+      def convert_xml_comment(el, inner, indent)
+        el.value + (el.options[:type] == :block ? "\n" : '')
+      end
+      alias :convert_xml_pi :convert_xml_comment
 
       def convert_br(el, inner, indent)
         "<br />"

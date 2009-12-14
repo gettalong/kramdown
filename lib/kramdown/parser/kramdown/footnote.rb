@@ -54,7 +54,7 @@ module Kramdown
           end
           if !fn_def[:marker] || !valid
             fn_def[:marker] = Element.new(:footnote, nil, :name => @src[1])
-            fn_def[:marker].options[:stack] = [@stack, @tree, fn_def[:marker]].flatten.compact
+            fn_def[:marker].options[:stack] = [@stack.map {|s| s.first}, @tree, fn_def[:marker]].flatten.compact
             @tree.children << fn_def[:marker]
           else
             warning("Footnote marker '#{@src[1]}' already appeared in document, ignoring newly found marker")
