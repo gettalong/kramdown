@@ -723,10 +723,10 @@ inside a raw HTML block.
 
 Also, if an invalid closing tag is found, it is ignored.
 
-By default, kramdown parses all HTML/XML tags as raw HTML blocks. However, this can be configured
-with the `:parse_block_html` option. If this is set to `true`, then syntax parsing in HTML blocks is
-globally enabled. It is also possible to enable/disable syntax parsing on a tag per tag basis using
-the `markdown` attribute:
+By default, kramdown parses all block HTML tags and all XML tags as raw HTML blocks. However, this
+can be configured with the `:parse_block_html` option. If this is set to `true`, then syntax parsing
+in HTML blocks is globally enabled. It is also possible to enable/disable syntax parsing on a tag
+per tag basis using the `markdown` attribute:
 
 * If an HTML tag has an attribute `markdown="0"`, then the tag is parsed as raw HTML block.
 
@@ -739,7 +739,8 @@ the `markdown` attribute:
 * If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
   level elements.
 
-The following list shows which HTML tags are parsed in which mode by default:
+The following list shows which HTML tags are parsed in which mode by default when `markdown="1"` is
+applied or `:parse_block_html` is `true`:
 
 Parse as raw HTML block
 : 
@@ -762,17 +763,23 @@ Parse as span level elements
 > above lists also include span level HTML tags in the case the `markdown` attribute is used on a
 > tag inside a raw HTML block.
 
-Here is a simple example with `:parse_block_html` set to `false`:
+Here is a simple example input and its output with `:parse_block_html` set to `false`:
 
     This is a para.
     <div>
     Something in here.
     </div>
     Other para.
+^
+    <p>This is a para.</p>
+    <div>
+    Something in here.
+    </div>
+    <p>Other para.</p>
 
-The content of the `div` tag will be parsed as raw HTML block and left alone. When setting
-`:parse_block_html` to `true` or using the `markdown="1"` attribute, the content will be parsed as
-block level elements and therefore be converted to a paragraph.
+As one can see the content of the `div` tag will be parsed as raw HTML block and left alone.
+However, if the `markdown="1"` attribute was used on the `div` tag, the content would be parsed as
+block level elements and therefore converted to a paragraph.
 
 You can also use several HTML tags at once:
 
@@ -786,17 +793,18 @@ You can also use several HTML tags at once:
 However, remember that if the content of a tag is parsed as block level elements, the content that
 appears after a start/end tag but on the same line, is processed as if it appears on a new line:
 
-    <div>This is the first part of a para,
+    <div markdown="1">This is the first part of a para,
     which is continued here.
     </div>
 
-    <p>This works without problems because it is parsed as span level elements</p>
+    <p markdown="1">This works without problems because it is parsed as span level elements</p>
 
-    <div>The end tag is not found because
+    <div markdown="1">The end tag is not found because
     this line is parsed as a paragraph</div>
 
-It is generally better to selectively enable or disable block/span level elements parsing by using
-the `markdown` attribute!
+Since setting `:parse_block_html` to `true` can lead to some not wanted behaviour, it is generally
+better to selectively enable or disable block/span level elements parsing by using the `markdown`
+attribute!
 
 Unclosed block level HTML tags are correctly closed at the end of the document to ensure correct
 nesting and invalidly used end tags are removed from the output:
@@ -810,7 +818,6 @@ nesting and invalidly used end tags are removed from the output:
     <div>
       <p>Another para.</p>
     </div>
-
 
 The parsing of processing instructions and XML comments is also supported. The content of both, PIs
 and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
@@ -1160,7 +1167,7 @@ can only be used inside one block level element, it is not possible to use a sta
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br />` instead of `<br>`.
 
-By default, kramdown parses kramdown syntax inside HTML spans. However, this behaviour can be
+By default, kramdown parses kramdown syntax inside span HTML tags. However, this behaviour can be
 configured with the `:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML
 spans is enabled, if it is set to `false`, parsing is disabled. It is also possible to
 enable/disable syntax parsing on a tag per tag basis using the `markdown` attribute:
