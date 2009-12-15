@@ -13,8 +13,13 @@ modified_at: 2009-12-03 20:25:00 +02:00
 * Major changes:
 
   - Added a compatibility fix so that kramdown works under Ruby 1.8.5 (requested by Steve Huff)
+  - Complete overhaul of the used HTML syntax and parser
 
 * Bug fixes:
+
+  - Fixed warnings on Ruby 1.9
+  - Fixed bug in emphasis parser where emphasis started with an underscore at the beginning of a new
+    line inside a paragraph was not recognized
 
 * Deprecation notes:
 
