@@ -33,7 +33,7 @@ module Kramdown
         type = (result =~ /_/ ? '_' : '*')
         reset_pos = @src.pos
 
-        if (type == '_' && @src.pre_match =~ /[[:alpha:]]\Z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/)
+        if (type == '_' && @src.pre_match =~ /[[:alpha:]]\z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/)
           add_text(result)
           return
         end
