@@ -13,7 +13,9 @@ modified_at: 2009-12-03 20:25:00 +02:00
 * Major changes:
 
   - Added a compatibility fix so that kramdown works under Ruby 1.8.5 (requested by Steve Huff)
-  - Complete overhaul of the used HTML syntax and parser
+  - Complete overhaul of the used block HTML syntax and block HTML parser
+  - Using the same semantics for invalid end tags and unclosed tags in the block and span HTML
+    parser
 
 * Bug fixes:
 
