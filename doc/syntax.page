@@ -1165,7 +1165,8 @@ literal meaning of a backtick you can backslash-escape it:
 HTML tags cannot only be used on the block level but also on the span level. Span level HTML tags
 can only be used inside one block level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
-you have to use, for example, `<br />` instead of `<br>`.
+you have to use, for example, `<br />` instead of `<br>` (although kramdown tries to fix such errors
+if possible).
 
 By default, kramdown parses kramdown syntax inside span HTML tags. However, this behaviour can be
 configured with the `:parse_span_html` option. If this is set to `true`, then syntax parsing in HTML
@@ -1195,7 +1196,16 @@ be preceded by at least one non whitespace character on the same line so that kr
 recognizes them as span level element and not as block level element. However, all span HTML tags,
 i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
 
-Unclosed HTML tags as well as invalidly used end tags or block HTML tags are escaped.
+Unclosed span level HTML tags are correctly closed at the end of the span level text to ensure
+correct nesting and invalidly used end tags or block HTML tags are removed from the output:
+
+    This is </invalid>.
+
+    This <span>is automatically closed.
+^
+    <p>This is .</p>
+
+    <p>This <span>is automatically closed.</span></p>
 
 Also note that one or more consecutive new line characters in an HTML span tag are replaced by a
 single space, for example:

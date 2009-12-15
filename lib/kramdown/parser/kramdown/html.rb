@@ -195,7 +195,7 @@ module Kramdown
       end
 
 
-      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--)/
+      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
       # Parse the HTML at the current position as span level HTML.
       def parse_span_html
@@ -203,11 +203,11 @@ module Kramdown
           @tree.children << Element.new(:xml_comment, result, :type => :span)
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
           @tree.children << Element.new(:xml_pi, result, :type => :span)
+        elsif result = @src.scan(HTML_TAG_CLOSE_RE)
+          warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
         elsif result = @src.scan(HTML_TAG_RE)
-          if HTML_BLOCK_ELEMENTS.include?(@src[1])
-            add_text(result)
-            return
-          end
+          return if HTML_BLOCK_ELEMENTS.include?(@src[1])
+
           reset_pos = @src.pos
           attrs = {}
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
@@ -236,11 +236,11 @@ module Kramdown
             if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]), (do_parsing ? :text : :html_text))
               end_pos = @src.pos
               @src.scan(stop_re)
-              @tree.children << el
             else
-              @src.pos = reset_pos
-              add_text(result)
+              warning("Found no end tag for '#{el.value}' - auto-closing it")
+              add_text(@src.scan(/.*/m))
             end
+            @tree.children << el
           end
         else
           add_text(@src.scan(/./))

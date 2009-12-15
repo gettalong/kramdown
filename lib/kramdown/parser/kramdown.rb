@@ -179,7 +179,7 @@ module Kramdown
               end
             end
           else
-            add_text(@src.scan_until(/.*/m)) unless stop_re
+            add_text(@src.scan(/.*/m)) unless stop_re
             break
           end
         end

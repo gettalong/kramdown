@@ -19,6 +19,10 @@ Auto-closing: <br>
 
 An invalid tag: <hr>
 
+A <p>block tag</p>.
+
 An invalid </closing> tag.
 
 A <script>*not*</script> tag.
+
+An <span>unclosed *tag.*
