@@ -87,4 +87,4 @@ out kramdown use the following command:
 ## Dependencies
 
 Since kramdown is written in Ruby, you just need the [Ruby interpreter](http://www.ruby-lang.org)
-versions 1.8.6, 1.8.7 or 1.9.1. There are no other dependencies.
+versions 1.8.5, 1.8.6, 1.8.7 or 1.9.1. There are no other dependencies.
