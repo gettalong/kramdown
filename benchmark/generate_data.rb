@@ -73,7 +73,7 @@ if options[:historic]
          end
   data.first << " #{options[:historic]}"
   MULTIPLIER.each_with_index do |m, i|
-    $stderr.puts "Generating static benchmark data, multiplier #{m}"
+    $stderr.puts "Generating historic benchmark data, multiplier #{m}"
     mddata = BMDATA*m
     Benchmark::measure { Kramdown::Document.new(mddata).to_html }
     data[i+1] << " %10.5f" % Benchmark::measure { Kramdown::Document.new(mddata).to_html }.real
