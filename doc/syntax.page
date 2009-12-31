@@ -691,20 +691,23 @@ There are three different line types that can be used in a table:
 
 * A *table row* is started with a pipe character, optionally indented up to three spaces, and then
   the text of the first table cell. Additional table cells can be added by using the pipe character
-  and then the text of the next table. One may optionally use a pipe character at the the end of a
-  table row line. Literal pipe characters need to be escaped. For example:
+  and then the text of the next table cell. One may optionally use a pipe character at the the end
+  of a table row line. Header rows and normal rows are all made using these table rows. Note that
+  literal pipe characters need to be escaped. For example:
 
       | First cell|Second cell|Third cell
       | First | Second | Third |
 
-* A *header line* is started with a pipe character, optionally indented up to three spaces. This
-  starts the first part (corresponds to the first table columen) and all other pipe character on the
-  line (except at the end of a header line) start another part corresponding to a table column. Each
-  part starts with one or more optional spaces and an optional colon, followed by one or more dashes
-  and finally an optional colon and another set of one or more optional spaces. For example:
+* A *header separator line* is started with a pipe character -- which starts the first column --,
+  optionally indented up to three spaces, followed by one or more optional spaces/tabs and an
+  optional colon, followed by one or more dashes and finally an optional colon and another set of
+  one or more optional spaces/tabs. Each other column also starts with a pipe character and follows
+  the same syntax as the first column. The colons are used for aligning the content of each column,
+  as explained below. For example:
 
       |---|---|---|
       | :-: |:------| ---:|
+      |-
 
 * A *separator line* is started with a pipe character, optionally indented up to three spaces,
   followed by at least one dash and then any number and combination of pipes, pluses and dashes. For
@@ -714,11 +717,13 @@ There are three different line types that can be used in a table:
       |----+----|
       |-
 
-Trailing spaces or tabs are ignored in all cases.
+Trailing spaces or tabs are ignored in all cases. The header separator line and the normal separator
+lines need not match the columns of any other table line intentionally to speed up and simplify
+table creation and maintenance.
 
-A table is specified by an optional separator line, one or more table rows, an optional header line,
-zero or more table rows, optionally interspersed with separator lines, and an optional trailing
-separator line.
+Given the above components, a table is specified by an optional separator line, one or more table
+rows, an optional header separator line, zero or more table rows, optionally interspersed with
+separator lines, and an optional trailing separator line.
 
 The meaning of all the different line types and their usage is explained using the following
 example:
@@ -726,14 +731,12 @@ example:
     |-----------------+------------+-----------------+----------------|
     | Default aligned |Left aligned| Center aligned  | Right aligned  |
     | --------------- |:-----------| :-------------: | -------------: |
-    | First body part |Second cell | Third  cell     | fourth cell    |
+    | First body part |Second cell | Third cell      | fourth cell    |
     | Second line     |foo         | **strong**      | baz            |
     | Third line      |quux        | baz             | bar            |
     |-----------------+------------+-----------------+----------------|
     | Second body     |            |                 |                |
     | 2 line          |            |                 |                |
-    |-----------------+------------+-----------------+----------------|
-    | Footer line     |            |                 |                |
     |-----------------+------------+-----------------+----------------|
 
 * The starting separator line is optional and can be used when creating a nice visual table.
@@ -741,24 +744,39 @@ example:
 * Table cells in table rows can only contain a single line of text, no multiline text is supported.
   The text of a table cell is parsed as span level elements.
 
-* If the table contains a header line, all table rows until the header line are considered to
-  contain table header cells. The colons of a header line are used for *aligning the columns*: if
+* If the table contains a header separator line, all table rows until the header line are considered
+  to contain table header cells. The colons of a header line are used for *aligning the columns*: if
   there is no colon, the column uses the default alignment, if there is a colon only before the
   dashes, the column is left aligned, if there are colons before and after the dashes, the column is
   center aligned and if there is only a colon after the dashes, the column is right aligned.
 
-* If the table has a trailing separator line and there is at least one separator line between table
-  rows, all table rows between the last separator line and the trailing separator line are
-  considered to contain table footer cells.
+  If a header separator line does not contain specifications for one or more columns, all not
+  specified columns will use the default alignment.
 
-* Multiple table body parts can be created by using separator lines. In such cases it is advised
-  to *not* use a trailing separator line sothat a table footer is not created accidentally.
+* Multiple table body parts can be created by using separator lines.
+
+* The trailing separator line is optional and can be used when creating a nice visual table.
+
+The above example table is rather time-consuming to create without the help of an ASCII table
+editor. However, the table syntax is flexible and the following table is equivalent to the one above
+but doesn't look as nice:
+
+    |---
+    | Default aligned | Left aligned | Center aligned | Right aligned
+    |-|:-|:-:|-:
+    | First body part | Second cell | Third cell | fourth cell
+    | Second line |foo | **strong** | baz
+    | Third line |quux | baz | bar
+    |---
+    | Second body
+    | 2 line
+    |---
 
 > The table syntax differs from the one used in [PHP Markdown Extra] as follows:
 >
 > * kramdown tables have to begin with a pipe character, this is optional in [PHP Markdown Extra].
 > * kramdown tables do not need to have a table header.
-> * kramdown tables can be visually structured using separator lines.
+> * kramdown tables can be structured using separator lines.
 {: .markdown-difference}
 
 
