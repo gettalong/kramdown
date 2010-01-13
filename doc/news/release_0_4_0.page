@@ -1,0 +1,17 @@
+---
+title: kramdown 0.4.0 released
+no_output: true
+sort_info: r0003
+created_at: 2009-12-20 15:50:00 +02:00
+modified_at: 2009-12-20 15:50:00 +02:00
+---
+## kramdown 0.4.0 released
+
+
+## Changes
+
+* Major changes:
+
+  - Added [syntax][1] for simple tables
+
+[1]: ../syntax.html#tables
