@@ -854,7 +854,8 @@ content is parsed:
 
 * Parse as span level elements: If the HTML/XML tag content should be parsed as text containing span
   level elements, then all text until the *next* matching end tag or until the end of the document
-  will be the content of the tag and will later be parsed by the span level parser.
+  will be the content of the tag and will later be parsed by the span level parser. This also means
+  that if the matching end tag is inside what appears to be a code span, it is still used!
 
 If there is text after an end tag, it will be parsed as if it appears on a separate line except when
 inside a raw HTML block.
