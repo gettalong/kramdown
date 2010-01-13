@@ -258,7 +258,7 @@ module Kramdown
           end
           para.children << ref
         end
-        (ol.children.empty? ? '' : "<div class=\"kramdown-footnotes\">\n#{convert(ol, 2)}</div>\n")
+        (ol.children.empty? ? '' : "<div class=\"footnotes\">\n#{convert(ol, 2)}</div>\n")
       end
 
       # Return the string with the attributes of the element +el+.

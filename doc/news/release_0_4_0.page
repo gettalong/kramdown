@@ -14,4 +14,8 @@ modified_at: 2009-12-20 15:50:00 +02:00
 
   - Added [syntax][1] for simple tables
 
+* Minor changes:
+
+  - Changed CSS class name `kramdown-footnotes` to `footnotes` for better compatibility
+
 [1]: ../syntax.html#tables
