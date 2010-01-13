@@ -1,0 +1,32 @@
+Simple header
+
+| cell1 | cell2
+|-----
+| cell3 | cell4
+
+Full header
+
+| cell1 | cell2
+|-------|-------|
+| cell3 | cell4
+
+With alignment
+
+| default | left | center | right | default
+|-| :- |:-: | -:
+| cell1 | cell2 | cell3 | cell4 | cell5
+
+Header without rows
+
+|:-:|:-:|
+| cell1 | cell2
+|-------|-------|
+| cell3 | cell4
+
+Multiple bodies
+
+| cell1 | cell2
++ :-:   + :---:
+| cell3 | cell4
+|----|||
+| cell5 | cell6

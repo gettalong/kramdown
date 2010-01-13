@@ -31,6 +31,8 @@ module Kramdown
     # Converts a Kramdown::Document to HTML.
     class Html
 
+      INDENTATION = 2
+
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
@@ -45,10 +47,10 @@ module Kramdown
       end
 
       # Convert the element tree +el+, setting the indentation level to +indent+.
-      def convert(el, indent = -2)
+      def convert(el, indent = -INDENTATION)
         result = ''
         el.children.each do |inner_el|
-          result << convert(inner_el, indent + 2)
+          result << convert(inner_el, indent + INDENTATION)
         end
         send("convert_#{el.type}", el, result, indent)
       end
@@ -151,6 +153,28 @@ module Kramdown
         el.value + (el.options[:type] == :block ? "\n" : '')
       end
       alias :convert_xml_pi :convert_xml_comment
+
+      def convert_table(el, inner, indent)
+        if el.options[:alignment].all? {|a| a == :default}
+          alignment = ''
+        else
+          alignment = el.options[:alignment].map do |a|
+            "#{' '*(indent + INDENTATION)}" + (a == :default ? "<col />" : "<col align=\"#{a}\" />") + "\n"
+          end.join('')
+        end
+        "#{' '*indent}<table#{options_for_element(el)}>\n#{alignment}#{inner}#{' '*indent}</table>\n"
+      end
+
+      def convert_thead(el, inner, indent)
+        "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner}#{' '*indent}</#{el.type}>\n"
+      end
+      alias :convert_tbody :convert_thead
+      alias :convert_tfoot :convert_thead
+      alias :convert_tr  :convert_thead
+
+      def convert_td(el, inner, indent)
+        "#{' '*indent}<td#{options_for_element(el)}>#{inner.empty? ? "&nbsp;" : inner}</td>\n"
+      end
 
       def convert_br(el, inner, indent)
         "<br />"

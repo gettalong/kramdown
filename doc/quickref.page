@@ -252,6 +252,36 @@ This *is* a term
 {::kdexample:}
 
 
+## Tables
+
+{::kdlink:: #tables part="tables"}
+
+kramdown supports a syntax for creating simple tables. A line starting with a pipe character (`|`)
+starts a table row. However, if the pipe characters is immediately followed by a dash (`-`), a
+separator line is created. Separator lines are used to split the table header from the table body
+(and optionally align the table columns) and to split the table body into multiple parts. If the
+pipe character is followed by an equal sign (`=`), the tables rows below it are part of the table
+footer.
+
+{::kdexample:}
+| A simple | table |
+| with multiple | lines|
+{::kdexample:}
+
+{::kdexample:}
+| Header1 | Header2 | Header3 |
+|:--------|:-------:|--------:|
+| cell1   | cell2   | cell3   |
+| cell4   | cell5   | cell6   |
+|----
+| cell1   | cell2   | cell3   |
+| cell4   | cell5   | cell6   |
+|=====
+| Foot1   | Foot2   | Foot3
+{: rules="groups"}
+{::kdexample:}
+
+
 ## HTML elements
 
 {::kdlink:: #html-blocks part="HTML blocks"}

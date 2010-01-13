@@ -697,7 +697,8 @@ There are four different text line types that can be used in a table:
 
   Header rows, footer rows and normal rows are all made using these table rows. Table cells can only
   contain a single line of text, no multiline text is supported. The text of a table cell is parsed
-  as span level elements. Note that literal pipe characters need to be escaped.
+  as span level elements. Note that literal pipe characters need to be escaped, even if they occur
+  in code spans!
 
   Here are some example table rows:
 
@@ -709,6 +710,7 @@ There are four different text line types that can be used in a table:
   A separator line is started with a pipe or plus character, optionally indented up to three spaces,
   followed by at least one dash and then any number and combination of pipes, dashes and pluses. The
   pipe and plus characters can be used to visually separate columns although this is not needed.
+  Multiple separator lines after another are treated as one separator line.
 
   Here are some example separator lines:
 
@@ -733,8 +735,6 @@ There are four different text line types that can be used in a table:
 
   If a header separator line does not contain alignment definitions for one or more columns, all
   unspecified columns will use the default alignment.
-
-  Also note that the syntax of normal separator lines is a subset of this syntax!
 
   A header separator line may only appear once in a table. If multiple header separator lines are
   used in one table, only the first is treated as header separator line, all others are treated as
@@ -769,9 +769,9 @@ even `|-` and `|=` are a valid separators.
 Given the above components, a table is specified by
 
 * an optional separator line,
-* optionally followed by one or more table rows followed by a header separator line,
+* optionally followed by zero, one or more table rows followed by a header separator line,
 * one or more table rows, optionally interspersed with separator lines,
-* optionally followed by a footer separator line and one or more table rows and
+* optionally followed by a footer separator line and zero, one or more table rows and
 * an optional trailing separator line.
 
 > The table syntax differs from the one used in [PHP Markdown Extra] as follows:

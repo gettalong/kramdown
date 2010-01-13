@@ -81,7 +81,7 @@ module Kramdown
       private
       #######
 
-      BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
+      BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                        :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
                        :footnote_definition, :ald, :block_ial, :extension_block, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
@@ -249,6 +249,7 @@ module Kramdown
       require 'kramdown/parser/kramdown/paragraph'
       require 'kramdown/parser/kramdown/header'
       require 'kramdown/parser/kramdown/blockquote'
+      require 'kramdown/parser/kramdown/table'
       require 'kramdown/parser/kramdown/codeblock'
       require 'kramdown/parser/kramdown/horizontal_rule'
       require 'kramdown/parser/kramdown/list'
