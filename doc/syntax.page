@@ -733,9 +733,6 @@ There are four different text line types that can be used in a table:
   column is left aligned, if there are colons before and after the dashes, the column is center
   aligned and if there is only a colon after the dashes, the column is right aligned.
 
-  If a header separator line does not contain alignment definitions for one or more columns, all
-  unspecified columns will use the default alignment.
-
   A header separator line may only appear once in a table. If multiple header separator lines are
   used in one table, only the first is treated as header separator line, all others are treated as
   normal separator lines.
@@ -787,7 +784,7 @@ row:
 
     |-----------------+------------+-----------------+----------------|
     | Default aligned |Left aligned| Center aligned  | Right aligned  |
-    |-----------------|:-----------|:---------------:|--------------:-|
+    |-----------------|:-----------|:---------------:|---------------:|
     | First body part |Second cell | Third cell      | fourth cell    |
     | Second line     |foo         | **strong**      | baz            |
     | Third line      |quux        | baz             | bar            |
