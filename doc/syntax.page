@@ -78,6 +78,7 @@ Following is a list of all those characters (character sequences) that can be es
     !         bang
     <<        left guillemet
     >>        right guillemet
+    :         colon
     |         pipe
 
 

@@ -18,4 +18,8 @@ modified_at: 2009-12-20 15:50:00 +02:00
 
   - Changed CSS class name `kramdown-footnotes` to `footnotes` for better compatibility
 
+* Bug fixes:
+
+  - Regular expression for matching escaped characters now works correctly
+
 [1]: ../syntax.html#tables
