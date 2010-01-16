@@ -28,10 +28,10 @@ module Kramdown
   module Parser
     class Kramdown
 
-      TABLE_SEP_LINE = /^#{OPT_SPACE}(\||\+)-[-+|]*[ \t]*\n/
+      TABLE_SEP_LINE = /^#{OPT_SPACE}(\||\+)-[+|-]*[ \t]*\n/
       TABLE_HSEP_ALIGN = /[ \t]*(:?)-+(:?)[ \t]*/
       TABLE_HSEP_LINE = /^#{OPT_SPACE}((?:(?:\||\+)#{TABLE_HSEP_ALIGN})+)(?:\||\+)?[ \t]*\n/
-      TABLE_FSEP_LINE = /^#{OPT_SPACE}(\||\+)=[=+|]*[ \t]*\n/
+      TABLE_FSEP_LINE = /^#{OPT_SPACE}(\||\+)=[+|=]*[ \t]*\n/
       TABLE_ROW_LINE = /^#{OPT_SPACE}\|(.*?)[ \t]*\n/
       TABLE_START = /^#{OPT_SPACE}\|(?:-|(?!=))/
 
