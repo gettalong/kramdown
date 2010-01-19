@@ -108,7 +108,12 @@ module Kramdown
             end
           end
         end
-        table.options[:alignment] += [:default] * (columns - table.options[:alignment].length)
+        if table.options[:alignment].length > columns
+          table.options[:alignment] = table.options[:alignment][0...columns]
+        else
+          table.options[:alignment] += [:default] * (columns - table.options[:alignment].length)
+        end
+
         @tree.children << table
 
         true

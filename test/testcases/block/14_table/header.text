@@ -10,10 +10,10 @@ Full header
 |-------|-------|
 | cell3 | cell4
 
-With alignment
+With alignment and superfluous alignment defs
 
 | default | left | center | right | default
-|-| :- |:-: | -:
+|-| :- |:-: | -: | - | :-: | :-
 | cell1 | cell2 | cell3 | cell4 | cell5
 
 With leading sep line
@@ -26,7 +26,7 @@ With leading sep line
 Multiple bodies
 
 | cell1 | cell2
-+ :-:   + :---:
++ :-: 
 | cell3 | cell4
 |----|||
 | cell5 | cell6
