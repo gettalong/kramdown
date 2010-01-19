@@ -688,7 +688,7 @@ Sometimes one wants to include simple tabular data in a kramdown document for wh
 full-blown HTML table is just too much. kramdown supports this with a simple syntax for ASCII
 tables.
 
-There are four different text line types that can be used in a table:
+There are three different text line types that can be used in a table:
 
 * *Table rows* define the content of a table.
 
@@ -709,9 +709,10 @@ There are four different text line types that can be used in a table:
 * *Separator lines* are used to split the table body into multiple body parts.
 
   A separator line is started with a pipe or plus character, optionally indented up to three spaces,
-  followed by at least one dash and then any number and combination of pipes, dashes and pluses. The
-  pipe and plus characters can be used to visually separate columns although this is not needed.
-  Multiple separator lines after another are treated as one separator line.
+  followed by an optional space, an optional colon, a dash and then any number and combination of
+  pipes, dashes, pluses, colons and spaces. The pipe and plus characters can be used to visually
+  separate columns although this is not needed. Multiple separator lines after another are treated
+  as one separator line.
 
   Here are some example separator lines:
 
@@ -719,30 +720,27 @@ There are four different text line types that can be used in a table:
       +----|----+
       |---------|
       |-
+      | :-----: |
 
-* A *header separator line* is used to demarcate header rows from normal table rows and/or to set
-  column alignment. All table rows above the header separator line are considered to be header rows.
+* The first separator line after at least one table row is treated specially, namely as *header
+  separator line*. It is used to demarcate header rows from normal table rows and/or to set column
+  alignments. All table rows above the header separator line are considered to be header rows.
 
-  A header separator line is started with a pipe or plus character, optionally indented up to three
-  spaces, and then the alignment definition for the first column. Subsequent column alignment
-  definitions need to be separated by pipes or pluses. An alignment definition consists of one or
-  more optional spaces/tabs followed by an optional colon, one or more dashes, an optional colon and
-  another set of one or more optional spaces/tabs.
+  The header separator line can be specially formatted to contain column alignment definitions: An
+  alignment definition consists of an optional space followed by an optional colon, one or more
+  dashes, an optional colon and another optional space. The colons of an alignment definition are
+  used to set the alignment of a column: if there are no colons, the column uses the default
+  alignment, if there is a colon only before the dashes, the column is left aligned, if there are
+  colons before and after the dashes, the column is center aligned and if there is only a colon
+  after the dashes, the column is right aligned. Each alignment definition sets the alignment for
+  one column, the first alignment definition for the first column, the second alignment definition
+  for the second column and so on.
 
-  The colons of an alignment definition are used to set the alignment of a column: if there are no
-  colons, the column uses the default alignment, if there is a colon only before the dashes, the
-  column is left aligned, if there are colons before and after the dashes, the column is center
-  aligned and if there is only a colon after the dashes, the column is right aligned.
-
-  A header separator line may only appear once in a table. If multiple header separator lines are
-  used in one table, only the first is treated as header separator line, all others are treated as
-  normal separator lines.
-
-  Here are some example header separator lines:
+  Here are some example header separator lines with alignment definitions:
 
       |---+---+---|
       + :-: |:------| ---:|
-      |-
+      | :-: :- -: -
 
 * A *footer separator line* is used to demarcate footer rows from normal table rows. All table rows
   below the footer separator line are considered to be footer rows.

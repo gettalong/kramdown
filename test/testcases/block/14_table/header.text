@@ -16,9 +16,9 @@ With alignment
 |-| :- |:-: | -:
 | cell1 | cell2 | cell3 | cell4 | cell5
 
-Header without rows
+With leading sep line
 
-|:-:|:-:|
+|:-:|-:|
 | cell1 | cell2
 |-------|-------|
 | cell3 | cell4

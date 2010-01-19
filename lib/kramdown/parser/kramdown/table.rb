@@ -28,10 +28,9 @@ module Kramdown
   module Parser
     class Kramdown
 
-      TABLE_SEP_LINE = /^#{OPT_SPACE}(\||\+)-[+|-]*[ \t]*\n/
-      TABLE_HSEP_ALIGN = /[ \t]*(:?)-+(:?)[ \t]*/
-      TABLE_HSEP_LINE = /^#{OPT_SPACE}((?:(?:\||\+)#{TABLE_HSEP_ALIGN})+)(?:\||\+)?[ \t]*\n/
-      TABLE_FSEP_LINE = /^#{OPT_SPACE}(\||\+)=[+|=]*[ \t]*\n/
+      TABLE_SEP_LINE = /^#{OPT_SPACE}(?:\||\+)([ ]?:?-[+|: -]*)[ \t]*\n/
+      TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
+      TABLE_FSEP_LINE = /^#{OPT_SPACE}(\||\+)[ ]?:?=[+|: =]*[ \t]*\n/
       TABLE_ROW_LINE = /^#{OPT_SPACE}\|(.*?)[ \t]*\n/
       TABLE_START = /^#{OPT_SPACE}\|(?:-|(?!=))/
 
@@ -55,17 +54,15 @@ module Kramdown
         end
 
         while !@src.eos?
-          if @src.scan(TABLE_HSEP_LINE) && !rows.empty?
+          if @src.scan(TABLE_SEP_LINE) && !rows.empty?
             if table.options[:alignment].empty? && !has_footer
               add_container.call(:thead, false)
               table.options[:alignment] = @src[1].scan(TABLE_HSEP_ALIGN).map do |left, right|
                 (left.empty? && right.empty? && :default) || (right.empty? && :left) || (left.empty? && :right) || :center
               end
-            else # treat as separator line
+            else # treat as normal separator line
               add_container.call(:tbody, false)
             end
-          elsif @src.scan(TABLE_SEP_LINE) && !rows.empty?
-            add_container.call(:tbody, false)
           elsif @src.scan(TABLE_FSEP_LINE)
             add_container.call(:tbody, true) if !rows.empty?
             has_footer = true
