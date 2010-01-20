@@ -405,18 +405,34 @@ code.
 ### Showing Whitespace in a Code Block
 
 If you add the class `show-whitespaces` to a code block (using a [block
-IAL](#block_inline_attribute_lists)), all spaces are replaced with `&sdot;` and additionally spaces
+IAL](#block-inline-attribute-lists)), all spaces are replaced with `&sdot;` and additionally spaces
 and tabs in the code block are marked up using HTML `span` tags and the CSS classes:
 
 * `ws-space-l`, `ws-tab-l`: leading spaces/tabs
 * `ws-space-r`, `ws-tab-r`: trailing spaces/tabs
 * `ws-space`, `ws-tab`: spaces/tabs in between
 
-Here is an example:
+Here is an example output:
 
     	  leading tab	and space
     trailing   tab and space    	
 {: .show-whitespaces}
+
+
+### Automatic Syntax Highlighting   {#syntax-highlighting}
+
+kramdown supports syntax highlighting of code through the [CodeRay](http://coderay.rubychan.de)
+library if it is installed and if the HTML converter is used. Syntax highlighting is activated when
+you add the key `lang` to a code block (using a [block IAL](#block-inline-attribute-lists)), its
+value has to be a language supported by CodeRay.
+
+Here is an example output:
+
+    require 'kramdown'
+
+    Kramdown::Document.new('* something').to_html
+    puts 1 + 1
+{: lang='ruby'}
 
 
 ## Horizontal Rules
@@ -977,8 +993,8 @@ comments is not processed:
 This is an implementation of [Maruku]'s feature for adding attributes to block and span level
 elements (the naming is also taken from Maruku). This block level element is used to define
 attributes which can be referenced later. The [Block Inline Attribute
-List](#block_inline_attribute_lists) is used to attach attributes to a block level element and the
-[Span Inline Attribute List](#span_inline_attribute_lists) is used to attach attributes to a span
+List](#block-inline-attribute-lists) is used to attach attributes to a block level element and the
+[Span Inline Attribute List](#span-inline-attribute-lists) is used to attach attributes to a span
 level element.
 
 Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
@@ -1051,7 +1067,7 @@ ALDs are processed like they are defined in one ALD.
 {: .markdown-difference}
 
 This block level element is used to attach attributes to a block level element. A block inline
-attribute list (block IAL) has the same structure as an [ALD](#attribute_list_definitions) except
+attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
 that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
 IALs) has to be put directly after the block level element to which the attributes should be
 attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
@@ -1084,14 +1100,14 @@ An extension block has two forms, one with a body and one without a body:
 
 Without a body
 
-:   The extension block line has the same structure as an [ALD](#attribute_list_definitions) except
+:   The extension block line has the same structure as an [ALD](#attribute-list-definitions) except
     that the reference name needs to prefixed and postfixed with `:` and identifies the extension to
     be used. Attributes can be defined like it is done for an ALD.
 
 With a body
 
 :   The starting and ending lines of an extension block with a body have the same structure as an
-    [ALD](#attribute_list_definitions) except that the reference name needs to prefixed with `:` and
+    [ALD](#attribute-list-definitions) except that the reference name needs to prefixed with `:` and
     identifies the extension to be used; attributes can be defined on the starting or ending line.
     The text between the starting and ending line is passed to the extension and not parsed by
     kramdown. If no ending line is found, the starting line is ignored and the body is parsed
@@ -1420,7 +1436,7 @@ name, all footnote definitions but the last are ignored.
 > the [Maruku] package.
 {: .markdown-difference}
 
-This is a version of the [block inline attribute list](#block_inline_attribute_lists) for span level
+This is a version of the [block inline attribute list](#block-inline-attribute-lists) for span level
 elements. It has the same structure as the block IAL except that leading and trailing spaces are not
 allowed. A span IAL (or two or more span IALs) has to be put directly after the span level element,
 no additional character is allowed between.

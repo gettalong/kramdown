@@ -50,17 +50,30 @@ module Kramdown
     #
     # [:auto_ids (used by the parser)]
     #    A boolean value deciding whether automatic header ID generation is used. Default: +false+.
+    #
+    # [:coderay (used by the HTML converter)]
+    #    A hash containing options for the CodeRay syntax highlighter. If this is set to +nil+,
+    #    syntax highlighting is disabled. When using the +options+ extension, any CodeRay option can
+    #    be set by prefixing it with +coderay_+.
+    #
+    #    Default:
+    #      {:wrap => :div, :line_numbers => :inline, :line_number_start => 1,
+    #       :tab_width => 8, :bold_every => 10, :css => :style}
+    #
     # [:filter_html (used by the HTML converter)]
     #    An array of HTML tag names that defines which tags should be filtered from the output. For
     #    example, if the value contains +iframe+, then all HTML +iframe+ tags are filtered out and
     #    only the body is displayed. Default: empty array. When using the +options+ extension, the
     #    string value needs to hold the HTML tag names separated by one or more spaces.
+    #
     # [:footnote_nr (used by the HTML converter)]
     #    The initial number used for creating the link to the first footnote. Default: +1+. When
     #    using the +options+ extension, the string value needs to be a valid number.
+    #
     # [:parse_block_html (used by the parser)]
     #    A boolean value deciding whether kramdown syntax is processed in block HTML tags. Default:
     #    +false+.
+    #
     # [:parse_span_html (used by the parser)]
     #    A boolean value deciding whether kramdown syntax is processed in span HTML tags. Default:
     #    +true+.
@@ -73,7 +86,9 @@ module Kramdown
       :filter_html => [],
       :auto_ids => true,
       :parse_block_html => false,
-      :parse_span_html => true
+      :parse_span_html => true,
+      :coderay => {:wrap => :div, :line_numbers => :inline,
+        :line_number_start => 1, :tab_width => 8, :bold_every => 10, :css => :style}
     }
 
 

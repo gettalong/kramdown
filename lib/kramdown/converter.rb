@@ -33,6 +33,13 @@ module Kramdown
 
       INDENTATION = 2
 
+      begin
+        require 'coderay'
+        HIGHLIGHTING_AVAILABLE = true
+      rescue LoadError => e
+        HIGHLIGHTING_AVAILABLE = false
+      end
+
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
@@ -77,19 +84,25 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent, opts)
-        result = escape_html(el.value)
-        if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
-          result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
-            suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
-            m.scan(/./).map do |c|
-              case c
-              when "\t" then "<span class=\"ws-tab#{suffix}\">\t</span>"
-              when " " then "<span class=\"ws-space#{suffix}\">&sdot;</span>"
-              end
-            end.join('')
+        if el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE && @doc.options[:coderay]
+          el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+          result = CodeRay.scan(el.value, el.options[:attr].delete('lang').to_sym).html(@doc.options[:coderay]).chomp + "\n"
+          "#{' '*indent}<div#{options_for_element(el)}>#{result}#{' '*indent}</div>\n"
+        else
+          result = escape_html(el.value)
+          if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
+            result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
+              suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
+              m.scan(/./).map do |c|
+                case c
+                when "\t" then "<span class=\"ws-tab#{suffix}\">\t</span>"
+                when " " then "<span class=\"ws-space#{suffix}\">&sdot;</span>"
+                end
+              end.join('')
+            end
           end
+          "#{' '*indent}<pre#{options_for_element(el)}><code>#{result}#{result =~ /\n\Z/ ? '' : "\n"}</code></pre>\n"
         end
-        "#{' '*indent}<pre#{options_for_element(el)}><code>#{result}#{result =~ /\n\Z/ ? '' : "\n"}</code></pre>\n"
       end
 
       def convert_blockquote(el, indent, opts)

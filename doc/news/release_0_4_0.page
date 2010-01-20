@@ -13,6 +13,7 @@ modified_at: 2009-12-20 15:50:00 +02:00
 * Major changes:
 
   - Added [syntax][1] for simple tables
+  - Added optional [syntax highlighting][2] of code blocks through the CodeRay library
 
 * Minor changes:
 
@@ -23,3 +24,4 @@ modified_at: 2009-12-20 15:50:00 +02:00
   - Regular expression for matching escaped characters now works correctly
 
 [1]: ../syntax.html#tables
+[2]: ../syntax.html#syntax-highlighting

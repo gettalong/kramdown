@@ -65,6 +65,25 @@ module Kramdown
       if val = opts.delete('parse_span_html')
         parser.doc.options[:parse_span_html] = boolean_value(val)
       end
+      if val = opts.delete('coderay_wrap')
+        (parser.doc.options[:coderay] ||= {})[:wrap] = (val.empty? ? nil : val.to_sym)
+      end
+      if val = opts.delete('coderay_css')
+        (parser.doc.options[:coderay] ||= {})[:css] = val.to_sym
+      end
+      if val = opts.delete('coderay_tab_width')
+        (parser.doc.options[:coderay] ||= {})[:tab_width] = val.to_i
+      end
+      if val = opts.delete('coderay_line_numbers')
+        (parser.doc.options[:coderay] ||= {})[:line_numbers] = (val.empty? ? nil : val.to_sym)
+      end
+      if val = opts.delete('coderay_line_number_start')
+        (parser.doc.options[:coderay] ||= {})[:line_number_start] = val.to_i
+      end
+      if val = opts.delete('coderay_bold_every')
+        (parser.doc.options[:coderay] ||= {})[:bold_every] = val.to_i
+      end
+
       opts.each {|k,v| parser.warning("Unknown kramdown options '#{k}'")}
     end
 

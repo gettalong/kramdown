@@ -51,7 +51,7 @@ module Kramdown
       ALD_ID_CHARS = /[\w\d-]/
       ALD_ANY_CHARS = /\\\}|[^\}]/
       ALD_ID_NAME = /(?:\w|\d)#{ALD_ID_CHARS}*/
-      ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])+?)\2/
+      ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])*?)\2/
       ALD_TYPE_CLASS_NAME = /\.(#{ALD_ID_NAME})/
       ALD_TYPE_ID_NAME = /#(#{ALD_ID_NAME})/
       ALD_TYPE_REF = /(#{ALD_ID_NAME})/
@@ -72,7 +72,7 @@ module Kramdown
       # Parse the inline attribute list at the current location.
       def parse_block_ial
         @src.pos += @src.matched_size
-        if @tree.children.last && @tree.children.last.type != :blank
+        if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
           parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
         end
         true

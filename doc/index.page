@@ -27,6 +27,7 @@ The kramdown package provides two ways for using it:
       require 'kramdown'
 
       Kramdown::Document.new(text).to_html
+  {: lang='ruby'}
 
   The second parameter to the `new` call is an options hash for (de)activating certain features. For
   more information have a look at the [API documentation]({relocatable: rdoc/index.html}).
