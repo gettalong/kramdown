@@ -59,7 +59,6 @@ if defined? Webgen
       config['sources'] = [['/', "Webgen::Source::FileSystem", 'doc']]
       config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
       config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
-      config['contentprocessor.map']['kramdown'] = 'Kramdown::KDConverter'
     end
   end
 
@@ -258,22 +257,6 @@ task :clobber => ['dev:clobber']
 # Helper methods and misc  ###################################################################
 
 module Kramdown
-
-  # Processes content in kramdown format using the +maruku+ library.
-  class KDConverter
-
-    # Convert the content in +context+ to HTML.
-    def call(context)
-      extend Webgen::Loggable
-      doc = ::Kramdown::Document.new(context.content)
-      context.content = doc.to_html
-      doc.warnings.each do |warn|
-        log(:warn) { "Warning while parsing #{context.ref_node.alcn} with kramdown: #{warn}" }
-      end
-      context
-    end
-
-  end
 
   class Extension
 

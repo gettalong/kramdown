@@ -20,4 +20,4 @@ features:
 
 * Supports common Markdown extension (similar to Maruku)
 
-[Syntax]: {relocatable: ../syntax.html}
+[Syntax]: ../syntax.html

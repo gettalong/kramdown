@@ -10,7 +10,7 @@ the kramdown syntax is a superset of the Markdown syntax, only a small part of t
 is not available in standard Markdown syntax. Note, that only the most basic syntax information is
 given. However, a link to the detailed syntax for each element is provided (which also details the
 differences to the standard Markdown syntax). The quick reference is for version **<%=
-Kramdown::VERSION %>** of the syntax documentation.
+::Kramdown::VERSION %>** of the syntax documentation.
 
 kramdown has two main classes of elements: block and span level elements. Block level elements are
 used to create paragraphs, headers, lists and so on whereas span level elements are used to markup
