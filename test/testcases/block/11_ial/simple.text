@@ -3,13 +3,15 @@ Some paragraph.
 
 > quote
 {: #id}
-{: .class}
+  {: .class}
 
 * list
 {: key="val"}
 
     code block
-  {: #other}
+{: #other}
+
+    other code block
 
 ## A header
 {:#myid}

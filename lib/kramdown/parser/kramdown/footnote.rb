@@ -28,7 +28,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n(?:#{BLANK_LINE}?#{CODEBLOCK_MATCH})*)/
+      FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n(?:#{BLANK_LINE}?#{CODEBLOCK_LINE})*)/
 
       # Parse the foot note definition at the current location.
       def parse_footnote_definition
@@ -38,6 +38,7 @@ module Kramdown
         parse_blocks(el, @src[2].gsub(INDENT, ''))
         warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @doc.parse_infos[:footnotes][@src[1]]
         (@doc.parse_infos[:footnotes][@src[1]] = {})[:content] = el
+        true
       end
       define_parser(:footnote_definition, FOOTNOTE_DEFINITION_START)
 
