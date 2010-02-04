@@ -1,0 +1,26 @@
+---
+title: kramdown 0.5.0 released
+no_output: true
+sort_info: r0004
+created_at: 2010-01-22 16:30:00 +02:00
+modified_at: 2010-01-22 16:30:00 +02:00
+---
+## kramdown 0.5.0 released
+
+The internals have been restructured slightly. So if you do more than just using the basic
+
+    Kramdown::Document.new(SOURCE, OPTIONS).to_html
+{: lang="ruby"}
+
+you may need to adapt your code.
+
+
+## Changes
+
+* Minor changes:
+
+  - Some code restructurations
+
+* Bug fixes:
+
+  - Fixed problem with multibyte encodings under Ruby 1.9
