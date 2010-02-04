@@ -121,7 +121,7 @@ module Kramdown
         @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val}
 
         parse_type = if @tree.type != :html_element || @tree.options[:parse_type] != :raw
-                       (@doc.options[:parse_block_html] ? HTML_PARSE_AS[name] : :raw)
+                       (@options[:parse_block_html] ? HTML_PARSE_AS[name] : :raw)
                      else
                        :raw
                      end
@@ -212,7 +212,7 @@ module Kramdown
           attrs = {}
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
-          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) ? false : @doc.options[:parse_span_html])
+          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) ? false : @options[:parse_span_html])
           if val = get_parse_type(attrs.delete('markdown'))
             if val == :block
               warning("Cannot use block level parsing in span level HTML tag - using default mode")

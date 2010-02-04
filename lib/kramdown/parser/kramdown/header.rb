@@ -50,7 +50,7 @@ module Kramdown
         el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
         add_text(text, el)
         el.options[:attr] = {'id' => id} if id
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
+        el.options[:attr] = {'id' => generate_id(text)} if @options[:auto_ids] && !id
         @tree.children << el
         true
       end
@@ -70,7 +70,7 @@ module Kramdown
         el = Element.new(:header, nil, :level => level.length)
         add_text(text, el)
         el.options[:attr] = {'id' => id} if id
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
+        el.options[:attr] = {'id' => generate_id(text)} if @options[:auto_ids] && !id
         @tree.children << el
         true
       end
