@@ -213,6 +213,24 @@ module Kramdown
         ial.each {|k,v| attr[k] = v if k.kind_of?(String) && k != 'class' }
       end
 
+      # Extract the part of the StringScanner backed string specified by the +range+. This method
+      # also works correctly under Ruby 1.9.
+      def extract_string(range)
+        result = nil
+        if RUBY_VERSION >= '1.9'
+          begin
+            enc = @src.string.encoding
+            @src.string.force_encoding('ASCII-8BIT')
+            result = @src.string[range].force_encoding(enc)
+          ensure
+            @src.string.force_encoding(enc)
+          end
+        else
+          result = @src.string[range]
+        end
+        result
+      end
+
 
       @@parsers = {}
 

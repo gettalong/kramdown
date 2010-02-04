@@ -42,7 +42,7 @@ module Kramdown
           el = Element.new(elem)
           stop_re = /#{Regexp.escape(delim)}/
           found = parse_spans(el, stop_re) do
-            (@src.string[@src.pos-1, 1] !~ /\s/) &&
+            (@src.pre_match[-1, 1] !~ /\s/) &&
               (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
               (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alpha:]]/)) && el.children.size > 0
           end

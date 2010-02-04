@@ -146,7 +146,7 @@ module Kramdown
             end
           elsif parse_type == :span
             if result = @src.scan_until(/(?=<\/#{el.value}\s*>)/m)
-              add_text(@src.string[curpos...@src.pos], el)
+              add_text(extract_string(curpos...@src.pos), el)
               @src.scan(HTML_TAG_CLOSE_RE)
             else
               add_text(@src.scan(/.*/m), el)
