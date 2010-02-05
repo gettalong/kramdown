@@ -20,6 +20,7 @@ you may need to adapt your code.
 * Minor changes:
 
   - Some code restructurations
+  - The quotation mark `"` is not converted to `&quot;` in normal text anymore.
 
 * Bug fixes:
 

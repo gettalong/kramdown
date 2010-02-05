@@ -103,7 +103,7 @@ module Kramdown
       end
 
       def convert_text(el, indent, opts)
-        escape_html(el.value, false)
+        escape_html(el.value, :text)
       end
 
       def convert_eob(el, indent, opts)
@@ -197,7 +197,7 @@ module Kramdown
       end
 
       def convert_html_text(el, indent, opts)
-        escape_html(el.value, false)
+        escape_html(el.value, :text)
       end
 
       def convert_xml_comment(el, indent, opts)
@@ -321,23 +321,30 @@ module Kramdown
 
       # Return the string with the attributes of the element +el+.
       def options_for_element(el)
-        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, false)}\"" }.sort.join('')
+        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :no_entities)}\"" }.sort.join('')
       end
 
       ESCAPE_MAP = {
         '<' => '&lt;',
         '>' => '&gt;',
-        '"' => '&quot;',
-        '&' => '&amp;'
+        '&' => '&amp;',
+        '"' => '&quot;'
       }
       ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| Regexp.escape(k)})
-      ESCAPE_ALL_NOT_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
+      ESCAPE_NO_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
+      ESCAPE_NORMAL = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, /<|>|&/)
+      ESCAPE_RE_FROM_TYPE = {
+        :all => ESCAPE_ALL_RE,
+        :no_entities => ESCAPE_NO_ENTITIES_RE,
+        :text => ESCAPE_NORMAL
+      }
 
-      # Escape the special HTML characters in the string +str+. If +all+ is +true+ then all
-      # characters are escaped, if +all+ is +false+ then only those characters are escaped that are
-      # not part on an HTML entity.
-      def escape_html(str, all = true)
-        str.gsub(all ? ESCAPE_ALL_RE : ESCAPE_ALL_NOT_ENTITIES_RE) {|m| ESCAPE_MAP[m] || m}
+      # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
+      # is escaped: <tt>:all</tt> - all special HTML characters as well as entities,
+      # <tt>:no_entities</tt> - all special HTML characters but no entities, <tt>:text</tt> - all
+      # special HTML characters except the quotation mark but no entities.
+      def escape_html(str, type = :all)
+        str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
       end
 
     end
