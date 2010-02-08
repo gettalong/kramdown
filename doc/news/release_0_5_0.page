@@ -14,8 +14,14 @@ The internals have been restructured slightly. So if you do more than just using
 
 you may need to adapt your code.
 
+Since the option handling has been revamped, each coderay option must not be set separably.
+
 
 ## Changes
+
+* Major changes:
+
+  - Enhanced the `kramdown` binary (it now supports setting the available options)
 
 * Minor changes:
 

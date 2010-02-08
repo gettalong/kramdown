@@ -21,6 +21,28 @@
 #++
 #
 
+require 'optparse'
 require 'kramdown'
 
-puts Kramdown::Document.new(ARGF.read).to_html
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
+
+  Kramdown::Options.definitions.each do |n, definition|
+    if definition.type == Kramdown::Options::Boolean
+      opts.on("--[no-]#{n}", definition.desc) {|v| options[n] = Kramdown::Options.parse(n, v)}
+    else
+      next if definition.type == Object
+      type = definition.type
+      type = String if type == Symbol
+      opts.on("--#{n} ARG", type, definition.desc) {|v| options[n] = Kramdown::Options.parse(n, v)}
+    end
+  end
+
+  opts.on("-h", "--help", "Show the help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+puts Kramdown::Document.new(ARGF.read, options).to_html

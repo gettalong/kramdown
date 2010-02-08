@@ -62,6 +62,11 @@ module Kramdown
       @options[name] = Definition.new(name, type, default, desc)
     end
 
+    # Return all option definitions.
+    def self.definitions
+      @options
+    end
+
     # Return +true+ if an option +name+ is defined.
     def self.defined?(name)
       @options.has_key?(name)
