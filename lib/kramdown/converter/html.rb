@@ -29,15 +29,24 @@ module Kramdown
     # Converts a Kramdown::Document to HTML.
     class Html
 
+      # Defines the amount of indentation used when nesting HTML tags.
       INDENTATION = 2
 
       begin
         require 'coderay'
+
+        # Highlighting via coderay is available if this constant is +true+.
         HIGHLIGHTING_AVAILABLE = true
       rescue LoadError => e
-        HIGHLIGHTING_AVAILABLE = false
+        HIGHLIGHTING_AVAILABLE = false # :nodoc:
       end
 
+      # Convert the Kramdown document +doc+ to HTML (uses the options set on the document).
+      def self.convert(doc)
+        new(doc).convert(doc.tree)
+      end
+
+      # :stopdoc:
 
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
@@ -47,12 +56,6 @@ module Kramdown
       end
       private_class_method(:new, :allocate)
 
-      # Convert the Kramdown document +doc+ to HTML.
-      def self.convert(doc)
-        new(doc).convert(doc.tree)
-      end
-
-      # Convert the element tree +el+, setting the indentation level to +indent+.
       def convert(el, indent = -INDENTATION, opts = {})
         send("convert_#{el.type}", el, indent, opts)
       end
