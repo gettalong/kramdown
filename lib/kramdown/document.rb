@@ -26,6 +26,7 @@ require 'kramdown/version'
 require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
+require 'kramdown/options'
 
 module Kramdown
 
@@ -41,12 +42,7 @@ module Kramdown
   # The #to_html method is a shortcut for using the Converter::Html class.
   #
   # The second argument to the #new method is an options hash for customizing the behaviour of the
-  # kramdown parser and the converters. The available options are documented in the parser/converter
-  # classes:
-  #
-  # * Parser::Kramdown
-  # * Converter::Html
-  #
+  # kramdown parser and the converters.
   class Document
 
     # The element tree of the document. It is immediately available after the #new method has been
@@ -65,11 +61,11 @@ module Kramdown
     attr_reader :parse_infos
 
 
-    # Create a new Kramdown document from the string +source+ and use the provided +options+ (see
-    # OPTIONS hash of the parser/converter clases for a list of available options). The +source+ is
-    # immediately parsed by the kramdown parser sothat after this call the output can be generated.
+    # Create a new Kramdown document from the string +source+ and use the provided +options+. The
+    # +source+ is immediately parsed by the kramdown parser sothat after this call the output can be
+    # generated.
     def initialize(source, options = {})
-      @options = options
+      @options = Options.merge(options)
       @warnings = []
       @parse_infos = {}
       @tree = Parser::Kramdown.parse(source, self)

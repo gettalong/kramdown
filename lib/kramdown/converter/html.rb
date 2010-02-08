@@ -29,37 +29,6 @@ module Kramdown
     # Converts a Kramdown::Document to HTML.
     class Html
 
-      # Currently available options are:
-      #
-      # [:coderay]
-      #    A hash containing options for the CodeRay syntax highlighter. If this is set to +nil+,
-      #    syntax highlighting is disabled. When using the +options+ extension, any CodeRay option can
-      #    be set by prefixing it with +coderay_+.
-      #
-      #    Default:
-      #      {:wrap => :div, :line_numbers => :inline, :line_number_start => 1,
-      #       :tab_width => 8, :bold_every => 10, :css => :style}
-      #
-      # [:filter_html]
-      #    An array of HTML tag names that defines which tags should be filtered from the output. For
-      #    example, if the value contains +iframe+, then all HTML +iframe+ tags are filtered out and
-      #    only the body is displayed. Default: empty array. When using the +options+ extension, the
-      #    string value needs to hold the HTML tag names separated by one or more spaces.
-      #
-      # [:footnote_nr]
-      #    The initial number used for creating the link to the first footnote. Default: +1+. When
-      #    using the +options+ extension, the string value needs to be a valid number.
-      #
-      # When using the +options+ extension, all boolean values can be set to false by using the
-      # string 'false' or an empty string, any other non-empty string will be converted to the value
-      # +true+.
-      OPTIONS={
-        :footnote_nr => 1,
-        :filter_html => [],
-        :coderay => {:wrap => :div, :line_numbers => :inline,
-          :line_number_start => 1, :tab_width => 8, :bold_every => 10, :css => :style}
-      }
-
       INDENTATION = 2
 
       begin
@@ -73,8 +42,7 @@ module Kramdown
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
-        @options = OPTIONS.merge(doc.options)
-        @footnote_counter = @footnote_start = @options[:footnote_nr]
+        @footnote_counter = @footnote_start = @doc.options[:footnote_nr]
         @footnotes = []
       end
       private_class_method(:new, :allocate)
@@ -115,9 +83,12 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent, opts)
-        if el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE && @options[:coderay]
+        if el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE
           el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-          result = CodeRay.scan(el.value, el.options[:attr].delete('lang').to_sym).html(@options[:coderay]).chomp + "\n"
+          opts = {:wrap => @doc.options[:coderay_wrap], :line_numbers => @doc.options[:coderay_line_numbers],
+            :line_number_start => @doc.options[:coderay_line_number_start], :tab_width => @doc.options[:coderay_tab_width],
+            :bold_every => @doc.options[:coderay_bold_every], :css => @doc.options[:coderay_css]}
+          result = CodeRay.scan(el.value, el.options[:attr].delete('lang').to_sym).html(opts).chomp + "\n"
           "#{' '*indent}<div#{options_for_element(el)}>#{result}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
@@ -174,7 +145,7 @@ module Kramdown
 
       def convert_html_element(el, indent, opts)
         res = inner(el, indent, opts)
-        if @options[:filter_html].include?(el.value)
+        if @doc.options[:filter_html].include?(el.value)
           res.chomp + (el.options[:type] == :block ? "\n" : '')
         elsif el.options[:type] == :span
           "<#{el.value}#{options_for_element(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")

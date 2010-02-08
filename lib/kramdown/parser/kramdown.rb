@@ -33,33 +33,6 @@ module Kramdown
     # Used for parsing a document in kramdown format.
     class Kramdown
 
-      # Currently available options are:
-      #
-      # [:auto_ids]
-      #    A boolean value deciding whether automatic header ID generation is used. Default: +false+.
-      #
-      # [:parse_block_html]
-      #    A boolean value deciding whether kramdown syntax is processed in block HTML tags. Default:
-      #    +false+.
-      #
-      # [:parse_span_html]
-      #    A boolean value deciding whether kramdown syntax is processed in span HTML tags. Default:
-      #    +true+.
-      #
-      # [:extension]
-      #    An object that is used instead of the default Kramdown::Parser::Kramdown::Extension
-      #    object for handling extensions.
-      #
-      # When using the +options+ extension, all boolean values can be set to false by using the
-      # string 'false' or an empty string, any other non-empty string will be converted to the value
-      # +true+.
-      OPTIONS = {
-        :auto_ids => true,
-        :parse_block_html => false,
-        :parse_span_html => true,
-        :extension => nil
-      }
-
       include ::Kramdown
 
       attr_reader :tree
@@ -69,8 +42,7 @@ module Kramdown
       # Create a new Kramdown parser object for the Kramdown::Document +doc+.
       def initialize(doc)
         @doc = doc
-        @options = OPTIONS.merge(doc.options)
-        @extension = @options[:extension] || Kramdown::Parser::Kramdown::Extension.new
+        @extension = @doc.options[:extension] || Kramdown::Parser::Kramdown::Extension.new
 
         @src = nil
         @tree = nil

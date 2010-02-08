@@ -54,45 +54,17 @@ module Kramdown
 
         # Update the document and parser options with the options set in +opts+.
         def parse_options(parser, opts, body)
-          if val = opts.delete('auto_ids')
-            parser.doc.options[:auto_ids] = parser.options[:auto_ids] = boolean_value(val)
+          opts.select do |k,v|
+            k = k.to_sym
+            if Kramdown::Options.defined?(k)
+              parser.doc.options[k] = Kramdown::Options.parse(k, v) rescue parser.doc.options[k]
+              false
+            else
+              true
+            end
+          end.each do |k,v|
+            parser.warning("Unknown kramdown option '#{k}'")
           end
-          if val = opts.delete('filter_html')
-            parser.doc.options[:filter_html] = val.split(/\s+/)
-          end
-          if val = opts.delete('footnote_nr')
-            parser.doc.options[:footnote_nr] = Integer(val) rescue parser.doc.options[:footnote_nr]
-          end
-          if val = opts.delete('parse_block_html')
-            parser.doc.options[:parse_block_html] = parser.options[:parse_block_html] = boolean_value(val)
-          end
-          if val = opts.delete('parse_span_html')
-            parser.doc.options[:parse_span_html] = parser.options[:parse_span_html] = boolean_value(val)
-          end
-          if val = opts.delete('coderay_wrap')
-            (parser.doc.options[:coderay] ||= {})[:wrap] = (val.empty? ? nil : val.to_sym)
-          end
-          if val = opts.delete('coderay_css')
-            (parser.doc.options[:coderay] ||= {})[:css] = val.to_sym
-          end
-          if val = opts.delete('coderay_tab_width')
-            (parser.doc.options[:coderay] ||= {})[:tab_width] = val.to_i
-          end
-          if val = opts.delete('coderay_line_numbers')
-            (parser.doc.options[:coderay] ||= {})[:line_numbers] = (val.empty? ? nil : val.to_sym)
-          end
-          if val = opts.delete('coderay_line_number_start')
-            (parser.doc.options[:coderay] ||= {})[:line_number_start] = val.to_i
-          end
-          if val = opts.delete('coderay_bold_every')
-            (parser.doc.options[:coderay] ||= {})[:bold_every] = val.to_i
-          end
-
-          opts.each {|k,v| parser.warning("Unknown kramdown options '#{k}'")}
-        end
-
-        def boolean_value(val)
-          val.downcase.strip != 'false' && !val.empty?
         end
 
       end
