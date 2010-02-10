@@ -304,7 +304,7 @@ module Kramdown
         '&' => '&amp;',
         '"' => '&quot;'
       }
-      ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| Regexp.escape(k)})
+      ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| k})
       ESCAPE_NO_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
       ESCAPE_NORMAL = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, /<|>|&/)
       ESCAPE_RE_FROM_TYPE = {
