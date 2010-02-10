@@ -1367,7 +1367,7 @@ single space, for example:
     Link: <a href="some
     link">text</a>
 ^
-    <p>Link: <a href="some link">text</a>
+    <p>Link: <a href="some link">text</a></p>
 
 
 ## Footnotes
