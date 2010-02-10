@@ -25,8 +25,27 @@ require 'optparse'
 require 'kramdown'
 
 options = {}
+format = 'html'
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
+
+  opts.separator ""
+  opts.separator "Command line options:"
+  opts.separator ""
+
+  opts.on("-f", "--format ARG", "Specify the output format: html (default) or latex") {|v| format = v}
+  opts.on("-v", "--version", "Show the version of kramdown") do
+    puts Kramdown::VERSION
+    exit
+  end
+  opts.on("-h", "--help", "Show the help") do
+    puts opts
+    exit
+  end
+
+  opts.separator ""
+  opts.separator "kramdown options:"
+  opts.separator ""
 
   Kramdown::Options.definitions.each do |n, definition|
     if definition.type == Kramdown::Options::Boolean
@@ -39,10 +58,6 @@ OptionParser.new do |opts|
     end
   end
 
-  opts.on("-h", "--help", "Show the help") do
-    puts opts
-    exit
-  end
 end.parse!
 
-puts Kramdown::Document.new(ARGF.read, options).to_html
+puts Kramdown::Document.new(ARGF.read, options).send("to_#{format}")

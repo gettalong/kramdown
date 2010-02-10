@@ -29,6 +29,7 @@ module Kramdown
 
     autoload :Base, 'kramdown/converter/base'
     autoload :Html, 'kramdown/converter/html'
+    autoload :Latex, 'kramdown/converter/latex'
 
   end
 
