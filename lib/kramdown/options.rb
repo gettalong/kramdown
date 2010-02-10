@@ -120,6 +120,8 @@ module Kramdown
     # parsers/converters.
     # ----------------------------
 
+    define(:template, String, '', "The name of an ERB template file that should be used to wrap the output")
+
     define(:auto_ids, Boolean, true, "Use automatic header ID generation (used in kramdown parser)")
     define(:parse_block_html, Boolean, false, "Process kramdown syntax in block HTML tags (used in kramdown parser)")
     define(:parse_span_html, Boolean, true, "Process kramdown syntax in span HTML tags (used in kramdown parser)")

@@ -30,6 +30,18 @@ require 'kramdown/options'
 
 module Kramdown
 
+  # Return the data directory for kramdown.
+  def self.data_dir
+    unless defined?(@@data_dir)
+      require 'rbconfig'
+      @@data_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data', 'kramdown'))
+      @@data_dir = File.expand_path(File.join(Config::CONFIG["datadir"], "kramdown")) if !File.exists?(@@data_dir)
+      raise "kramdown data directory not found! This is a bug, please report it!" unless File.directory?(@@data_dir)
+    end
+    @@data_dir
+  end
+
+
   # The main interface to kramdown.
   #
   # This class provides a one-stop-shop for using kramdown to convert text into various output

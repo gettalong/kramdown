@@ -27,7 +27,9 @@ module Kramdown
   module Converter
 
     # Converts a Kramdown::Document to HTML.
-    class Html
+    class Html < Base
+
+      # :stopdoc:
 
       # Defines the amount of indentation used when nesting HTML tags.
       INDENTATION = 2
@@ -38,23 +40,15 @@ module Kramdown
         # Highlighting via coderay is available if this constant is +true+.
         HIGHLIGHTING_AVAILABLE = true
       rescue LoadError => e
-        HIGHLIGHTING_AVAILABLE = false # :nodoc:
+        HIGHLIGHTING_AVAILABLE = false
       end
-
-      # Convert the Kramdown document +doc+ to HTML (uses the options set on the document).
-      def self.convert(doc)
-        new(doc).convert(doc.tree)
-      end
-
-      # :stopdoc:
 
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
-        @doc = doc
+        super
         @footnote_counter = @footnote_start = @doc.options[:footnote_nr]
         @footnotes = []
       end
-      private_class_method(:new, :allocate)
 
       def convert(el, indent = -INDENTATION, opts = {})
         send("convert_#{el.type}", el, indent, opts)

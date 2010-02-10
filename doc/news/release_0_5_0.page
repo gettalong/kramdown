@@ -22,6 +22,7 @@ Since the option handling has been revamped, each coderay option must not be set
 * Major changes:
 
   - Enhanced the `kramdown` binary (it now supports setting the available options)
+  - Added support for ERB templates to wrap the generated output
 
 * Minor changes:
 

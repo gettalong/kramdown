@@ -23,9 +23,11 @@
 module Kramdown
 
   # This module contains all available converters, i.e. classes that take a document and convert the
-  # document tree to a string in a specific format, for example, HTML.
+  # document tree to a string in a specific format, for example, HTML. These converters use the Base
+  # class for common functionality - see its API documentation for how to create a converter class.
   module Converter
 
+    autoload :Base, 'kramdown/converter/base'
     autoload :Html, 'kramdown/converter/html'
 
   end
