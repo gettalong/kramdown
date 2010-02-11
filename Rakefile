@@ -216,7 +216,7 @@ EOF
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2010 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown.
 #
@@ -258,7 +258,7 @@ task :clobber => ['dev:clobber']
 
 module Kramdown
 
-  class Extension
+  class Parser::Kramdown::Extension
 
     def parse_kdexample(parser, opts, body)
       wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
