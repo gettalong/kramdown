@@ -31,7 +31,7 @@ module Kramdown
         @src.pos += @src.matched_size
         add_text(@src[1])
       end
-      define_parser(:escaped_chars, ESCAPED_CHARS)
+      define_parser(:escaped_chars, ESCAPED_CHARS, '\\\\')
 
     end
   end

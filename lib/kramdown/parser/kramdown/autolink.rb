@@ -35,7 +35,7 @@ module Kramdown
         add_text(@src[1].sub(/^mailto:/, ''), el)
         @tree.children << el
       end
-      define_parser(:autolink, AUTOLINK_START)
+      define_parser(:autolink, AUTOLINK_START, '<')
 
     end
   end

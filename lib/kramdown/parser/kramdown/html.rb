@@ -246,7 +246,7 @@ module Kramdown
           add_text(@src.scan(/./))
         end
       end
-      define_parser(:span_html, HTML_SPAN_START)
+      define_parser(:span_html, HTML_SPAN_START, '<')
 
     end
   end

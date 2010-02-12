@@ -146,7 +146,7 @@ module Kramdown
           add_text(result)
         end
       end
-      define_parser(:link, LINK_START)
+      define_parser(:link, LINK_START, '!?\[')
 
     end
   end

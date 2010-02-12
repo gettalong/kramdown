@@ -95,7 +95,7 @@ module Kramdown
           add_text(@src.matched)
         end
       end
-      define_parser(:span_ial, IAL_SPAN_START)
+      define_parser(:span_ial, IAL_SPAN_START, '\{:')
 
     end
   end

@@ -31,8 +31,7 @@ module Kramdown
         @src.pos += @src.matched_size
         @tree.children << Element.new(:entity, @src.matched)
       end
-      define_parser(:html_entity, REXML::Parsers::BaseParser::REFERENCE_RE)
-
+      define_parser(:html_entity, REXML::Parsers::BaseParser::REFERENCE_RE, '&')
 
     end
   end

@@ -99,8 +99,13 @@ module Kramdown
             raise Kramdown::Error, "Unknown parser: #{name}"
           end
         end
-        @span_start = Regexp.union(*SPAN_PARSERS.map {|name| @parsers[name].start_re})
-        @span_start_re = /(?=#{@span_start})/
+        @span_start, @span_start_re = span_parser_regexps
+      end
+
+      # Create the needed span parser regexps.
+      def span_parser_regexps(parsers = SPAN_PARSERS)
+        span_start = /#{parsers.map {|name| @parsers[name].span_start}.join('|')}/
+        [span_start, /(?=#{span_start})/]
       end
 
       # Parse all block level elements in +text+ into the element +el+.
@@ -151,10 +156,7 @@ module Kramdown
 
         span_start = @span_start
         span_start_re = @span_start_re
-        if parsers
-          span_start = Regexp.union(*parsers.map {|name| @parsers[name].start_re})
-          span_start_re = /(?=#{span_start})/
-        end
+        span_start, span_start_re = span_parser_regexps(parsers) if parsers
         parsers = parsers || SPAN_PARSERS
 
         used_re = (stop_re.nil? ? span_start_re : /(?=#{Regexp.union(stop_re, span_start)})/)
@@ -173,13 +175,7 @@ module Kramdown
                 false
               end
             end unless stop_re_found
-            if !processed && !stop_re_found
-              if stop_re_matched
-                add_text(@src.scan(/./))
-              else
-                raise Kramdown::Error, 'Bug: please report!'
-              end
-            end
+            add_text(@src.scan(/./)) if !processed && !stop_re_found
           else
             add_text(@src.scan(/.*/m)) unless stop_re
             break
@@ -237,18 +233,20 @@ module Kramdown
       @@parsers = {}
 
       # Holds all the needed data for one block/span level parser.
-      Data = Struct.new(:name, :start_re, :method)
+      Data = Struct.new(:name, :start_re, :span_start, :method)
 
       # Add a parser method
       #
       # * with the given +name+,
       # * using +start_re+ as start regexp
+      # * and, for span parsers, +span_start+ as a String that can be used in a regexp and
+      #   which identifies the starting character(s)
       #
       # to the registry. The method name is automatically derived from the +name+ or can explicitly
       # be set by using the +meth_name+ parameter.
-      def self.define_parser(name, start_re, meth_name = "parse_#{name}")
+      def self.define_parser(name, start_re, span_start = nil, meth_name = "parse_#{name}")
         raise "A parser with the name #{name} already exists!" if @@parsers.has_key?(name)
-        @@parsers[name] = Data.new(name, start_re, meth_name)
+        @@parsers[name] = Data.new(name, start_re, span_start, meth_name)
       end
 
       # Return the Data structure for the parser +name+.

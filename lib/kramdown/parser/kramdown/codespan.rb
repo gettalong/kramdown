@@ -50,7 +50,7 @@ module Kramdown
           add_text(result)
         end
       end
-      define_parser(:codespan, CODESPAN_DELIMITER)
+      define_parser(:codespan, CODESPAN_DELIMITER, '`')
 
     end
   end

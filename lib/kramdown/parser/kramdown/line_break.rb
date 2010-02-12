@@ -31,7 +31,7 @@ module Kramdown
         @src.pos += @src.matched_size
         @tree.children << Element.new(:br)
       end
-      define_parser(:line_break, LINE_BREAK)
+      define_parser(:line_break, LINE_BREAK, '(  |\\\\)(?=\n)')
 
     end
   end

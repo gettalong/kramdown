@@ -41,7 +41,7 @@ module Kramdown
           add_text(val.dup)
         end
       end
-      define_parser(:typographic_syms, TYPOGRAPHIC_SYMS_RE)
+      define_parser(:typographic_syms, TYPOGRAPHIC_SYMS_RE, '--|\\.\\.\\.|(?:\\\\| )?(?:<<|>>)')
 
     end
   end

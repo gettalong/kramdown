@@ -62,7 +62,7 @@ module Kramdown
           add_text(result)
         end
       end
-      define_parser(:emphasis, EMPHASIS_START)
+      define_parser(:emphasis, EMPHASIS_START, '\*|_')
 
     end
   end

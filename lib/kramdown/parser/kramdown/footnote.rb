@@ -66,7 +66,7 @@ module Kramdown
           add_text(@src.matched)
         end
       end
-      define_parser(:footnote_marker, FOOTNOTE_MARKER_START)
+      define_parser(:footnote_marker, FOOTNOTE_MARKER_START, '\[')
 
     end
   end
