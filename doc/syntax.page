@@ -7,9 +7,7 @@ This is version **<%= ::Kramdown::VERSION %>** of the syntax documentation.
 
 Table of Contents:
 
-{::nomarkdown:}
 {menu: {used_nodes: fragments, min_levels: 3}}
-{::nomarkdown:}
 
 # kramdown Syntax
 
@@ -80,6 +78,8 @@ Following is a list of all those characters (character sequences) that can be es
     >>        right guillemet
     :         colon
     |         pipe
+    "         double quote
+    '         single quote
 
 
 ## Typographic Symbols
@@ -93,6 +93,10 @@ kramdown converts the following plain ASCII character into their corresponding t
   non-breakable space
 * `>>` will become a right guillemet (like this >>) -- an optional leading space will become a
   non-breakable space
+
+It also replaces normal single `'` and double quotes `"` with "fancy quotes". There *may* be times
+when kramdown falsely replace the quotes. If this is the case, just \'escape\" the quotes and they
+won't be replaced with fancy ones.
 
 > The original Markdown program does not do this transformations.
 {: .markdown-difference}

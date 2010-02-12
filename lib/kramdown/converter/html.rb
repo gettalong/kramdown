@@ -254,6 +254,10 @@ module Kramdown
         TYPOGRAPHIC_SYMS[el.value]
       end
 
+      def convert_smart_quote(el, indent, opts)
+        "&#{el.value};"
+      end
+
       def convert_root(el, indent, opts)
         inner(el, indent, opts) << footnote_content
       end

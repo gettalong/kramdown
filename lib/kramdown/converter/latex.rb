@@ -230,6 +230,11 @@ module Kramdown
         TYPOGRAPHIC_SYMS[el.value]
       end
 
+      SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''}
+      def convert_smart_quote(el, opts)
+        SMART_QUOTE_SYMS[el.value]
+      end
+
       ESCAPE_MAP = {
         "^"  => "\\^{}",
         "\\" => "\\textbackslash{}",
