@@ -242,7 +242,7 @@ module Kramdown
       alias :convert_strong :convert_em
 
       def convert_entity(el, indent, opts)
-        el.value
+        "&#{el.value.kind_of?(Integer) ? '#' : ''}#{el.value};"
       end
 
       TYPOGRAPHIC_SYMS = {

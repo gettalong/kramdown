@@ -20,18 +20,18 @@
 #++
 #
 
-require 'rexml/parsers/baseparser'
-
 module Kramdown
   module Parser
     class Kramdown
 
+      HTML_ENTITY_RE = /&([\w:][\-\w\d\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
+
       # Parse the HTML entity at the current location.
       def parse_html_entity
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:entity, @src.matched)
+        @tree.children << Element.new(:entity, @src[1] || (@src[2] && @src[2].to_i) || @src[3].hex)
       end
-      define_parser(:html_entity, REXML::Parsers::BaseParser::REFERENCE_RE, '&')
+      define_parser(:html_entity, HTML_ENTITY_RE, '&')
 
     end
   end
