@@ -60,4 +60,6 @@ OptionParser.new do |opts|
 
 end.parse!
 
-puts Kramdown::Document.new(ARGF.read, options).send("to_#{format}")
+doc = Kramdown::Document.new(ARGF.read, options)
+puts doc.send("to_#{format}")
+doc.warnings.each {|warn| $stderr.puts warn}
