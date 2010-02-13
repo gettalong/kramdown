@@ -32,6 +32,7 @@ module Kramdown
       # Initialize the converter with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
+        @doc.conversion_infos.clear
       end
       private_class_method(:new, :allocate)
 

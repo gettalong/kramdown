@@ -66,11 +66,15 @@ module Kramdown
     attr_accessor :options
 
     # An array of warning messages. It is filled with warnings during the parsing phase (i.e. in
-    # #new) and the converting phase.
+    # #new) and the conversion phase.
     attr_reader :warnings
 
     # Holds needed parse information like ALDs, link definitions and so on.
     attr_reader :parse_infos
+
+    # Holds conversion information which is dependent on the used converter. A converter clears this
+    # variable before duing the conversion.
+    attr_reader :conversion_infos
 
 
     # Create a new Kramdown document from the string +source+ and use the provided +options+. The
@@ -80,6 +84,7 @@ module Kramdown
       @options = Options.merge(options)
       @warnings = []
       @parse_infos = {}
+      @conversion_infos = {}
       @tree = Parser::Kramdown.parse(source, self)
     end
 
