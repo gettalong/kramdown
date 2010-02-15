@@ -105,7 +105,7 @@ module Kramdown
       elsif @options[name].type == Float
         Float(data)
       elsif @options[name].type == Symbol
-        (data.empty? ? nil : data.to_sym)
+        (data.strip.empty? ? nil : data.to_sym)
       elsif @options[name].type == Boolean
         data.downcase.strip != 'false' && !data.empty?
       elsif @options[name].type == Array
