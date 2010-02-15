@@ -182,6 +182,8 @@ EOF
       files = %w[.gem .tgz .zip].collect {|ext| "pkg/kramdown-#{Kramdown::VERSION}" + ext}
 
       rf.add_release('kramdown', 'kramdown', Kramdown::VERSION, *files)
+
+      sh "gem push pkg/kramdown-#{Kramdown::VERSION}.gem"
       puts 'done'
     end
 
