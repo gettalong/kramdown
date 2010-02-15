@@ -28,6 +28,7 @@ options = {}
 format = 'html'
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
+  opts.summary_indent = ' '*4
 
   opts.separator ""
   opts.separator "Command line options:"
@@ -39,7 +40,7 @@ OptionParser.new do |opts|
     exit
   end
   opts.on("-h", "--help", "Show the help") do
-    puts opts
+    puts opts.summarize('', 5, 72)
     exit
   end
 
@@ -49,13 +50,18 @@ OptionParser.new do |opts|
 
   Kramdown::Options.definitions.each do |n, definition|
     if definition.type == Kramdown::Options::Boolean
-      opts.on("--[no-]#{n}", definition.desc) {|v| options[n] = Kramdown::Options.parse(n, v)}
+      opts.on("--[no-]#{n}") {|v| options[n] = Kramdown::Options.parse(n, v)}
     else
       next if definition.type == Object
       type = definition.type
       type = String if type == Symbol
-      opts.on("--#{n} ARG", type, definition.desc) {|v| options[n] = Kramdown::Options.parse(n, v)}
+      opts.on("--#{n} ARG", type) {|v| options[n] = Kramdown::Options.parse(n, v)}
     end
+
+    definition.desc.split(/\n/).each do |line|
+      opts.separator opts.summary_indent + ' '*6 + line
+    end
+    opts.separator ''
   end
 
 end.parse!
