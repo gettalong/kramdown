@@ -79,11 +79,11 @@ and [mailing lists][ml] available if you have any questions!
 written in Ruby, supports standard Markdown (with some minor modifications) and various extensions
 that have been made popular by the [PHP Markdown Extra] package and [Maruku].
 
-It is probably the fastest pure-Ruby Markdown converter available (January 2010), being about 4.5x
+It is probably the fastest pure-Ruby Markdown converter available (February 2010), being about 4.5x
 faster than [Maruku] and about 10x faster than [BlueFeather].
 
 <div class="a-center">
-The latest version of kramdown is <b>0.4.0</b> and it was released on <b>2010-01-22</b>.
+The latest version of kramdown is <b>0.5.0</b> and it was released on <b>2010-02-15</b>.
 </div>
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
