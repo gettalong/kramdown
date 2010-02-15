@@ -120,22 +120,142 @@ module Kramdown
     # parsers/converters.
     # ----------------------------
 
-    define(:template, String, '', "The name of an ERB template file that should be used to wrap the output")
+    define(:template, String, '', <<EOF)
+The name of an ERB template file that should be used to wrap the output
 
-    define(:auto_ids, Boolean, true, "Use automatic header ID generation (used in kramdown parser)")
-    define(:parse_block_html, Boolean, false, "Process kramdown syntax in block HTML tags (used in kramdown parser)")
-    define(:parse_span_html, Boolean, true, "Process kramdown syntax in span HTML tags (used in kramdown parser)")
-    define(:extension, Object, nil, "An object for handling the extensions (used in kramdown parser)")
+This is used to wrap the output in an environment so that the output can
+be used as a stand-alone document. For example, an HTML template would
+provide the needed header and body tags so that the whole output is a
+valid HTML file. If no template is specified, the output will be just
+the converted text.
 
-    define(:footnote_nr, Integer, 1, "The initial number used for creating the link to the first footnote (used in HTML converter)")
+When resolving the template file, the given template name is used first.
+If such a file is not found, the converter extension is appended. If the
+file still cannot be found, the templates name is interpreted as a
+template name that is provided by kramdown (without the converter
+extension).
 
-    define(:filter_html, Array, [], "An array of HTML tags that should be filtered from the output (used in HTML converter)")
-    define(:coderay_wrap, Symbol, :div, "How the highlighted code should be wrapped (used in HTML converter)")
-    define(:coderay_line_numbers, Symbol, :inline, "How and if line numbers should be shown (used in HTML converter)")
-    define(:coderay_line_number_start, Integer, 1, "The start value for the line numbers (used in HTML converter)")
-    define(:coderay_tab_width, Integer, 8, "The tab width used in highlighted code (used in HTML converter)")
-    define(:coderay_bold_every, Integer, 10, "How often a line number should be made bold (used in HTML converter)")
-    define(:coderay_css, Symbol, :style, "Defines how the highlighted code gets styled (used in HTML converter)")
+kramdown provides a default template named 'default' for each converter.
+
+Default: ''
+Used by: all converters
+EOF
+
+    define(:auto_ids, Boolean, true, <<EOF)
+Use automatic header ID generation
+
+If this option is `true`, ID values for all headers are automatically
+generated if no ID is explicitly specified.
+
+Default: true
+Used by: kramdown parser
+EOF
+
+    define(:parse_block_html, Boolean, false, <<EOF)
+Process kramdown syntax in block HTML tags
+
+If this option is `true`, the kramdown parser processes the content of
+block HTML tags as text containing block level elements. Since this is
+not wanted normally, the default is `false`. It is normally better to
+selectively enable kramdown processing via the markdown attribute.
+
+Default: false
+Used by: kramdown parser
+EOF
+
+    define(:parse_span_html, Boolean, true, <<EOF)
+Process kramdown syntax in span HTML tags
+
+If this option is `true`, the kramdown parser processes the content of
+span HTML tags as text containing span level elements.
+
+Default: true
+Used by: kramdown parser
+EOF
+
+    define(:extension, Object, nil, <<EOF)
+An object for handling the extensions
+
+The value for this option needs to be an object that can handle the
+extensions found in a kramdown document. If this option is `nil`, the
+default extension object is used.
+
+Default: nil
+Used by: kramdown parser
+EOF
+
+    define(:footnote_nr, Integer, 1, <<EOF)
+The number of the first footnote
+
+This option can be used to specify the number that is used for the first
+footnote.
+
+Default: 1
+Used by: HTML converter
+EOF
+
+    define(:filter_html, Array, [], <<EOF)
+An array of HTML tags that should be filtered from the output
+
+The value can either be specified as array or as a space separated
+string (which will be converted to an array). All HTML tags that are
+listed in the array will be filtered from the output, i.e. only their
+contents is used. This applies only to HTML tags found in the initial
+document.
+
+Default: []
+Used by: HTML converter
+EOF
+
+    define(:coderay_wrap, Symbol, :div, <<EOF)
+Defines how the highlighted code should be wrapped
+
+The possible values are :span, :div or nil.
+
+Default: :div
+Used by: HTML converter
+EOF
+
+    define(:coderay_line_numbers, Symbol, :inline, <<EOF)
+Defines how and if line numbers should be shown
+
+The possible values are :table, :inline, :list or nil. If this option is
+nil, no line numbers are shown.
+
+Default: :inline
+Used by: HTML converter
+EOF
+
+    define(:coderay_line_number_start, Integer, 1, <<EOF)
+The start value for the line numbers
+
+Default: 1
+Used by: HTML converter
+EOF
+
+    define(:coderay_tab_width, Integer, 8, <<EOF)
+The tab width used in highlighted code
+
+Used by: HTML converter
+EOF
+
+    define(:coderay_bold_every, Integer, 10, <<EOF)
+Defines how often a line number should be made bold
+
+Default: 10
+Used by: HTML converter
+EOF
+
+    define(:coderay_css, Symbol, :style, <<EOF)
+Defines how the highlighted code gets styled
+
+Possible values are :class (CSS classes are applied to the code
+elements, one must supply the needed CSS file) or :style (default CSS
+styles are directly applied to the code elements).
+
+Default: style
+Used by: HTML converter
+EOF
 
   end
 
