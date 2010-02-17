@@ -24,14 +24,19 @@ module Kramdown
   module Parser
     class Kramdown
 
-      AUTOLINK_START = /<((mailto|https?|ftps?):.*?|\S*?@\S*?)>/
+      if RUBY_VERSION == '1.8.5'
+        ACHARS = '\x80-\xFF'
+      else
+        ACHARS = ''
+      end
+      AUTOLINK_START = /<((mailto|https?|ftps?):.+?|[-.\w#{ACHARS}]+@[-\w#{ACHARS}]+(\.[-\w#{ACHARS}]+)*\.[a-z]+)>/u
 
       # Parse the autolink at the current location.
       def parse_autolink
         @src.pos += @src.matched_size
         href = @src[1]
         href= "mailto:#{href}" if @src[2].nil?
-        el = Element.new(:a, nil, {:attr => {'href' => href}, :obfuscate_text => (@src[2].nil? || @src[2] == 'mailto')})
+        el = Element.new(:a, nil, {:attr => {'href' => href}})
         add_text(@src[1].sub(/^mailto:/, ''), el)
         @tree.children << el
       end

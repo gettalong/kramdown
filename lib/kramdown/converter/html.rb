@@ -206,14 +206,15 @@ module Kramdown
       end
 
       def convert_a(el, indent, opts)
-        if el.options[:attr]['href'] =~ /^mailto:/
+        do_obfuscation = el.options[:attr]['href'] =~ /^mailto:/
+        if do_obfuscation
           el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
           href = obfuscate(el.options[:attr]['href'].sub(/^mailto:/, ''))
           mailto = obfuscate('mailto')
           el.options[:attr]['href'] = "#{mailto}:#{href}"
         end
         res = inner(el, indent, opts)
-        res = obfuscate(res) if el.options[:obfuscate_text]
+        res = obfuscate(res) if do_obfuscation
         "<a#{options_for_element(el)}>#{res}</a>"
       end
 
@@ -268,6 +269,7 @@ module Kramdown
         text.each_byte do |b|
           result += (b > 128 ? b.chr : "&#%03d;" % b)
         end
+        result.force_encoding(text.encoding) if RUBY_VERSION >= '1.9'
         result
       end
 
