@@ -28,7 +28,8 @@ ENCODING_MAP = {
 \usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{hyperref}
-<% doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>} <% } %>
+<% doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
+<% } %>
 
 \hypersetup{colorlinks=true,urlcolor=blue}
 

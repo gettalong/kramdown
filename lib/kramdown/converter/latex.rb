@@ -20,6 +20,8 @@
 #++
 #
 
+require 'set'
+
 module Kramdown
 
   module Converter
@@ -35,7 +37,7 @@ module Kramdown
         super
         #TODO: set the footnote counter at the beginning of the document
         @doc.options[:footnote_nr]
-        @doc.conversion_infos[:packages] = []
+        @doc.conversion_infos[:packages] = Set.new
       end
 
       def convert(el, opts = {})
