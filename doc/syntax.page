@@ -1160,7 +1160,20 @@ output.
 
 ## Links and Images
 
-Two styles of links are supported: inline and reference.
+Three types of links are supported: autolinks, inline links and reference links.
+
+### Autolinks
+
+This is the easiest one to create: Just surround a web address or an email address with angle
+brackets and the address will be turned into a proper link. The address will be used as link target
+and as link text. For example:
+
+    Information can be found on the <http://example.com> homepage.
+    You can also mail me: <me.example@example.com>
+
+It is not possible to specify a different link text using autolinks -- use the other link types for
+this!
+
 
 ### Inline Links
 

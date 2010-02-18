@@ -19,3 +19,4 @@ modified_at: 2010-02-15 10:11:00 +02:00
 * Bug fixes:
 
   - Fixed problem where clearly invalid email autolinks were permitted (reported by Eric Sunshine)
+  - Added documentation for autolinks (reported by Eric Sunshine)
