@@ -24,14 +24,29 @@ module Kramdown
   module Parser
     class Kramdown
 
-      ESCAPED_CHARS = /\\([\\.*_+`()\[\]{}#!:|"'\$-])/
+      BLOCK_MATH_START = /^#{OPT_SPACE}(\\)?\$\$(.*?)\$\$\s*?\n/m
 
-      # Parse the backslash-escaped character at the current location.
-      def parse_escaped_chars
+      # Parse the math block at the current location.
+      def parse_block_math
+        if @src[1]
+          @src.scan(/^#{OPT_SPACE}\\/)
+          return false
+        end
         @src.pos += @src.matched_size
-        add_text(@src[1])
+        @tree.children << Element.new(:math, @src[2], :type => :block)
+        true
       end
-      define_parser(:escaped_chars, ESCAPED_CHARS, '\\\\')
+      define_parser(:block_math, BLOCK_MATH_START)
+
+
+      INLINE_MATH_START = /\$\$(.*?)\$\$/
+
+      # Parse the inline math at the current location.
+      def parse_inline_math
+        @src.pos += @src.matched_size
+        @tree.children << Element.new(:math, @src[1], :type => :inline)
+      end
+      define_parser(:inline_math, INLINE_MATH_START, '\$')
 
     end
   end

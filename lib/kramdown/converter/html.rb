@@ -259,6 +259,16 @@ module Kramdown
         "&#{el.value};"
       end
 
+      def convert_math(el, indent, opts)
+        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+        el.options[:attr] ||= {}
+        el.options[:attr]['class'] ||= ''
+        el.options[:attr]['class'] += (el.options[:attr]['class'].empty? ? '' : ' ') + 'math'
+        type = 'span'
+        type = 'div' if el.options[:type] == :block
+        "<#{type}#{options_for_element(el)}>#{escape_html(el.value, :text)}</#{type}>#{type == 'div' ? "\n" : ''}"
+      end
+
       def convert_root(el, indent, opts)
         inner(el, indent, opts) << footnote_content
       end

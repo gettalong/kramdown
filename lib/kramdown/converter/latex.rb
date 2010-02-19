@@ -498,6 +498,19 @@ EOF
         SMART_QUOTE_SYMS[el.value]
       end
 
+      def convert_math(el, opts)
+        @doc.conversion_infos[:packages] += %w[amssymb amsmath amsthm amsfonts]
+        if el.options[:type] == :block
+          if el.value =~ /\A\s*\\begin\{/
+            el.value
+          else
+            latex_environment('displaymath', el.value)
+          end
+        else
+          "$#{el.value}$"
+        end
+      end
+
       ESCAPE_MAP = {
         "^"  => "\\^{}",
         "\\" => "\\textbackslash{}",
