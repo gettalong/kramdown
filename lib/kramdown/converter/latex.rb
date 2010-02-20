@@ -140,13 +140,16 @@ module Kramdown
 
       def convert_html_element(el, opts)
         @doc.warnings << "Can't convert HTML element"
+        ''
       end
 
       def convert_html_text(el, opts)
         @doc.warnings << "Can't convert HTML text"
+        ''
       end
 
       def convert_xml_comment(el, opts)
+        @doc.warnings << "Can't convert XML comment/PI"
         ''
       end
       alias :convert_xml_pi :convert_xml_comment
