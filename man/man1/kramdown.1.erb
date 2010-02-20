@@ -1,0 +1,54 @@
+.TH "KRAMDOWN" 1 "February 2010"
+.SH NAME
+kramdown \- a fast, pure-Ruby Markdown-superset converter
+.SH SYNOPSIS
+.B kramdown
+[\fIoptions\fR]
+[\fIFILE\fR ...]
+.SH DESCRIPTION
+kramdown parses a superset of Markdown and converts it to different output formats. It is supports
+standard Markdown (with some minor modifications) and various extensions like tables and definition
+lists.
+
+If \fIFILE\fR is not specified, kramdown reads from the standard input. The result is written to the
+standard output.
+
+There are two sets of options that kramdown accepts: The first one includes the options that are
+used directly by the kramdown binary. The second set of options controls how kramdown parses and
+converts its input.
+.SH OPTIONS
+.TP
+.B \-f, \-\-format ARG
+Specify the output format. Available output formats: html (this is the default) or latex.
+.TP
+.B \-v, \-\-version
+Show the version of kramdown.
+.TP
+.B \-h, \-\-help
+Show the help.
+
+.SH KRAMDOWN OPTIONS
+<%
+require 'kramdown/document'
+
+Kramdown::Options.definitions.each do |n, definition|
+  if definition.type == Kramdown::Options::Boolean %>
+.TP
+.B \-\-[no\-]<%= n %>
+<% else
+    next if definition.type == Object
+    type = definition.type
+    type = String if type == Symbol %>
+.TP
+.B \-\-<%= n %> ARG
+<% end %>
+<%= definition.desc %>
+<% end %>
+.SH SEE ALSO
+The kramdown website, http://kramdown.rubyforge.org/ for more information, especially on the support
+input syntax.
+.SH AUTHOR
+webgen was written by Thomas Leitner <t_leitner@gmx.at>
+.PP
+This manual page was written by Thomas Leitner <t_leitner@gmx.at>.
+

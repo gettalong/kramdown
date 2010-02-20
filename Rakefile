@@ -31,6 +31,7 @@ require 'fileutils'
 require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
+require 'erb'
 
 $:.unshift('lib')
 require 'kramdown'
@@ -105,6 +106,7 @@ EOF
                             'bin/*',
                             'benchmark/*',
                             'lib/**/*.rb',
+                            'man/man1/kramdown.1',
                             'doc/**',
                             'test/**/*'
                            ])
@@ -119,6 +121,14 @@ EOF
   file 'ChangeLog' do
     puts "Generating ChangeLog file"
     `git log --name-only > ChangeLog`
+  end
+
+  CLOBBER << "man/man1/kramdown.1"
+  file 'man/man1/kramdown.1' => ['man/man1/kramdown.1.erb'] do
+    puts "Generating kramdown man page"
+    File.open('man/man1/kramdown.1', 'w+') do |file|
+      file.write(ERB.new(File.read('man/man1/kramdown.1.erb')).result(binding))
+    end
   end
 
   Rake::PackageTask.new('kramdown', Kramdown::VERSION) do |pkg|

@@ -15,6 +15,7 @@ modified_at: 2010-02-15 10:11:00 +02:00
 
 * Minor changes:
 
+  - Added a man page for the kramdown binary
 
 * Bug fixes:
 
