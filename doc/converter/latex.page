@@ -1,0 +1,19 @@
+---
+title: LaTeX Converter
+---
+# {title:}
+
+This converter converts a kramdown element tree into LaTeX. It supports all available element types
+except the HTML specific ones. The LaTeX document can, for example, further be converted to a PDF
+file.
+
+Since the LaTeX converter outputs just the converted element tree and not a whole LaTeX document by
+default, one should always use the `:template` option (see below).
+
+## Options
+
+The LaTeX converter supports the following options:
+
+{options: {items: [:template]}}
+
+

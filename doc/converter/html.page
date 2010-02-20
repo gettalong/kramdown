@@ -1,0 +1,15 @@
+---
+title: HTML Converter
+---
+# {title:}
+
+This converter converts a kramdown element tree into a HTML fragment and supports all available
+element types.
+
+## Options
+
+The HTML converter supports the following options:
+
+{options: {items: [:template, :footnote_nr, :filter_html, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
+
+

@@ -3,17 +3,14 @@ title: Home
 in_menu: true
 sort_info: 1
 ---
-## Syntax
+## Overview
 
-The kramdown syntax is based on Markdown, a very easy to write, easy to read markup for writing HTML
-documents in plain text. Since the basic Markdown syntax has some shortcomings, implementations
-(especially the [PHP Markdown Extra] package) have tried to overcome this shortcomings with
-additional syntax. kramdown supports all features of the original Markdown syntax (albeit with some
-minor corrections) as well as newer features implemented in the [PHP Markdown Extra] package and
-[Maruku].
+kramdown is first and foremost a library for converting text written in a superset of Markdown to
+HTML. However, due to its modular architecture it is able to support additional input and output
+formats. The following input and output formats are currently supported:
 
-For a complete description of the implemented syntax, have a look at the [Syntax page]({relocatable:
-syntax.html}).
+* Input: [kramdown](parser/kramdown.html) (a superset of Markdown)
+* Output: [HTML](converter/html.html), [LaTeX](converter/latex.html)
 
 
 ## Usage
@@ -30,21 +27,22 @@ The kramdown package provides two ways for using it:
   {: lang='ruby'}
 
   The second parameter to the `new` call is an options hash for (de)activating certain features. For
-  more information have a look at the [API documentation]({relocatable: rdoc/index.html}).
+  more information have a look at the [API documentation](rdoc/index.html).
 
 * **As an application**
 
   Together with the library files a binary called `kramdown` is shipped which can be used to convert
-  text in kramdown syntax to HTML. It either reads from the files specified as the command line
-  arguments or from the standard input. For example:
+  text in any supported format (currently only kramdown syntax) to any supported output format (e.g.
+  HTML or LaTeX). It either reads from the files specified as the command line arguments or from the
+  standard input. For example:
 
       kramdown path/to/kramdown/doc/syntax.page
 
 
 ## Tests
 
-kramdown uses various test suites to verify the correct working of the parser and the HTML
-converter. For more information, have a look at the [tests document](tests.html).
+kramdown uses various test suites to verify the correct working of the parsers and converters. For
+more information, have a look at the [tests document](tests.html).
 
 
 ## Bugs, Forums, Mailing Lists
@@ -55,6 +53,13 @@ and [mailing lists][ml] available if you have any questions!
 [bug_report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
 [forum]: http://rubyforge.org/forum/?group_id=7403
 [ml]: http://rubyforge.org/mail/?group_id=7403
+
+
+## Thanks
+
+kramdown would not be possible without the prior work of many other people. I want to thank everyone
+involved with making Markdown such a nice markup language and especially the developers of other
+Markdown implementations because kramdown borrowed many ideas from existing packages.
 
 
 ## Author
@@ -75,9 +80,9 @@ and [mailing lists][ml] available if you have any questions!
 ## Welcome to the kramdown site
 
 **kramdown** (sic, not Kramdown or KramDown, just kramdown) is a *free* GPL-licensed
-[Ruby](http://www.ruby-lang.org) library for parsing a superset of Markdown. It is completely
-written in Ruby, supports standard Markdown (with some minor modifications) and various extensions
-that have been made popular by the [PHP Markdown Extra] package and [Maruku].
+[Ruby](http://www.ruby-lang.org) library for parsing and converting a superset of Markdown. It is
+completely written in Ruby, supports standard Markdown (with some minor modifications) and various
+extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
 
 It is probably the fastest pure-Ruby Markdown converter available (February 2010), being about 4.5x
 faster than [Maruku] and about 10x faster than [BlueFeather].

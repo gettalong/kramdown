@@ -10,6 +10,7 @@ end
 begin
   require 'webgen/webgentask'
   require 'webgen/page'
+  require 'webgen/website'
 rescue LoadError
 end
 
@@ -60,6 +61,8 @@ if defined? Webgen
       config['sources'] = [['/', "Webgen::Source::FileSystem", 'doc']]
       config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
       config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
+      config.optionsdisplay.items [], :mandatory => 'default'
+      config['contentprocessor.tags.map']['options'] = 'OptionsDisplay'
     end
   end
 
@@ -267,6 +270,25 @@ end
 task :clobber => ['dev:clobber']
 
 # Helper methods and misc  ###################################################################
+
+
+class OptionsDisplay
+
+  include Webgen::Tag::Base
+
+  def call(tag, body, context)
+    param('optionsdisplay.items').collect do |opt|
+      Kramdown::Options.definitions[opt]
+    end.collect do |term|
+      lines = term.desc.split(/\n/)
+      first = lines.shift
+      rest = lines[0..-2].collect {|l| "  " + l}.join("\n")
+      "`#{term.name.inspect}`\n: #{first}\n#{rest}"
+    end.join("\n")
+  end
+
+end
+
 
 module Kramdown
 
