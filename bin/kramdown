@@ -34,7 +34,13 @@ OptionParser.new do |opts|
   opts.separator "Command line options:"
   opts.separator ""
 
-  opts.on("-f", "--format ARG", "Specify the output format: html (default) or latex") {|v| format = v}
+  opts.on("-i", "--input ARG", "Specify the input format: kramdown (default)") {|v| options[:input] = v}
+  opts.on("-o", "--ouput ARG", "Specify the output format: html (default) or latex") {|v| format = v}
+  opts.on("-f", "--format ARG", "DEPRACATED: Specify the output format: html (default) or latex") do |v|
+    warn("DEPRECATED: This option will be removed in the next release, use --output instead")
+    format = v
+  end
+
   opts.on("-v", "--version", "Show the version of kramdown") do
     puts Kramdown::VERSION
     exit
@@ -66,6 +72,11 @@ OptionParser.new do |opts|
 
 end.parse!
 
-doc = Kramdown::Document.new(ARGF.read, options)
-puts doc.send("to_#{format}")
-doc.warnings.each {|warn| $stderr.puts warn}
+begin
+  doc = Kramdown::Document.new(ARGF.read, options)
+  puts doc.send("to_#{format}")
+  doc.warnings.each {|warn| $stderr.puts "Warning: #{warn}"}
+rescue Kramdown::Error => e
+  $stderr.puts "Error: #{e.message}"
+  exit(1)
+end

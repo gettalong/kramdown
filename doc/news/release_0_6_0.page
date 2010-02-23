@@ -16,8 +16,13 @@ modified_at: 2010-02-15 10:11:00 +02:00
 * Minor changes:
 
   - Added a man page for the kramdown binary
+  - Added a CLI option for selecting the input format and changed the output format option to `-o`
 
 * Bug fixes:
 
   - Fixed problem where clearly invalid email autolinks were permitted (reported by Eric Sunshine)
   - Added documentation for autolinks (reported by Eric Sunshine)
+
+* Deprecation notes:
+
+  - The CLI options `-f` will be removed in the next release.

@@ -54,7 +54,7 @@ module Kramdown
   # The #to_html method is a shortcut for using the Converter::Html class.
   #
   # The second argument to the #new method is an options hash for customizing the behaviour of the
-  # kramdown parser and the converters.
+  # used parser and the converter. See Document#new for more information!
   class Document
 
     # The element tree of the document. It is immediately available after the #new method has been
@@ -63,7 +63,7 @@ module Kramdown
 
     # The options hash which holds the options for parsing/converting the Kramdown document. It is
     # possible that these values get changed during the parsing phase.
-    attr_accessor :options
+    attr_reader :options
 
     # An array of warning messages. It is filled with warnings during the parsing phase (i.e. in
     # #new) and the conversion phase.
@@ -73,25 +73,33 @@ module Kramdown
     attr_reader :parse_infos
 
     # Holds conversion information which is dependent on the used converter. A converter clears this
-    # variable before duing the conversion.
+    # variable before doing the conversion.
     attr_reader :conversion_infos
 
 
-    # Create a new Kramdown document from the string +source+ and use the provided +options+. The
-    # +source+ is immediately parsed by the kramdown parser sothat after this call the output can be
-    # generated.
+    # Create a new Kramdown document from the string +source+ and use the provided +options+.
+    #
+    # The special options key <tt>:input</tt> can be used to select the parser that should parse the
+    # +source+. It has to be the name of a class in the Kramdown::Parser module. For example, to
+    # select the kramdown parser, one would set the <tt>:input</tt> key to +Kramdown+. If this key
+    # is not set, it defaults to +Kramdown+.
+    #
+    # The +source+ is immediately parsed by the selected parser so that after this call the document
+    # tree is available and the output can be generated.
     def initialize(source, options = {})
       @options = Options.merge(options)
       @warnings = []
       @parse_infos = {}
       @conversion_infos = {}
-      @tree = Parser::Kramdown.parse(source, self)
+      @tree = Parser.const_get((options[:input] || 'kramdown').to_s.capitalize).parse(source, self)
+    rescue NameError
+      raise Kramdown::Error.new("Invalid input format selected: #{options[:input]}")
     end
 
     # Check if a method is invoked that begins with +to_+ and if so, try to instantiate a converter
-    # class and use it for converting the document.
+    # class (i.e. a class in the Kramdown::Converter module) and use it for converting the document.
     #
-    # For example, +to_html+ would instantiate the Converter::Html class.
+    # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
     def method_missing(id, *attr, &block)
       if id.to_s =~ /^to_(\w+)$/
         Converter.const_get($1.capitalize).convert(self)
