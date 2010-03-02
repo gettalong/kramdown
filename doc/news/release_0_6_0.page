@@ -22,6 +22,7 @@ modified_at: 2010-02-15 10:11:00 +02:00
 
   - Fixed problem where clearly invalid email autolinks were permitted (reported by Eric Sunshine)
   - Added documentation for autolinks (reported by Eric Sunshine)
+  - Fixed performance problem related to emphasis parsing (reported by Chris Heald)
 
 * Deprecation notes:
 

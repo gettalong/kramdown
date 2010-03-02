@@ -151,7 +151,7 @@ module Kramdown
 
       # Parse all span level elements in the source string.
       def parse_spans(el, stop_re = nil, parsers = nil, text_type = :text)
-        @stack.push([@tree, @text_type])
+        @stack.push([@tree, @text_type]) unless @tree.nil?
         @tree, @text_type = el, text_type
 
         span_start = @span_start

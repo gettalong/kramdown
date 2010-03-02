@@ -1340,20 +1340,13 @@ The asterisk form is also allowed within a single word:
 
     This is un*believe*able! This d_oe_s not work!
 
-Text emphasized with different delimiters can be nested but you can't nest emphasized text with the
-same delimiters:
+Text can be marked up as both emphasized and strong, possibly using different delimiters. However,
+it is not possible to nest strong within strong or emphasized within emphasized text:
 
     This is a ***strong and emphasized*** text.
-    This **is __very__ strong**.
-    This **is **very** strong**.
-
-will produce the following output:
-
-    <p>This is a <strong><em>strong and emphasized</em></strong> text.
-    This <strong>is <strong>very</strong> strong</strong>.
-    This <strong>is </strong>very<strong> strong</strong>.</p>
-
-Notice the difference between the second and the third line!
+    This **is _emphasized_ as well**.
+    This *does _not_ work*.
+    This **does __not__ work either**.
 
 If one or two asterisks or underscores are surrounded by spaces, they are treated literally. If you
 want to force the literal meaning of an asterisk or an underscore you can backslash-escape it:

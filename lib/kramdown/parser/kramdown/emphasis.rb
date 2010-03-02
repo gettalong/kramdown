@@ -33,7 +33,8 @@ module Kramdown
         type = (result =~ /_/ ? '_' : '*')
         reset_pos = @src.pos
 
-        if (type == '_' && @src.pre_match =~ /[[:alpha:]]\z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/)
+        if (type == '_' && @src.pre_match =~ /[[:alpha:]]\z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/) ||
+            @tree.type == element || @stack.any? {|el, _| el.type == element}
           add_text(result)
           return
         end
@@ -50,7 +51,7 @@ module Kramdown
         end
 
         found, el, stop_re = sub_parse.call(result, element)
-        if !found && element == :strong
+        if !found && element == :strong && @tree.type != :em
           @src.pos = reset_pos - 1
           found, el, stop_re = sub_parse.call(type, :em)
         end
