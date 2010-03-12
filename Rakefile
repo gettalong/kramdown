@@ -110,6 +110,7 @@ EOF
                             'benchmark/*',
                             'lib/**/*.rb',
                             'man/man1/kramdown.1',
+                            'data/**/*',
                             'doc/**',
                             'test/**/*'
                            ])
