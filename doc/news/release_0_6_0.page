@@ -17,6 +17,8 @@ modified_at: 2010-02-15 10:11:00 +02:00
 
   - Added a man page for the kramdown binary
   - Added a CLI option for selecting the input format and changed the output format option to `-o`
+  - Small syntax change for list items: the last list item text is now also wrapped in a paragraph
+    tag if all other list items are.
 
 * Bug fixes:
 

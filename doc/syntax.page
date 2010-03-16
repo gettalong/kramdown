@@ -550,6 +550,16 @@ by leaving a blank line after the last list item and using an EOB marker:
 
     ^
 
+The text of the last list item is also wrapped in a paragraph tag if *all* other list items contain
+a proper paragraph as first element. This makes the following use case work like expected, i.e.
+*all* the list items are wrapped in paragraphs:
+
+    * First list item
+
+    * Second list item
+
+    * Last list item
+
 > The original Markdown syntax page specifies that list items which are separated by one or more
 > blank lines are wrapped in paragraph tags. This means that the first text will also be wrapped in
 > a paragraph if you have block level elements in a list which are separated by blank lines. The

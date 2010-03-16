@@ -17,3 +17,32 @@
 A paragraph
   1. followed not by ol
 - followed not by ul
+
+A compact list:
+
+* compact
+* list
+* items
+
+A normal list:
+
+* not
+
+* compact
+
+* but here
+A normal list:
+
+* not
+
+* compact
+
+* here
+
+A normal list:
+
+* not
+
+* compact
+
+* here
