@@ -5,10 +5,23 @@ title: LaTeX Converter
 
 This converter converts a kramdown element tree into LaTeX. It supports all available element types
 except the HTML specific ones. The LaTeX document can, for example, further be converted to a PDF
-file.
+file to produce a high quality, printable version.
 
 Since the LaTeX converter outputs just the converted element tree and not a whole LaTeX document by
-default, one should always use the `:template` option (see below).
+default, one should always use the `:template` option (see below) to include the necessary
+"framework".
+
+
+## Code Blocks
+
+Syntax highlighting and visualizing whitespace in a code block is done using the `listings` package.
+So all languages supported by the `listings` package can be highlighted.
+
+
+## Emphasis
+
+The latex command `emph` is used for light and the command `textbf` for strong emphasis.
+
 
 ## Options
 

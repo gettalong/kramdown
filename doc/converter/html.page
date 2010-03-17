@@ -1,10 +1,43 @@
 ---
 title: HTML Converter
 ---
-# {title:}
+# HTML Converter
 
 This converter converts a kramdown element tree into a HTML fragment and supports all available
 element types.
+
+## Code Blocks
+
+A code block is wrapped in both `<pre>` and  `<code>` tags.
+
+When showing whitespace in a code block, all spaces are replaced with the entity `&sdot;` and
+additionally spaces and tabs in the code block are marked up using HTML `span` tags and the
+following CSS classes:
+
+* `ws-space-l`, `ws-tab-l`: leading spaces/tabs
+* `ws-space-r`, `ws-tab-r`: trailing spaces/tabs
+* `ws-space`, `ws-tab`: spaces/tabs in between
+
+Syntax highlighting for text in a code blocks is done using the
+[CodeRay](http://coderay.rubychan.de) library which can be installed, for example, via Rubygems.
+Have a look at the CodeRay homepage to see all supported languages.
+
+
+## Math Support
+
+If you want math formulas correctly displayed, you have to include the [jsMath] javascript library
+in the HTML file (see the [jsMath homepage][jsMath] for details). Note that kramdown does *not* ship
+with the jsMath library and that therefore the `default` template does *not* include a link to it!
+
+Why jsMath? Because I think that it is simply the best way to display LaTeX math formulas on the
+Web.
+
+
+## Emphasis
+
+kramdown uses the HTML element `em` to style light and the element `strong` to style strong
+emphasized text parts.
+
 
 ## Options
 
@@ -13,3 +46,4 @@ The HTML converter supports the following options:
 {options: {items: [:template, :footnote_nr, :filter_html, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
 
 
+[jsMath]: http://www.math.union.edu/~dpvc/jsMath/
