@@ -87,9 +87,9 @@ extensions that have been made popular by the [PHP Markdown Extra] package and [
 It is probably the fastest pure-Ruby Markdown converter available (February 2010), being about 4.5x
 faster than [Maruku] and about 10x faster than [BlueFeather].
 
-<div class="a-center">
+<p class="a-center">
 The latest version of kramdown is <b>0.5.0</b> and it was released on <b>2010-02-15</b>.
-</div>
+</p>
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Maruku]: http://maruku.rubyforge.org

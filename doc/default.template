@@ -12,49 +12,38 @@
     <title>{title:} | kramdown</title>
   </head>
   <body>
-    <div id="layout">
-
+    <div id="fullheader">
       <div id="header">
-
         <h1 id="logo"><a href="{relocatable: /}" title="Homepage">kramdown <span class='slogan'>fast, pure-Ruby Markdown-superset converter</span></a></h1>
-        <hr class="noscreen" />
-
       </div>
-
-      <hr class="noscreen" />
-
-      <div id="nav" class="box">
+    </div>
+    <div id="fullnav">
+      <div id="nav">
         {menu: {max_levels: 1, used_nodes: files}}
-        <hr class="noscreen" />
       </div>
-
-      <div id="container" class="box">
-
-        <% if context.content_node.node_info[:page].blocks.has_key?('intro') %>
-        <div id="intro">
-          <div id="intro-in">
-            <webgen:block name="intro" node="first" />
-          </div>
+    </div>
+    <div id="fullintro">
+      <% if context.content_node.node_info[:page].blocks.has_key?('intro') %>
+      <div id="intro">
+        <div id="intro-in">
+          <webgen:block name="intro" node="first" />
         </div>
-        <% end %>
+      </div>
+      <% end %>
+    </div>
 
-        <div id="main" class="content box">
-          <div class="in">
-            <div class="shadow">
-              <webgen:block name="content" />
-            </div>
+    <div id="container">
 
-            <div class="clear"></div>
-
-          </div>
-        </div>
-
+      <div id="main">
+        <webgen:block name="content" />
+        <div class="clear"></div>
       </div>
 
-      <div id="footer" class="shadow">
-        <div class="f-left">Copyright © 2009 Thomas Leitner</div>
-        <div class="f-right">Design by <a href="http://www.davidkohout.cz" title="Original template design">David Kohout</a></div>
-      </div>
+    </div>
+
+    <div id="footer" class="shadow">
+      <div class="float-left">Copyright © 2009 Thomas Leitner</div>
+      <div class="float-right">Design by <a href="http://www.davidkohout.cz" title="Original template design">David Kohout</a></div>
     </div>
 
     <!-- Start of StatCounter Code -->
