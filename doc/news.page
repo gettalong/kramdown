@@ -18,7 +18,7 @@ end.collect {|na,no| no}.sort.reverse.each do |node|
 %>
 
 <div class='news-item'>
-<div class="news-date f-right">
+<div class="news-date float-right">
   Published on <%= node['created_at'].strftime("%A, %d %B %Y") %>
 </div>
 <%= context.render_block(:name => 'content', :chain => [node]) %>

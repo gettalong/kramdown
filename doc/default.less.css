@@ -315,6 +315,106 @@ body, table, code {
             }
         }
 
+
+
+        /* added definitions ------------------------------------------------------------ */
+
+        .news-item {
+            border-top: 3px solid #ddd;
+            margin-top: 20px;
+
+            h2 {
+                margin-top: 20px;
+            }
+        }
+
+        .news-date {
+            margin-top: 30px;
+        }
+
+        pre {
+            margin: 15px 10px;
+            background-color: #e6e8e9;
+            color: #000;
+        }
+
+        pre.show-whitespaces .ws-space {
+            background-color: #f44;
+        }
+        pre.show-whitespaces .ws-space-l {
+            background-color: #f22;
+        }
+        pre.show-whitespaces .ws-space-r {
+            background-color: #f00;
+        }
+
+        pre.show-whitespaces .ws-tab {
+            background-color: #ff4;
+        }
+        pre.show-whitespaces .ws-tab-l {
+            background-color: #ff2;
+        }
+        pre.show-whitespaces .ws-tab-r {
+            background-color: #ff0;
+        }
+
+        pre.show-whitespaces.ws-lr .ws-tab {
+            background-color: inherit;
+        }
+        pre.show-whitespaces.ws-lr .ws-space {
+            background-color: inherit;
+            opacity: 0;
+        }
+
+        blockquote.markdown-difference {
+            margin: 15px 20px;
+            padding: 5px;
+            border: 2px solid #e6e8e9;
+            background-color: #ffffee
+        }
+
+        blockquote.markdown-difference:before {
+            content: "Difference to Standard Markdown";
+            display: block;
+            font-weight: bold;
+            margin-top: 5px
+        }
+
+        pre.kdexample-before {
+            width: 45%;
+            float: left;
+        }
+
+        pre.kdexample-after-source {
+            width: 45%;
+            float: right;
+            background-color: #ffffee;
+            border: 2px solid #e6e8e9;
+            margin-bottom: 3px;
+        }
+
+        div.kdexample-after-live {
+            width: 45%;
+            float: right;
+            clear: right;
+            background-color: #eeffee;
+            border: 2px solid #e6e8e9;
+            margin: 0px 10px;
+        }
+
+        div.kdsyntaxlink {
+            float: right;
+            padding: 5px;
+            border: 1px solid #e6e8e9;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        div.kdsyntaxlink a {
+            text-decoration: none;
+        }
+
+
     }
 }
 
@@ -366,97 +466,3 @@ acronym {
 .a-right, tr.a-right td {text-align:right;}
 
 .clear { clear: both; }
-
-
-
-
-
-/* added definitions ------------------------------------------------------------ */
-.news-item + .news-item {
-    border-top: 1px solid #dddddd;
-}
-.news-date {
-    margin-top: 5px;
-}
-
-pre {
-    margin: 15px 10px;
-    background-color: #e6e8e9;
-    color: #000;
-}
-
-pre.show-whitespaces .ws-space {
-    background-color: #f44;
-}
-pre.show-whitespaces .ws-space-l {
-    background-color: #f22;
-}
-pre.show-whitespaces .ws-space-r {
-    background-color: #f00;
-}
-
-pre.show-whitespaces .ws-tab {
-    background-color: #ff4;
-}
-pre.show-whitespaces .ws-tab-l {
-    background-color: #ff2;
-}
-pre.show-whitespaces .ws-tab-r {
-    background-color: #ff0;
-}
-
-pre.show-whitespaces.ws-lr .ws-tab {
-    background-color: inherit;
-}
-pre.show-whitespaces.ws-lr .ws-space {
-    background-color: inherit;
-    opacity: 0;
-}
-
-blockquote.markdown-difference {
-    margin: 15px 20px;
-    padding: 5px;
-    border: 2px solid #e6e8e9;
-    background-color: #ffffee
-}
-
-blockquote.markdown-difference:before {
-    content: "Difference to Standard Markdown";
-    display: block;
-    font-weight: bold;
-    margin-top: 5px
-}
-
-pre.kdexample-before {
-    width: 45%;
-    float: left;
-}
-
-pre.kdexample-after-source {
-    width: 45%;
-    float: right;
-    background-color: #ffffee;
-    border: 2px solid #e6e8e9;
-    margin-bottom: 3px;
-}
-
-div.kdexample-after-live {
-    width: 45%;
-    float: right;
-    clear: right;
-    background-color: #eeffee;
-    border: 2px solid #e6e8e9;
-    margin: 0px 10px;
-}
-
-div.kdsyntaxlink {
-    float: right;
-    padding: 5px;
-    border: 1px solid #e6e8e9;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-div.kdsyntaxlink a {
-    text-decoration: none;
-}
