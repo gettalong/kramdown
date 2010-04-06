@@ -87,22 +87,24 @@ if options[:graph]
   Dir['historic-*.dat'].each do |historic_name|
     theruby = historic_name.sub(/^historic-/, '').sub(/\.dat$/, '')
     graph_name = "graph-#{theruby}.png"
-    static_name = "static-#{theruby}.dat"
+    #static_name = "static-#{theruby}.dat"
     historic_names = File.readlines(historic_name).first.chomp[1..-1].split(/\s*\|\|\s*/)
-    static_names = (File.exist?(static_name) ? File.readlines(static_name).first.chomp[1..-1].split(/\s*\|\|\s*/) : [])
+    #static_names = (File.exist?(static_name) ? File.readlines(static_name).first.chomp[1..-1].split(/\s*\|\|\s*/) : [])
     File.open("gnuplot.dat", "w+") do |f|
       f.puts <<EOF
 set title "Execution Time Performance for #{theruby}"
 set xlabel "File Multiplier (i.e. n times mdbasic.text)"
 set ylabel "Execution Time in secondes"
+set key left top
 set grid "on"
 set terminal png
 set output "#{graph_name}"
 EOF
       f.print "plot "
       i, j = 1, 1
-      f.puts((historic_names.map {|n| i += 1; "\"#{historic_name}\" using 1:#{i} with lp title \"#{n}\""} +
-              static_names.map {|n| j += 1; n =~ /bluefeather/i ? nil : "\"#{static_name}\" using 1:#{j} with lp title \"#{n}\""}.compact).join(", "))
+      f.puts((historic_names.map {|n| i += 1; "\"#{historic_name}\" using 1:#{i} with lp title \"#{n}\""}
+              #static_names.map {|n| j += 1; n =~ /bluefeather/i ? nil : "\"#{static_name}\" using 1:#{j} with lp title \"#{n}\""}.compact
+             ).join(", "))
     end
     `gnuplot gnuplot.dat`
     FileUtils.rm("gnuplot.dat")
