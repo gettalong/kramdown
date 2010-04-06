@@ -39,7 +39,8 @@ BlueCloth and rdiscount:
 </code>
 </pre>
 
-And here are some graphs which show the execution times on different Ruby interpreters:
+And here are some graphs which show the execution times of the various kramdown releases on
+different Ruby interpreters:
 
 ![ruby 1.8.6]({relocatable: img/graph-ruby-1.8.6.png})
 ![ruby 1.8.7]({relocatable: img/graph-ruby-1.8.7.png})
