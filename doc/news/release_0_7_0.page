@@ -18,3 +18,5 @@ modified_at: 2010-04-06 11:30:00 +02:00
 * Bug fixes:
 
 * Deprecation notes:
+
+  - Removed deprecated CLI option `-f`
