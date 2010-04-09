@@ -272,45 +272,48 @@ task :clobber => ['dev:clobber']
 
 # Helper methods and misc  ###################################################################
 
+if defined? Webgen
 
-class OptionsDisplay
+  class OptionsDisplay
 
-  include Webgen::Tag::Base
+    include Webgen::Tag::Base
 
-  def call(tag, body, context)
-    param('optionsdisplay.items').collect do |opt|
-      Kramdown::Options.definitions[opt]
-    end.collect do |term|
-      lines = term.desc.split(/\n/)
-      first = lines.shift
-      rest = lines[0..-2].collect {|l| "  " + l}.join("\n")
-      "`#{term.name.inspect}`\n: #{first}\n#{rest}"
-    end.join("\n")
-  end
-
-end
-
-
-module Kramdown
-
-  class Parser::Kramdown::Extension
-
-    def parse_kdexample(parser, opts, body)
-      wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
-      wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
-      doc = ::Kramdown::Document.new(body)
-      wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
-      wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
-      wrap.children.last.children << Element.new(:raw, doc.to_html)
-      parser.tree.children << wrap
-      parser.tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
+    def call(tag, body, context)
+      param('optionsdisplay.items').collect do |opt|
+        Kramdown::Options.definitions[opt]
+      end.collect do |term|
+        lines = term.desc.split(/\n/)
+        first = lines.shift
+        rest = lines[0..-2].collect {|l| "  " + l}.join("\n")
+        "`#{term.name.inspect}`\n: #{first}\n#{rest}"
+      end.join("\n")
     end
 
-    def parse_kdlink(parser, opts, body)
-      wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdsyntaxlink'})
-      wrap.children << Element.new(:a, nil, :attr => {'href' => "syntax.html##{opts['id']}"})
-      wrap.children.last.children << Element.new(:text, "&rarr; Syntax for #{opts['part']}")
-      parser.tree.children << wrap
+  end
+
+
+  module Kramdown
+
+    class Parser::Kramdown::Extension
+
+      def parse_kdexample(parser, opts, body)
+        wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
+        wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
+        doc = ::Kramdown::Document.new(body)
+        wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
+        wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
+        wrap.children.last.children << Element.new(:raw, doc.to_html)
+        parser.tree.children << wrap
+        parser.tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
+      end
+
+      def parse_kdlink(parser, opts, body)
+        wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdsyntaxlink'})
+        wrap.children << Element.new(:a, nil, :attr => {'href' => "syntax.html##{opts['id']}"})
+        wrap.children.last.children << Element.new(:text, "&rarr; Syntax for #{opts['part']}")
+        parser.tree.children << wrap
+      end
+
     end
 
   end
