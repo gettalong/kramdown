@@ -178,8 +178,8 @@ module Kramdown
                   # Special case for e.g. "<i>Custer</i>'s Last Stand."
                   [/("|')(\s|s\b|$)/, [:rquote1, 2]],
                   # Any remaining single quotes should be opening ones:
-                  [/(.?)'/, [1, :lsquo]],
-                  [/(.?)"/, [1, :ldquo]],
+                  [/(.?)'/m, [1, :lsquo]],
+                  [/(.?)"/m, [1, :ldquo]],
                  ] #'"
 
       SQ_SUBSTS = {

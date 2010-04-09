@@ -17,6 +17,9 @@ modified_at: 2010-04-06 11:30:00 +02:00
 
 * Bug fixes:
 
+  - Fixed a problem with parsing smart quotes at the beginning of a line (reported by Michael
+    Franzl)
+
 * Deprecation notes:
 
   - Removed deprecated CLI option `-f`
