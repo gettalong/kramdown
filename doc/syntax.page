@@ -1481,6 +1481,39 @@ foot note definitions are ignored. If more than one footnote definitions have th
 name, all footnote definitions but the last are ignored.
 
 
+## Abbreviations
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [PHP Markdown Extra] package.
+{: .markdown-difference}
+
+kramdown provides a syntax to assign the full phrase to an abbreviation. When writing the text, you
+don't need to do anything special. However, once you add abbreviation definitions, the
+abbreviations in the text get marked up automatically. Abbreviations can consist of any character
+except a closing bracket.
+
+An abbreviation definition is used to define the full phrase for an abbreviation and has the
+following structure:
+
+* An asterisk and the abbreviation in square brackets, optionally indented up to three
+  spaces,
+* then a colon and the full phrase of the abbreviation on one line (leading and trailing spaces are
+  stripped from the full phrase).
+
+Later abbreviation definition for the same abbreviation override prior ones and it does not matter
+where you put an abbreviation definition in a kramdown document. Empty definitions are also allowed.
+
+Here are some examples:
+
+    This is some text not written in HTML but in another language!
+
+    *[another language]: It's called Markdown
+    *[HTML]: HyperTextMarkupLanguage
+
+> Abbreviation definitions are, despite being described here, block level elements.
+{: .information}
+
+
 ## Typographic Symbols
 
 > The original Markdown syntax does not support these transformations.

@@ -51,6 +51,7 @@ module Kramdown
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
+        @doc.parse_infos[:abbrev_defs] = {}
         @doc.parse_infos[:footnotes] = {}
       end
       private_class_method(:new, :allocate)
@@ -85,7 +86,8 @@ module Kramdown
 
       BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                        :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
-                       :footnote_definition, :ald, :block_ial, :block_math, :extension_block, :eob_marker, :paragraph]
+                       :footnote_definition, :abbrev_definition, :ald, :block_ial, :block_math, :extension_block,
+                       :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
                        :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
 
@@ -144,6 +146,7 @@ module Kramdown
           else
             update_tree(child)
             update_attr_with_ial(child.options[:attr] ||= {}, child.options[:ial]) if child.options[:ial]
+            replace_abbreviations(child)
             child
           end
         end.flatten!
@@ -213,18 +216,18 @@ module Kramdown
 
       # Extract the part of the StringScanner backed string specified by the +range+. This method
       # also works correctly under Ruby 1.9.
-      def extract_string(range)
+      def extract_string(range, strscan = @src)
         result = nil
         if RUBY_VERSION >= '1.9'
           begin
-            enc = @src.string.encoding
-            @src.string.force_encoding('ASCII-8BIT')
-            result = @src.string[range].force_encoding(enc)
+            enc = strscan.string.encoding
+            strscan.string.force_encoding('ASCII-8BIT')
+            result = strscan.string[range].force_encoding(enc)
           ensure
-            @src.string.force_encoding(enc)
+            strscan.string.force_encoding(enc)
           end
         else
-          result = @src.string[range]
+          result = strscan.string[range]
         end
         result
       end
@@ -285,6 +288,7 @@ module Kramdown
       require 'kramdown/parser/kramdown/emphasis'
       require 'kramdown/parser/kramdown/smart_quotes'
       require 'kramdown/parser/kramdown/math'
+      require 'kramdown/parser/kramdown/abbreviation'
 
     end
 

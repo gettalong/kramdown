@@ -269,6 +269,12 @@ module Kramdown
         "<#{type}#{options_for_element(el)}>#{escape_html(el.value, :text)}</#{type}>#{type == 'div' ? "\n" : ''}"
       end
 
+      def convert_abbreviation(el, indent, opts)
+        title = @doc.parse_infos[:abbrev_defs][el.value]
+        title = nil if title.empty?
+        "<abbr#{title ? " title=\"#{title}\"" : ''}>#{el.value}</abbr>"
+      end
+
       def convert_root(el, indent, opts)
         inner(el, indent, opts) << footnote_content
       end

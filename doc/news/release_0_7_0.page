@@ -7,11 +7,14 @@ modified_at: 2010-04-06 11:30:00 +02:00
 ---
 ## kramdown 0.7.0 released
 
-
+This release adds syntax support for abbreviations. This means that kramdown is now syntax-wise on
+par with Maruku and PHP Markdown Extra!
 
 ## Changes
 
 * Major changes:
+
+  - Added support for PHP Markdown Extra like abbreviations
 
 * Minor changes:
 

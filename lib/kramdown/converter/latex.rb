@@ -514,6 +514,10 @@ EOF
         end
       end
 
+      def convert_abbreviation(el, indent, opts)
+        el.value
+      end
+
       ESCAPE_MAP = {
         "^"  => "\\^{}",
         "\\" => "\\textbackslash{}",

@@ -526,6 +526,21 @@ As can be seen above the footnote name is only used for the anchors and the numb
 automatically in document order.
 
 
+## Abbreviations
+
+{::kdlink:: #abbreviations part="abbreviations"}
+
+Abbreviations will work out of the box once you add an abbreviation definition. So you can just
+write the text and add the definitions later on.
+
+{::kdexample:}
+This is an HTML
+example.
+
+*[HTML]: Hyper Text Markup Language
+{::kdexample:}
+
+
 ## HTML Elements
 
 {::kdlink:: #html-spans part="HTML spans"}
