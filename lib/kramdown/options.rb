@@ -148,7 +148,7 @@ If this option is `true`, ID values for all headers are automatically
 generated if no ID is explicitly specified.
 
 Default: true
-Used by: kramdown parser
+Used by: HTML/Latex converter
 EOF
 
     define(:parse_block_html, Boolean, false, <<EOF)

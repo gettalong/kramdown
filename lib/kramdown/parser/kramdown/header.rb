@@ -24,19 +24,6 @@ module Kramdown
   module Parser
     class Kramdown
 
-      # Generate an alpha-numeric ID from the the string +str+.
-      def generate_id(str)
-        gen_id = str.gsub(/[^a-zA-Z0-9 -]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '-').downcase
-        gen_id = 'section' if gen_id.length == 0
-        @used_ids ||= {}
-        if @used_ids.has_key?(gen_id)
-          gen_id += '-' + (@used_ids[gen_id] += 1).to_s
-        else
-          @used_ids[gen_id] = 0
-        end
-        gen_id
-      end
-
       HEADER_ID=/(?:[ \t]\{#((?:\w|\d)[\w\d-]*)\})?/
       SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)#{HEADER_ID}[ \t]*?\n(-|=)+\s*?\n/
 
@@ -47,10 +34,9 @@ module Kramdown
         end
         @src.pos += @src.matched_size
         text, id, level = @src[1].strip, @src[2], @src[3]
-        el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1))
+        el = Element.new(:header, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
         add_text(text, el)
         el.options[:attr] = {'id' => id} if id
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
         @tree.children << el
         true
       end
@@ -67,10 +53,9 @@ module Kramdown
         end
         result = @src.scan(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2].strip, @src[3]
-        el = Element.new(:header, nil, :level => level.length)
+        el = Element.new(:header, nil, :level => level.length, :raw_text => text)
         add_text(text, el)
         el.options[:attr] = {'id' => id} if id
-        el.options[:attr] = {'id' => generate_id(text)} if @doc.options[:auto_ids] && !id
         @tree.children << el
         true
       end

@@ -84,8 +84,6 @@ If you set the option `auto_ids` to `false` (for example, by using the `options`
 [Extension Blocks](#extension-blocks)), then the automatic header ID generation is turned off:
 
 {::kdexample:}
-# A header with an ID
-
 {::options:: auto_ids="false"}
 
 # A header without an ID
@@ -388,13 +386,9 @@ body text and continues until a matching ending line (as in the example above). 
 used, then the extension does not have a body, for example:
 
 {::kdexample:}
-# Header with id
 {::options:: auto_ids="false"}
 
 # Header without id
-{::options:: auto_ids="true"}
-
-# Header with id
 {::kdexample:}
 
 

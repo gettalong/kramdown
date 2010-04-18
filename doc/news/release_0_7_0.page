@@ -10,6 +10,10 @@ modified_at: 2010-04-06 11:30:00 +02:00
 This release adds syntax support for abbreviations. This means that kramdown is now syntax-wise on
 par with Maruku and PHP Markdown Extra!
 
+Additionally, the parser has been made non-configurable, i.e. the parser doesn't support options
+anymore. This means that the intermediary stage after parsing will always be the same for one and
+the same input document.
+
 ## Changes
 
 * Major changes:
@@ -17,6 +21,8 @@ par with Maruku and PHP Markdown Extra!
   - Added support for PHP Markdown Extra like abbreviations
 
 * Minor changes:
+
+  - The option `:auto_ids` has been moved from the parser to the converters.
 
 * Bug fixes:
 

@@ -3,7 +3,7 @@
 {::options:: unusedvar="val"}
 {::options:: auto_ids="true"}
 
-# with header id
+# without header id
 
 <div>
 some <span>*para*</span>
