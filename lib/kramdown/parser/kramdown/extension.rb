@@ -82,6 +82,11 @@ module Kramdown
         body = nil
         parse_attribute_list(@src[3], opts)
 
+        warn('DEPRECATION warning: This syntax is deprecated, use the new extension syntax')
+        if !%w{comment nomarkdown options}.include?(ext)
+          warn('DEPRECATION warning: Custom extensions will be removed in a future version - use a template processor like ERB instead')
+        end
+
         if !@extension.public_methods.map {|m| m.to_s}.include?("parse_#{ext}")
           warning("No extension named '#{ext}' found - ignoring extension block")
           body = :invalid

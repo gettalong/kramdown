@@ -10,9 +10,9 @@ modified_at: 2010-04-06 11:30:00 +02:00
 This release adds syntax support for abbreviations. This means that kramdown is now syntax-wise on
 par with Maruku and PHP Markdown Extra!
 
-Additionally, the parser has been made non-configurable, i.e. the parser doesn't support options
-anymore. This means that the intermediary stage after parsing will always be the same for one and
-the same input document.
+Additionally, the option `:auto_ids` has been moved from being interpreted by the parser to being
+interpreted by the converters. This means that it is not possible anymore to turn automatic header
+ID generation on or off for parts of a text.
 
 ## Changes
 
@@ -32,3 +32,4 @@ the same input document.
 * Deprecation notes:
 
   - Removed deprecated CLI option `-f`
+  - The old extension syntax and support for custom extensions will be removed in the next release.
