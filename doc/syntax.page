@@ -1142,60 +1142,74 @@ Here are some examples for block IALs:
     {:.ruby}
 
 
-## Extension Blocks
+## Extensions
 
 > This syntax feature is not part of the original Markdown syntax.
 {: .markdown-difference}
 
-Extension blocks can be used, for example, to treat whole sections of text specially. For example,
-one could write an extension that highlights a code fragment specified in an extension block.
+Extensions provide additional functionality but use the same syntax for it. They are available as
+block as well as span level elements.
 
-An extension block has two forms, one with a body and one without a body:
+The syntax for an extension is very similar to the syntax of [ALDs](#attribute-list-definitions).
+Here are some examples of how to specify extensions and afterwards is the syntax definition:
 
-Without a body
+    {:comment}
+    This text is completely ignored by kramdown - a comment in the text.
+    {:/comment}
 
-:   The extension block line has the same structure as an [ALD](#attribute-list-definitions) except
-    that the reference name needs to prefixed and postfixed with `:` and identifies the extension to
-    be used. Attributes can be defined like it is done for an ALD.
+    Do you see {:comment}this text{:/comment}?
+    {:comment}some other comment{:/}
 
-With a body
+    {:options key="val" /}
 
-:   The starting and ending lines of an extension block with a body have the same structure as an
-    [ALD](#attribute-list-definitions) except that the reference name needs to prefixed with `:` and
-    identifies the extension to be used; attributes can be defined on the starting or ending line.
-    The text between the starting and ending line is passed to the extension and not parsed by
-    kramdown. If no ending line is found, the starting line is ignored and the body is parsed
-    normally by kramdown.
+An extension can be specified with or without a body. Therefore there exist a start and an end tag
+for extensions. The start tag has the following structure:
 
-If the specified extension is not found, a warning is shown and the whole extension block including
-the body is ignored. The following extensions are built-in:
+* an left brace,
+* followed by a colon and the extension name,
+* optionally followed by a space and attribute definitions (allowed characters are backslash-escaped
+  closing braces or any character except a not escaped closing brace -- same as with ALDs),
+* followed by a slash and a right brace (in case the extension has no body) or only a right
+  brace (in case the extension has a body).
+
+The stop tag has the following structure:
+
+* a left brace,
+* followed by a colon and a slash,
+* optionally followed by the extension name,
+* followed by a right brace.
+
+A stop tag is only needed if the extension has a body!
+
+The above syntax can be used as is for span level extensions. The starting and ending lines for block level
+extensions are defined as:
+
+* The starting line consists of the extension start tag, optionally preceded by up to three spaces,
+  and followed by optional spaces until the end of the line.
+* The ending line consists of the extension stop tag, optionally preceded by up to three spaces,
+  and followed by optional spaces until the end of the line.
+
+If no end tag can be found for an extension start tag, the start tag is treated as if it has no
+body. If an invalid extension stop tag is found, it is ignored. If an invalid extension name is
+specified the extension (and the eventually specified body) are ignored.
+
+The following extensions can be used with kramdown:
 
 `comment`
 
-:   Treats the body text as a comment which does not show in the output.
+:   Treat the body text as a comment which does not show in the output.
 
 `nomarkdown`
 
-:   The body is not processed with kramdown but output as-is.
+:   Don't process the body with kramdown but output it as-is.
 
 `options`
 
 :   Should be used without a body since the body is ignored. Is used for setting the global options
-    for the kramdown processor (for example, to enable automatic header ID generation). Note that
+    for the kramdown processor (for example, to disable automatic header ID generation). Note that
     options that are used by the parser are immediately effective whereas all other options are not!
     This means, for example, that it is not possible to set converter options only for some part of
     a kramdown document.
-
-Here are some examples for how extension blocks look like:
-
-    {::toc::}
-
-    The above extension block could be replaced by a table of contents.
-
-    {::comment:}
-    This text is completely ignored by kramdown - a comment in the text.
-    {::comment:}
-
 
 
 # Span Level Elements

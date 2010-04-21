@@ -73,7 +73,7 @@ module Kramdown
       EXT_BLOCK_START_STR = "^#{OPT_SPACE}\\{::(%s):(:)?(#{ALD_ANY_CHARS}*)\\}\s*?\n"
       EXT_BLOCK_START = /#{EXT_BLOCK_START_STR % ALD_ID_NAME}/
 
-      # Parse the extension block at the current location.
+      # Parse the block extension at the current location.
       def parse_extension_block
         @src.pos += @src.matched_size
 
@@ -108,6 +108,67 @@ module Kramdown
         true
       end
       define_parser(:extension_block, EXT_BLOCK_START)
+
+
+      ##########################################
+      ### Code for handling new extension syntax
+      ##########################################
+
+      def handle_extension(name, opts, body, type)
+        case name
+        when 'comment'
+          # nothing to do
+        when 'nomarkdown'
+          @tree.children << Element.new(:raw, body, :type => type) if body.kind_of?(String)
+        when 'options'
+          opts.select do |k,v|
+            k = k.to_sym
+            if Kramdown::Options.defined?(k)
+              @doc.options[k] = Kramdown::Options.parse(k, v) rescue @doc.options[k]
+              false
+            else
+              true
+            end
+          end.each do |k,v|
+            warning("Unknown kramdown option '#{k}'")
+          end
+        else
+          warning("Invalid extension name '#{name}' specified - ignoring extension")
+        end
+      end
+
+
+      EXT_STOP_STR = "\\{:/(%s)?\\}"
+      EXT_STOP = /#{EXT_STOP_STR % ALD_ID_NAME}/
+      EXT_SPAN_START = /\{:(\w+)(?:\s(#{ALD_ANY_CHARS}*?)|)(\/)?\}|#{EXT_STOP}/
+
+      # Parse the extension span at the current location.
+      def parse_span_extension
+        @src.pos += @src.matched_size
+
+        if @src[4] || @src.matched == '{:/}'
+          name = (@src[4] ? "for '#{@src[4]}' " : '')
+          warning("Invalid extension stop tag #{name}found - ignoring it")
+          return
+        end
+
+        ext = @src[1]
+        opts = {}
+        body = nil
+        parse_attribute_list(@src[2] || '', opts)
+
+        if !@src[3]
+          stop_re = /#{EXT_STOP_STR % ext}/
+          if result = @src.scan_until(stop_re)
+            body = result.sub!(stop_re, '')
+          else
+            warning("No stop tag for extension '#{ext}' found - treating it as extension without body")
+          end
+        end
+
+        handle_extension(ext, opts, body, :span)
+      end
+      define_parser(:span_extension, EXT_SPAN_START, '\{:/?')
 
     end
   end

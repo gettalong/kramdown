@@ -81,10 +81,10 @@ Second level header
 {::kdexample:}
 
 If you set the option `auto_ids` to `false` (for example, by using the `options` extension, see
-[Extension Blocks](#extension-blocks)), then the automatic header ID generation is turned off:
+[Extensions](#extensions)), then the automatic header ID generation is turned off:
 
 {::kdexample:}
-{::options:: auto_ids="false"}
+{:options auto_ids="false" /}
 
 # A header without an ID
 {::kdexample:}
@@ -355,38 +355,38 @@ paragraph
 {::kdexample:}
 
 
-## Extension Blocks
+## Extensions
 
-{::kdlink:: #extension-blocks part="extension blocks"}
+{::kdlink:: #extensions part="extensions"}
 
-Extension blocks can be used to add custom behaviour to kramdown. For more information on how to do
-this have a look at the [API documentation]({relocatable: /rdoc/index.html}). kramdown comes with
-some built-in extensions for ignoring text (i.e. treating text as comment), for inserting arbitrary
-text into the output and for setting kramdown options.
+kramdown provides some less used functionality through a common syntax. This will allow the easy
+addition of other extensions if need arises. Currently, there are extensions for ignoring text (i.e.
+treating text as comment), for inserting arbitrary text as-is into the output and for setting
+kramdown options.
 
 Here is an example that shows how to insert comments into text:
 
 {::kdexample:}
 This is a paragraph
-{::comment:}
+{:comment}
 This is a comment which is
 completely ignored.
-{::comment:}
+{:/comment}
 ... paragraph continues here.
 
-{::nomarkdown:}
-This is not parsed *by* kramdown
-{::nomarkdown:}
+Extensions can also be used
+inline {:nomarkdown}**see**{:/}!
 {::kdexample:}
 
-As one can see from the above example, the syntax for extension blocks is virtually the same as for
-block IALs and ALDs, except that the colon of a block IAL has to be replaced by two colons, the name
-of the extension and then one or two colons. If one colon is used, it means that the extension has
-body text and continues until a matching ending line (as in the example above). If two colons are
-used, then the extension does not have a body, for example:
+As one can see from the above example, the syntax for extensions is nearly identical to that of
+ALDs. However, there is no trailing colon after the extension name and the extension end tag needs a
+slash between the colon and the extension name. One can also use the short form of the end tag, i.e.
+`{:/}`. Attribute definitions can be specified on the start tag by separating them with a space from
+the extension name. Also, if the extension does not have a body, there needs to be a slash right
+before the closing brace:
 
 {::kdexample:}
-{::options:: auto_ids="false"}
+{:options auto_ids="false" /}
 
 # Header without id
 {::kdexample:}

@@ -10,6 +10,10 @@ modified_at: 2010-04-06 11:30:00 +02:00
 This release adds syntax support for abbreviations. This means that kramdown is now syntax-wise on
 par with Maruku and PHP Markdown Extra!
 
+Another big change is the extension support: After some discussion on the mailing list (many thanks
+to Eric Sunshine and Shawn Van Ittersum), the syntax for the extensions has been changed and support
+for custom extensions will be dropped.
+
 Additionally, the option `:auto_ids` has been moved from being interpreted by the parser to being
 interpreted by the converters. This means that it is not possible anymore to turn automatic header
 ID generation on or off for parts of a text.
@@ -19,6 +23,7 @@ ID generation on or off for parts of a text.
 * Major changes:
 
   - Added support for PHP Markdown Extra like abbreviations
+  - Added support for span extensions
 
 * Minor changes:
 

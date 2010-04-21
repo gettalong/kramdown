@@ -89,7 +89,7 @@ module Kramdown
                        :footnote_definition, :abbrev_definition, :ald, :block_ial, :block_math, :extension_block,
                        :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
-                       :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
+                       :span_extension, :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
