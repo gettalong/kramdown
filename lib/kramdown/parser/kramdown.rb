@@ -86,8 +86,8 @@ module Kramdown
 
       BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                        :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
-                       :footnote_definition, :abbrev_definition, :ald, :block_ial, :block_math, :extension_block,
-                       :eob_marker, :paragraph]
+                       :footnote_definition, :abbrev_definition, :ald, :block_math, :extension_block_depr,
+                       :block_extension, :block_ial, :eob_marker, :paragraph]
       SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
                        :span_extension, :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
 

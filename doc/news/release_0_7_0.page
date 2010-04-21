@@ -24,6 +24,7 @@ ID generation on or off for parts of a text.
 
   - Added support for PHP Markdown Extra like abbreviations
   - Added support for span extensions
+  - New syntax for block/span extensions
 
 * Minor changes:
 

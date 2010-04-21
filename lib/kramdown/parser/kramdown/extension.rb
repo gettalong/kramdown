@@ -70,11 +70,11 @@ module Kramdown
       end
 
 
-      EXT_BLOCK_START_STR = "^#{OPT_SPACE}\\{::(%s):(:)?(#{ALD_ANY_CHARS}*)\\}\s*?\n"
-      EXT_BLOCK_START = /#{EXT_BLOCK_START_STR % ALD_ID_NAME}/
+      EXT_BLOCK_START_STR_DEPR = "^#{OPT_SPACE}\\{::(%s):(:)?(#{ALD_ANY_CHARS}*)\\}\s*?\n"
+      EXT_BLOCK_START_DEPR = /#{EXT_BLOCK_START_STR_DEPR % ALD_ID_NAME}/
 
       # Parse the block extension at the current location.
-      def parse_extension_block
+      def parse_extension_block_depr
         @src.pos += @src.matched_size
 
         ext = @src[1]
@@ -93,7 +93,7 @@ module Kramdown
         end
 
         if !@src[2]
-          stop_re = /#{EXT_BLOCK_START_STR % ext}/
+          stop_re = /#{EXT_BLOCK_START_STR_DEPR % ext}/
           if result = @src.scan_until(stop_re)
             parse_attribute_list(@src[3], opts)
             body = result.sub!(stop_re, '') if body != :invalid
@@ -107,12 +107,38 @@ module Kramdown
 
         true
       end
-      define_parser(:extension_block, EXT_BLOCK_START)
+      define_parser(:extension_block_depr, EXT_BLOCK_START_DEPR)
 
 
       ##########################################
       ### Code for handling new extension syntax
       ##########################################
+
+      def parse_extension_start_tag(type)
+        @src.pos += @src.matched_size
+
+        if @src[4] || @src.matched == '{:/}'
+          name = (@src[4] ? "for '#{@src[4]}' " : '')
+          warning("Invalid extension stop tag #{name}found - ignoring it")
+          return
+        end
+
+        ext = @src[1]
+        opts = {}
+        body = nil
+        parse_attribute_list(@src[2] || '', opts)
+
+        if !@src[3]
+          stop_re = (type == :block ? /#{EXT_BLOCK_STOP_STR % ext}/ : /#{EXT_STOP_STR % ext}/)
+          if result = @src.scan_until(stop_re)
+            body = result.sub!(stop_re, '')
+          else
+            warning("No stop tag for extension '#{ext}' found - treating it as extension without body")
+          end
+        end
+
+        handle_extension(ext, opts, body, type)
+      end
 
       def handle_extension(name, opts, body, type)
         case name
@@ -139,34 +165,22 @@ module Kramdown
 
 
       EXT_STOP_STR = "\\{:/(%s)?\\}"
-      EXT_STOP = /#{EXT_STOP_STR % ALD_ID_NAME}/
-      EXT_SPAN_START = /\{:(\w+)(?:\s(#{ALD_ANY_CHARS}*?)|)(\/)?\}|#{EXT_STOP}/
+      EXT_START_STR = "\\{:(\\w+)(?:\\s(#{ALD_ANY_CHARS}*?)|)(\\/)?\\}"
+      EXT_SPAN_START = /#{EXT_START_STR}|#{EXT_STOP_STR % ALD_ID_NAME}/
+      EXT_BLOCK_START = /^#{OPT_SPACE}(?:#{EXT_START_STR}|#{EXT_STOP_STR % ALD_ID_NAME})\s*?\n/
+      EXT_BLOCK_STOP_STR = "^#{OPT_SPACE}#{EXT_STOP_STR}\s*?\n"
+
+      # Parse the extension block at the current location.
+      def parse_block_extension
+        parse_extension_start_tag(:block)
+        true
+      end
+      define_parser(:block_extension, EXT_BLOCK_START)
+
 
       # Parse the extension span at the current location.
       def parse_span_extension
-        @src.pos += @src.matched_size
-
-        if @src[4] || @src.matched == '{:/}'
-          name = (@src[4] ? "for '#{@src[4]}' " : '')
-          warning("Invalid extension stop tag #{name}found - ignoring it")
-          return
-        end
-
-        ext = @src[1]
-        opts = {}
-        body = nil
-        parse_attribute_list(@src[2] || '', opts)
-
-        if !@src[3]
-          stop_re = /#{EXT_STOP_STR % ext}/
-          if result = @src.scan_until(stop_re)
-            body = result.sub!(stop_re, '')
-          else
-            warning("No stop tag for extension '#{ext}' found - treating it as extension without body")
-          end
-        end
-
-        handle_extension(ext, opts, body, :span)
+        parse_extension_start_tag(:span)
       end
       define_parser(:span_extension, EXT_SPAN_START, '\{:/?')
 

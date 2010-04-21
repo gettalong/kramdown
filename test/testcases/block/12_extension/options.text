@@ -1,7 +1,6 @@
 # No header id
 
-{::options:: unusedvar="val"}
-{::options:: auto_ids="true"}
+{:options unusedvar="val" /}
 
 # without header id
 
@@ -9,19 +8,19 @@
 some <span>*para*</span>
 </div>
 
-{::options:: parse_block_html="true" parse_span_html="true"}
+{:options parse_block_html="true" parse_span_html="true" /}
 
 <div>
 some <span>*para*</span>
 </div>
 
-{::options:: auto_ids="false" filter_html="p em"}
+{:options auto_ids="false" filter_html="p em" /}
 
 <p>
 This is <em>some</em> text.
 </p>
 
-{::options:: footnote_nr="10"}
+{:options footnote_nr="10" /}
 
 Some text[^ab].
 
