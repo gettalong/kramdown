@@ -62,7 +62,11 @@ if defined? Webgen
       config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
       config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
       config.optionsdisplay.items [], :mandatory => 'default'
+      config.kdlink.oid nil, :mandatory => true
+      config.kdlink.part nil, :mandatory => true
       config['contentprocessor.tags.map']['options'] = 'OptionsDisplay'
+      config['contentprocessor.tags.map']['kdexample'] = 'KDExample'
+      config['contentprocessor.tags.map']['kdlink'] = 'KDLink'
     end
   end
 
@@ -291,29 +295,29 @@ if defined? Webgen
 
   end
 
+  require 'cgi'
 
-  module Kramdown
+  class KDExample
 
-    class Parser::Kramdown::Extension
+    include Webgen::Tag::Base
 
-      def parse_kdexample(parser, opts, body)
-        wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdexample'})
-        wrap.children << Element.new(:codeblock, body, :attr => {'class' => 'kdexample-before'})
-        doc = ::Kramdown::Document.new(body)
-        wrap.children << Element.new(:codeblock, doc.to_html,  :attr => {'class' => 'kdexample-after-source'})
-        wrap.children << Element.new(:html_element, 'div', :attr => {'class' => 'kdexample-after-live'})
-        wrap.children.last.children << Element.new(:raw, doc.to_html)
-        parser.tree.children << wrap
-        parser.tree.children << Element.new(:html_element, 'div', :attr => {'class' => 'clear'})
-      end
+    def call(tag, body, context)
+      result = ::Kramdown::Document.new(body).to_html
+      before = "<pre class='kdexample-before'>#{body}<code>\n</code></pre>"
+      after = "<pre class='kdexample-after-source'>#{CGI::escapeHTML(result)}<code>\n</code></pre>"
+      afterhtml = "<div class='kdexample-after-live'>#{result}</div>"
+      "<div class='kdexample'>#{before}#{after}#{afterhtml}\n</div><div class='clear'></div>"
+    end
 
-      def parse_kdlink(parser, opts, body)
-        wrap = Element.new(:html_element, 'div', :attr => {'class' => 'kdsyntaxlink'})
-        wrap.children << Element.new(:a, nil, :attr => {'href' => "syntax.html##{opts['id']}"})
-        wrap.children.last.children << Element.new(:text, "&rarr; Syntax for #{opts['part']}")
-        parser.tree.children << wrap
-      end
+  end
 
+  class KDLink
+
+    include Webgen::Tag::Base
+
+    def call(tag, body, context)
+      link = "<a href='syntax.html##{param('kdlink.oid')}'>&rarr; Syntax for #{param('kdlink.part')}</a>"
+      "<div class='kdsyntaxlink'>#{link}\n</div>"
     end
 
   end
