@@ -17,15 +17,16 @@ it strives to provide a strict syntax with definite rules and therefore isn't co
 with Markdown. Nonetheless, most Markdown documents should work fine when parsed with kramdown. All
 places where the kramdown syntax differs from the Markdown syntax are highlighted.
 
-Following is the complete syntax definition so that you know what you will get when a kramdown
-document is converted to, for example, HTML.
+Following is the complete syntax definition for all elements kramdown supports. Together with the
+documentation on the available converters, it is clearly specified what you will get when a kramdown
+document is converted.
 
 
 ## Source Text Formatting
 
 A kramdown document may be in any encoding, for example ASCII, UTF-8 or ISO-8859-1, and the output
-will have the same encoding as the source. It consists of two types of elements, block level
-elements and span level elements:
+will have the same encoding as the source. The document consists of two types of elements, block
+level elements and span level elements:
 
 * Block level elements define the main structure of the content, for example, what part of the text
   should be a paragraph, a list, a blockquote and so on.
@@ -33,6 +34,12 @@ elements and span level elements:
 * Span level elements mark up small text parts as, for example, emphasized text or a link.
 
 Thus span level elements can only occur inside block level elements or other span level elements.
+
+You will often find references to the "first column" or "first character" of a line in a block level
+element descriptions. Such a reference is always to be taken relative to the current indentation
+level because some block level elements open up a new indentation level (e.g. blockquotes). The
+beginning of a kramdown document opens up the default indentation level which begins at the first
+column of the text.
 
 
 ### Usage of Tabs
@@ -53,9 +60,9 @@ This means, for example, that you can just use `<`, `>` and `&` in a kramdown do
 think about when to use their HTML entity counterparts. However, if you *do use* HTML entitys or
 HTML tags which use one of the characters, the result will be correct nonetheless!
 
-Since kramdown also uses some characters to mark-up the text, there need to be a way to escape these
-special characters so that they can have their normal meaning. This can be done by using backslash
-escapes. For example, you can use a literal backtick like this:
+Since kramdown also uses some characters to mark-up the text, there needs to be a way to escape
+these special characters so that they can have their normal meaning. This can be done by using
+backslash escapes. For example, you can use a literal backtick like this:
 
     This \`is not a code\` span!
 
@@ -80,16 +87,10 @@ Following is a list of all the characters (character sequences) that can be esca
     $         dollar sign
 
 
-# Block Level Elements
+# Structural Elements
 
-Block level elements are used to structure the content. They can mark up some text as, for example,
-a simple paragraph, a quote or as a list item.
-
-You will often find references to the "first column" or "first character" of a line in the block
-level element descriptions. Such a reference is always to be taken relative to the current
-indentation level because some block level elements open up a new indentation level (e.g.
-blockquotes). The beginning of a kramdown document opens up the default indentation level which
-begins at the first column of the text.
+All structural elements are block level elements and they are used to structure the content. They
+can mark up some text as, for example, a simple paragraph, a quote or as a list item.
 
 
 ## Blank lines
@@ -103,33 +104,6 @@ meaning:
 * When used in paragraphs -- see the [paragraphs section](#paragraphs)
 * When used in headers -- see the [headers section](#headers)
 * When used in lists -- see the [lists section](#lists)
-
-
-## End-Of-Block Marker    {#eob-marker}
-
-> The EOB marker is not part of the standard Markdown syntax.
-{: .markdown-difference}
-
-The End-Of-Block (EOB) marker -- a `^` as first character on an otherwise empty line -- can be used
-to specify the end of a block level element even if the block level element, after which it is used,
-would continue otherwise. If there is no block level element to end, the EOB marker is simply
-ignored.
-
-You won't find an EOB marker in most kramdown documents but sometimes it is necessary to use it to
-achieve the wanted results which would be impossible otherwise. However, it should only be used when
-absolutely necesary!
-
-For example, the following gives you one list with two items:
-
-    * list item one
-
-    * list item two
-
-By using an EOB marker, you can make two lists with one item each:
-
-    * list one
-    ^
-    * list two
 
 
 ## Paragraphs
@@ -156,7 +130,8 @@ The following gives you an example of how paragraphs look like:
 
 ## Headers
 
-kramdown supports so called Setext style and atx style headers.
+kramdown supports so called Setext style and atx style headers. Both forms can be used inside a
+single document.
 
 ### Setext Style
 
@@ -343,22 +318,6 @@ example:
 
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
-
-
-## Horizontal Rules
-
-A horizontal rule for visually separating content is created by using three or more asterisks,
-dashes or underscores (these may not be mixed on a line), optionally separated by spaces or tabs, on
-an otherwise blank line. The first asterisk, dash or underscore may optionally be indented up to
-three spaces. The following examples show different possibilities to create a horizontal rule:
-
-    * * *
-
-    ---
-
-      _  _  _  _
-
-    ---------------
 
 
 ## Lists
@@ -747,6 +706,22 @@ editor. However, the table syntax is flexible and the above table could also be 
     | Footer row
 
 
+## Horizontal Rules
+
+A horizontal rule for visually separating content is created by using three or more asterisks,
+dashes or underscores (these may not be mixed on a line), optionally separated by spaces or tabs, on
+an otherwise blank line. The first asterisk, dash or underscore may optionally be indented up to
+three spaces. The following examples show different possibilities to create a horizontal rule:
+
+    * * *
+
+    ---
+
+      _  _  _  _
+
+    ---------------
+
+
 ## Math Blocks
 
 > This syntax feature is not part of the original Markdown syntax. The idea comes from the [Maruku]
@@ -965,181 +940,8 @@ comments is not processed:
     continues here.
 
 
-## Attribute List Definitions
 
-> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
-> the [Maruku] package.
-{: .markdown-difference}
-
-This is an implementation of [Maruku]'s feature for adding attributes to block and span level
-elements (the naming is also taken from Maruku). This block level element is used to define
-attributes which can be referenced later. The [Block Inline Attribute
-List](#block-inline-attribute-lists) is used to attach attributes to a block level element and the
-[Span Inline Attribute List](#span-inline-attribute-lists) is used to attach attributes to a span
-level element.
-
-Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
-explanation:
-
-    {:ref-name: #myid .my-class}
-    {:other: ref-name #id-of-other title="hallo you"}
-    {:test: key="value \" with quote" and other='quote brace \}'}
-
-An ALD line has the following structure:
-
-* a left brace, optionally preceded by up to three spaces,
-* followed by a colon, the reference name and another colon,
-* followed by attribute definitions (allowed characters are backslash-escaped closing braces or any
-  character except a not escaped closing brace),
-* followed by a closing brace and optional spaces until the end of the line.
-
-The reference name needs to start with a word character or a digit, optionally followed by other word
-characters, digits or dashes.
-
-There are four different types of attribute definitions which have to be separated by one or more
-spaces:
-
-references
-
-:   This must be a valid reference name. It is used to reference an other ALD so that the attributes
-    of the other ALD are also included in this one. The reference name is ignored when collecting the
-    attributes if no attribute definition list with this reference name exists. For example, a
-    simple reference looks like `id`.
-
-key-value pairs
-
-:   A key-value pair is defined by a key name, which must follow the rules for reference names, then
-    an equal sign and then the value in single or double quotes. If you need to use the value
-    delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
-    Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
-    example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
-
-ID name
-
-:   An ID name is defined by using a hash and then the identifier name which must follow the rules
-    for reference names. This is a short hand for the key-value pair `id="IDNAME"` since this is
-    often used. The ID name specifies the unique ID of a block or span level element. For example,
-    an ID name looks like `#myid`.
-
-class names
-
-:   A class name is defined by using a dot and then the class name. This is (almost, but not quite)
-    a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
-    the class name should be appended to the current value of the `class` attribute. The following
-    ALDs are all equivalent:
-
-        {:id: .cls1 .cls2}
-        {:id: class="cls1" .cls2}
-        {:id: class="something" class="cls1" .cls2}
-        {:id: class="cls1 cls2}
-
-As can be seen from the example of the class names, attributes that are defined earlier are
-overwritten by ones with the same name defined later. Also, everything in the attribute definitions
-part that does not match one of the above four types is ignored.
-
-If there is more than one ALD with the same reference name, the attribute definitions of all the
-ALDs are processed like they are defined in one ALD.
-
-
-## Block Inline Attribute Lists
-
-> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
-> the [Maruku] package.
-{: .markdown-difference}
-
-This block level element is used to attach attributes to a block level element. A block inline
-attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
-that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
-IALs) has to be put directly after the block level element to which the attributes should be
-attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
-the block level element and the IAL.
-
-Key-value pairs of an IAL take precedence over equally named key-value pairs in referenced ALDs.
-
-Here are some examples for block IALs:
-
-    A simple paragraph with an ID attribute.
-    {: #para-one}
-
-    > A blockquote with a title
-    {:title="The blockquote title"}
-    {: #myid}
-
-        Some code here
-    {:.ruby}
-
-
-## Extensions
-
-> This syntax feature is not part of the original Markdown syntax.
-{: .markdown-difference}
-
-Extensions provide additional functionality but use the same syntax for it. They are available as
-block as well as span level elements.
-
-The syntax for an extension is very similar to the syntax of [ALDs](#attribute-list-definitions).
-Here are some examples of how to specify extensions and afterwards is the syntax definition:
-
-    {:comment}
-    This text is completely ignored by kramdown - a comment in the text.
-    {:/comment}
-
-    Do you see {:comment}this text{:/comment}?
-    {:comment}some other comment{:/}
-
-    {:options key="val" /}
-
-An extension can be specified with or without a body. Therefore there exist a start and an end tag
-for extensions. The start tag has the following structure:
-
-* an left brace,
-* followed by a colon and the extension name,
-* optionally followed by a space and attribute definitions (allowed characters are backslash-escaped
-  closing braces or any character except a not escaped closing brace -- same as with ALDs),
-* followed by a slash and a right brace (in case the extension has no body) or only a right
-  brace (in case the extension has a body).
-
-The stop tag has the following structure:
-
-* a left brace,
-* followed by a colon and a slash,
-* optionally followed by the extension name,
-* followed by a right brace.
-
-A stop tag is only needed if the extension has a body!
-
-The above syntax can be used as is for span level extensions. The starting and ending lines for block level
-extensions are defined as:
-
-* The starting line consists of the extension start tag, optionally preceded by up to three spaces,
-  and followed by optional spaces until the end of the line.
-* The ending line consists of the extension stop tag, optionally preceded by up to three spaces,
-  and followed by optional spaces until the end of the line.
-
-If no end tag can be found for an extension start tag, the start tag is treated as if it has no
-body. If an invalid extension stop tag is found, it is ignored. If an invalid extension name is
-specified the extension (and the eventually specified body) are ignored.
-
-The following extensions can be used with kramdown:
-
-`comment`
-
-:   Treat the body text as a comment which does not show in the output.
-
-`nomarkdown`
-
-:   Don't process the body with kramdown but output it as-is.
-
-`options`
-
-:   Should be used without a body since the body is ignored. Is used for setting the global options
-    for the kramdown processor (for example, to disable automatic header ID generation). Note that
-    options that are used by the parser are immediately effective whereas all other options are not!
-    This means, for example, that it is not possible to set converter options only for some part of
-    a kramdown document.
-
-
-# Span Level Elements
+# Text Markup
 
 These elements are used inside block level elements to markup text fragments. For example, one can
 easily create links or apply emphasis to certain text parts.
@@ -1475,7 +1277,148 @@ when kramdown falsely replace the quotes. If this is the case, just \'escape\" t
 won't be replaced with fancy ones.
 
 
-## Span Inline Attribute Lists
+
+# Other Markup
+
+This section describes markup that is not widely used in kramdown documents but which are sometimes
+needed nonetheless.
+
+
+## End-Of-Block Marker    {#eob-marker}
+
+> The EOB marker is not part of the standard Markdown syntax.
+{: .markdown-difference}
+
+The End-Of-Block (EOB) marker -- a `^` as first character on an otherwise empty line -- is a block
+level element that can be used to specify the end of a block level element even if the block level
+element, after which it is used, would continue otherwise. If there is no block level element to
+end, the EOB marker is simply ignored.
+
+You won't find an EOB marker in most kramdown documents but sometimes it is necessary to use it to
+achieve the wanted results which would be impossible otherwise. However, it should only be used when
+absolutely necesary!
+
+For example, the following gives you one list with two items:
+
+    * list item one
+
+    * list item two
+
+By using an EOB marker, you can make two lists with one item each:
+
+    * list one
+    ^
+    * list two
+
+
+## Attribute List Definitions
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [Maruku] package.
+{: .markdown-difference}
+
+This is an implementation of [Maruku]'s feature for adding attributes to block and span level
+elements (the naming is also taken from Maruku). This block level element is used to define
+attributes which can be referenced later. The [Block Inline Attribute
+List](#block-inline-attribute-lists) is used to attach attributes to a block level element and the
+[Span Inline Attribute List](#span-inline-attribute-lists) is used to attach attributes to a span
+level element.
+
+Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
+explanation:
+
+    {:ref-name: #myid .my-class}
+    {:other: ref-name #id-of-other title="hallo you"}
+    {:test: key="value \" with quote" and other='quote brace \}'}
+
+An ALD line has the following structure:
+
+* a left brace, optionally preceded by up to three spaces,
+* followed by a colon, the reference name and another colon,
+* followed by attribute definitions (allowed characters are backslash-escaped closing braces or any
+  character except a not escaped closing brace),
+* followed by a closing brace and optional spaces until the end of the line.
+
+The reference name needs to start with a word character or a digit, optionally followed by other word
+characters, digits or dashes.
+
+There are four different types of attribute definitions which have to be separated by one or more
+spaces:
+
+references
+
+:   This must be a valid reference name. It is used to reference an other ALD so that the attributes
+    of the other ALD are also included in this one. The reference name is ignored when collecting the
+    attributes if no attribute definition list with this reference name exists. For example, a
+    simple reference looks like `id`.
+
+key-value pairs
+
+:   A key-value pair is defined by a key name, which must follow the rules for reference names, then
+    an equal sign and then the value in single or double quotes. If you need to use the value
+    delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
+    Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
+    example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
+
+ID name
+
+:   An ID name is defined by using a hash and then the identifier name which must follow the rules
+    for reference names. This is a short hand for the key-value pair `id="IDNAME"` since this is
+    often used. The ID name specifies the unique ID of a block or span level element. For example,
+    an ID name looks like `#myid`.
+
+class names
+
+:   A class name is defined by using a dot and then the class name. This is (almost, but not quite)
+    a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
+    the class name should be appended to the current value of the `class` attribute. The following
+    ALDs are all equivalent:
+
+        {:id: .cls1 .cls2}
+        {:id: class="cls1" .cls2}
+        {:id: class="something" class="cls1" .cls2}
+        {:id: class="cls1 cls2}
+
+As can be seen from the example of the class names, attributes that are defined earlier are
+overwritten by ones with the same name defined later. Also, everything in the attribute definitions
+part that does not match one of the above four types is ignored.
+
+If there is more than one ALD with the same reference name, the attribute definitions of all the
+ALDs are processed like they are defined in one ALD.
+
+
+## Inline Attribute Lists
+
+These elements are used to attach attributes to another element.
+
+### Block Inline Attribute Lists
+
+> This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
+> the [Maruku] package.
+{: .markdown-difference}
+
+This block level element is used to attach attributes to a block level element. A block inline
+attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
+that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
+IALs) has to be put directly after the block level element to which the attributes should be
+attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
+the block level element and the IAL.
+
+Key-value pairs of an IAL take precedence over equally named key-value pairs in referenced ALDs.
+
+Here are some examples for block IALs:
+
+    A simple paragraph with an ID attribute.
+    {: #para-one}
+
+    > A blockquote with a title
+    {:title="The blockquote title"}
+    {: #myid}
+
+        Some code here
+    {:.ruby}
+
+### Span Inline Attribute Lists
 
 > This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
 > the [Maruku] package.
@@ -1490,6 +1433,77 @@ Here are some examples for span IALs:
 
     This *is*{:.underline} some `code`{:#id}{:.class}.
     A [link](test.html){:rel='something'} and some **tools**{:.tools}.
+
+
+## Extensions
+
+> This syntax feature is not part of the original Markdown syntax.
+{: .markdown-difference}
+
+Extensions provide additional functionality but use the same syntax for it. They are available as
+block as well as span level elements.
+
+The syntax for an extension is very similar to the syntax of [ALDs](#attribute-list-definitions).
+Here are some examples of how to specify extensions and afterwards is the syntax definition:
+
+    {:comment}
+    This text is completely ignored by kramdown - a comment in the text.
+    {:/comment}
+
+    Do you see {:comment}this text{:/comment}?
+    {:comment}some other comment{:/}
+
+    {:options key="val" /}
+
+An extension can be specified with or without a body. Therefore there exist a start and an end tag
+for extensions. The start tag has the following structure:
+
+* an left brace,
+* followed by a colon and the extension name,
+* optionally followed by a space and attribute definitions (allowed characters are backslash-escaped
+  closing braces or any character except a not escaped closing brace -- same as with ALDs),
+* followed by a slash and a right brace (in case the extension has no body) or only a right
+  brace (in case the extension has a body).
+
+The stop tag has the following structure:
+
+* a left brace,
+* followed by a colon and a slash,
+* optionally followed by the extension name,
+* followed by a right brace.
+
+A stop tag is only needed if the extension has a body!
+
+The above syntax can be used as is for span level extensions. The starting and ending lines for block level
+extensions are defined as:
+
+* The starting line consists of the extension start tag, optionally preceded by up to three spaces,
+  and followed by optional spaces until the end of the line.
+* The ending line consists of the extension stop tag, optionally preceded by up to three spaces,
+  and followed by optional spaces until the end of the line.
+
+If no end tag can be found for an extension start tag, the start tag is treated as if it has no
+body. If an invalid extension stop tag is found, it is ignored. If an invalid extension name is
+specified the extension (and the eventually specified body) are ignored.
+
+The following extensions can be used with kramdown:
+
+`comment`
+
+:   Treat the body text as a comment which does not show in the output.
+
+`nomarkdown`
+
+:   Don't process the body with kramdown but output it as-is.
+
+`options`
+
+:   Should be used without a body since the body is ignored. Is used for setting the global options
+    for the kramdown processor (for example, to disable automatic header ID generation). Note that
+    options that are used by the parser are immediately effective whereas all other options are not!
+    This means, for example, that it is not possible to set converter options only for some part of
+    a kramdown document.
+
 
 
 {include_file: doc/links.markdown}
