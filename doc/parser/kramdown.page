@@ -1,7 +1,7 @@
 ---
 title: kramdown Parser
 ---
-# {title:}
+# kramdown Parser
 
 This is the main parser of the kramdown library (as the name suggests). It parses text in kramdown
 syntax which is based on Markdown, a very easy to write, easy to read markup for writing HTML
@@ -18,7 +18,7 @@ page](../syntax.html), the [quick reference](../quickref.html) provides a short 
 
 The kramdown parser supports the following options:
 
-{options: {items: [:auto_ids, :parse_block_html, :parse_span_html]}}
+{options: {items: [:parse_block_html, :parse_span_html]}}
 
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/

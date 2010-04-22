@@ -289,7 +289,7 @@ if defined? Webgen
         lines = term.desc.split(/\n/)
         first = lines.shift
         rest = lines[0..-2].collect {|l| "  " + l}.join("\n")
-        "`#{term.name.inspect}`\n: #{first}\n#{rest}"
+        "`#{term.name}`\n: #{first}\n#{rest}"
       end.join("\n")
     end
 

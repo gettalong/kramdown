@@ -4,11 +4,71 @@ title: HTML Converter
 # HTML Converter
 
 This converter converts a kramdown element tree into a HTML fragment and supports all available
-element types.
+element types. Below is a list of additional features of the HTML converter as well as some
+additional information.
+
+
+## Automatic Generation of Header IDs    {#auto-ids}
+
+kramdown supports the automatic generation of header IDs if the option `auto_ids` is set to `true`
+(which is the default). This is done by converting the untransformed, i.e. plain, header text via the
+following steps:
+
+* All characters except letters, numbers, spaces and dashes are removed.
+* All characters from the start of the line until the first letter are removed.
+* Everything except letters and numbers is converted to dashes.
+* Everything is lowercased.
+* If nothing is left, the identifier `section` is used.
+* If a such created identifier already exists, a dash and a sequential number is added (first `-1`,
+  then `-2` and so on).
+
+Following are some examples of header texts and their respective generated IDs:
+
+    # This is a header
+    auto_id: this-is-a-header
+
+    ## 12. Another one 1 here
+    auto_id: another-one-1-here
+
+    ### Do ^& it now
+    auto_id: do--it-now
+
+    Hallo
+    =====
+    auto_id: hallo
+
+    Not now
+    -------
+    auto_id: not-now
+
+    # Hallo
+    auto_id: hallo-1
+
+    # 123456789
+    auto_id: section
+
+> The automatic creation of header IDs is not part of standard Markdown. The rules on how header
+> text is converted to an identifier are based on the rules specified by [Pandoc].
+{: .markdown-difference}
+
+Such generated IDs are only used if no ID has been set manually before.
+
 
 ## Code Blocks
 
 A code block is wrapped in both `<pre>` and  `<code>` tags.
+
+### Showing Whitespace in a Code Block
+
+It is sometimes useful to visualize whitespace within a code block. This can be achieved by adding
+the class `show-whitespaces` to a code block (using a [block
+IAL](../syntax.html#block-inline-attribute-lists)).
+
+Here is an example where the whitespaces are shown:
+
+    	  leading tab	and space
+    trailing   tab and space    	
+{: .show-whitespaces}
 
 When showing whitespace in a code block, all spaces are replaced with the entity `&sdot;` and
 additionally spaces and tabs in the code block are marked up using HTML `span` tags and the
@@ -18,9 +78,24 @@ following CSS classes:
 * `ws-space-r`, `ws-tab-r`: trailing spaces/tabs
 * `ws-space`, `ws-tab`: spaces/tabs in between
 
+
+### Automatic Syntax Highlighting   {#syntax-highlighting}
+
+kramdown supports syntax highlighting of code blocks. Just add the key `lang` to a code block (using
+a [block IAL](../syntax.html#block-inline-attribute-lists)) and it will be highlighted using the
+specified language.
+
 Syntax highlighting for text in a code blocks is done using the
 [CodeRay](http://coderay.rubychan.de) library which can be installed, for example, via Rubygems.
 Have a look at the CodeRay homepage to see all supported languages.
+
+Here is an example on how Ruby code is highlighted:
+
+    require 'kramdown'
+
+    Kramdown::Document.new('* something').to_html
+    puts 1 + 1
+{: lang='ruby'}
 
 
 ## Math Support
@@ -43,7 +118,7 @@ emphasized text parts.
 
 The HTML converter supports the following options:
 
-{options: {items: [:template, :footnote_nr, :filter_html, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
+{options: {items: [:auto_ids, :template, :footnote_nr, :filter_html, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
 
 
-[jsMath]: http://www.math.union.edu/~dpvc/jsMath/
+{include_file: doc/links.markdown}

@@ -20,10 +20,6 @@ places where the kramdown syntax differs from the Markdown syntax are highlighte
 Following is the complete syntax definition so that you know what you will get when a kramdown
 document is converted to, for example, HTML.
 
-[Maruku]: http://maruku.rubyforge.org
-[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
-[Pandoc]: http://johnmacfarlane.net/pandoc/
-
 
 ## Source Text Formatting
 
@@ -231,56 +227,14 @@ the header text. For example:
 > Again, the original Markdown syntax allows one to omit the blank line before an atx style header.
 {: .markdown-difference}
 
-### Automatic Generation of Header IDs
 
-kramdown supports the automatic generation of header IDs if the option `auto_ids` is set to `true`
-(which is the default). This is done by converting the untransformed, i.e. plain, header text via the
-following steps:
+### Specifying a Header ID
 
-* All characters except letters, numbers, spaces and dashes are removed.
-* All characters from the start of the line until the first letter are removed.
-* Everything except letters and numbers is converted to dashes.
-* Everything is lowercased.
-* If nothing is left, the identifier `section` is used.
-* If a such created identifier already exists, a dash and a sequential number is added (first `-1`,
-  then `-2` and so on).
-
-Following are some examples of header texts and their respective generated IDs:
-
-    # This is a header
-    auto_id: this-is-a-header
-
-    ## 12. Another one 1 here
-    auto_id: another-one-1-here
-
-    ### Do ^& it now
-    auto_id: do--it-now
-
-    Hallo
-    =====
-    auto_id: hallo
-
-    Not now
-    -------
-    auto_id: not-now
-
-    # Hallo
-    auto_id: hallo-1
-
-    # 123456789
-    auto_id: section
-
-> The automatic creation of header IDs is not part of standard Markdown. The rules on how header
-> text is converted to an identifier are based on the rules specified by [Pandoc].
-{: .markdown-difference}
-
-### Manually Specifying a Header ID
-
-Additionally to automatic header ID generation, kramdown supports a nice way for explicitly setting
-the header ID which is taken from [PHP Markdown Extra] and [Maruku]: If you follow the header text
-with an opening curly bracket (separated from the text with a least one space), a hash, the ID and a
-closing curly bracket, the ID is set on the header. If you use the trailing hash feature of atx
-style headers, the header ID has to go after the trailing hashes. For example:
+kramdown supports a nice way for explicitly setting the header ID which is taken from [PHP Markdown
+Extra] and [Maruku]: If you follow the header text with an opening curly bracket (separated from the
+text with a least one space), a hash, the ID and a closing curly bracket, the ID is set on the
+header. If you use the trailing hash feature of atx style headers, the header ID has to go after the
+trailing hashes. For example:
 
     Hello        {#id}
     -----
@@ -389,33 +343,6 @@ example:
 
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
-
-### Showing Whitespace in a Code Block
-
-It is sometimes useful to visualize whitespace within a code block. This can be achieved in kramdown
-by adding the class `show-whitespaces` to a code block (using a [block
-IAL](#block-inline-attribute-lists)).
-
-Here is an example where the whitespaces are shown:
-
-    	  leading tab	and space
-    trailing   tab and space    	
-{: .show-whitespaces}
-
-
-### Automatic Syntax Highlighting   {#syntax-highlighting}
-
-kramdown supports syntax highlighting of code. Just add the key `lang` to a code block (using a
-[block IAL](#block-inline-attribute-lists)) and it will be highlighted using the specified language.
-Details on the supported languages can be found in the documentation for each converter.
-
-Here is an example on how Ruby code is highlighted:
-
-    require 'kramdown'
-
-    Kramdown::Document.new('* something').to_html
-    puts 1 + 1
-{: lang='ruby'}
 
 
 ## Horizontal Rules
@@ -1563,3 +1490,6 @@ Here are some examples for span IALs:
 
     This *is*{:.underline} some `code`{:#id}{:.class}.
     A [link](test.html){:rel='something'} and some **tools**{:.tools}.
+
+
+{include_file: doc/links.markdown}

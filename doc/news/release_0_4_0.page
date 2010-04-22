@@ -32,5 +32,5 @@ Markdown, PHP Markdown Extra, Python Markdown and Maruku.
   - Regular expression for matching escaped characters now works correctly
 
 [1]: ../syntax.html#tables
-[2]: ../syntax.html#syntax-highlighting
+[2]: ../converter/html.html#syntax-highlighting
 [3]: http://daringfireball.net/projects/downloads/Markdown_1.0.1.zip

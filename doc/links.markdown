@@ -1,0 +1,4 @@
+[Maruku]: http://maruku.rubyforge.org
+[PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
+[Pandoc]: http://johnmacfarlane.net/pandoc/
+[jsMath]: http://www.math.union.edu/~dpvc/jsMath/
