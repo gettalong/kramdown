@@ -1,11 +1,11 @@
 This is a simple paragraph.
-{:nomarkdown}  
+{::nomarkdown}  
 This *is* not processed 
   {:/nomarkdown}
 And another paragraph
 
-{:nomarkdown this='is' .ignore /}
+{::nomarkdown this='is' .ignore /}
 
 Paragraph
-{:nomarkdown}
+{::nomarkdown}
 Another paragraph

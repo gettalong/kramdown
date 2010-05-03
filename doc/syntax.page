@@ -1446,20 +1446,20 @@ block as well as span level elements.
 The syntax for an extension is very similar to the syntax of [ALDs](#attribute-list-definitions).
 Here are some examples of how to specify extensions and afterwards is the syntax definition:
 
-    {:comment}
+    {::comment}
     This text is completely ignored by kramdown - a comment in the text.
     {:/comment}
 
-    Do you see {:comment}this text{:/comment}?
-    {:comment}some other comment{:/}
+    Do you see {::comment}this text{:/comment}?
+    {::comment}some other comment{:/}
 
-    {:options key="val" /}
+    {::options key="val" /}
 
 An extension can be specified with or without a body. Therefore there exist a start and an end tag
 for extensions. The start tag has the following structure:
 
 * an left brace,
-* followed by a colon and the extension name,
+* followed by two colons and the extension name,
 * optionally followed by a space and attribute definitions (allowed characters are backslash-escaped
   closing braces or any character except a not escaped closing brace -- same as with ALDs),
 * followed by a slash and a right brace (in case the extension has no body) or only a right

@@ -1,8 +1,8 @@
 paragraph
-{:something}
+{::something}
 anotherthing
 {:/something}
 
 paragraph
-{:something/}
+{::something/}
 paragraph

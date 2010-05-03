@@ -165,7 +165,7 @@ module Kramdown
 
 
       EXT_STOP_STR = "\\{:/(%s)?\\}"
-      EXT_START_STR = "\\{:(\\w+)(?:\\s(#{ALD_ANY_CHARS}*?)|)(\\/)?\\}"
+      EXT_START_STR = "\\{::(\\w+)(?:\\s(#{ALD_ANY_CHARS}*?)|)(\\/)?\\}"
       EXT_SPAN_START = /#{EXT_START_STR}|#{EXT_STOP_STR % ALD_ID_NAME}/
       EXT_BLOCK_START = /^#{OPT_SPACE}(?:#{EXT_START_STR}|#{EXT_STOP_STR % ALD_ID_NAME})\s*?\n/
       EXT_BLOCK_STOP_STR = "^#{OPT_SPACE}#{EXT_STOP_STR}\s*?\n"
@@ -182,7 +182,7 @@ module Kramdown
       def parse_span_extension
         parse_extension_start_tag(:span)
       end
-      define_parser(:span_extension, EXT_SPAN_START, '\{:/?')
+      define_parser(:span_extension, EXT_SPAN_START, '\{:[:/]')
 
     end
   end
