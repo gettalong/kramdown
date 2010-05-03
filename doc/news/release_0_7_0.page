@@ -14,7 +14,7 @@ Another big change is the extension support: After some discussion on the mailin
 to Eric Sunshine and Shawn Van Ittersum), the syntax for the extensions has been changed and support
 for custom extensions will be dropped.
 
-Additionally, the option `:auto_ids` has been moved from being interpreted by the parser to being
+Additionally, the option `auto_ids` has been moved from being interpreted by the parser to being
 interpreted by the converters. This means that it is not possible anymore to turn automatic header
 ID generation on or off for parts of a text.
 
@@ -28,7 +28,7 @@ ID generation on or off for parts of a text.
 
 * Minor changes:
 
-  - The option `:auto_ids` has been moved from the parser to the converters.
+  - The option `auto_ids` has been moved from the parser to the converters.
 
 * Bug fixes:
 
