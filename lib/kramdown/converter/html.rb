@@ -48,6 +48,8 @@ module Kramdown
         super
         @footnote_counter = @footnote_start = @doc.options[:footnote_nr]
         @footnotes = []
+        @toc = []
+        @toc_code = nil
       end
 
       def convert(el, indent = -INDENTATION, opts = {})
@@ -113,6 +115,7 @@ module Kramdown
         if @doc.options[:auto_ids] && !(el.options[:attr] && el.options[:attr]['id'])
           (el.options[:attr] ||= {})['id'] = generate_id(el.options[:raw_text])
         end
+        @toc << [el.options[:level], el.options[:attr]['id'], el.children] if el.options[:attr] && el.options[:attr]['id']
         "#{' '*indent}<h#{el.options[:level]}#{options_for_element(el)}>#{inner(el, indent, opts)}</h#{el.options[:level]}>\n"
       end
 
@@ -121,7 +124,11 @@ module Kramdown
       end
 
       def convert_ul(el, indent, opts)
-        "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner(el, indent, opts)}#{' '*indent}</#{el.type}>\n"
+        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil) && (el.type == :ul || el.type == :ol)
+          @toc_code = (0..128).to_a.map{|a| rand(36).to_s(36)}.join
+        else
+          "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner(el, indent, opts)}#{' '*indent}</#{el.type}>\n"
+        end
       end
       alias :convert_ol :convert_ul
       alias :convert_dl :convert_ul
@@ -280,7 +287,47 @@ module Kramdown
       end
 
       def convert_root(el, indent, opts)
-        inner(el, indent, opts) << footnote_content
+        result = inner(el, indent, opts)
+        result << footnote_content
+        if @toc_code
+          toc_tree = generate_toc_tree
+          text = if toc_tree.children.size > 0
+                   convert(toc_tree, 0)
+                 else
+                   ''
+                 end
+          result.sub!(/#{@toc_code}/, text)
+        end
+        result
+      end
+
+      def generate_toc_tree
+        sections = Element.new(:ul, nil, {:attr => {:id => 'markdown-toc'}})
+        stack = []
+        @toc.each do |level, id, children|
+          li = Element.new(:li, nil, {:level => level})
+          a = Element.new(:a, nil, {:attr => {:href => "##{id}"}})
+          a.children += children
+          li.children << a
+          li.children << Element.new(:ul)
+
+          success = false
+          while !success
+            if stack.empty?
+              sections.children << li
+              stack << li
+              success = true
+            elsif stack.last.options[:level] < li.options[:level]
+              stack.last.children.last.children << li
+              stack << li
+              success = true
+            else
+              item = stack.pop
+              item.children.pop unless item.children.last.children.size > 0
+            end
+          end
+        end
+        sections
       end
 
       # Helper method for obfuscating the +text+ by using HTML entities.

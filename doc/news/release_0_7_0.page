@@ -12,11 +12,16 @@ par with Maruku and PHP Markdown Extra!
 
 Another big change is the extension support: After some discussion on the mailing list (many thanks
 to Eric Sunshine and Shawn Van Ittersum), the syntax for the extensions has been changed and support
-for custom extensions will be dropped.
+for custom extensions will be dropped in a future release.
 
 Additionally, the option `auto_ids` has been moved from being interpreted by the parser to being
 interpreted by the converters. This means that it is not possible anymore to turn automatic header
 ID generation on or off for parts of a text.
+
+The HTML and LaTeX converters also gained the ability to generate a table of contents. Just add the
+reference name "toc" to an ordered or unordered list and it will be replaced by the ToC (this is
+"coincidentally" the same syntax that Maruku uses...).
+
 
 ## Changes
 
@@ -25,6 +30,7 @@ ID generation on or off for parts of a text.
   - Added support for PHP Markdown Extra like abbreviations
   - Added support for span extensions
   - New syntax for block/span extensions
+  - Added support for generating a table of contents in the HTML and LaTeX converters
 
 * Minor changes:
 

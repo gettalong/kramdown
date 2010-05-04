@@ -105,7 +105,7 @@ module Kramdown
         type = HEADER_TYPES[el.options[:level]]
         if (el.options[:attr] && (id = el.options[:attr]['id'])) ||
             (@doc.options[:auto_ids] && (id = generate_id(el.options[:raw_text])))
-          "\\hypertarget{#{id}}{}\\#{type}*{#{inner(el, opts)}}\\label{#{id}}\n\n"
+          "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"
         else
           "\\#{type}*{#{inner(el, opts)}}\n\n"
         end
@@ -116,12 +116,14 @@ module Kramdown
       end
 
       def convert_ul(el, opts)
-        latex_environment('itemize', inner(el, opts))
+        if !@doc.conversion_infos[:has_toc] && (el.options[:ial][:refs].include?('toc') rescue nil)
+          @doc.conversion_infos[:has_toc] = true
+          '\tableofcontents'
+        else
+          latex_environment(el.type == :ul ? 'itemize' : 'enumerate', inner(el, opts))
+        end
       end
-
-      def convert_ol(el, opts)
-        latex_environment('enumerate', inner(el, opts))
-      end
+      alias :convert_ol :convert_ul
 
       def convert_dl(el, opts)
         latex_environment('description', inner(el, opts))

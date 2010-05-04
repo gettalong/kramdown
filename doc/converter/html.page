@@ -114,6 +114,22 @@ kramdown uses the HTML element `em` to style light and the element `strong` to s
 emphasized text parts.
 
 
+## Automatic "Table of Contents" Generation    {#toc}
+
+kramdown supports the automatic generation of the table of contents of all headers that have an ID
+set. Just assign the reference name "toc" to an ordered or unordered list by using an IAL and the
+list will be replaced with the actual table of contents.
+
+Here is an example:
+
+    * Will be replaced with the ToC
+    {:toc}
+
+    # H1 header
+
+    ## H2 header
+
+
 ## Options
 
 The HTML converter supports the following options:

@@ -35,6 +35,12 @@ whitespace in a code block is done using the `listings` package. So all language
 The latex command `emph` is used for light and the command `textbf` for strong emphasis.
 
 
+## Automatic "Table of Contents" Generation
+
+If you add a "toc" reference to a list as described on the [HTML converter page](html.html#toc), the
+list is replaced by the table of contents using the `\tableofcontents` command.
+
+
 ## Options
 
 The LaTeX converter supports the following options:
