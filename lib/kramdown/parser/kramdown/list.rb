@@ -23,6 +23,7 @@
 require 'kramdown/parser/kramdown/blank_line'
 require 'kramdown/parser/kramdown/eob'
 require 'kramdown/parser/kramdown/horizontal_rule'
+require 'kramdown/parser/kramdown/attribute_list'
 
 module Kramdown
   module Parser
@@ -73,6 +74,11 @@ module Kramdown
             item = Element.new(:li)
             item.value, indentation, content_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
+
+            item.value.sub!(/^#{IAL_SPAN_START}/) do |match|
+              parse_attribute_list($~[1], item.options[:ial] ||= {})
+              ''
+            end
 
             list_start_re = (type == :ul ? /^( {0,#{[3, indentation - 1].min}}[+*-])([\t| ].*?\n)/ :
                              /^( {0,#{[3, indentation - 1].min}}\d+\.)([\t| ].*?\n)/)

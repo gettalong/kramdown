@@ -331,7 +331,8 @@ Both ordered and unordered lists follow the same rules.
 
 A list is started with a list marker (in case of unordered lists one of `+`, `-` or `*` -- you can
 mix them -- and in case of ordered lists a number followed by a period) followed by one tab or at
-least one space and then the first part of the content of the list item. The leading tabs or spaces
+least one space, optionally followed by an [IAL](#inline-attribute-lists) that should be applied to
+the list item and then the first part of the content of the list item. The leading tabs or spaces
 are stripped away from this first line of content to allow for a nice alignment with the following
 content of a list item (see below). All following list items with the same marker type (unordered or
 ordered) are put into the same list. The numbers used for ordered lists are irrelevant, an ordered
@@ -509,6 +510,14 @@ useful when the paragraph starts with something looking like a list item marker)
 
     1984\. It was great
     \- others say that, too!
+
+As mentioned at the beginning, an optional IAL for applying attributes to a list item can be used
+after the list item marker:
+
+    * {:.cls} This item has the class "cls".
+      Here continues the above paragraph.
+
+    * This is a normal list item.
 
 
 ### Definition Lists

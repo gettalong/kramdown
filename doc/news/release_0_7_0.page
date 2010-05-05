@@ -36,6 +36,8 @@ reference name "toc" to an ordered or unordered list and it will be replaced by 
 
   - The option `auto_ids` has been moved from the parser to the converters.
   - Invalid span IALs are now removed from the output
+  - IALs can now be applied to individual list items by placing the IAL directly after the list item
+    marker
 
 * Bug fixes:
 
