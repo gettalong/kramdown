@@ -1427,7 +1427,8 @@ Here are some examples for block IALs:
 This is a version of the [block inline attribute list](#block-inline-attribute-lists) for span level
 elements. It has the same structure as the block IAL except that leading and trailing spaces are not
 allowed. A span IAL (or two or more span IALs) has to be put directly after the span level element
-to which it should be applied, no additional character is allowed between.
+to which it should be applied, no additional character is allowed between, otherwise it is ignored
+and only removed from the output.
 
 Here are some examples for span IALs:
 

@@ -92,7 +92,6 @@ module Kramdown
           update_attr_with_ial(@tree.children.last.options[:attr] ||= {}, attr)
         else
           warning("Ignoring span IAL because preceding element is just text")
-          add_text(@src.matched)
         end
       end
       define_parser(:span_ial, IAL_SPAN_START, '\{:')

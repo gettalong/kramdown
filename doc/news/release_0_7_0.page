@@ -35,6 +35,7 @@ reference name "toc" to an ordered or unordered list and it will be replaced by 
 * Minor changes:
 
   - The option `auto_ids` has been moved from the parser to the converters.
+  - Invalid span IALs are now removed from the output
 
 * Bug fixes:
 
