@@ -91,12 +91,12 @@ module Kramdown
       @warnings = []
       @parse_infos = {}
       @conversion_infos = {}
-      begin
-        parser = Parser.const_get((options[:input] || 'kramdown').to_s.capitalize)
-      rescue NameError
+      parser = (options[:input] || 'kramdown').to_s.capitalize
+      if Parser.const_defined?(parser)
+        @tree = Parser.const_get(parser).parse(source, self)
+      else
         raise Kramdown::Error.new("kramdown has no parser to handle the specified input format: #{options[:input]}")
       end
-      @tree = parser.parse(source, self)
     end
 
     # Check if a method is invoked that begins with +to_+ and if so, try to instantiate a converter
