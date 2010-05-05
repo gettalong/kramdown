@@ -68,6 +68,7 @@ module Kramdown
         tree = Element.new(:root)
         parse_blocks(tree, adapt_source(source))
         update_tree(tree)
+        replace_abbreviations(tree)
         @doc.parse_infos[:footnotes].each do |name, data|
           update_tree(data[:content])
         end
@@ -146,7 +147,6 @@ module Kramdown
           else
             update_tree(child)
             update_attr_with_ial(child.options[:attr] ||= {}, child.options[:ial]) if child.options[:ial]
-            replace_abbreviations(child)
             child
           end
         end.flatten!
