@@ -79,7 +79,7 @@ module Kramdown
         else
           @used_ids[gen_id] = 0
         end
-        gen_id
+        @doc.options[:auto_id_prefix] + gen_id
       end
 
     end

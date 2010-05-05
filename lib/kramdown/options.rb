@@ -151,6 +151,18 @@ Default: true
 Used by: HTML/Latex converter
 EOF
 
+    define(:auto_id_prefix, String, '', <<EOF)
+Prefix used for automatically generated heaer IDs
+
+This option can be used to set a prefix for the automatically generated
+header IDs so that there is no conflict when rendering multiple kramdown
+documents into one output file separately. The prefix should only
+contain characters that are valid in an ID!
+
+Default: ''
+Used by: HTML/Latex converter
+EOF
+
     define(:parse_block_html, Boolean, false, <<EOF)
 Process kramdown syntax in block HTML tags
 
