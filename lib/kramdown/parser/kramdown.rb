@@ -31,6 +31,44 @@ module Kramdown
   module Parser
 
     # Used for parsing a document in kramdown format.
+    #
+    # If you want to extend the functionality of the parser, you need to the following:
+    #
+    # * Create a new subclass
+    # * add the needed parser methods
+    # * modify the @block_parsers and @span_parsers variables and add the names of your parser
+    #   methods
+    #
+    # Here is a small example for an extended parser class that parses ERB style tags as raw text if
+    # they are used as span level elements (an equivalent block level parser should probably also be
+    # made to handle the block case):
+    #
+    #   require 'kramdown/parser/kramdown'
+    #
+    #   class Kramdown::Parser::ERBKramdown < Kramdown::Parser::Kramdown
+    #
+    #      def initialize(doc)
+    #        super(doc)
+    #        @span_parsers.unshift(:erb_tags)
+    #      end
+    #
+    #      ERB_TAGS_START = /<%.*?%>/
+    #
+    #      def parse_erb_tags
+    #        @src.pos += @src.matched_size
+    #        @tree.children << Element.new(:raw, @src.matched)
+    #      end
+    #      define_parser(:erb_tags, ERB_TAGS_START, '<%')
+    #
+    #   end
+    #
+    # The new parser can be used like this:
+    #
+    #   require 'kramdown/document'
+    #   # require the file with the above parser class
+    #
+    #   Kramdown::Document.new(input_text, :input => 'ERBKramdown').to_html
+    #
     class Kramdown
 
       include ::Kramdown
@@ -54,6 +92,14 @@ module Kramdown
         @doc.parse_infos[:link_defs] = {}
         @doc.parse_infos[:abbrev_defs] = {}
         @doc.parse_infos[:footnotes] = {}
+
+        @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
+                          :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
+                          :footnote_definition, :abbrev_definition, :ald, :block_math, :extension_block_depr,
+                          :block_extension, :block_ial, :eob_marker, :paragraph]
+        @span_parsers =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
+                         :span_extension, :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
+
       end
       private_class_method(:new, :allocate)
 
@@ -83,20 +129,13 @@ module Kramdown
       end
 
       #######
-      private
+      protected
       #######
-
-      BLOCK_PARSERS = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
-                       :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
-                       :footnote_definition, :abbrev_definition, :ald, :block_math, :extension_block_depr,
-                       :block_extension, :block_ial, :eob_marker, :paragraph]
-      SPAN_PARSERS =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
-                       :span_extension, :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
         @parsers = {}
-        (BLOCK_PARSERS + SPAN_PARSERS).each do |name|
+        (@block_parsers + @span_parsers).each do |name|
           if self.class.has_parser?(name)
             @parsers[name] = self.class.parser(name)
           else
@@ -107,7 +146,7 @@ module Kramdown
       end
 
       # Create the needed span parser regexps.
-      def span_parser_regexps(parsers = SPAN_PARSERS)
+      def span_parser_regexps(parsers = @span_parsers)
         span_start = /#{parsers.map {|name| @parsers[name].span_start}.join('|')}/
         [span_start, /(?=#{span_start})/]
       end
@@ -120,7 +159,7 @@ module Kramdown
         status = catch(:stop_block_parsing) do
           while !@src.eos?
             block_ial_set = @block_ial
-            BLOCK_PARSERS.any? do |name|
+            @block_parsers.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
               else
@@ -163,7 +202,7 @@ module Kramdown
         span_start = @span_start
         span_start_re = @span_start_re
         span_start, span_start_re = span_parser_regexps(parsers) if parsers
-        parsers = parsers || SPAN_PARSERS
+        parsers = parsers || @span_parsers
 
         used_re = (stop_re.nil? ? span_start_re : /(?=#{Regexp.union(stop_re, span_start)})/)
         stop_re_found = false
