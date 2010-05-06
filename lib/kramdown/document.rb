@@ -91,7 +91,8 @@ module Kramdown
       @warnings = []
       @parse_infos = {}
       @conversion_infos = {}
-      parser = (options[:input] || 'kramdown').to_s.capitalize
+      parser = (options[:input] || 'kramdown').to_s
+      parser = parser[0..0].upcase + parser[1..-1]
       if Parser.const_defined?(parser)
         @tree = Parser.const_get(parser).parse(source, self)
       else
