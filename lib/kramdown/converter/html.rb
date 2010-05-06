@@ -125,7 +125,8 @@ module Kramdown
 
       def convert_ul(el, indent, opts)
         if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil) && (el.type == :ul || el.type == :ol)
-          @toc_code = (0..128).to_a.map{|a| rand(36).to_s(36)}.join
+          @toc_code = [el.type, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
+          @toc_code.last
         else
           "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner(el, indent, opts)}#{' '*indent}</#{el.type}>\n"
         end
@@ -290,26 +291,26 @@ module Kramdown
         result = inner(el, indent, opts)
         result << footnote_content
         if @toc_code
-          toc_tree = generate_toc_tree
+          toc_tree = generate_toc_tree(@toc, @toc_code.first)
           text = if toc_tree.children.size > 0
                    convert(toc_tree, 0)
                  else
                    ''
                  end
-          result.sub!(/#{@toc_code}/, text)
+          result.sub!(/#{@toc_code.last}/, text)
         end
         result
       end
 
-      def generate_toc_tree
-        sections = Element.new(:ul, nil, {:attr => {:id => 'markdown-toc'}})
+      def generate_toc_tree(toc, type)
+        sections = Element.new(type, nil, {:attr => {:id => 'markdown-toc'}})
         stack = []
-        @toc.each do |level, id, children|
+        toc.each do |level, id, children|
           li = Element.new(:li, nil, {:level => level})
           a = Element.new(:a, nil, {:attr => {:href => "##{id}"}})
           a.children += children
           li.children << a
-          li.children << Element.new(:ul)
+          li.children << Element.new(type)
 
           success = false
           while !success
@@ -326,6 +327,10 @@ module Kramdown
               item.children.pop unless item.children.last.children.size > 0
             end
           end
+        end
+        while !stack.empty?
+          item = stack.pop
+          item.children.pop unless item.children.last.children.size > 0
         end
         sections
       end
