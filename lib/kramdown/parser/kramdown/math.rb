@@ -33,7 +33,7 @@ module Kramdown
           return false
         end
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:math, @src[2], :type => :block)
+        @tree.children << new_block_el(:math, @src[2], :type => :block)
         true
       end
       define_parser(:block_math, BLOCK_MATH_START)

@@ -29,7 +29,7 @@ module Kramdown
       # Parse the EOB marker at the current location.
       def parse_eob_marker
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:eob)
+        @tree.children << new_block_el(:eob)
         true
       end
       define_parser(:eob_marker, EOB_MARKER)

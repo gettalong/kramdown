@@ -48,6 +48,7 @@ module Kramdown
         @tree = nil
         @stack = []
         @text_type = :text
+        @block_ial = nil
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
@@ -118,6 +119,7 @@ module Kramdown
 
         status = catch(:stop_block_parsing) do
           while !@src.eos?
+            block_ial_set = @block_ial
             BLOCK_PARSERS.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
@@ -128,6 +130,7 @@ module Kramdown
               warning('Warning: this should not occur - no block parser handled the line')
               add_text(@src.scan(/.*\n/))
             end
+            @block_ial = nil if block_ial_set
           end
         end
 
@@ -212,6 +215,13 @@ module Kramdown
         end if ial[:refs]
         attr['class'] = ((attr['class'] || '') + " #{ial['class']}").lstrip if ial['class']
         ial.each {|k,v| attr[k] = v if k.kind_of?(String) && k != 'class' }
+      end
+
+      # Create a new block level element, taking care of applying a preceding block IAL if it exists.
+      def new_block_el(*args)
+        el = Element.new(*args)
+        el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
+        el
       end
 
       # Extract the part of the StringScanner backed string specified by the +range+. This method

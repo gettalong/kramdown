@@ -32,7 +32,7 @@ module Kramdown
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << @src.matched.chomp
         else
-          @tree.children << Element.new(:p)
+          @tree.children << new_block_el(:p)
           add_text(@src.matched.lstrip.chomp, @tree.children.last)
         end
         true

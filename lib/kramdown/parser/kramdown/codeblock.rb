@@ -32,7 +32,7 @@ module Kramdown
 
       # Parse the indented codeblock at the current location.
       def parse_codeblock
-        @tree.children << Element.new(:codeblock, @src.scan(CODEBLOCK_MATCH).gsub!(INDENT, ''))
+        @tree.children << new_block_el(:codeblock, @src.scan(CODEBLOCK_MATCH).gsub!(INDENT, ''))
         true
       end
       define_parser(:codeblock, CODEBLOCK_START)
@@ -45,7 +45,7 @@ module Kramdown
       def parse_codeblock_fenced
         if @src.check(FENCED_CODEBLOCK_MATCH)
           @src.pos += @src.matched_size
-          @tree.children << Element.new(:codeblock, @src[2])
+          @tree.children << new_block_el(:codeblock, @src[2])
           true
         else
           false

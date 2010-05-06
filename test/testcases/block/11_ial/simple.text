@@ -16,6 +16,13 @@ Some paragraph.
 ## A header
 {:#myid}
 
+{:.cls}
+Some paragraph here
+
+Paragraph
+{:.cls}
+Paragraph
+
 Another header
 ==============
 {: .class #other}

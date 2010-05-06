@@ -32,7 +32,7 @@ module Kramdown
         if @tree.children.last && @tree.children.last.type == :blank
           @tree.children.last.value += @src.matched
         else
-          @tree.children << Element.new(:blank, @src.matched)
+          @tree.children << new_block_el(:blank, @src.matched)
         end
         true
       end

@@ -1409,9 +1409,10 @@ These elements are used to attach attributes to another element.
 This block level element is used to attach attributes to a block level element. A block inline
 attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
 that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
-IALs) has to be put directly after the block level element to which the attributes should be
-attached, otherwise it is ignored. This is, for example, the case when there is a blank line between
-the block level element and the IAL.
+IALs) has to be put directly before or after the block level element to which the attributes should
+be attached. If a block IAL is directly after *and* before a block level element, it is applied to
+preceding element. The block IAL is ignored in all other cases, for example, when the block IAL is
+surrounded by blank lines.
 
 Key-value pairs of an IAL take precedence over equally named key-value pairs in referenced ALDs.
 
@@ -1424,8 +1425,8 @@ Here are some examples for block IALs:
     {:title="The blockquote title"}
     {: #myid}
 
-        Some code here
     {:.ruby}
+        Some code here
 
 ### Span Inline Attribute Lists
 

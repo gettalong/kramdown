@@ -74,6 +74,8 @@ module Kramdown
         @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
           parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
+        else
+          parse_attribute_list(@src[1], @block_ial = {})
         end
         true
       end

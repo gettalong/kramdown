@@ -60,7 +60,7 @@ module Kramdown
         end
 
         type, list_start_re = (@src.check(LIST_START_UL) ? [:ul, LIST_START_UL] : [:ol, LIST_START_OL])
-        list = Element.new(type)
+        list = new_block_el(type)
 
         item = nil
         indent_re = nil
@@ -152,7 +152,7 @@ module Kramdown
         end
 
         first_as_para = false
-        deflist = Element.new(:dl)
+        deflist = new_block_el(:dl)
         para = @tree.children.pop
         if para.type == :blank
           para = @tree.children.pop

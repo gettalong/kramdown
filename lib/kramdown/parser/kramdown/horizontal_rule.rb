@@ -29,7 +29,7 @@ module Kramdown
       # Parse the horizontal rule at the current location.
       def parse_horizontal_rule
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:hr)
+        @tree.children << new_block_el(:hr)
         true
       end
       define_parser(:horizontal_rule, HR_START)
