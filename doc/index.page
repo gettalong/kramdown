@@ -88,7 +88,7 @@ It is probably the fastest pure-Ruby Markdown converter available (February 2010
 faster than [Maruku] and about 10x faster than [BlueFeather].
 
 <p class="a-center">
-The latest version of kramdown is <b>0.6.0</b> and it was released on <b>2010-04-06</b>.
+The latest version of kramdown is <b>0.7.0</b> and it was released on <b>2010-05-07</b>.
 </p>
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
