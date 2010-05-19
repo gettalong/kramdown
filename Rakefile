@@ -232,8 +232,8 @@ EOF
     end
   end
 
+  CODING_LINE = "# -*- coding: utf-8 -*-\n"
   COPYRIGHT=<<EOF
-# -*- coding: utf-8 -*-
 #
 #--
 # Copyright (C) 2009-2010 Thomas Leitner <t_leitner@gmx.at>
@@ -256,15 +256,18 @@ EOF
 #
 EOF
 
-  desc "Insert copyright notice"
-  task :insert_copyright do
+  desc "Insert/Update copyright notice"
+  task :update_copyright do
     inserted = false
     Dir["lib/**/*.rb"].each do |file|
-      if !File.read(file).start_with?(COPYRIGHT)
+      if !File.read(file).start_with?(CODING_LINE + COPYRIGHT)
         inserted = true
         puts "Updating file #{file}"
-        data = COPYRIGHT + "\n" + File.read(file)
-        File.open(file, 'w+') {|f| f.puts(data)}
+        old = File.read(file)
+        if !(result = old.gsub!(/\A#{Regexp.escape(CODING_LINE)}#\n#--.*?\n#\+\+\n#\n/m, CODING_LINE + COPYRIGHT))
+          old.gsub!(/\A(#{Regexp.escape(CODING_LINE)})?/, CODING_LINE + COPYRIGHT + "\n")
+        end
+        File.open(file, 'w+') {|f| f.puts(old)}
       end
     end
     puts "Look through the above mentioned files and correct all problems" if inserted
