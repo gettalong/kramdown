@@ -10,8 +10,8 @@ sort_info: 5
 kramdown should work on any platform which supports Ruby. It has been successfully tested on the
 following platforms:
 
-* Linux with Ruby 1.8.5, 1.8.6, 1.8.7, 1.9.1
-* Mac OSX with Ruby 1.8.5, 1.8.6, 1.8.7, 1.9.1, 1.9.2-preview1 and jruby 1.4.0.
+* Linux with Ruby 1.8.5, 1.8.6, 1.8.7, 1.9.1, 1.9.2-preview1 and jruby 1.5.0.
+* Mac OSX with Ruby 1.8.5, 1.8.6, 1.8.7, 1.9.1, 1.9.2-preview1 and jruby 1.5.0.
 
 See the platform specific installation notes for more information!
 
@@ -20,9 +20,9 @@ See the platform specific installation notes for more information!
 
 ### Linux
 
-There are a variety of Linux distributions out there with different package management systems. So we
-will focus on instructions for Ubuntu 9.04 here (which should probably also work for any recent
-Debian based distribution).
+There are a variety of Linux distributions out there with different package management systems. So
+we will focus on instructions for Ubuntu 9.04 here (which should probably also work for any newer
+Ubuntu version or any recent Debian based distribution).
 
 After running the following commands, kramdown is installed and ready to use:
 
@@ -30,7 +30,7 @@ After running the following commands, kramdown is installed and ready to use:
     sudo gem1.8 install kramdown
 
 > You will also need to add `export PATH=$PATH:/var/lib/gems/1.8/bin` to your `~/.bashrc` because
-> this is the binary path the executable files get installed.
+> this is the binary path the executable files get installed to.
 
 
 ### Mac OS X

@@ -2,14 +2,15 @@
 title: Syntax
 in_menu: true
 sort_info: 10
----
-This is version **<%= ::Kramdown::VERSION %>** of the syntax documentation.
+--- name:sidebar
+<h1>Contents</h1>
 
-Table of Contents:
-
-{menu: {used_nodes: fragments, min_levels: 3}}
+{menu: {used_nodes: fragments, min_levels: 4, max_levels: 6}}
+--- name:content
 
 # kramdown Syntax
+
+This is version **<%= ::Kramdown::VERSION %>** of the syntax documentation.
 
 The kramdown syntax is based on the Markdown syntax and has been enhanced with features that are
 found in other Markdown implementations like [Maruku], [PHP Markdown Extra] and [Pandoc]. However,

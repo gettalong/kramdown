@@ -5,44 +5,11 @@ sort_info: 1
 ---
 ## Overview
 
-kramdown is first and foremost a library for converting text written in a superset of Markdown to
-HTML. However, due to its modular architecture it is able to support additional input and output
-formats. The following input and output formats are currently supported:
-
-* Input: [kramdown](parser/kramdown.html) (a superset of Markdown)
-* Output: [HTML](converter/html.html), [LaTeX](converter/latex.html)
-
-
-## Usage
-
-The kramdown package provides two ways for using it:
-
-* **As a library**
-
-  kramdown uses basically the same API as [RedCloth], [BlueCloth] and [Maruku]:
-
-      require 'kramdown'
-
-      Kramdown::Document.new(text).to_html
-  {: lang='ruby'}
-
-  The second parameter to the `new` call is an options hash for (de)activating certain features. For
-  more information have a look at the [API documentation](rdoc/index.html).
-
-* **As an application**
-
-  Together with the library files a binary called `kramdown` is shipped which can be used to convert
-  text in any supported format (currently only kramdown syntax) to any supported output format (e.g.
-  HTML or LaTeX). It either reads from the files specified as the command line arguments or from the
-  standard input. For example:
-
-      kramdown path/to/kramdown/doc/syntax.page
-
-
-## Tests
-
-kramdown uses various test suites to verify the correct working of the parsers and converters. For
-more information, have a look at the [tests document](tests.html).
+If you want to get started with kramdown, have a look at the [installation page](installation.html)
+to see how you can install it on your system. Then look through the
+[documentation](documentation.html) for finding information about how to actually use kramdown and
+what parsers/converters it supports. The [syntax](syntax.html) provides a detailed description of
+the superset of Markdown which kramdown supports.
 
 
 ## Bugs, Forums, Mailing Lists

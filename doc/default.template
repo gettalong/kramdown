@@ -34,6 +34,10 @@
 
     <div id="container">
 
+      <div id="sidebar"><div id="sidebar-content">
+        <webgen:block name="sidebar" node="first" notfound="ignore" />
+      </div></div>
+
       <div id="main">
         <webgen:block name="content" />
         <div class="clear"></div>

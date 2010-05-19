@@ -11,7 +11,7 @@ additional syntax. The kramdown parser supports all features of the original Mar
 with some minor corrections) as well as newer features implemented in the [PHP Markdown Extra]
 package and [Maruku].
 
-For a complete description of the implemented syntax, have a look at the [Syntax
+For a complete description of the implemented syntax, have a look at the [syntax
 page](../syntax.html), the [quick reference](../quickref.html) provides a short overview.
 
 ## Options

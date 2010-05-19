@@ -153,6 +153,55 @@ body, table, code {
     background-image: -moz-linear-gradient(top, #eee, #fff 100, #fff);
     background-image: -webkit-gradient(linear, 0 0, 0 200, from(#eee), to(#fff));
 
+    a {
+        color: @link-color;
+        background-color: inherit;
+        text-decoration: underline;
+    }
+
+    a:hover, a:link {
+        color: #0B4775;
+    }
+
+    #sidebar {
+        float: right;
+        width: 30%;
+        min-width: 100px;
+        margin: 0 0 10px 10px;
+        color: black;
+        font-size: 92%;
+        background-color: #eee;
+
+        #sidebar-content {
+            padding: 5px 10px;
+            opacity: 1;
+        }
+
+        p {
+            margin: 0px;
+            padding: 5px 0px;
+        }
+
+        ul {
+            list-style: square;
+            margin: 5px 0px 5px 15px;
+            padding: 3px;
+
+            ul {
+                margin: 0px 0px 0px 5px;
+            }
+        }
+
+        a {
+            padding: 1px;
+            text-decoration: none;
+        }
+
+        h1 {
+            font: bold 150% Perpetua, Baskerville, "Big Caslon", "Palatino Linotype", Palatino, "URW Palladio L", "Nimbus Roman No9 L", serif;
+        }
+    }
+
     #main {
 
         margin-top: 20px;
@@ -195,16 +244,6 @@ body, table, code {
         dd {
             margin: 5px 0px 10px 20px;
             padding: 2px;
-        }
-
-        a {
-            color: @link-color;
-            background-color: inherit;
-            text-decoration: underline;
-        }
-
-        a:hover, a:link {
-            color: #0B4775;
         }
 
         *:target::after {
@@ -390,6 +429,8 @@ body, table, code {
             float: right;
             background-color: #ffffee;
             border: 2px solid #e6e8e9;
+            margin-left: 10px;
+            margin-right: 10px;
             margin-bottom: 3px;
         }
 
@@ -400,6 +441,7 @@ body, table, code {
             background-color: #eeffee;
             border: 2px solid #e6e8e9;
             margin: 0px 10px;
+            padding: 5px;
         }
 
         div.kdsyntaxlink {

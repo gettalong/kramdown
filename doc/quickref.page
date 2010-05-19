@@ -2,7 +2,11 @@
 title: Quick Reference
 in_menu: true
 sort_info: 9
----
+--- name:sidebar
+<h1>Contents</h1>
+
+{menu: {used_nodes: fragments, min_levels: 4, max_levels: 6}}
+--- name:content
 # Quick Reference
 
 Below are examples of all available structural elements that can be used in a kramdown text. Since
@@ -22,7 +26,7 @@ appears in the browser. This looks like this:
 <div class="kdexample">
 <pre class="kdexample-before"><code>kramdown example code</code></pre>
 <pre class="kdexample-after-source"><code>Example code converted to HTML</code></pre>
-<div class="kdexample-after-live">
+<div class="kdexample-after-live" style="clear:none">
 Live browser view of example code
 </div>
 </div>
