@@ -1,0 +1,22 @@
+---
+title: kramdown 0.8.0 released
+no_output: true
+sort_info: r0008
+created_at: 2010-05-07 12:15:00 +02:00
+modified_at: 2010-05-07 12:15:00 +02:00
+---
+## kramdown 0.8.0 released
+
+Support for the old extension syntax and custom extensions has been dropped as of this release.
+
+
+## Changes
+
+* Bug fixes:
+
+  - Attributes that have been assigned to the to-be-replaced TOC list are now added correctly on the
+    generated TOC list in the HTML converter
+
+* Deprecation notes:
+
+  - The old extension syntax and support for custom extensions has been removed.
