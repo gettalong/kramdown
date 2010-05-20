@@ -187,17 +187,6 @@ Default: true
 Used by: kramdown parser
 EOF
 
-    define(:extension, Object, nil, <<EOF)
-An object for handling the extensions
-
-The value for this option needs to be an object that can handle the
-extensions found in a kramdown document. If this option is `nil`, the
-default extension object is used.
-
-Default: nil
-Used by: kramdown parser
-EOF
-
     define(:footnote_nr, Integer, 1, <<EOF)
 The number of the first footnote
 

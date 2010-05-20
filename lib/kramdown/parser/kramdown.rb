@@ -80,7 +80,6 @@ module Kramdown
       # Create a new Kramdown parser object for the Kramdown::Document +doc+.
       def initialize(doc)
         @doc = doc
-        @extension = @doc.options[:extension] || Kramdown::Parser::Kramdown::Extension.new
 
         @src = nil
         @tree = nil
@@ -95,7 +94,7 @@ module Kramdown
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                           :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
-                          :footnote_definition, :abbrev_definition, :ald, :block_math, :extension_block_depr,
+                          :footnote_definition, :abbrev_definition, :ald, :block_math,
                           :block_extension, :block_ial, :eob_marker, :paragraph]
         @span_parsers =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
                          :span_extension, :span_ial, :html_entity, :typographic_syms, :line_break, :escaped_chars]
