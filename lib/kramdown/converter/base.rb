@@ -26,7 +26,26 @@ module Kramdown
 
   module Converter
 
-    # This class servers as base class for all converters.
+    # == Base class for converters
+    #
+    # This class servers as base class for all converters. It provides methods that can/should be
+    # used by all converters (like #generate_id) as well as common functionality that is
+    # automatically applied to the result (for example, embedding the output into a template).
+    #
+    # == Implementing a converter
+    #
+    # Implementing a new converter is rather easy: just create a new sub class from this class and
+    # put it in the Kramdown::Converter module (the latter is only needed if auto-detection should
+    # work properly). Then you need to implement the #convert(tree) method which takes a document
+    # tree and should return the converted output.
+    #
+    # The document instance is automatically set as @doc in Base#initialize. Furthermore, the
+    # document instance provides a hash called `conversion_infos` that is also automatically cleared
+    # and can be used to store information about the conversion process.
+    #
+    # The actual transformation of the document tree can be done in any way. However, writing one
+    # method per tree element type is a straight forward way to do it - this is how the Html and
+    # Latex converters do the transformation.
     class Base
 
       # Initialize the converter with the given Kramdown document +doc+.
@@ -69,7 +88,7 @@ module Kramdown
       end
 
 
-      # Generate an alpha-numeric ID from the the string +str+.
+      # Generate an unique alpha-numeric ID from the the string +str+ for use as header ID.
       def generate_id(str)
         gen_id = str.gsub(/[^a-zA-Z0-9 -]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '-').downcase
         gen_id = 'section' if gen_id.length == 0

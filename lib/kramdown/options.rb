@@ -22,7 +22,8 @@
 
 module Kramdown
 
-  # This module defines all options that are used by parsers and/or converters.
+  # This module defines all options that are used by parsers and/or converters as well as providing
+  # methods to deal with the options.
   module Options
 
     # Helper class introducing a boolean type for specifying boolean values (+true+ and +false+) as
@@ -39,13 +40,13 @@ module Kramdown
     # ----------------------------
     # :section: Option definitions
     #
-    # This sections informs about the methods that can be used on the Options class.
+    # This sections informs describes the methods that can be used on the Options module.
     # ----------------------------
 
     # Contains the definition of an option.
     Definition = Struct.new(:name, :type, :default, :desc)
 
-    # Allowed option types
+    # Allowed option types.
     ALLOWED_TYPES = [String, Integer, Float, Symbol, Boolean, Array, Object]
 
     @options = {}
@@ -54,7 +55,7 @@ module Kramdown
     # Symbol, Boolean, Array, Object), default value +default+ and the description +desc+.
     #
     # The type 'Object' should only be used if none of the other types suffices because such an
-    # option will be opaque!
+    # option will be opaque and cannot be used, for example, by CLI command!
     def self.define(name, type, default, desc)
       raise ArgumentError, "Option name #{name} is already used" if @options.has_key?(name)
       raise ArgumentError, "Invalid option type #{type} specified" if !ALLOWED_TYPES.include?(type)
@@ -67,7 +68,7 @@ module Kramdown
       @options
     end
 
-    # Return +true+ if an option +name+ is defined.
+    # Return +true+ if an option called +name+ is defined.
     def self.defined?(name)
       @options.has_key?(name)
     end
@@ -79,7 +80,8 @@ module Kramdown
       temp
     end
 
-    # Merge the #defaults Hash with the parsed options from the given Hash.
+    # Merge the #defaults Hash with the *parsed* options from the given Hash, i.e. only valid option
+    # names are considered and their value is run through the #parse method.
     def self.merge(hash)
       temp = defaults
       hash.each do |k,v|

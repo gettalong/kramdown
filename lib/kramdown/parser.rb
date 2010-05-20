@@ -22,8 +22,10 @@
 
 module Kramdown
 
-  # This module contains all available parsers. Currently, there is only one parser for parsing
-  # documents in kramdown format.
+  # == Parser Module
+  #
+  # This module contains all available parsers. Currently, there is only one parser called Kramdown
+  # for parsing documents in kramdown format.
   module Parser
 
     autoload :Kramdown, 'kramdown/parser/kramdown'

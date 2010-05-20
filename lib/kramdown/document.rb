@@ -69,7 +69,8 @@ module Kramdown
     # #new) and the conversion phase.
     attr_reader :warnings
 
-    # Holds needed parse information like ALDs, link definitions and so on.
+    # Holds needed parse information which is dependent on the used parser, like ALDs, link
+    # definitions and so on. This information may be used by converters afterwards.
     attr_reader :parse_infos
 
     # Holds conversion information which is dependent on the used converter. A converter clears this
@@ -77,15 +78,16 @@ module Kramdown
     attr_reader :conversion_infos
 
 
-    # Create a new Kramdown document from the string +source+ and use the provided +options+.
+    # Create a new Kramdown document from the string +source+ and use the provided +options+. The
+    # options that can be used are defined in the Options module.
     #
     # The special options key <tt>:input</tt> can be used to select the parser that should parse the
     # +source+. It has to be the name of a class in the Kramdown::Parser module. For example, to
     # select the kramdown parser, one would set the <tt>:input</tt> key to +Kramdown+. If this key
     # is not set, it defaults to +Kramdown+.
     #
-    # The +source+ is immediately parsed by the selected parser so that after this call the document
-    # tree is available and the output can be generated.
+    # The +source+ is immediately parsed by the selected parser so that the document tree is
+    # immediately available and the output can be generated.
     def initialize(source, options = {})
       @options = Options.merge(options)
       @warnings = []
