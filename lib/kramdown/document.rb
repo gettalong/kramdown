@@ -106,7 +106,7 @@ module Kramdown
     # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
     def method_missing(id, *attr, &block)
       if id.to_s =~ /^to_(\w+)$/
-        Converter.const_get($1.capitalize).convert(self)
+        Converter.const_get($1[0..0].upcase + $1[1..-1]).convert(self)
       else
         super
       end
