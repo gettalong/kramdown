@@ -119,7 +119,9 @@ emphasized text parts.
 kramdown supports the automatic generation of the table of contents of all headers that have an ID
 set. Just assign the reference name "toc" to an ordered or unordered list by using an IAL and the
 list will be replaced with the actual table of contents, rendered as nested unordered lists if "toc"
-was applied to an unordered list or else as nested ordered lists.
+was applied to an unordered list or else as nested ordered lists. All attributes applied to the
+original list will also be applied to the generated TOC list and it will get an ID of `markdown-toc`
+if no ID was set.
 
 Here is an example:
 
