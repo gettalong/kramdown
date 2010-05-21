@@ -197,11 +197,6 @@ module Kramdown
       end
 
       def convert_thead(el, indent, opts)
-        opts[:cell_type] = case el.type
-                           when :thead then 'th'
-                           when :tbody, :tfoot then 'td'
-                           else opts[:cell_type]
-                           end
         "#{' '*indent}<#{el.type}#{options_for_element(el)}>\n#{inner(el, indent, opts)}#{' '*indent}</#{el.type}>\n"
       end
       alias :convert_tbody :convert_thead
@@ -210,8 +205,9 @@ module Kramdown
 
       def convert_td(el, indent, opts)
         res = inner(el, indent, opts)
-        "#{' '*indent}<#{opts[:cell_type]}#{options_for_element(el)}>#{res.empty? ? "&nbsp;" : res}</#{opts[:cell_type]}>\n"
+        "#{' '*indent}<#{el.type}#{options_for_element(el)}>#{res.empty? ? "&nbsp;" : res}</#{el.type}>\n"
       end
+      alias :convert_th :convert_td
 
       def convert_br(el, indent, opts)
         "<br />"

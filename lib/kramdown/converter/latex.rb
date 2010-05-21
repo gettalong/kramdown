@@ -183,6 +183,7 @@ module Kramdown
       def convert_td(el, opts)
         inner(el, opts)
       end
+      alias :convert_th :convert_td
 
       def convert_br(el, opts)
         "\\newline\n"

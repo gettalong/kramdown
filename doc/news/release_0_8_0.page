@@ -12,6 +12,10 @@ Support for the old extension syntax and custom extensions has been dropped as o
 
 ## Changes
 
+* Minor changes:
+
+  - Table header cells are now represented by their own element type
+
 * Bug fixes:
 
   - Attributes that have been assigned to the to-be-replaced TOC list are now added correctly on the
