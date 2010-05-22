@@ -38,10 +38,10 @@ module Kramdown
 
       HTML_PARSE_AS_BLOCK = %w{applet button blockquote colgroup dd div dl fieldset form iframe li
                                map noscript object ol table tbody td th thead tfoot tr ul}
-      HTML_PARSE_AS_SPAN  = %w{a abbr acronym address b bdo big cite caption code del dfn dt em
-                               h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p pre q rb rbc
+      HTML_PARSE_AS_SPAN  = %w{a abbr acronym address b bdo big cite caption del dfn dt em
+                               h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc
                                rp rt rtc ruby samp select small span strong sub sup tt var}
-      HTML_PARSE_AS_RAW   = %w{script math option textarea}
+      HTML_PARSE_AS_RAW   = %w{script math option textarea pre code}
 
       HTML_PARSE_AS = Hash.new {|h,k| h[k] = :raw}
       HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}

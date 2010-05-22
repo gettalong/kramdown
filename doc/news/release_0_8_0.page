@@ -24,6 +24,7 @@ Support for the old extension syntax and custom extensions has been dropped as o
     element was added
   - Fixed problem with HTML span parsing: some text was not added to the correct element when the
     end tag was not found
+  - HTML `code` and `pre` tags are now parsed as raw HTML tags
 
 * Deprecation notes:
 
