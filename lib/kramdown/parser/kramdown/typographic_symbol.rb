@@ -24,7 +24,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      TYPOGRAPHIC_SYMS = [['---', :mdash], ['--', :ndash], ['...', :ellipsis],
+      TYPOGRAPHIC_SYMS = [['---', :mdash], ['--', :ndash], ['...', :hellip],
                           ['\\<<', '&lt;&lt;'], ['\\>>', '&gt;&gt;'],
                           ['<< ', :laquo_space], [' >>', :raquo_space],
                           ['<<', :laquo], ['>>', :raquo]]
@@ -37,8 +37,12 @@ module Kramdown
         val = TYPOGRAPHIC_SYMS_SUBST[@src.matched]
         if val.kind_of?(Symbol)
           @tree.children << Element.new(:typographic_sym, val)
+        elsif @src.matched == '\\<<'
+          @tree.children << Element.new(:entity, 'lt')
+          @tree.children << Element.new(:entity, 'lt')
         else
-          add_text(val.dup)
+          @tree.children << Element.new(:entity, 'gt')
+          @tree.children << Element.new(:entity, 'gt')
         end
       end
       define_parser(:typographic_syms, TYPOGRAPHIC_SYMS_RE, '--|\\.\\.\\.|(?:\\\\| )?(?:<<|>>)')

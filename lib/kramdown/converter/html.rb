@@ -255,7 +255,7 @@ module Kramdown
       end
 
       TYPOGRAPHIC_SYMS = {
-        :mdash => '&mdash;', :ndash => '&ndash;', :ellipsis => '&hellip;',
+        :mdash => '&mdash;', :ndash => '&ndash;', :hellip => '&hellip;',
         :laquo_space => '&laquo;&nbsp;', :raquo_space => '&nbsp;&raquo;',
         :laquo => '&laquo;', :raquo => '&raquo;'
       }

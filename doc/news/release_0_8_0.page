@@ -20,6 +20,8 @@ Support for the old extension syntax and custom extensions has been dropped as o
 
   - Attributes that have been assigned to the to-be-replaced TOC list are now added correctly on the
     generated TOC list in the HTML converter
+  - Fixed problem in typographic symbol processing where an entity string instead of an entity
+    element was added
 
 * Deprecation notes:
 

@@ -492,7 +492,7 @@ EOF
       end
 
       TYPOGRAPHIC_SYMS = {
-        :mdash => '---', :ndash => '--', :ellipsis => '\ldots{}',
+        :mdash => '---', :ndash => '--', :hellip => '\ldots{}',
         :laquo_space => '\guillemotleft{}~', :raquo_space => '~\guillemotright{}',
         :laquo => '\guillemotleft{}', :raquo => '\guillemotright{}'
       }
