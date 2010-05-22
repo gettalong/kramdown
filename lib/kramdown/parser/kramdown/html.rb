@@ -237,7 +237,7 @@ module Kramdown
               @src.scan(stop_re)
             else
               warning("Found no end tag for '#{el.value}' - auto-closing it")
-              add_text(@src.scan(/.*/m))
+              add_text(@src.scan(/.*/m), el, (do_parsing ? :text : :raw_text))
             end
             @tree.children << el
           end

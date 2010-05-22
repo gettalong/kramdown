@@ -22,6 +22,8 @@ Support for the old extension syntax and custom extensions has been dropped as o
     generated TOC list in the HTML converter
   - Fixed problem in typographic symbol processing where an entity string instead of an entity
     element was added
+  - Fixed problem with HTML span parsing: some text was not added to the correct element when the
+    end tag was not found
 
 * Deprecation notes:
 
