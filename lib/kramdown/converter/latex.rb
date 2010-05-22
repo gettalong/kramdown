@@ -63,6 +63,7 @@ module Kramdown
       def convert_text(el, opts)
         escape(el.value)
       end
+      alias :convert_raw_text :convert_text
 
       def convert_eob(el, opts)
         ''
@@ -143,11 +144,6 @@ module Kramdown
 
       def convert_html_element(el, opts)
         @doc.warnings << "Can't convert HTML element"
-        ''
-      end
-
-      def convert_html_text(el, opts)
-        @doc.warnings << "Can't convert HTML text"
         ''
       end
 

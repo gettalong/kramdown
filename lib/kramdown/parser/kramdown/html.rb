@@ -170,7 +170,7 @@ module Kramdown
         while !@src.eos? && !done
           if result = @src.scan_until(HTML_RAW_START)
             endpos = @src.pos
-            add_text(result, @tree, :html_text)
+            add_text(result, @tree, :raw_text)
             if @src.scan(HTML_TAG_RE)
               handle_html_start_tag
             elsif @src.scan(HTML_TAG_CLOSE_RE)
@@ -180,11 +180,11 @@ module Kramdown
                 warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
               end
             else
-              add_text(@src.scan(/./), @tree, :html_text)
+              add_text(@src.scan(/./), @tree, :raw_text)
             end
           else
             result = @src.scan(/.*/m)
-            add_text(result, @tree, :html_text)
+            add_text(result, @tree, :raw_text)
             warning("Found no end tag for '#{@tree.value}' - auto-closing it")
             done = true
           end
@@ -233,8 +233,7 @@ module Kramdown
             warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
             @tree.children << el
           else
-            if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]), (do_parsing ? :text : :html_text))
-              end_pos = @src.pos
+            if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]), (do_parsing ? :text : :raw_text))
               @src.scan(stop_re)
             else
               warning("Found no end tag for '#{el.value}' - auto-closing it")

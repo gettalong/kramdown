@@ -72,6 +72,7 @@ module Kramdown
       def convert_text(el, indent, opts)
         escape_html(el.value, :text)
       end
+      alias :convert_raw_text :convert_text
 
       def convert_eob(el, indent, opts)
         ''
@@ -174,10 +175,6 @@ module Kramdown
           output << "\n" if el.options[:outer_element] || (el.options[:parse_type] != :raw && !el.options[:parent_is_raw])
           output
         end
-      end
-
-      def convert_html_text(el, indent, opts)
-        escape_html(el.value, :text)
       end
 
       def convert_xml_comment(el, indent, opts)
