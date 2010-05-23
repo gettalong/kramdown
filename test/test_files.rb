@@ -30,6 +30,7 @@ class TestFiles < Test::Unit::TestCase
     define_method('test_' + file.tr('.', '_')) do
       html_file = file.sub('.text', '.html')
       opts_file = file.sub('.text', '.options')
+      opts_file = File.join(File.dirname(file), 'options') if !File.exist?(opts_file)
       options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
       doc = Kramdown::Document.new(File.read(file), options)
       assert_equal(File.read(html_file), doc.to_html, "Failed test #{file}")
