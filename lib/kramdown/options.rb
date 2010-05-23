@@ -187,6 +187,21 @@ Default: true
 Used by: kramdown parser
 EOF
 
+    define(:html_to_native, Boolean, false, <<EOF)
+Convert HTML elements to native elements
+
+If this option is `true`, the parser converts HTML elements to native
+elements. For example, when parsing `<em>hallo</em>` the emphasis tag
+would normally be converted to an `:html` element with tag type `:em`.
+If `html_to_native` is `true`, then the emphasis would be converted to a
+native `:em` element.
+
+This is useful for converters that cannot deal with HTML elements.
+
+Default: false
+Used by: kramdown parser
+EOF
+
     define(:footnote_nr, Integer, 1, <<EOF)
 The number of the first footnote
 

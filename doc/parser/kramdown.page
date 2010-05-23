@@ -14,11 +14,36 @@ package and [Maruku].
 For a complete description of the implemented syntax, have a look at the [syntax
 page](../syntax.html), the [quick reference](../quickref.html) provides a short overview.
 
+
+## Conversion of HTML tags to native kramdown elements
+
+If the option `html_to_native` is `true`, then the kramdown parser converts HTML tags that have a
+native kramdown element representation to this representation. This is useful, for example, for
+converters that cannot directly convert HTML tags.
+
+Here is a description of the HTML tags that have native representations and how they are converted:
+
+`em strong blockquote hr br a img ul ol li dl dt dd p thead tbody tfoot tr td th`
+: These HTML tags are just transformed into their native representation and don't need any further
+  processing.
+
+`h1 h2 h3 h4 h5 h6`
+: These six header tags are all mapped to the single `header` element with different header levels.
+
+`code pre`
+: The `code` tag is converted to a `codespan` element and the `pre` tag to a `codeblock` element.
+  However, all child tags are removed and only the contained text is used.
+
+`table`
+: This tag is converted to its native element counterpart and all text (= whitespace) except inside
+  nested `td` or `th` tags is removed.
+
+
 ## Options
 
 The kramdown parser supports the following options:
 
-{options: {items: [:parse_block_html, :parse_span_html]}}
+{options: {items: [:parse_block_html, :parse_span_html, :html_to_native]}}
 
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/

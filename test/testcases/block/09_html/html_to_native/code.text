@@ -1,0 +1,4 @@
+This is a <code>code span <b>with</b> &lt;entities&gt; that should be preserved</code>.
+This is a <code>simple code</code> span.
+
+<pre>Some very important <b>&lt;</b> thing</pre>

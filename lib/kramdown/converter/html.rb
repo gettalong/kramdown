@@ -83,7 +83,7 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent, opts)
-        if el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE
+        if el.value && el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE
           el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
           opts = {:wrap => @doc.options[:coderay_wrap], :line_numbers => @doc.options[:coderay_line_numbers],
             :line_number_start => @doc.options[:coderay_line_number_start], :tab_width => @doc.options[:coderay_tab_width],
@@ -91,7 +91,7 @@ module Kramdown
           result = CodeRay.scan(el.value, el.options[:attr].delete('lang').to_sym).html(opts).chomp + "\n"
           "#{' '*indent}<div#{options_for_element(el)}>#{result}#{' '*indent}</div>\n"
         else
-          result = escape_html(el.value)
+          result = (el.value ? escape_html(el.value) : inner(el, indent, opts))
           if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
             result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
               suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
@@ -228,7 +228,7 @@ module Kramdown
       end
 
       def convert_codespan(el, indent, opts)
-        "<code#{options_for_element(el)}>#{escape_html(el.value)}</code>"
+        "<code#{options_for_element(el)}>#{el.value ? escape_html(el.value) : inner(el, indent, opts)}</code>"
       end
 
       def convert_footnote(el, indent, opts)

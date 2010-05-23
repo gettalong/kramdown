@@ -48,6 +48,57 @@ module Kramdown
       HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
+
+      HTML_TO_NATIVE_RAW_TEXT_PROC = lambda do |c, raw|
+        raw << c.value if c.type == :raw_text || c.type == :text
+        c.children.each {|cc| HTML_TO_NATIVE_RAW_TEXT_PROC.call(cc, raw)}
+      end
+      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img ul ol li dl dt dd p thead tbody tfoot tr td th}
+      HTML_TO_NATIVE_BASIC_PROC = lambda {|el| el.type = el.value.intern; el.value = nil}
+      HTML_TO_NATIVE_HEADER_EL = %w{h1 h2 h3 h4 h5 h6}
+      HTML_TO_NATIVE_HEADER_PROC = lambda do |el|
+        el.type = :header
+        el.options[:level] = el.value[1..1].to_i
+        el.value = nil
+        HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, el.options[:raw_text] = '')
+      end
+      HTML_TO_NATIVE_CODE_EL = %w{code pre}
+      HTML_TO_NATIVE_CODE_PROC = lambda do |el, *second|
+        if second.empty?
+          el.type = (el.value == 'code' ? :codespan : :codeblock)
+          el.value = nil
+          raw = Element.new(:raw_text, '')
+          HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, raw.value)
+          el.children.clear
+          el.children << raw
+        elsif el.children.size == 1
+          el.value = el.children.first.value
+          el.children.clear
+        end
+      end
+      HTML_TO_NATIVE = {
+        'table' => lambda do |el|
+          el.type = :table
+          el.value = nil
+          el.options[:alignment] = []
+          helper = lambda do |c|
+            if c.type != :td && c.type != :th
+              c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
+            end
+            if c.type == :tr && el.options[:alignment].empty?
+              el.options[:alignment] = [:default] * c.children.inject(0) do |sum, cc|
+                cc.type == :th || cc.type == :td ? sum + 1 : sum
+              end
+            end
+            c.children.each {|cc| helper.call(cc)}
+          end
+          helper.call(el)
+        end,
+      }
+      HTML_TO_NATIVE_BASIC_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_BASIC_PROC}
+      HTML_TO_NATIVE_HEADER_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_HEADER_PROC}
+      HTML_TO_NATIVE_CODE_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_CODE_PROC}
+
       #:stopdoc:
       # Some HTML elements like script belong to both categories (i.e. are valid in block and
       # span HTML) and don't appear therefore!
@@ -82,7 +133,7 @@ module Kramdown
             @src.pos += @src.matched_size
             name = @src[1]
 
-            if @tree.type ==:html_element && @tree.value == name
+            if @tree.type == :html_element && @tree.value == name
               throw :stop_block_parsing, :found
             else
               warning("Found invalidly used HTML closing tag for '#{name}' - ignoring it")
@@ -157,6 +208,41 @@ module Kramdown
           end
           @src.scan(/[ \t]*\n/) unless (@tree.type == :html_element && @tree.options[:parse_type] == :raw)
         end
+        post_process_html_element(el)
+      end
+
+      # Converts the HTML element +el+ to a native element if possible.
+      def post_process_html_element(el)
+        if @doc.options[:html_to_native] && (processor = HTML_TO_NATIVE[el.value])
+          processor.call(el)
+          post_process_html_text(el)
+          processor.call(el, :after) if processor.arity < 0
+        end
+      end
+
+      # Post process the HTML text.
+      def post_process_html_text(el)
+        el.children.map! do |child|
+          if child.type == :raw_text
+            oldsrc, @src = @src, StringScanner.new(child.value)
+            parse_spans(child, nil, [:html_entity], :raw_text)
+            @src = oldsrc
+            child.children.each do |c|
+              if c.type == :entity
+                if %w{lsquo rsquo ldquo rdquo}.include?(c.value)
+                  c.type = :smart_quote
+                  c.value = c.value.intern
+                elsif %w{mdash ndash hellip laquo raquo}.include?(c.value)
+                  c.type = :typographic_sym
+                  c.value = c.value.intern
+                end
+              end
+            end
+          else
+            post_process_html_text(child)
+            child
+          end
+        end.flatten!
       end
 
       # Parse raw HTML until the matching end tag for +el+ is found or until the end of the
@@ -241,6 +327,7 @@ module Kramdown
             end
             @tree.children << el
           end
+          post_process_html_element(el)
         else
           add_text(@src.scan(/./))
         end

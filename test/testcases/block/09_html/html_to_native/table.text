@@ -1,0 +1,14 @@
+<table class="examples">
+<tr>
+  <th>Usage</th>
+  <th>
+Output
+  </th>
+</tr>
+<tr>
+  <td>Some *data*</td>
+  <td>
+Some more
+  </td>
+</tr>
+</table>

@@ -7,10 +7,21 @@ modified_at: 2010-05-07 12:15:00 +02:00
 ---
 ## kramdown 0.8.0 released
 
-Support for the old extension syntax and custom extensions has been dropped as of this release.
+One of the bigger changes in this release is the support for converting HTML tags into native
+kramdown elements via the new `html_to_native` option. For example, the HTML tag `p` is converted to
+the native paragraph element instead of a generic HTML tag if this option is set to `true`. This is
+especially useful for converters that don't handle generic HTML tags (e.g. the LaTeX converter).
+
+Also note that support for the old extension syntax and custom extensions has been dropped as of
+this release!
 
 
 ## Changes
+
+* Major changes:
+
+  - Added the option `html_to_native` (default: `false`) which tells the kramdown parser whether to
+    convert HTML tags to native kramdown elements or to generic HTML elements.
 
 * Minor changes:
 
