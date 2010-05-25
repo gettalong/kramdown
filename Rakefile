@@ -14,8 +14,11 @@ begin
 rescue LoadError
 end
 
+begin
 require 'rdoc/task'
 require 'rdoc/rdoc'
+rescue LoadError
+end
 
 
 begin
@@ -73,16 +76,18 @@ if defined? Webgen
   task :doc => :htmldoc
 end
 
-rd = Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'htmldoc/rdoc'
-  rdoc.title = 'kramdown'
-  rdoc.main = 'Kramdown'
-  rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
+if defined? Rake::RDocTask
+  rd = Rake::RDocTask.new do |rdoc|
+    rdoc.rdoc_dir = 'htmldoc/rdoc'
+    rdoc.title = 'kramdown'
+    rdoc.main = 'Kramdown'
+    rdoc.options << '--line-numbers'
+    rdoc.rdoc_files.include('lib/**/*.rb')
+  end
 
-desc "Build the whole user documentation"
-task :doc => :rdoc
+  desc "Build the whole user documentation"
+  task :doc => :rdoc
+end
 
 tt = Rake::TestTask.new do |test|
   test.warning = true
