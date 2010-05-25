@@ -27,13 +27,15 @@ require 'yaml'
 class TestFiles < Test::Unit::TestCase
 
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |file|
-    define_method('test_' + file.tr('.', '_')) do
-      html_file = file.sub('.text', '.html')
-      opts_file = file.sub('.text', '.options')
-      opts_file = File.join(File.dirname(file), 'options') if !File.exist?(opts_file)
-      options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
-      doc = Kramdown::Document.new(File.read(file), options)
-      assert_equal(File.read(html_file), doc.to_html, "Failed test #{file}")
+    %w( html latex ).each do |output_format|
+      define_method('test_' + file.tr('.', '_') + "_to_#{output_format}") do
+        out_file = file.sub('.text', ".#{output_format}")
+        opts_file = file.sub('.text', '.options')
+        opts_file = File.join(File.dirname(file), 'options') if !File.exist?(opts_file)
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
+        doc = Kramdown::Document.new(File.read(file), options)
+        assert_equal(File.read(out_file), doc.send("to_#{output_format}"), "Failed test #{file}") if File.exists?(out_file)
+      end
     end
   end
 
