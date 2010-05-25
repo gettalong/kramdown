@@ -213,7 +213,7 @@ module Kramdown
       end
 
       def convert_footnote(el, opts)
-        "\\footnote{#{inner(@doc.parse_infos[:footnotes][el.options[:name]])}}"
+        "\\footnote{#{inner(@doc.parse_infos[:footnotes][el.options[:name]][:content], opts)}}"
       end
 
       def convert_raw(el, opts)
