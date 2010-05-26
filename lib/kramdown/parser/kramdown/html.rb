@@ -50,7 +50,7 @@ module Kramdown
 
 
       HTML_TO_NATIVE_RAW_TEXT_PROC = lambda do |c, raw|
-        raw << c.value if c.type == :raw_text || c.type == :text
+        raw << c.value.to_s if [:raw_text, :text, :codespan, :codeblock].include?(c.type)
         c.children.each {|cc| HTML_TO_NATIVE_RAW_TEXT_PROC.call(cc, raw)}
       end
       HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img ul ol li dl dt dd p thead tbody tfoot tr td th}
