@@ -23,7 +23,7 @@ converters that cannot directly convert HTML tags.
 
 Here is a description of the HTML tags that have native representations and how they are converted:
 
-`em strong blockquote hr br a img ul ol li dl dt dd p thead tbody tfoot tr td th`
+`em strong blockquote hr br a img li dt dd p thead tbody tfoot tr td th`
 : These HTML tags are just transformed into their native representation and don't need any further
   processing.
 
@@ -34,9 +34,16 @@ Here is a description of the HTML tags that have native representations and how 
 : The `code` tag is converted to a `codespan` element and the `pre` tag to a `codeblock` element.
   However, all child tags are removed and only the contained text is used.
 
-`table`
-: This tag is converted to its native element counterpart and all text (= whitespace) except inside
-  nested `td` or `th` tags is removed.
+`table ul ol dl`
+
+: These tags are converted to their native element counterpart and all text (= whitespace) except
+  inside nested
+
+  - `td` or `th` tags for the `table` tag,
+  - `li` tags for `ul` and `ol` tags,
+  - `dt` and `dd` tags for the `dl` tag
+
+  is removed.
 
 
 ## Options

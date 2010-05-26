@@ -53,7 +53,7 @@ module Kramdown
         raw << c.value.to_s if [:raw_text, :text, :codespan, :codeblock].include?(c.type)
         c.children.each {|cc| HTML_TO_NATIVE_RAW_TEXT_PROC.call(cc, raw)}
       end
-      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img ul ol li dl dt dd p thead tbody tfoot tr td th}
+      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img li dt dd p thead tbody tfoot tr td th}
       HTML_TO_NATIVE_BASIC_PROC = lambda {|el| el.type = el.value.intern; el.value = nil}
       HTML_TO_NATIVE_HEADER_EL = %w{h1 h2 h3 h4 h5 h6}
       HTML_TO_NATIVE_HEADER_PROC = lambda do |el|
@@ -75,6 +75,18 @@ module Kramdown
           el.value = el.children.first.value
           el.children.clear
         end
+      end
+      HTML_TO_NATIVE_LIST_EL = %w{ul ol dl}
+      HTML_TO_NATIVE_LIST_PROC = lambda do |el|
+        el.type = el.value.intern
+        el.value = nil
+        helper = lambda do |c|
+          if c.type != :li && c.type != :dt && c.type != :dd
+            c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
+            c.children.each {|cc| helper.call(cc)}
+          end
+        end
+        helper.call(el)
       end
       HTML_TO_NATIVE = {
         'table' => lambda do |el|
@@ -98,6 +110,7 @@ module Kramdown
       HTML_TO_NATIVE_BASIC_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_BASIC_PROC}
       HTML_TO_NATIVE_HEADER_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_HEADER_PROC}
       HTML_TO_NATIVE_CODE_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_CODE_PROC}
+      HTML_TO_NATIVE_LIST_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_LIST_PROC}
 
       #:stopdoc:
       # Some HTML elements like script belong to both categories (i.e. are valid in block and
