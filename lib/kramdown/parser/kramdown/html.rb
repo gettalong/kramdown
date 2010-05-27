@@ -53,19 +53,28 @@ module Kramdown
         raw << c.value.to_s if [:raw_text, :text, :codespan, :codeblock].include?(c.type)
         c.children.each {|cc| HTML_TO_NATIVE_RAW_TEXT_PROC.call(cc, raw)}
       end
-      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img li dt dd p thead tbody tfoot tr td th}
-      HTML_TO_NATIVE_BASIC_PROC = lambda {|el| el.type = el.value.intern; el.value = nil}
+      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img dt p thead tbody tfoot tr td th}
+      HTML_TO_NATIVE_BASIC_PROC = lambda do |el|
+        el.type = el.value.intern;
+        el.options[:category] = HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block
+        el.value = nil
+      end
       HTML_TO_NATIVE_HEADER_EL = %w{h1 h2 h3 h4 h5 h6}
       HTML_TO_NATIVE_HEADER_PROC = lambda do |el|
         el.type = :header
         el.options[:level] = el.value[1..1].to_i
+        el.options[:category] = :block
         el.value = nil
         HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, el.options[:raw_text] = '')
       end
       HTML_TO_NATIVE_CODE_EL = %w{code pre}
       HTML_TO_NATIVE_CODE_PROC = lambda do |el, *second|
         if second.empty?
-          el.type = (el.value == 'code' ? :codespan : :codeblock)
+          el.type, el.options[:category] = if el.value == 'code'
+                                             [:codespan, :span]
+                                           else
+                                             [:codeblock, :block]
+                                           end
           el.value = nil
           raw = Element.new(:raw_text, '')
           HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, raw.value)
@@ -79,6 +88,7 @@ module Kramdown
       HTML_TO_NATIVE_LIST_EL = %w{ul ol dl}
       HTML_TO_NATIVE_LIST_PROC = lambda do |el|
         el.type = el.value.intern
+        el.options[:category] = :block
         el.value = nil
         helper = lambda do |c|
           if c.type != :li && c.type != :dt && c.type != :dd
@@ -88,21 +98,39 @@ module Kramdown
         end
         helper.call(el)
       end
+      HTML_TO_NATIVE_LIST_CONT_EL = %w{li dd}
+      HTML_TO_NATIVE_LIST_CONT_PROC = lambda do |el|
+        el.type = el.value.intern
+        el.options[:category] = :block
+        el.value = nil
+        i = 0
+        while i < el.children.length
+          c = el.children[i]
+          if (c.type == :raw_text || c.type == :text) && c.value.strip.empty? &&
+              (i == 0 || i == el.children.length - 1 || el.children[i-1].options[:category] == :block ||
+               el.children[i+1].options[:category] == :block)
+            el.children.delete_at(i)
+          else
+            i += 1
+          end
+        end
+      end
       HTML_TO_NATIVE = {
         'table' => lambda do |el|
           el.type = :table
+          el.options[:category] = :block
           el.value = nil
           el.options[:alignment] = []
           helper = lambda do |c|
             if c.type != :td && c.type != :th
               c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
+              c.children.each {|cc| helper.call(cc)}
             end
             if c.type == :tr && el.options[:alignment].empty?
               el.options[:alignment] = [:default] * c.children.inject(0) do |sum, cc|
                 cc.type == :th || cc.type == :td ? sum + 1 : sum
               end
             end
-            c.children.each {|cc| helper.call(cc)}
           end
           helper.call(el)
         end,
@@ -111,6 +139,7 @@ module Kramdown
       HTML_TO_NATIVE_HEADER_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_HEADER_PROC}
       HTML_TO_NATIVE_CODE_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_CODE_PROC}
       HTML_TO_NATIVE_LIST_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_LIST_PROC}
+      HTML_TO_NATIVE_LIST_CONT_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_LIST_CONT_PROC}
 
       #:stopdoc:
       # Some HTML elements like script belong to both categories (i.e. are valid in block and

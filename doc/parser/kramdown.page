@@ -35,8 +35,7 @@ Here is a description of the HTML tags that have native representations and how 
   However, all child tags are removed and only the contained text is used.
 
 `table ul ol dl`
-
-: These tags are converted to their native element counterpart and all text (= whitespace) except
+: These tags are converted to their native element counterparts and all text (= whitespace) except
   inside nested
 
   - `td` or `th` tags for the `table` tag,
@@ -44,6 +43,11 @@ Here is a description of the HTML tags that have native representations and how 
   - `dt` and `dd` tags for the `dl` tag
 
   is removed.
+
+`li dd`
+: These tags are converted to their native element counterparts and all immediate text child
+  elements containing only whitespace and either appearing as first or last child or being
+  preceded/followed by a block element are removed.
 
 
 ## Options
