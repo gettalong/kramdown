@@ -113,7 +113,7 @@ EOF
                             'Rakefile',
                             'setup.rb',
                             'COPYING', 'GPL', 'README', 'AUTHORS',
-                            'VERSION', 'ChangeLog',
+                            'VERSION', 'ChangeLog', 'CONTRIBUTERS',
                             'bin/*',
                             'benchmark/*',
                             'lib/**/*.rb',
@@ -133,6 +133,14 @@ EOF
   file 'ChangeLog' do
     puts "Generating ChangeLog file"
     `git log --name-only > ChangeLog`
+  end
+
+  CLOBBER << 'CONTRIBUTERS'
+  file 'CONTRIBUTERS' do
+    puts "Generating CONTRIBUTERS file"
+    `echo "  Count Name" > CONTRIBUTERS`
+    `echo "======= ====" >> CONTRIBUTERS`
+    `git log | grep ^Author: | sed 's/^Author: //' | sort | uniq -c | sort -nr >> CONTRIBUTERS`
   end
 
   CLOBBER << "man/man1/kramdown.1"
