@@ -138,10 +138,10 @@ module Kramdown
       def convert_li(el, indent, opts)
         output = ' '*indent << "<#{el.type}" << options_for_element(el) << ">"
         res = inner(el, indent, opts)
-        if el.options[:first_is_block]
-          output << "\n" << res << ' '*indent
-        else
+        if el.children.empty? || el.children.first.options[:category] != :block
           output << res << (res =~ /\n\Z/ ? ' '*indent : '')
+        else
+          output << "\n" << res << ' '*indent
         end
         output << "</#{el.type}>\n"
       end

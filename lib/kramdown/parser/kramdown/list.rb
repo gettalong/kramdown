@@ -123,8 +123,6 @@ module Kramdown
             text = it.children.shift.children.first
             text.value += "\n" if !it.children.empty? && it.children[0].type != :blank
             it.children.unshift(text)
-          else
-            it.options[:first_is_block] = true
           end
 
           if it.children.last.type == :blank
@@ -207,8 +205,6 @@ module Kramdown
             text = it.children.shift.children.first
             text.value += "\n" if !it.children.empty?
             it.children.unshift(text)
-          else
-            it.options[:first_is_block] = true
           end
         end
 
