@@ -127,7 +127,7 @@ module Kramdown
   # (paragraphs, headers, emphasis, ...). The type of element can be set via the #type accessor.
   class Element
 
-    # A symbol representing the element type. For example, +:p+ or +:blockquote+.
+    # A symbol representing the element type. For example, <tt>:p</tt> or <tt>:blockquote</tt>.
     attr_accessor :type
 
     # The value of the element. The interpretation of this field depends on the type of the element.
@@ -135,7 +135,12 @@ module Kramdown
     attr_accessor :value
 
     # The options hash for the element. It is used for storing arbitray options as well as the
-    # *attributes* of the element under the <tt>:attr</tt> key.
+    # following special contents:
+    #
+    # - *Attributes* of the element under the <tt>:attr</tt> key
+    # - Category of the element, either <tt>:block</tt> or <tt>:span</tt>, under the
+    #   <tt>:category</tt> key. If this key is absent, it can be assumed that the element is in the
+    #   <tt>:span</tt> category.
     attr_accessor :options
 
     # The child elements of this element.

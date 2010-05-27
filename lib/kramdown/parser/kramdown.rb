@@ -258,6 +258,7 @@ module Kramdown
       # Create a new block level element, taking care of applying a preceding block IAL if it exists.
       def new_block_el(*args)
         el = Element.new(*args)
+        el.options[:category] ||= :block
         el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
         el
       end

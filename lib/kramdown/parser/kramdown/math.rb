@@ -33,7 +33,7 @@ module Kramdown
           return false
         end
         @src.pos += @src.matched_size
-        @tree.children << new_block_el(:math, @src[2], :type => :block)
+        @tree.children << new_block_el(:math, @src[2], :category => :block)
         true
       end
       define_parser(:block_math, BLOCK_MATH_START)
@@ -44,7 +44,7 @@ module Kramdown
       # Parse the inline math at the current location.
       def parse_inline_math
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:math, @src[1], :type => :inline)
+        @tree.children << Element.new(:math, @src[1], :category => :inline)
       end
       define_parser(:inline_math, INLINE_MATH_START, '\$')
 

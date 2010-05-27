@@ -156,8 +156,8 @@ module Kramdown
       def convert_html_element(el, indent, opts)
         res = inner(el, indent, opts)
         if @doc.options[:filter_html].include?(el.value)
-          res.chomp + (el.options[:type] == :block ? "\n" : '')
-        elsif el.options[:type] == :span
+          res.chomp + (el.options[:category] == :block ? "\n" : '')
+        elsif el.options[:category] == :span
           "<#{el.value}#{options_for_element(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
@@ -178,7 +178,7 @@ module Kramdown
       end
 
       def convert_xml_comment(el, indent, opts)
-        el.value + (el.options[:type] == :block ? "\n" : '')
+        el.value + (el.options[:category] == :block ? "\n" : '')
       end
       alias :convert_xml_pi :convert_xml_comment
 
@@ -270,7 +270,7 @@ module Kramdown
         el.options[:attr]['class'] ||= ''
         el.options[:attr]['class'] += (el.options[:attr]['class'].empty? ? '' : ' ') + 'math'
         type = 'span'
-        type = 'div' if el.options[:type] == :block
+        type = 'div' if el.options[:category] == :block
         "<#{type}#{options_for_element(el)}>#{escape_html(el.value, :text)}</#{type}>#{type == 'div' ? "\n" : ''}"
       end
 

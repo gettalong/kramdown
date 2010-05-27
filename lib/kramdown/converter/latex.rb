@@ -507,7 +507,7 @@ EOF
 
       def convert_math(el, opts)
         @doc.conversion_infos[:packages] += %w[amssymb amsmath amsthm amsfonts]
-        if el.options[:type] == :block
+        if el.options[:category] == :block
           if el.value =~ /\A\s*\\begin\{/
             el.value
           else

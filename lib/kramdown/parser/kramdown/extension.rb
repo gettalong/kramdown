@@ -57,7 +57,7 @@ module Kramdown
         when 'comment'
           # nothing to do
         when 'nomarkdown'
-          @tree.children << Element.new(:raw, body, :type => type) if body.kind_of?(String)
+          @tree.children << Element.new(:raw, body, :category => type) if body.kind_of?(String)
         when 'options'
           opts.select do |k,v|
             k = k.to_sym

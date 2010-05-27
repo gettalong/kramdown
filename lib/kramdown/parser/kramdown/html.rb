@@ -130,11 +130,11 @@ module Kramdown
       # Parse the HTML at the current position as block level HTML.
       def parse_block_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:xml_comment, result, :type => :block)
+          @tree.children << Element.new(:xml_comment, result, :category => :block)
           @src.scan(/[ \t]*\n/)
           true
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:xml_pi, result, :type => :block)
+          @tree.children << Element.new(:xml_pi, result, :category => :block)
           @src.scan(/[ \t]*\n/)
           true
         else
@@ -195,7 +195,7 @@ module Kramdown
 
         @src.scan(/[ \t]*\n/) if parse_type == :block
 
-        el = Element.new(:html_element, name, :attr => attrs, :type => :block, :parse_type => parse_type)
+        el = Element.new(:html_element, name, :attr => attrs, :category => :block, :parse_type => parse_type)
         el.options[:outer_element] = true if @tree.type != :html_element
         el.options[:parent_is_raw] = true if @tree.type == :html_element && @tree.options[:parse_type] == :raw
         @tree.children << el
@@ -299,9 +299,9 @@ module Kramdown
       # Parse the HTML at the current position as span level HTML.
       def parse_span_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:xml_comment, result, :type => :span)
+          @tree.children << Element.new(:xml_comment, result, :category => :span)
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:xml_pi, result, :type => :span)
+          @tree.children << Element.new(:xml_pi, result, :category => :span)
         elsif result = @src.scan(HTML_TAG_CLOSE_RE)
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
         elsif result = @src.scan(HTML_TAG_RE)
@@ -324,7 +324,7 @@ module Kramdown
             end
           end
 
-          el = Element.new(:html_element, @src[1], :attr => attrs, :type => :span, :parse_type => (do_parsing ? :span : :raw))
+          el = Element.new(:html_element, @src[1], :attr => attrs, :category => :span, :parse_type => (do_parsing ? :span : :raw))
           stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
           if @src[4]
             @tree.children << el
