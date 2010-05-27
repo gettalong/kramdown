@@ -15,11 +15,10 @@ rescue LoadError
 end
 
 begin
-require 'rdoc/task'
-require 'rdoc/rdoc'
+  require 'rdoc/task'
+  require 'rdoc/rdoc'
 rescue LoadError
 end
-
 
 begin
   require 'rubyforge'
@@ -72,8 +71,6 @@ if defined? Webgen
       config['contentprocessor.tags.map']['kdlink'] = 'KDLink'
     end
   end
-
-  task :doc => :htmldoc
 end
 
 if defined? Rake::RDocTask
@@ -84,9 +81,11 @@ if defined? Rake::RDocTask
     rdoc.options << '--line-numbers'
     rdoc.rdoc_files.include('lib/**/*.rb')
   end
+end
 
+if defined?(Webgen) && defined?(Rake::RDocTask)
   desc "Build the whole user documentation"
-  task :doc => :rdoc
+  task :doc => [:rdoc, 'htmldoc']
 end
 
 tt = Rake::TestTask.new do |test|
@@ -186,8 +185,10 @@ EOF
 
   end
 
-  desc 'Release Kramdown version ' + Kramdown::VERSION
-  task :release => [:clobber, :package, :publish_files, :publish_website, :post_news]
+  if defined?(Rubyforge) && defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
+    desc 'Release Kramdown version ' + Kramdown::VERSION
+    task :release => [:clobber, :package, :publish_files, :publish_website, :post_news]
+  end
 
   if defined? RubyForge
     desc "Upload the release to Rubyforge"
