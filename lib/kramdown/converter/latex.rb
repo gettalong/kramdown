@@ -213,6 +213,7 @@ module Kramdown
       end
 
       def convert_footnote(el, opts)
+        @doc.conversion_infos[:packages] << 'fancyvrb'
         "\\footnote{#{inner(@doc.parse_infos[:footnotes][el.options[:name]][:content], opts)}}"
       end
 

@@ -31,6 +31,10 @@ ENCODING_MAP = {
 <% doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
 <% } %>
 
+<% if doc.conversion_infos[:packages].include?('fancyvrb') %>
+\VerbatimFootnotes
+<% end %>
+
 \hypersetup{colorlinks=true,urlcolor=blue}
 
 \begin{document}
