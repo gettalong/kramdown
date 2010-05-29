@@ -49,98 +49,6 @@ module Kramdown
       HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
 
 
-      HTML_TO_NATIVE_RAW_TEXT_PROC = lambda do |c, raw|
-        raw << c.value.to_s if [:raw_text, :text, :codespan, :codeblock].include?(c.type)
-        c.children.each {|cc| HTML_TO_NATIVE_RAW_TEXT_PROC.call(cc, raw)}
-      end
-      HTML_TO_NATIVE_BASIC_EL = %w{em strong blockquote hr br a img dt p thead tbody tfoot tr td th}
-      HTML_TO_NATIVE_BASIC_PROC = lambda do |el|
-        el.type = el.value.intern;
-        el.options[:category] = HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block
-        el.value = nil
-      end
-      HTML_TO_NATIVE_HEADER_EL = %w{h1 h2 h3 h4 h5 h6}
-      HTML_TO_NATIVE_HEADER_PROC = lambda do |el|
-        el.type = :header
-        el.options[:level] = el.value[1..1].to_i
-        el.options[:category] = :block
-        el.value = nil
-        HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, el.options[:raw_text] = '')
-      end
-      HTML_TO_NATIVE_CODE_EL = %w{code pre}
-      HTML_TO_NATIVE_CODE_PROC = lambda do |el, *second|
-        if second.empty?
-          el.type, el.options[:category] = if el.value == 'code'
-                                             [:codespan, :span]
-                                           else
-                                             [:codeblock, :block]
-                                           end
-          el.value = nil
-          raw = Element.new(:raw_text, '')
-          HTML_TO_NATIVE_RAW_TEXT_PROC.call(el, raw.value)
-          el.children.clear
-          el.children << raw
-        elsif el.children.size == 1
-          el.value = el.children.first.value
-          el.children.clear
-        end
-      end
-      HTML_TO_NATIVE_LIST_EL = %w{ul ol dl}
-      HTML_TO_NATIVE_LIST_PROC = lambda do |el|
-        el.type = el.value.intern
-        el.options[:category] = :block
-        el.value = nil
-        helper = lambda do |c|
-          if c.type != :li && c.type != :dt && c.type != :dd
-            c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
-            c.children.each {|cc| helper.call(cc)}
-          end
-        end
-        helper.call(el)
-      end
-      HTML_TO_NATIVE_LIST_CONT_EL = %w{li dd}
-      HTML_TO_NATIVE_LIST_CONT_PROC = lambda do |el|
-        el.type = el.value.intern
-        el.options[:category] = :block
-        el.value = nil
-        i = 0
-        while i < el.children.length
-          c = el.children[i]
-          if (c.type == :raw_text || c.type == :text) && c.value.strip.empty? &&
-              (i == 0 || i == el.children.length - 1 || el.children[i-1].options[:category] == :block ||
-               el.children[i+1].options[:category] == :block)
-            el.children.delete_at(i)
-          else
-            i += 1
-          end
-        end
-      end
-      HTML_TO_NATIVE = {
-        'table' => lambda do |el|
-          el.type = :table
-          el.options[:category] = :block
-          el.value = nil
-          el.options[:alignment] = []
-          helper = lambda do |c|
-            if c.type != :td && c.type != :th
-              c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
-              c.children.each {|cc| helper.call(cc)}
-            end
-            if c.type == :tr && el.options[:alignment].empty?
-              el.options[:alignment] = [:default] * c.children.inject(0) do |sum, cc|
-                cc.type == :th || cc.type == :td ? sum + 1 : sum
-              end
-            end
-          end
-          helper.call(el)
-        end,
-      }
-      HTML_TO_NATIVE_BASIC_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_BASIC_PROC}
-      HTML_TO_NATIVE_HEADER_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_HEADER_PROC}
-      HTML_TO_NATIVE_CODE_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_CODE_PROC}
-      HTML_TO_NATIVE_LIST_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_LIST_PROC}
-      HTML_TO_NATIVE_LIST_CONT_EL.each {|i| HTML_TO_NATIVE[i] = HTML_TO_NATIVE_LIST_CONT_PROC}
-
       #:stopdoc:
       # Some HTML elements like script belong to both categories (i.e. are valid in block and
       # span HTML) and don't appear therefore!
@@ -152,58 +60,8 @@ module Kramdown
                                form h1 h2 h3 h4 h5 h6 hr iframe legend li map ol optgroup p pre table tbody
                                td th thead tfoot tr ul}
       HTML_ELEMENTS_WITHOUT_BODY = %w{area br col hr img input}
-
-      HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
       HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/))/
 
-      # Parse the HTML at the current position as block level HTML.
-      def parse_block_html
-        if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:xml_comment, result, :category => :block)
-          @src.scan(/[ \t]*\n/)
-          true
-        elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:xml_pi, result, :category => :block)
-          @src.scan(/[ \t]*\n/)
-          true
-        else
-          if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
-            @src.pos += @src.matched_size
-            handle_html_start_tag
-            true
-          elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
-            @src.pos += @src.matched_size
-            name = @src[1]
-
-            if @tree.type == :html_element && @tree.value == name
-              throw :stop_block_parsing, :found
-            else
-              warning("Found invalidly used HTML closing tag for '#{name}' - ignoring it")
-              true
-            end
-          else
-            false
-          end
-        end
-      end
-      define_parser(:block_html, HTML_BLOCK_START)
-
-
-      # Return the HTML parse type defined by the string +val+, i.e. raw when "0", default parsing
-      # (return value +nil+) when "1", span parsing when "span" and block parsing when "block". If
-      # +val+ is nil, then the default parsing mode is used.
-      def get_parse_type(val)
-        case val
-        when "0" then :raw
-        when "1" then :default
-        when "span" then :span
-        when "block" then :block
-        when NilClass then nil
-        else
-          warning("Invalid markdown attribute val '#{val}', using default")
-          nil
-        end
-      end
 
       # Process the HTML start tag that has already be scanned/checked.
       def handle_html_start_tag
@@ -253,38 +111,20 @@ module Kramdown
         post_process_html_element(el)
       end
 
-      # Converts the HTML element +el+ to a native element if possible.
-      def post_process_html_element(el)
-        if @doc.options[:html_to_native] && (processor = HTML_TO_NATIVE[el.value])
-          processor.call(el)
-          post_process_html_text(el)
-          processor.call(el, :after) if processor.arity < 0
+      # Return the HTML parse type defined by the string +val+, i.e. raw when "0", default parsing
+      # (return value +nil+) when "1", span parsing when "span" and block parsing when "block". If
+      # +val+ is nil, then the default parsing mode is used.
+      def get_parse_type(val)
+        case val
+        when "0" then :raw
+        when "1" then :default
+        when "span" then :span
+        when "block" then :block
+        when NilClass then nil
+        else
+          warning("Invalid markdown attribute val '#{val}', using default")
+          nil
         end
-      end
-
-      # Post process the HTML text.
-      def post_process_html_text(el)
-        el.children.map! do |child|
-          if child.type == :raw_text
-            oldsrc, @src = @src, StringScanner.new(child.value)
-            parse_spans(child, nil, [:html_entity], :raw_text)
-            @src = oldsrc
-            child.children.each do |c|
-              if c.type == :entity
-                if %w{lsquo rsquo ldquo rdquo}.include?(c.value)
-                  c.type = :smart_quote
-                  c.value = c.value.intern
-                elsif %w{mdash ndash hellip laquo raquo}.include?(c.value)
-                  c.type = :typographic_sym
-                  c.value = c.value.intern
-                end
-              end
-            end
-          else
-            post_process_html_text(child)
-            child
-          end
-        end.flatten!
       end
 
       # Parse raw HTML until the matching end tag for +el+ is found or until the end of the
@@ -321,6 +161,180 @@ module Kramdown
         @tree = @stack.pop
         endpos
       end
+
+      # Converts the HTML element +el+ to a native element if possible.
+      def post_process_html_element(el)
+        if @doc.options[:html_to_native] && (processor = HTML_TO_NATIVE[el.value])
+          self.send(processor, el)
+          post_process_html_text_elements(el) if el.options[:outer_element]
+        end
+      end
+
+      # Post process the HTML text.
+      def post_process_html_text_elements(el)
+        el.children.map! do |child|
+          if child.type == :raw_text
+            post_process_html_text(child)
+            child.children
+          else
+            post_process_html_text_elements(child)
+            child
+          end
+        end.flatten!
+      end
+
+      # Post process the HTML text of +el+.
+      def post_process_html_text(el)
+        oldsrc, @src = @src, StringScanner.new(el.value)
+        parse_spans(el, nil, [:html_entity], :raw_text)
+        @src = oldsrc
+        el.children.each do |c|
+          if c.type == :entity
+            if %w{lsquo rsquo ldquo rdquo}.include?(c.value)
+              c.type = :smart_quote
+              c.value = c.value.intern
+            elsif %w{mdash ndash hellip laquo raquo}.include?(c.value)
+              c.type = :typographic_sym
+              c.value = c.value.intern
+            end
+          end
+        end
+      end
+
+      HTML_TO_NATIVE = {
+        'table' => :html_to_native_table,
+      }
+      %w{em strong blockquote hr br a img dt p thead tbody tfoot tr td th}.each {|i| HTML_TO_NATIVE[i] = :html_to_native_basic}
+      %w{h1 h2 h3 h4 h5 h6}.each {|i| HTML_TO_NATIVE[i] = :html_to_native_header}
+      %w{code pre}.each {|i| HTML_TO_NATIVE[i] = :html_to_native_code}
+      %w{ul ol dl}.each {|i| HTML_TO_NATIVE[i] = :html_to_native_list}
+      %w{li dd}.each {|i| HTML_TO_NATIVE[i] = :html_to_native_list_content}
+
+      def html_to_native_raw_text(c, raw)
+        raw << c.value.to_s if [:raw_text, :text, :codespan, :codeblock].include?(c.type)
+        c.children.each {|cc| html_to_native_raw_text(cc, raw)}
+      end
+
+      def html_to_native_basic(el)
+        el.type = el.value.intern;
+        el.options[:category] = HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block
+        el.value = nil
+      end
+
+      def html_to_native_header(el)
+        el.type = :header
+        el.options[:level] = el.value[1..1].to_i
+        el.options[:category] = :block
+        el.value = nil
+        html_to_native_raw_text(el, el.options[:raw_text] = '')
+      end
+
+      def html_to_native_code(el)
+        el.type, el.options[:category] = if el.value == 'code'
+                                           [:codespan, :span]
+                                         else
+                                           [:codeblock, :block]
+                                         end
+        el.value = nil
+        if el.children.size == 1 && el.children.first.type == :codespan
+          el.value = el.children.first.value
+          el.children = el.children.first.children
+        else
+          raw = Element.new(:raw_text, '')
+          html_to_native_raw_text(el, raw.value)
+          post_process_html_text(raw)
+          if raw.children.length > 1 || raw.children.first.type != :raw_text
+            el.children = raw.children
+          else
+            el.children.clear
+            el.value = raw.children.first.value
+          end
+        end
+      end
+
+      def html_to_native_list(el)
+        el.type = el.value.intern
+        el.options[:category] = :block
+        el.value = nil
+        helper = lambda do |c|
+          if c.type != :li && c.type != :dt && c.type != :dd
+            c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
+            c.children.each {|cc| helper.call(cc)}
+          end
+        end
+        helper.call(el)
+      end
+
+      def html_to_native_list_content(el)
+        el.type = el.value.intern
+        el.options[:category] = :block
+        el.value = nil
+        i = 0
+        while i < el.children.length
+          c = el.children[i]
+          if (c.type == :raw_text || c.type == :text) && c.value.strip.empty? &&
+              (i == 0 || i == el.children.length - 1 || el.children[i-1].options[:category] == :block ||
+               el.children[i+1].options[:category] == :block)
+            el.children.delete_at(i)
+          else
+            i += 1
+          end
+        end
+      end
+
+      def html_to_native_table(el)
+        el.type = :table
+        el.options[:category] = :block
+        el.value = nil
+        el.options[:alignment] = []
+        helper = lambda do |c|
+          if c.type != :td && c.type != :th
+            c.children.delete_if {|cc| cc.type == :raw_text || cc.type == :text}
+            c.children.each {|cc| helper.call(cc)}
+          end
+          if c.type == :tr && el.options[:alignment].empty?
+            el.options[:alignment] = [:default] * c.children.inject(0) do |sum, cc|
+              cc.type == :th || cc.type == :td ? sum + 1 : sum
+            end
+          end
+        end
+        helper.call(el)
+      end
+
+
+      HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
+
+      # Parse the HTML at the current position as block level HTML.
+      def parse_block_html
+        if result = @src.scan(HTML_COMMENT_RE)
+          @tree.children << Element.new(:xml_comment, result, :category => :block)
+          @src.scan(/[ \t]*\n/)
+          true
+        elsif result = @src.scan(HTML_INSTRUCTION_RE)
+          @tree.children << Element.new(:xml_pi, result, :category => :block)
+          @src.scan(/[ \t]*\n/)
+          true
+        else
+          if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
+            @src.pos += @src.matched_size
+            handle_html_start_tag
+            true
+          elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
+            @src.pos += @src.matched_size
+            name = @src[1]
+
+            if @tree.type == :html_element && @tree.value == name
+              throw :stop_block_parsing, :found
+            else
+              warning("Found invalidly used HTML closing tag for '#{name}' - ignoring it")
+              true
+            end
+          else
+            false
+          end
+        end
+      end
+      define_parser(:block_html, HTML_BLOCK_START)
 
 
       HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
