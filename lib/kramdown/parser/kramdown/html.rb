@@ -176,10 +176,21 @@ module Kramdown
 
       # Post process the HTML text.
       def post_process_html_text_elements(el)
+        i = -1
         el.children.map! do |child|
+          i += 1
           if child.type == :raw_text
-            post_process_html_text(child)
-            child.children
+            if el.options[:category] == :block
+              child.value.lstrip! if i == 0
+              child.value.rstrip! if i == el.children.size - 1
+            end
+            if child.value =~ /\A\s*\Z/ && i > 0 && i < el.children.size - 1 &&
+                el.children[i-1].options[:category] == :block && el.children[i+1].options[:category] == :block
+              Element.new(:blank, child.value)
+            else
+              post_process_html_text(child, el)
+              child.children
+            end
           else
             post_process_html_text_elements(child)
             child
@@ -187,12 +198,13 @@ module Kramdown
         end.flatten!
       end
 
-      # Post process the HTML text of +el+.
-      def post_process_html_text(el)
+      # Post process the HTML text of +el+ whose parent is +parent+.
+      def post_process_html_text(el, parent = nil)
+        @parsers[:html_to_native_compress_whitespace] = self.class.parser(:html_to_native_compress_whitespace)
         oldsrc, @src = @src, StringScanner.new(el.value)
-        parse_spans(el, nil, [:html_entity], :raw_text)
+        parse_spans(el, nil, [:html_entity, :html_to_native_compress_whitespace], :raw_text)
         @src = oldsrc
-        el.children.each do |c|
+        el.children.each_with_index do |c, i|
           if c.type == :entity
             if %w{lsquo rsquo ldquo rdquo}.include?(c.value)
               c.type = :smart_quote
@@ -204,6 +216,12 @@ module Kramdown
           end
         end
       end
+
+      def parse_html_to_native_compress_whitespace
+        @src.pos += @src.matched_size
+        add_text(' ')
+      end
+      define_parser(:html_to_native_compress_whitespace, /\s+/, '\\s')
 
       HTML_TO_NATIVE = {
         'table' => :html_to_native_table,
