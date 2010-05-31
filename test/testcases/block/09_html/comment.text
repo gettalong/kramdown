@@ -10,3 +10,6 @@ para2
 Blah
 Blah
 --> para
+
+> This is
+> <!-- a comment -->

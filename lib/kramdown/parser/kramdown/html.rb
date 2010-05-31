@@ -60,7 +60,7 @@ module Kramdown
                                form h1 h2 h3 h4 h5 h6 hr iframe legend li map ol optgroup p pre table tbody
                                td th thead tfoot tr ul}
       HTML_ELEMENTS_WITHOUT_BODY = %w{area br col hr img input}
-      HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/))/
+      HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/
 
 
       # Process the HTML start tag that has already be scanned/checked.
@@ -139,7 +139,11 @@ module Kramdown
           if result = @src.scan_until(HTML_RAW_START)
             endpos = @src.pos
             add_text(result, @tree, :raw_text)
-            if @src.scan(HTML_TAG_RE)
+            if result = @src.scan(HTML_COMMENT_RE)
+              @tree.children << Element.new(:xml_comment, result, :category => :block, :parent_is_raw => true)
+            elsif result = @src.scan(HTML_INSTRUCTION_RE)
+              @tree.children << Element.new(:xml_pi, result, :category => :block, :parent_is_raw => true)
+            elsif @src.scan(HTML_TAG_RE)
               handle_html_start_tag
             elsif @src.scan(HTML_TAG_CLOSE_RE)
               if @tree.value == @src[1]

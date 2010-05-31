@@ -178,7 +178,11 @@ module Kramdown
       end
 
       def convert_xml_comment(el, indent, opts)
-        el.value + (el.options[:category] == :block ? "\n" : '')
+        if el.options[:category] == :block && !el.options[:parent_is_raw]
+          ' '*indent + el.value + "\n"
+        else
+          el.value
+        end
       end
       alias :convert_xml_pi :convert_xml_comment
 
