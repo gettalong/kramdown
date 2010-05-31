@@ -31,6 +31,7 @@ class TestFiles < Test::Unit::TestCase
     opts_file = text_file.sub(/\.text$/, '.options')
     (Dir[basename + ".*"] - [text_file, opts_file]).each do |output_file|
       output_format = File.extname(output_file)[1..-1]
+      next if !Kramdown::Converter.const_defined?(output_format[0..0].upcase + output_format[1..-1])
       define_method('test_' + text_file.tr('.', '_') + "_to_#{output_format}") do
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
         options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
