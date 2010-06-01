@@ -59,7 +59,7 @@ module Kramdown
       HTML_BLOCK_ELEMENTS = %w{address applet button blockquote caption col colgroup dd div dl dt fieldset
                                form h1 h2 h3 h4 h5 h6 hr iframe legend li map ol optgroup p pre table tbody
                                td th thead tfoot tr ul}
-      HTML_ELEMENTS_WITHOUT_BODY = %w{area br col hr img input}
+      HTML_ELEMENTS_WITHOUT_BODY = %w{area base br col command embed hr img input keygen link meta param source track wbr}
       HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/
 
 
