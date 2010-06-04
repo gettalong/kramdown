@@ -181,6 +181,7 @@ module Kramdown
                       when :code_span then 'code'
                       when :code_block then 'pre'
                       when :header then 'h1'
+                      else parent.type.to_s
                       end
                     end
             el.options = {:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block}
