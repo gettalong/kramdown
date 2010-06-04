@@ -90,9 +90,24 @@ module Kramdown
             warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
             closed = true
           end
-          yield(el, closed)
+          if name == 'script'
+            handle_html_script_tag
+            yield(el, true)
+          else
+            yield(el, closed)
+          end
         end
 
+        def handle_html_script_tag
+          curpos = @src.pos
+          if result = @src.scan_until(/(?=<\/script\s*>)/m)
+            add_text(extract_string(curpos...@src.pos, @src), @tree.children.last, :raw)
+            @src.scan(HTML_TAG_CLOSE_RE)
+          else
+            add_text(@src.scan(/.*/m), @tree.children.last, :raw)
+            warning("Found no end tag for 'script' - auto-closing it")
+          end
+        end
 
         HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/
 
