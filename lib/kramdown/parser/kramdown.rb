@@ -69,7 +69,7 @@ module Kramdown
     #
     #   Kramdown::Document.new(input_text, :input => 'ERBKramdown').to_html
     #
-    class Kramdown
+    class Kramdown < Base
 
       include ::Kramdown
 
@@ -79,7 +79,7 @@ module Kramdown
 
       # Create a new Kramdown parser object for the Kramdown::Document +doc+.
       def initialize(doc)
-        @doc = doc
+        super(doc)
 
         @src = nil
         @tree = nil
@@ -103,11 +103,6 @@ module Kramdown
       private_class_method(:new, :allocate)
 
 
-      # Parse the string +source+ using the Kramdown::Document +doc+ and return the parse tree.
-      def self.parse(source, doc)
-        new(doc).parse(source)
-      end
-
       # The source string provided on initialization is parsed and the created +tree+ is returned.
       def parse(source)
         configure_parser
@@ -119,12 +114,6 @@ module Kramdown
           update_tree(data[:content])
         end
         tree
-      end
-
-      # Add the given warning +text+ to the warning array of the Kramdown document.
-      def warning(text)
-        @doc.warnings << text
-        #TODO: add position information
       end
 
       #######
@@ -231,21 +220,6 @@ module Kramdown
         stop_re_found
       end
 
-      # Modify the string +source+ to be usable by the parser.
-      def adapt_source(source)
-        source.gsub(/\r\n?/, "\n").chomp + "\n"
-      end
-
-      # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
-      # +type+ element or creates a new text element with the given +type+.
-      def add_text(text, tree = @tree, type = @text_type)
-        if tree.children.last && tree.children.last.type == type
-          tree.children.last.value << text
-        elsif !text.empty?
-          tree.children << Element.new(type, text)
-        end
-      end
-
       # Update the attributes with the information from the inline attribute list and all referenced ALDs.
       def update_attr_with_ial(attr, ial)
         ial[:refs].each do |ref|
@@ -262,25 +236,6 @@ module Kramdown
         el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
         el
       end
-
-      # Extract the part of the StringScanner backed string specified by the +range+. This method
-      # also works correctly under Ruby 1.9.
-      def extract_string(range, strscan = @src)
-        result = nil
-        if RUBY_VERSION >= '1.9'
-          begin
-            enc = strscan.string.encoding
-            strscan.string.force_encoding('ASCII-8BIT')
-            result = strscan.string[range].force_encoding(enc)
-          ensure
-            strscan.string.force_encoding(enc)
-          end
-        else
-          result = strscan.string[range]
-        end
-        result
-      end
-
 
       @@parsers = {}
 
