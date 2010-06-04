@@ -158,12 +158,16 @@ module Kramdown
         def process(el, convert_simple = true, parent = nil)
           case el.type
           when :xml_comment, :xml_pi, :html_doctype
-            ptype = case parent.type
-                    when :html_element then parent.value
-                    when :code_span then 'code'
-                    when :code_block then 'pre'
-                    when :header then 'h1'
-                    end rescue 'div'
+            ptype = if parent.nil?
+                      'div'
+                    else
+                      case parent.type
+                      when :html_element then parent.value
+                      when :code_span then 'code'
+                      when :code_block then 'pre'
+                      when :header then 'h1'
+                      end
+                    end
             el.options = {:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block}
             return
           when :html_element
