@@ -161,7 +161,7 @@ module Kramdown
           "<#{el.value}#{options_for_element(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
-          output << ' '*indent if el.options[:parse_type] != :raw && !el.options[:parent_is_raw]
+          output << ' '*indent if !el.options[:parent_is_raw]
           output << "<#{el.value}#{options_for_element(el)}"
           if !res.empty? && el.options[:parse_type] != :block
             output << ">#{res}</#{el.value}>"
@@ -172,7 +172,7 @@ module Kramdown
           else
             output << " />"
           end
-          output << "\n" if el.options[:outer_element] || (el.options[:parse_type] != :raw && !el.options[:parent_is_raw])
+          output << "\n" if el.options[:outer_element] || !el.options[:parent_is_raw]
           output
         end
       end
