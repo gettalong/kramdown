@@ -152,11 +152,14 @@ module Kramdown
       end
 
       def convert_xml_comment(el, opts)
-        @doc.warnings << "Can't convert XML comment/PI"
+        el.value.split(/\n/).map {|l| "% #{l}"}.join("\n") + "\n"
+      end
+
+      def convert_xml_pi(el, opts)
+        @doc.warnings << "Can't convert XML PI/HTML document type"
         ''
       end
-      alias :convert_xml_pi :convert_xml_comment
-      alias :convert_html_doctype :convert_xml_comment
+      alias :convert_html_doctype :convert_xml_pi
 
       TABLE_ALIGNMENT_CHAR = {:default => 'l', :left => 'l', :center => 'c', :right => 'r'}
 
