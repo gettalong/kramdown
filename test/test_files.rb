@@ -26,6 +26,7 @@ require 'yaml'
 
 class TestFiles < Test::Unit::TestCase
 
+  # Generate test methods for kramdown-to-xxx conversion
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     basename = text_file.sub(/\.text$/, '')
     opts_file = text_file.sub(/\.text$/, '.options')
@@ -39,6 +40,35 @@ class TestFiles < Test::Unit::TestCase
         assert_equal(File.read(output_file), doc.send("to_#{output_format}"))
       end
     end
+  end
+
+  # Generate test method for html-to-html conversion
+  `tidy -v 2>&1`
+  if $?.exitstatus != 0
+    warn("Skipping html-to-html tests because tidy executable is missing")
+  else
+    EXCLUDE_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
+                     'test/testcases/block/09_html/simple.html' # bc of xml elements
+                    ]
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
+      next if EXCLUDE_FILES.any? {|f| html_file =~ /#{f}$/}
+      define_method('test_' + html_file.tr('.', '_') + "_to_html") do
+        doc = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1)
+        assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
+      end
+    end
+  end
+
+  def tidy_output(out)
+    result = IO.popen("tidy -q -raw 2>/dev/null", 'r+') do |io|
+      io.write(out)
+      io.close_write
+      io.read
+    end
+    if $?.exitstatus == 2
+      raise "Problem using tidy"
+    end
+    result
   end
 
 end
