@@ -44,6 +44,7 @@ Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
 
   html_file = file.sub('.text', '.html')
   opts_file = file.sub('.text', '.options')
+  opts_file = File.join(File.dirname(file), 'options') if !File.exist?(opts_file)
   options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
   doc = Kramdown::Document.new(File.read(file), options)
   begin
