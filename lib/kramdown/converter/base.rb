@@ -28,7 +28,7 @@ module Kramdown
 
     # == Base class for converters
     #
-    # This class servers as base class for all converters. It provides methods that can/should be
+    # This class serves as base class for all converters. It provides methods that can/should be
     # used by all converters (like #generate_id) as well as common functionality that is
     # automatically applied to the result (for example, embedding the output into a template).
     #
