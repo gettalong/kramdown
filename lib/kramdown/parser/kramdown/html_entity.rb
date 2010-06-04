@@ -20,18 +20,18 @@
 #++
 #
 
+require 'kramdown/parser/html'
+
 module Kramdown
   module Parser
     class Kramdown
-
-      HTML_ENTITY_RE = /&([\w:][\-\w\d\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
       # Parse the HTML entity at the current location.
       def parse_html_entity
         @src.pos += @src.matched_size
         @tree.children << Element.new(:entity, @src[1] || (@src[2] && @src[2].to_i) || @src[3].hex)
       end
-      define_parser(:html_entity, HTML_ENTITY_RE, '&')
+      define_parser(:html_entity, Kramdown::Parser::Html::Constants::HTML_ENTITY_RE, '&')
 
     end
   end

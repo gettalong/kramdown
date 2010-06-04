@@ -32,6 +32,7 @@ module Kramdown
 
     autoload :Base, 'kramdown/parser/base'
     autoload :Kramdown, 'kramdown/parser/kramdown'
+    autoload :Html, 'kramdown/parser/html'
 
   end
 
