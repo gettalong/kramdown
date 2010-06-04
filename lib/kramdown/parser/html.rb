@@ -155,7 +155,7 @@ module Kramdown
         SIMPLE_ELEMENTS = %w{em strong blockquote hr br a img p thead tbody tfoot tr td th ul ol dl li dl dt dd}
 
         # Convert the element +el+ and its children.
-        def process(el, parent = nil)
+        def process(el, convert_simple = true, parent = nil)
           case el.type
           when :xml_comment, :xml_pi, :html_doctype
             ptype = case parent.type
@@ -176,25 +176,23 @@ module Kramdown
           mname = "convert_#{el.value}"
           if self.class.method_defined?(mname)
             send(mname, el)
-          elsif SIMPLE_ELEMENTS.include?(type)
+          elsif convert_simple && SIMPLE_ELEMENTS.include?(type)
             set_basics(el, type.intern, HTML_SPAN_ELEMENTS.include?(type) ? :span : :block)
-            process_children(el)
+            process_children(el, convert_simple)
           else
-            el.options[:category] = HTML_SPAN_ELEMENTS.include?(type) ? :span : :block
-            el.options[:parse_type] = HTML_PARSE_AS[el.value]
-            process_children(el)
+            process_html_element(el, convert_simple)
           end
 
           strip_whitespace(el) if STRIP_WHITESPACE.include?(type)
           remove_whitespace_children(el) if REMOVE_WHITESPACE_CHILDREN.include?(type)
         end
 
-        def process_children(el)
+        def process_children(el, convert_simple = true)
           el.children.map! do |c|
             if c.type == :raw_text
               process_text(c.value)
             else
-              process(c, el)
+              process(c, convert_simple, el)
               c
             end
           end.flatten!
@@ -223,6 +221,14 @@ module Kramdown
             end
           end
           result
+        end
+
+        def process_html_element(el, convert_simple = true)
+          el.options = {:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
+            :parse_type => HTML_PARSE_AS[el.value],
+            :attr => el.options[:attr]
+          }
+          process_children(el, convert_simple)
         end
 
         def remove_text_children(el)
@@ -285,7 +291,10 @@ module Kramdown
         alias :convert_pre :convert_code
 
         def convert_table(el)
-          return unless is_simple_table?(el)
+          if !is_simple_table?(el)
+            process_html_element(el, false)
+            return
+          end
           process_children(el)
           set_basics(el, :table, :block)
           el.options[:alignment] = []
@@ -298,17 +307,17 @@ module Kramdown
             end
           end
           helper.call(el)
+          true
         end
 
         def is_simple_table?(el)
           only_phrasing_content = lambda do |c|
             c.children.all? do |cc|
-              cc.type == :raw_text || !HTML_BLOCK_ELEMENTS.include?(cc.type) ||
-                only_phrasing_content.call(cc)
+              (cc.type == :raw_text || !HTML_BLOCK_ELEMENTS.include?(cc.value)) && only_phrasing_content.call(cc)
             end
           end
           helper = Proc.new do |c|
-            if c.value == :th || c.value == :td
+            if c.value == 'th' || c.value == 'td'
               return false if !only_phrasing_content.call(c)
             else
               c.children.each {|cc| helper.call(cc)}
