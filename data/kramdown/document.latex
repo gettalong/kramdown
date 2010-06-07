@@ -17,10 +17,11 @@ ENCODING_MAP = {
   'CP1250' => 'cp120',
   'CP1252' => 'cp1252',
   'CP1257' => 'cp1257'
-} %>
+}
+%>
 \documentclass{scrartcl}
 <% if RUBY_VERSION >= '1.9' %>
-\usepackage[<%= ENCODING_MAP[body.encoding.name] %>]{inputenc}
+\usepackage[<%= ENCODING_MAP[@body.encoding.name] %>]{inputenc}
 <% else %>
 \usepackage[mathletters]{ucs}
 \usepackage[utf8x]{inputenc}
@@ -28,15 +29,15 @@ ENCODING_MAP = {
 \usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{hyperref}
-<% doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
+<% @doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
 <% } %>
 
-<% if doc.conversion_infos[:packages].include?('fancyvrb') %>
+<% if @doc.conversion_infos[:packages].include?('fancyvrb') %>
 \VerbatimFootnotes
 <% end %>
 
 \hypersetup{colorlinks=true,urlcolor=blue}
 
 \begin{document}
-<%= body %>
+<%= @body %>
 \end{document}

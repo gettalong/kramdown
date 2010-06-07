@@ -69,13 +69,16 @@ module Kramdown
       # Apply the template specified in the +doc+ options, using +body+ as the body string.
       def self.apply_template(doc, body)
         erb = ERB.new(get_template(doc.options[:template]))
-        erb.result(binding)
+        obj = Object.new
+        obj.instance_variable_set(:@doc, doc)
+        obj.instance_variable_set(:@body, body)
+        erb.result(obj.instance_eval{binding})
       end
 
       # Return the template specified by +template+.
       def self.get_template(template)
         format_ext = '.' + self.name.split(/::/).last.downcase
-        shipped = File.join(Kramdown.data_dir, template + format_ext)
+        shipped = File.join(::Kramdown.data_dir, template + format_ext)
         if File.exist?(template)
           File.read(template)
         elsif File.exist?(template + format_ext)
