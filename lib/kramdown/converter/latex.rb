@@ -523,7 +523,7 @@ EOF
         end
       end
 
-      def convert_abbreviation(el, indent, opts)
+      def convert_abbreviation(el, opts)
         el.value
       end
 
