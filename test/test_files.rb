@@ -23,6 +23,7 @@
 require 'test/unit'
 require 'kramdown'
 require 'yaml'
+require 'tmpdir'
 
 class TestFiles < Test::Unit::TestCase
 
@@ -42,16 +43,16 @@ class TestFiles < Test::Unit::TestCase
     end
   end
 
-  # Generate test method for html-to-html conversion
+  # Generate test methods for html-to-html conversion
   `tidy -v 2>&1`
   if $?.exitstatus != 0
     warn("Skipping html-to-html tests because tidy executable is missing")
   else
-    EXCLUDE_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
-                     'test/testcases/block/09_html/simple.html' # bc of xml elements
-                    ]
+    EXCLUDE_HTML_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
+                          'test/testcases/block/09_html/simple.html' # bc of xml elements
+                         ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
-      next if EXCLUDE_FILES.any? {|f| html_file =~ /#{f}$/}
+      next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
         doc = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1)
         assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
@@ -69,6 +70,31 @@ class TestFiles < Test::Unit::TestCase
       raise "Problem using tidy"
     end
     result
+  end
+
+  # Generate test methods for text-to-latex conversion and compilation
+  `latex -v 2>&1`
+  if $?.exitstatus != 0
+    warn("Skipping latex compilation tests because latex executable is missing")
+  else
+    EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
+                           'test/testcases/span/01_link/imagelinks.text', # bc of image links
+                           'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
+                          ]
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
+      next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
+      define_method('test_' + text_file.tr('.', '_') + "_to_latex_compilation") do
+        latex =  Kramdown::Document.new(File.read(text_file),
+                                                          :auto_ids => false, :footnote_nr => 1,
+                                                          :template => 'document').to_latex
+        result = IO.popen("latex -output-directory='#{Dir.tmpdir}' 2>/dev/null", 'r+') do |io|
+          io.write(latex)
+          io.close_write
+          io.read
+        end
+        fail(result.scan(/^!(.*\n.*)/).join("\n")) if $?.exitstatus != 0
+      end
+    end
   end
 
 end
