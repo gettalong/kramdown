@@ -82,7 +82,7 @@ module Kramdown
             cells.pop if cells.last.strip.empty?
             cells.each do |cell_text|
               tcell = Element.new(:td)
-              tcell.children << Element.new(:text, cell_text.strip)
+              tcell.children << Element.new(:raw_text, cell_text.strip)
               trow.children << tcell
             end
             columns = [columns, cells.length].max

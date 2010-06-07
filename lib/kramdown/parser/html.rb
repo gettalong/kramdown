@@ -127,7 +127,7 @@ module Kramdown
           done = false
           while !@src.eos? && !done
             if result = @src.scan_until(HTML_RAW_START)
-              add_text(result, @tree, :raw_text)
+              add_text(result, @tree, :text)
               if result = @src.scan(HTML_COMMENT_RE)
                 @tree.children << Element.new(:xml_comment, result, :category => :block, :parent_is_raw => true)
               elsif result = @src.scan(HTML_INSTRUCTION_RE)
@@ -141,11 +141,11 @@ module Kramdown
                   warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
                 end
               else
-                add_text(@src.scan(/./), @tree, :raw_text)
+                add_text(@src.scan(/./), @tree, :text)
               end
             else
               result = @src.scan(/.*/m)
-              add_text(result, @tree, :raw_text)
+              add_text(result, @tree, :text)
               warning("Found no end tag for '#{@tree.value}' - auto-closing it") if @tree.type == :html_element
               done = true
             end
@@ -209,7 +209,7 @@ module Kramdown
 
         def process_children(el, convert_simple = true)
           el.children.map! do |c|
-            if c.type == :raw_text
+            if c.type == :text
               process_text(c.value)
             else
               process(c, convert_simple, el)
@@ -226,7 +226,7 @@ module Kramdown
           result = []
           while !src.eos?
             if tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/)
-              result << Element.new(:raw_text, tmp)
+              result << Element.new(:text, tmp)
               src.scan(HTML_ENTITY_RE)
               val = src[1] || (src[2] && src[2].to_i) || src[3].hex
               result << if %w{lsquo rsquo ldquo rdquo}.include?(val)
@@ -237,7 +237,7 @@ module Kramdown
                           Element.new(:entity, val)
                         end
             else
-              result << Element.new(:raw_text, src.scan(/.*/m))
+              result << Element.new(:text, src.scan(/.*/m))
             end
           end
           result
@@ -252,15 +252,15 @@ module Kramdown
         end
 
         def remove_text_children(el)
-          el.children.delete_if {|c| c.type == :raw_text}
+          el.children.delete_if {|c| c.type == :text}
         end
 
         def strip_whitespace(el)
           return if el.children.empty?
-          if el.children.first.type == :raw_text
+          if el.children.first.type == :text
             el.children.first.value.lstrip!
           end
-          if el.children.last.type == :raw_text
+          if el.children.last.type == :text
             el.children.last.value.rstrip!
           end
         end
@@ -269,7 +269,7 @@ module Kramdown
           i = -1
           el.children.delete_if do |c|
             i += 1
-            c.type == :raw_text && c.value.strip.empty? &&
+            c.type == :text && c.value.strip.empty? &&
               (i == 0 || i == el.children.length - 1 || (el.children[i-1].options[:category] == :block &&
                                                          el.children[i+1].options[:category] == :block))
           end
@@ -282,7 +282,7 @@ module Kramdown
         end
 
         def extract_text(el, raw)
-          raw << el.value.to_s if el.type == :raw_text
+          raw << el.value.to_s if el.type == :text
           el.children.each {|c| extract_text(c, raw)}
         end
 
@@ -302,7 +302,7 @@ module Kramdown
           raw = ''
           extract_text(el, raw)
           result = process_text(raw, true)
-          if result.length > 1 || result.first.type != :raw_text
+          if result.length > 1 || result.first.type != :text
             el.children = result
           else
             el.value = result.first.value
@@ -333,7 +333,7 @@ module Kramdown
         def is_simple_table?(el)
           only_phrasing_content = lambda do |c|
             c.children.all? do |cc|
-              (cc.type == :raw_text || !HTML_BLOCK_ELEMENTS.include?(cc.value)) && only_phrasing_content.call(cc)
+              (cc.type == :text || !HTML_BLOCK_ELEMENTS.include?(cc.value)) && only_phrasing_content.call(cc)
             end
           end
           helper = Proc.new do |c|

@@ -158,7 +158,7 @@ module Kramdown
         end
         para.children.first.value.split("\n").each do |term|
           el = Element.new(:dt)
-          el.children << Element.new(:text, term)
+          el.children << Element.new(:raw_text, term)
           deflist.children << el
         end
 

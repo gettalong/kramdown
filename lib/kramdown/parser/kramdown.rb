@@ -84,7 +84,7 @@ module Kramdown
         @src = nil
         @tree = nil
         @stack = []
-        @text_type = :text
+        @text_type = :raw_text
         @block_ial = nil
 
         @doc.parse_infos[:ald] = {}
@@ -165,12 +165,12 @@ module Kramdown
         status
       end
 
-      # Update the tree by parsing all <tt>:text</tt> elements with the span level parser (resets
-      # +@tree+, +@src+ and the +@stack+) and by updating the attributes from the IALs.
+      # Update the tree by parsing all <tt>:raw_text</tt> elements with the span level parser
+      # (resets +@tree+, +@src+ and the +@stack+) and by updating the attributes from the IALs.
       def update_tree(element)
         element.children.map! do |child|
-          if child.type == :text
-            @stack, @tree = [], nil
+          if child.type == :raw_text
+            @stack, @tree, @text_type = [], nil, :text
             @src = StringScanner.new(child.value)
             parse_spans(child)
             child.children
@@ -183,7 +183,7 @@ module Kramdown
       end
 
       # Parse all span level elements in the source string.
-      def parse_spans(el, stop_re = nil, parsers = nil, text_type = :text)
+      def parse_spans(el, stop_re = nil, parsers = nil, text_type = @text_type)
         @stack.push([@tree, @text_type]) unless @tree.nil?
         @tree, @text_type = el, text_type
 

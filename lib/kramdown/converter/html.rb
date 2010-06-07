@@ -72,7 +72,6 @@ module Kramdown
       def convert_text(el, indent, opts)
         escape_html(el.value, :text)
       end
-      alias :convert_raw_text :convert_text
 
       def convert_eob(el, indent, opts)
         ''

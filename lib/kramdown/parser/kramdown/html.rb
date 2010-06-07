@@ -154,11 +154,11 @@ module Kramdown
           if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
             warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
           elsif !@src[4]
-            if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]), (do_parsing ? :text : :raw_text))
+            if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]))
               @src.scan(stop_re)
             else
               warning("Found no end tag for '#{el.value}' - auto-closing it")
-              add_text(@src.scan(/.*/m), el, (do_parsing ? :text : :raw_text))
+              add_text(@src.scan(/.*/m), el)
             end
           end
           Kramdown::Parser::Html::ElementConverter.new.process(el) if @doc.options[:html_to_native]

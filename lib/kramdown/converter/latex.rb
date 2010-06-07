@@ -63,7 +63,6 @@ module Kramdown
       def convert_text(el, opts)
         escape(el.value)
       end
-      alias :convert_raw_text :convert_text
 
       def convert_eob(el, opts)
         ''
