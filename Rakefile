@@ -193,7 +193,7 @@ EOF
 
   end
 
-  if defined?(Rubyforge) && defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
+  if defined?(RubyForge) && defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
     desc 'Release Kramdown version ' + Kramdown::VERSION
     task :release => [:clobber, :package, :publish_files, :publish_website, :post_news]
   end
