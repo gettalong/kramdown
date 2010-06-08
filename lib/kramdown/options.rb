@@ -213,6 +213,8 @@ Used by: HTML converter
 EOF
 
     define(:filter_html, Array, [], <<EOF)
+NOTE: This option is deprecated and will be removed in a future release!
+
 An array of HTML tags that should be filtered from the output
 
 The value can either be specified as array or as a space separated

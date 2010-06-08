@@ -13,7 +13,8 @@ the native paragraph element instead of a generic HTML tag if this option is set
 especially useful for converters that don't handle generic HTML tags (e.g. the LaTeX converter).
 
 Also note that support for the old extension syntax and custom extensions has been dropped as of
-this release!
+this release! And the `filter_html` option will be removed in the next release because there exist
+better facilities for performing this kind of task!
 
 
 ## Changes
@@ -41,3 +42,4 @@ this release!
 * Deprecation notes:
 
   - The old extension syntax and support for custom extensions has been removed.
+  - The `filter_html` option will be removed in the next release.
