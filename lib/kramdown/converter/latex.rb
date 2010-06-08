@@ -146,8 +146,14 @@ module Kramdown
       end
 
       def convert_html_element(el, opts)
-        @doc.warnings << "Can't convert HTML element"
-        ''
+        if el.value == 'i'
+          "\\emph{#{inner(el, opts)}}"
+        elsif el.value == 'b'
+          "\\emph{#{inner(el, opts)}}"
+        else
+          @doc.warnings << "Can't convert HTML element"
+          ''
+        end
       end
 
       def convert_xml_comment(el, opts)
