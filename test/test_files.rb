@@ -92,7 +92,7 @@ class TestFiles < Test::Unit::TestCase
           io.close_write
           io.read
         end
-        fail(result.scan(/^!(.*\n.*)/).join("\n")) if $?.exitstatus != 0
+        assert($?.exitstatus == 0, result.scan(/^!(.*\n.*)/).join("\n"))
       end
     end
   end
