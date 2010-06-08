@@ -1,5 +1,5 @@
 <%
-ENCODING_MAP = {
+encmap = {
   'UTF-8' => 'utf8x',
   'US-ASCII' => 'ascii',
   'ISO-8859-1' => 'latin1',
@@ -21,7 +21,7 @@ ENCODING_MAP = {
 %>
 \documentclass{scrartcl}
 <% if RUBY_VERSION >= '1.9' %>
-\usepackage[<%= ENCODING_MAP[@body.encoding.name] %>]{inputenc}
+\usepackage[<%= encmap[@body.encoding.name] %>]{inputenc}
 <% else %>
 \usepackage[mathletters]{ucs}
 \usepackage[utf8x]{inputenc}
