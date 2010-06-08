@@ -205,9 +205,12 @@ module Kramdown
         if el.options[:attr]['src'] =~ /^(https?|ftps?):\/\//
           @doc.warnings << "Cannot include non-local image"
           ''
-        else
+        elsif !el.options[:attr]['src'].empty?
           @doc.conversion_infos[:packages] << 'graphicx'
           "\\includegraphics{#{el.options[:attr]['src']}}"
+        else
+          @doc.warnings << "Cannot include image with empty path"
+          ''
         end
       end
 
