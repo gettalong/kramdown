@@ -9,7 +9,7 @@ kramdown is first and foremost a library for converting text written in a supers
 HTML. However, due to its modular architecture it is able to support additional input and output
 formats. The following input and output formats are currently supported:
 
-* Input: [kramdown](parser/kramdown.html) (a superset of Markdown)
+* Input: [kramdown](parser/kramdown.html) (a superset of Markdown), [html](parser/html.html)
 * Output: [HTML](converter/html.html), [LaTeX](converter/latex.html)
 
 
@@ -37,12 +37,12 @@ The kramdown package provides two ways for using it:
   The default parser used is `kramdown`, however, you can select a different one with the `:input`
   option:
 
-      puts Kramdown::Document.new(text, :input => 'other').to_latex
+      puts Kramdown::Document.new(text, :input => 'html').to_latex
   {:ruby}
 
   You can also reuse the created document object to produce multiple outputs:
 
-      doc = Kramdown::Document.new(text, :input => 'other')
+      doc = Kramdown::Document.new(text, :input => 'html')
       puts doc.to_html
       puts doc.to_latex
   {:ruby}
@@ -62,8 +62,11 @@ The kramdown package provides two ways for using it:
   The input and output formats as well as all available kramdown options are supported through
   command line switches.
 
+
 ## Tests
 
 kramdown uses various test suites to verify the correct working of the parsers and converters. For
 more information, have a look at the [tests document](tests.html).
 
+
+{include_file: doc/links.markdown}

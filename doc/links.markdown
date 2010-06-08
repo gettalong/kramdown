@@ -2,3 +2,5 @@
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Pandoc]: http://johnmacfarlane.net/pandoc/
 [jsMath]: http://www.math.union.edu/~dpvc/jsMath/
+[BlueCloth]: http://deveiate.org/projects/BlueCloth
+[RedCloth]: http://redcloth.org/

@@ -15,39 +15,11 @@ For a complete description of the implemented syntax, have a look at the [syntax
 page](../syntax.html), the [quick reference](../quickref.html) provides a short overview.
 
 
-## Conversion of HTML tags to native kramdown elements
+## HTML parsing
 
-If the option `html_to_native` is `true`, then the kramdown parser converts HTML tags that have a
-native kramdown element representation to this representation. This is useful, for example, for
-converters that cannot directly convert HTML tags.
-
-Here is a description of the HTML tags that have native representations and how they are converted:
-
-`em strong blockquote hr br a img li dt dd p thead tbody tfoot tr td th`
-: These HTML tags are just transformed into their native representation and don't need any further
-  processing.
-
-`h1 h2 h3 h4 h5 h6`
-: These six header tags are all mapped to the single `header` element with different header levels.
-
-`code pre`
-: The `code` tag is converted to a `codespan` element and the `pre` tag to a `codeblock` element.
-  However, all child tags are removed and only the contained text is used.
-
-`table ul ol dl`
-: These tags are converted to their native element counterparts and all text (= whitespace) except
-  inside nested
-
-  - `td` or `th` tags for the `table` tag,
-  - `li` tags for `ul` and `ol` tags,
-  - `dt` and `dd` tags for the `dl` tag
-
-  is removed.
-
-`li dd`
-: These tags are converted to their native element counterparts and all immediate text child
-  elements containing only whitespace and either appearing as first or last child or being
-  preceded/followed by a block element are removed.
+The kramdown parser uses the HTML parser for parsing HTML tags. However, HTML tags are not converted
+to a native element representation by default, in contrast to the HTML parser. You need to set the
+option `html_to_native` to `true` to achieve this.
 
 
 ## Options
