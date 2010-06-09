@@ -36,7 +36,7 @@ class TestFiles < Test::Unit::TestCase
       next if !Kramdown::Converter.const_defined?(output_format[0..0].upcase + output_format[1..-1])
       define_method('test_' + text_file.tr('.', '_') + "_to_#{output_format}") do
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :filter_html => [], :footnote_nr => 1}
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
         doc = Kramdown::Document.new(File.read(text_file), options)
         assert_equal(File.read(output_file), doc.send("to_#{output_format}"))
       end

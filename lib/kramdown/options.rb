@@ -212,21 +212,6 @@ Default: 1
 Used by: HTML converter
 EOF
 
-    define(:filter_html, Array, [], <<EOF)
-NOTE: This option is deprecated and will be removed in a future release!
-
-An array of HTML tags that should be filtered from the output
-
-The value can either be specified as array or as a space separated
-string (which will be converted to an array). All HTML tags that are
-listed in the array will be filtered from the output, i.e. only their
-contents is used. This applies only to HTML tags found in the initial
-document.
-
-Default: []
-Used by: HTML converter
-EOF
-
     define(:coderay_wrap, Symbol, :div, <<EOF)
 Defines how the highlighted code should be wrapped
 

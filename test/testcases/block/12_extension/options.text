@@ -14,12 +14,6 @@ some <span>*para*</span>
 some <span>*para*</span>
 </div>
 
-{::options auto_ids="false" filter_html="p em" /}
-
-<p>
-This is <em>some</em> text.
-</p>
-
 {::options footnote_nr="10" /}
 
 Some text[^ab].

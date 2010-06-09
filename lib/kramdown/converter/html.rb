@@ -154,10 +154,7 @@ module Kramdown
 
       def convert_html_element(el, indent, opts)
         res = inner(el, indent, opts)
-        if @doc.options[:filter_html].include?(el.value)
-          warn("The filter_html option is deprecated and will be removed in the next release")
-          res.chomp + (el.options[:category] == :block ? "\n" : '')
-        elsif el.options[:category] == :span
+        if el.options[:category] == :span
           "<#{el.value}#{options_for_element(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
