@@ -93,6 +93,7 @@ module Kramdown
       @options = Options.merge(options)
       @warnings = []
       @parse_infos = {}
+      @parse_infos[:encoding] = source.encoding if RUBY_VERSION >= '1.9'
       @conversion_infos = {}
       parser = (options[:input] || 'kramdown').to_s
       parser = parser[0..0].upcase + parser[1..-1]

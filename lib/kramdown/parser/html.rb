@@ -170,6 +170,10 @@ module Kramdown
                               header h1 h2 h3 h4 h5 h6 legend li nav p section td th}
         SIMPLE_ELEMENTS = %w{em strong blockquote hr br a img p thead tbody tfoot tr td th ul ol dl li dl dt dd}
 
+        def initialize(doc)
+          @doc = doc
+        end
+
         # Convert the element +el+ and its children.
         def process(el, convert_simple = true, parent = nil)
           case el.type
@@ -295,17 +299,35 @@ module Kramdown
         %w{h2 h3 h4 h5 h6}.each {|i| alias_method("convert_#{i}".intern, :convert_h1)}
 
         def convert_code(el)
-          if el.value == 'code'
-            set_basics(el, :codespan, :span)
-          else
-            set_basics(el, :codeblock, :block)
-          end
           raw = ''
           extract_text(el, raw)
           result = process_text(raw, true)
+          if RUBY_VERSION >= '1.9'
+            begin
+              str = result.inject('') do |mem, c|
+                if c.type == :text
+                  mem << c.value
+                elsif c.type == :entity
+                  mem << [c.value.code_point].pack('U*').encode(@doc.parse_infos[:encoding])
+                elsif c.type == :smart_quote || c.type == :typographic_sym
+                  mem << [entity(c.value.to_s).code_point].pack('U*').encode(@doc.parse_infos[:encoding])
+                else
+                  raise "Bug - please report"
+                end
+              end
+              result.clear
+              result << Element.new(:text, str)
+            rescue
+            end
+          end
           if result.length > 1 || result.first.type != :text
-            el.children = result
+            process_html_element(el, false)
           else
+            if el.value == 'code'
+              set_basics(el, :codespan, :span)
+            else
+              set_basics(el, :codeblock, :block)
+            end
             el.value = result.first.value
           end
         end
@@ -375,7 +397,7 @@ module Kramdown
         end
         parse_raw_html(@tree, &tag_handler)
 
-        ec = ElementConverter.new
+        ec = ElementConverter.new(@doc)
         @tree.children.each {|c| ec.process(c)}
         ec.remove_whitespace_children(@tree)
         @tree

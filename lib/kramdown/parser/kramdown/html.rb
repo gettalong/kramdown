@@ -98,7 +98,7 @@ module Kramdown
           if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
             @src.pos += @src.matched_size
             handle_html_start_tag(&method(:handle_kramdown_html_tag))
-            Kramdown::Parser::Html::ElementConverter.new.process(@tree.children.last) if @doc.options[:html_to_native]
+            Kramdown::Parser::Html::ElementConverter.new(@doc).process(@tree.children.last) if @doc.options[:html_to_native]
             true
           elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
             @src.pos += @src.matched_size
@@ -161,7 +161,7 @@ module Kramdown
               add_text(@src.scan(/.*/m), el)
             end
           end
-          Kramdown::Parser::Html::ElementConverter.new.process(el) if @doc.options[:html_to_native]
+          Kramdown::Parser::Html::ElementConverter.new(@doc).process(el) if @doc.options[:html_to_native]
         else
           add_text(@src.scan(/./))
         end

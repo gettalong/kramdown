@@ -34,7 +34,6 @@ module Kramdown
       # Initialize the parser with the given Kramdown document +doc+.
       def initialize(doc)
         @doc = doc
-        @doc.parse_infos.clear
         @text_type = :text
       end
       private_class_method(:new, :allocate)

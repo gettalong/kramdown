@@ -73,10 +73,6 @@ module Kramdown
       end
 
       def convert_codeblock(el, opts)
-        if !el.value
-          @doc.warnings << "Cannot convert codeblock with entity references"
-          return ''
-        end
         show_whitespace = el.options[:attr] && el.options[:attr]['class'].to_s =~ /\bshow-whitespaces\b/
         lang = el.options[:attr] && el.options[:attr]['lang']
         if show_whitespace || lang
@@ -221,7 +217,7 @@ module Kramdown
       end
 
       def convert_codespan(el, opts)
-        "{\\tt #{el.value ? escape(el.value) : inner(el, opts)}}"
+        "{\\tt #{escape(el.value)}}"
       end
 
       def convert_footnote(el, opts)
