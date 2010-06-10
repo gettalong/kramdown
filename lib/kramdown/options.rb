@@ -262,6 +262,13 @@ Default: style
 Used by: HTML converter
 EOF
 
+    define(:numeric_entities, Boolean, false, <<EOF)
+Defines whether entities are output using names or numeric values
+
+Default: false
+Used by: HTML converter
+EOF
+
   end
 
 end

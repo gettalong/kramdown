@@ -20,19 +20,16 @@
 #++
 #
 
-require 'kramdown/parser/html'
-
 module Kramdown
-  module Parser
-    class Kramdown
 
-      # Parse the HTML entity at the current location.
-      def parse_html_entity
-        @src.pos += @src.matched_size
-        @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity(@src[1] || (@src[2] && @src[2].to_i) || @src[3].hex))
-      end
-      define_parser(:html_entity, Kramdown::Parser::Html::Constants::HTML_ENTITY_RE, '&')
+  # == Utils Module
+  #
+  # This module contains utility class/modules/methods that can be used by both parsers and
+  # converters.
+  module Utils
 
-    end
+    autoload :Entities, 'kramdown/utils/entities'
+
   end
+
 end

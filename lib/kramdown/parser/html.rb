@@ -161,6 +161,7 @@ module Kramdown
       class ElementConverter
 
         include Constants
+        include ::Kramdown::Utils::Entities
 
         REMOVE_TEXT_CHILDREN =  %w{html head hgroup ol ul dl table colgroup tbody thead tfoot tr select optgroup}
         REMOVE_WHITESPACE_CHILDREN = %w{body section nav article aside header footer address
@@ -234,7 +235,7 @@ module Kramdown
                         elsif %w{mdash ndash hellip laquo raquo}.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
-                          Element.new(:entity, val)
+                          Element.new(:entity, entity(val))
                         end
             else
               result << Element.new(:text, src.scan(/.*/m))
@@ -385,3 +386,4 @@ module Kramdown
   end
 
 end
+

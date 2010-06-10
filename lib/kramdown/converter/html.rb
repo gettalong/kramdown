@@ -97,7 +97,7 @@ module Kramdown
               m.scan(/./).map do |c|
                 case c
                 when "\t" then "<span class=\"ws-tab#{suffix}\">\t</span>"
-                when " " then "<span class=\"ws-space#{suffix}\">&sdot;</span>"
+                when " " then "<span class=\"ws-space#{suffix}\">&#8901;</span>"
                 end
               end.join('')
             end
@@ -250,20 +250,24 @@ module Kramdown
       alias :convert_strong :convert_em
 
       def convert_entity(el, indent, opts)
-        "&#{el.value.kind_of?(Integer) ? '#' : ''}#{el.value};"
+        entity_to_str(el.value)
       end
 
       TYPOGRAPHIC_SYMS = {
-        :mdash => '&mdash;', :ndash => '&ndash;', :hellip => '&hellip;',
-        :laquo_space => '&laquo;&nbsp;', :raquo_space => '&nbsp;&raquo;',
-        :laquo => '&laquo;', :raquo => '&raquo;'
+        :mdash => [::Kramdown::Utils::Entities.entity('mdash')],
+        :ndash => [::Kramdown::Utils::Entities.entity('ndash')],
+        :hellip => [::Kramdown::Utils::Entities.entity('hellip')],
+        :laquo_space => [::Kramdown::Utils::Entities.entity('laquo'), ::Kramdown::Utils::Entities.entity('nbsp')],
+        :raquo_space => [::Kramdown::Utils::Entities.entity('nbsp'), ::Kramdown::Utils::Entities.entity('raquo')],
+        :laquo => [::Kramdown::Utils::Entities.entity('laquo')],
+        :raquo => [::Kramdown::Utils::Entities.entity('raquo')]
       }
       def convert_typographic_sym(el, indent, opts)
-        TYPOGRAPHIC_SYMS[el.value]
+        TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e)}.join('')
       end
 
       def convert_smart_quote(el, indent, opts)
-        "&#{el.value};"
+        entity_to_str(::Kramdown::Utils::Entities.entity(el.value.to_s))
       end
 
       def convert_math(el, indent, opts)
@@ -358,6 +362,15 @@ module Kramdown
           para.children << ref
         end
         (ol.children.empty? ? '' : "<div class=\"footnotes\">\n#{convert(ol, 2)}</div>\n")
+      end
+
+      # Convert the +entity+ to a string.
+      def entity_to_str(e)
+        if @doc.options[:numeric_entities] || e.name.nil?
+          "&##{e.code_point};"
+        else
+          "&#{e.name};"
+        end
       end
 
       # Return the string with the attributes of the element +el+.

@@ -27,6 +27,7 @@ require 'kramdown/error'
 require 'kramdown/parser'
 require 'kramdown/converter'
 require 'kramdown/options'
+require 'kramdown/utils'
 
 module Kramdown
 

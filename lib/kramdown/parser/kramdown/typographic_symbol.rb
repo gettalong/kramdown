@@ -38,11 +38,11 @@ module Kramdown
         if val.kind_of?(Symbol)
           @tree.children << Element.new(:typographic_sym, val)
         elsif @src.matched == '\\<<'
-          @tree.children << Element.new(:entity, 'lt')
-          @tree.children << Element.new(:entity, 'lt')
+          @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('lt'))
+          @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('lt'))
         else
-          @tree.children << Element.new(:entity, 'gt')
-          @tree.children << Element.new(:entity, 'gt')
+          @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('gt'))
+          @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('gt'))
         end
       end
       define_parser(:typographic_syms, TYPOGRAPHIC_SYMS_RE, '--|\\.\\.\\.|(?:\\\\| )?(?:<<|>>)')

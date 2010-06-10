@@ -241,263 +241,258 @@ module Kramdown
         "\\textbf{#{inner(el, opts)}}"
       end
 
-      # Inspired by Maruku: entity conversion table taken from htmltolatex
-      # (http://sourceforge.net/projects/htmltolatex/), with some small adjustments as noted
-      ENTITY_CONV_TABLE = <<'EOF'
-    <char num='913' name='Alpha' convertTo='$A$' />
-    <char num='914' name='Beta' convertTo='$B$' />
-    <char num='915' name='Gamma' convertTo='$\Gamma$' />
-    <char num='916' name='Delta' convertTo='$\Delta$' />
-    <char num='917' name='Epsilon' convertTo='$E$' />
-    <char num='918' name='Zeta' convertTo='$Z$' />
-    <char num='919' name='Eta' convertTo='$H$' />
-    <char num='920' name='Theta' convertTo='$\Theta$' />
-    <char num='921' name='Iota' convertTo='$I$' />
-    <char num='922' name='Kappa' convertTo='$K$' />
-    <char num='923' name='Lambda' convertTo='$\Lambda$' />
-    <char num='924' name='Mu' convertTo='$M$' />
-    <char num='925' name='Nu' convertTo='$N$' />
-    <char num='926' name='Xi' convertTo='$\Xi$' />
-    <char num='927' name='Omicron' convertTo='$O$' />
-    <char num='928' name='Pi' convertTo='$\Pi$' />
-    <char num='929' name='Rho' convertTo='$P$' />
-    <char num='931' name='Sigma' convertTo='$\Sigma$' />
-    <char num='932' name='Tau' convertTo='$T$' />
-    <char num='933' name='Upsilon' convertTo='$Y$' />
-    <char num='934' name='Phi' convertTo='$\Phi$' />
-    <char num='935' name='Chi' convertTo='$X$' />
-    <char num='936' name='Psi' convertTo='$\Psi$' />
-    <char num='937' name='Omega' convertTo='$\Omega$' />
-    <char num='945' name='alpha' convertTo='$\alpha$' />
-    <char num='946' name='beta' convertTo='$\beta$' />
-    <char num='947' name='gamma' convertTo='$\gamma$' />
-    <char num='948' name='delta' convertTo='$\delta$' />
-    <char num='949' name='epsilon' convertTo='$\epsilon$' />
-    <char num='950' name='zeta' convertTo='$\zeta$' />
-    <char num='951' name='eta' convertTo='$\eta$' />
-    <char num='952' name='theta' convertTo='$\theta$' />
-    <char num='953' name='iota' convertTo='$\iota$' />
-    <char num='954' name='kappa' convertTo='$\kappa$' />
-    <char num='955' name='lambda' convertTo='$\lambda$' />
-    <char num='956' name='mu' convertTo='$\mu$' />
-    <char num='957' name='nu' convertTo='$\nu$' />
-    <char num='958' name='xi' convertTo='$\xi$' />
-    <char num='959' name='omicron' convertTo='$o$' />
-    <char num='960' name='pi' convertTo='$\pi$' />
-    <char num='961' name='rho' convertTo='$\rho$' />
-    <char num='963' name='sigma' convertTo='$\sigma$' />
-    <char num='964' name='tau' convertTo='$\tau$' />
-    <char num='965' name='upsilon' convertTo='$\upsilon$' />
-    <char num='966' name='phi' convertTo='$\phi$' />
-    <char num='967' name='chi' convertTo='$\chi$' />
-    <char num='968' name='psi' convertTo='$\psi$' />
-    <char num='969' name='omega' convertTo='$\omega$' />
-    <char num='962' name='sigmaf' convertTo='$\varsigma$' />
-    <char num='977' name='thetasym' convertTo='$\vartheta$' />
-    <char num='982' name='piv' convertTo='$\varpi$' />
-    <char num='8230' name='hellip' convertTo='\ldots' />
-    <char num='8242' name='prime' convertTo='$\prime$' />
-    <char num='8254' name='oline' convertTo='-' />
-    <char num='8260' name='frasl' convertTo='/' />
-    <char num='8472' name='weierp' convertTo='$\wp$' />
-    <char num='8465' name='image' convertTo='$\Im$' />
-    <char num='8476' name='real' convertTo='$\Re$' />
-    <char num='8501' name='alefsym' convertTo='$\aleph$' />
-    <char num='8226' name='bull' convertTo='$\bullet$' />
-    <char num='8482' name='trade' convertTo='$^{\rm TM}$' /> <!-- \texttrademark -->
-    <char num='8592' name='larr' convertTo='$\leftarrow$' />
-    <char num='8594' name='rarr' convertTo='$\rightarrow$' />
-    <char num='8593' name='uarr' convertTo='$\uparrow$' />
-    <char num='8595' name='darr' convertTo='$\downarrow$' />
-    <char num='8596' name='harr' convertTo='$\leftrightarrow$' />
-    <char num='8629' name='crarr' convertTo='$\hookleftarrow$' />
-    <char num='8657' name='uArr' convertTo='$\Uparrow$' />
-    <char num='8659' name='dArr' convertTo='$\Downarrow$' />
-    <char num='8656' name='lArr' convertTo='$\Leftarrow$' />
-    <char num='8658' name='rArr' convertTo='$\Rightarrow$' />
-    <char num='8660' name='hArr' convertTo='$\Leftrightarrow$' />
-    <char num='8704' name='forall' convertTo='$\forall$' />
-    <char num='8706' name='part' convertTo='$\partial$' />
-    <char num='8707' name='exist' convertTo='$\exists$' />
-    <char num='8709' name='empty' convertTo='$\emptyset$' />
-    <char num='8711' name='nabla' convertTo='$\nabla$' />
-    <char num='8712' name='isin' convertTo='$\in$' />
-    <char num='8715' name='ni' convertTo='$\ni$' />
-    <char num='8713' name='notin' convertTo='$\notin$' />
-    <char num='8721' name='sum' convertTo='$\sum$' />
-    <char num='8719' name='prod' convertTo='$\prod$' />
-    <char num='8722' name='minus' convertTo='$-$' />
-    <char num='8727' name='lowast' convertTo='$\ast$' />
-    <char num='8730' name='radic' convertTo='$\surd$' />
-    <char num='8733' name='prop' convertTo='$\propto$' />
-    <char num='8734' name='infin' convertTo='$\infty$' />
-    <char num='8736' name='ang' convertTo='$\angle$' />
-    <char num='8743' name='and' convertTo='$\wedge$' />
-    <char num='8744' name='or' convertTo='$\vee$' />
-    <char num='8745' name='cup' convertTo='$\cup$' />
-    <char num='8746' name='cap' convertTo='$\cap$' />
-    <char num='8747' name='int' convertTo='$\int$' />
-    <char num='8756' name='there4' convertTo='$\therefore$' /> <!-- amssymb --> --CHANGED!!!
-    <char num='8764' name='sim' convertTo='$\sim$' />
-    <char num='8776' name='asymp' convertTo='$\approx$' />
-    <char num='8773' name='cong' convertTo='$\cong$' />
-    <char num='8800' name='ne' convertTo='$\neq$' />
-    <char num='8801' name='equiv' convertTo='$\equiv$' />
-    <char num='8804' name='le' convertTo='$\leq$' />
-    <char num='8805' name='ge' convertTo='$\geq$' />
-    <char num='8834' name='sub' convertTo='$\subset$' />
-    <char num='8835' name='sup' convertTo='$\supset$' />
-    <char num='8838' name='sube' convertTo='$\subseteq$' />
-    <char num='8839' name='supe' convertTo='$\supseteq$' />
-    <char num='8836' name='nsub' convertTo='$\nsubset$' /> <!-- amssymb --> --CHANGED!!!
-    <char num='8853' name='oplus' convertTo='$\oplus$' />
-    <char num='8855' name='otimes' convertTo='$\otimes$' />
-    <char num='8869' name='perp' convertTo='$\perp$' />
-    <char num='8901' name='sdot' convertTo='$\cdot$' />
-    <char num='8968' name='rceil' convertTo='$\rceil$' />
-    <char num='8969' name='lceil' convertTo='$\lceil$' />
-    <char num='8970' name='lfloor' convertTo='$\lfloor$' />
-    <char num='8971' name='rfloor' convertTo='$\rfloor$' />
-    <char num='9001' name='rang' convertTo='$\rangle$' />
-    <char num='9002' name='lang' convertTo='$\langle$' />
-    <char num='9674' name='loz' convertTo='$\lozenge$' /> <!-- amssymb --> --CHANGED!!!
-    <char num='9824' name='spades' convertTo='$\spadesuit$' />
-    <char num='9827' name='clubs' convertTo='$\clubsuit$' />
-    <char num='9829' name='hearts' convertTo='$\heartsuit$' />
-    <char num='9830' name='diams' convertTo='$\diamondsuit$' />
-    <char num='38' name='amp' convertTo='\@AMP' />
-    <char num='34' name='quot' convertTo='@DOUBLEQUOT' />
-    <char num='39' name='apos' convertTo='@QUOT' />     -- ADDED!!!
-    <char num='169' name='copy' convertTo='\copyright' />
-    <char num='60' name='lt' convertTo='\textless{}' />       -- CHANGED!!!
-    <char num='62' name='gt' convertTo='\textgreater{}' />    -- CHANGED!!!
-    <char num='338' name='OElig' convertTo='\OE' />
-    <char num='339' name='oelig' convertTo='\oe' />
-    <char num='352' name='Scaron' convertTo='\v{S}' />
-    <char num='353' name='scaron' convertTo='\v{s}' />
-    <char num='376' name='Yuml' convertTo='\"Y' />
-    <char num='710' name='circ' convertTo='\textasciicircum' />
-    <char num='732' name='tilde' convertTo='\textasciitilde' />
-    <char num='8211' name='ndash' convertTo='--' />
-    <char num='8212' name='mdash' convertTo='---' />
-    <char num='8216' name='lsquo' convertTo='`' />
-    <char num='8217' name='rsquo' convertTo='@QUOT' />
-    <char num='8220' name='ldquo' convertTo='``' />
-    <char num='8221' name='rdquo' convertTo='@QUOT@QUOT' />
-    <char num='8224' name='dagger' convertTo='\dag' />
-    <char num='8225' name='Dagger' convertTo='\ddag' />
-    <char num='8240' name='permil' convertTo='\permil' /> <!-- wasysym package -->
-    <char num='8364' name='euro' convertTo='\euro' /> <!-- eurosym package -->
-    <char num='8249' name='lsaquo' convertTo='\guilsinglleft' />
-    <char num='8250' name='rsaquo' convertTo='\guilsinglright' />
-    <char num='160' name='nbsp' convertTo='\nolinebreak' />
-    <char num='161' name='iexcl' convertTo='\textexclamdown' />
-    <char num='163' name='pound' convertTo='\pounds' />
-    <char num='164' name='curren' convertTo='\currency' /> <!-- wasysym package -->
-    <char num='165' name='yen' convertTo='\textyen' /> <!-- textcomp -->
-    <char num='166' name='brvbar' convertTo='\brokenvert' /> <!-- wasysym -->
-    <char num='167' name='sect' convertTo='\S' />
-    <char num='171' name='laquo' convertTo='\guillemotleft' />
-    <char num='187' name='raquo' convertTo='\guillemotright' />
-    <char num='174' name='reg' convertTo='\textregistered' />
-    <char num='170' name='ordf' convertTo='\textordfeminine' />
-    <char num='172' name='not' convertTo='$\neg$' />
-    <char num='176' name='deg' convertTo='$\degree$' /> <!-- mathabx -->
-    <char num='177' name='plusmn' convertTo='$\pm$' />
-    <char num='180' name='acute' convertTo='@QUOT' />
-    <char num='181' name='micro' convertTo='$\mu$' />
-    <char num='182' name='para' convertTo='\P' />
-    <char num='183' name='middot' convertTo='$\cdot$' />
-    <char num='186' name='ordm' convertTo='\textordmasculine' />
-    <char num='162' name='cent' convertTo='\cent' /> <!-- wasysym -->
-    <char num='185' name='sup1' convertTo='$^1$' />
-    <char num='178' name='sup2' convertTo='$^2$' />
-    <char num='179' name='sup3' convertTo='$^3$' />
-    <char num='189' name='frac12' convertTo='$\frac{1}{2}$' />
-    <char num='188' name='frac14' convertTo='$\frac{1}{4}$' />
-    <char num='190' name='frac34' convertTo='$\frac{3}{4}' />
-    <char num='192' name='Agrave' convertTo='\`A' />
-    <char num='193' name='Aacute' convertTo='\@QUOTA' />
-    <char num='194' name='Acirc' convertTo='\^A' />
-    <char num='195' name='Atilde' convertTo='\~A' />
-    <char num='196' name='Auml' convertTo='\@DOUBLEQUOTA' />
-    <char num='197' name='Aring' convertTo='\AA' />
-    <char num='198' name='AElig' convertTo='\AE' />
-    <char num='199' name='Ccedil' convertTo='\cC' />
-    <char num='200' name='Egrave' convertTo='\`E' />
-    <char num='201' name='Eacute' convertTo='\@QUOTE' />
-    <char num='202' name='Ecirc' convertTo='\^E' />
-    <char num='203' name='Euml' convertTo='\@DOUBLEQUOTE' />
-    <char num='204' name='Igrave' convertTo='\`I' />
-    <char num='205' name='Iacute' convertTo='\@QUOTI' />
-    <char num='206' name='Icirc' convertTo='\^I' />
-    <char num='207' name='Iuml' convertTo='\"I' />
-    <char num='208' name='ETH' convertTo='$\eth$' /> <!-- amssymb --> --CHANGED!!!
-    <char num='209' name='Ntilde' convertTo='\~N' />
-    <char num='210' name='Ograve' convertTo='\`O' />
-    <char num='211' name='Oacute' convertTo='\@QUOTO' />
-    <char num='212' name='Ocirc' convertTo='\^O' />
-    <char num='213' name='Otilde' convertTo='\~O' />
-    <char num='214' name='Ouml' convertTo='\@DOUBLEQUOTO' />
-    <char num='215' name='times' convertTo='$\times$' />
-    <char num='216' name='Oslash' convertTo='\O' />
-    <char num='217' name='Ugrave' convertTo='\`U' />
-    <char num='218' name='Uacute' convertTo='\@QUOTU' />
-    <char num='219' name='Ucirc' convertTo='\^U' />
-    <char num='220' name='Uuml' convertTo='\@DOUBLEQUOTU' />
-    <char num='221' name='Yacute' convertTo='\@QUOTY' />
-    <char num='222' name='THORN' convertTo='\Thorn' />    <!-- wasysym -->
-    <char num='223' name='szlig' convertTo='\ss' />
-    <char num='224' name='agrave' convertTo='\`a' />
-    <char num='225' name='aacute' convertTo='\@QUOTa' />
-    <char num='226' name='acirc' convertTo='\^a' />
-    <char num='227' name='atilde' convertTo='\~a' />
-    <char num='228' name='auml' convertTo='\@DOUBLEQUOTa' />
-    <char num='229' name='aring' convertTo='\aa' />
-    <char num='230' name='aelig' convertTo='\ae' />
-    <char num='231' name='ccedil' convertTo='\cc' />
-    <char num='232' name='egrave' convertTo='\`e' />
-    <char num='233' name='eacute' convertTo='\@QUOTe' />
-    <char num='234' name='ecirc' convertTo='\^e' />
-    <char num='235' name='euml' convertTo='\@DOUBLEQUOTe' />
-    <char num='236' name='igrave' convertTo='\`i' />
-    <char num='237' name='iacute' convertTo='\@QUOTi' />
-    <char num='238' name='icirc' convertTo='\^i' />
-    <char num='239' name='iuml' convertTo='\@DOUBLEQUOTi' />
-    <char num='240' name='eth' convertTo='$\eth$' /> <!-- -->
-    <char num='241' name='ntilde' convertTo='\~n' />
-    <char num='242' name='ograve' convertTo='\`o' />
-    <char num='243' name='oacute' convertTo='\@QUOTo' />
-    <char num='244' name='ocirc' convertTo='\^o' />
-    <char num='245' name='otilde' convertTo='\~o' />
-    <char num='246' name='ouml' convertTo='\@DOUBLEQUOTo' />
-    <char num='247' name='divide' convertTo='$\divide$' />
-    <char num='248' name='oslash' convertTo='\o' />
-    <char num='249' name='ugrave' convertTo='\`u' />
-    <char num='250' name='uacute' convertTo='\@QUOTu' />
-    <char num='251' name='ucirc' convertTo='\^u' />
-    <char num='252' name='uuml' convertTo='\@DOUBLEQUOTu' />
-    <char num='253' name='yacute' convertTo='\@QUOTy' />
-    <char num='254' name='thorn' convertTo='\thorn' /> <!-- wasysym -->
-    <char num='255' name='yuml' convertTo='\@DOUBLEQUOTy' />
-EOF
-      ENTITY_MAP = {}
-      ENTITY_CONV_TABLE.split(/\n/).each do |line|
-        num = line.scan(/num='(\d+)'/).first.first.to_i
-        name = line.scan(/name='(.*?)'/).first.first
-        latex = line.scan(/convertTo='(.*?)'/).first.first.gsub(/@AMP/, '&').
-          gsub(/@QUOT/, '\'').gsub(/@DOUBLEQUOT/, '"').gsub(/@LT/, '<').gsub(/@GT/, '>') + '{}'
-        package = line.scan(/<!--\s*(\w+)/).first
-        package = package.first unless package.nil?
-        ENTITY_MAP[num] = [latex, package]
-        ENTITY_MAP[name] = [latex, package]
-      end
+      # Inspired by Maruku: entity conversion table based on the one from htmltolatex
+      # (http://sourceforge.net/projects/htmltolatex/), with some small adjustments/additions
+      ENTITY_CONV_TABLE = {
+        913 => ['$A$'],
+        914 => ['$B$'],
+        915 => ['$\Gamma$'],
+        916 => ['$\Delta$'],
+        917 => ['$E$'],
+        918 => ['$Z$'],
+        919 => ['$H$'],
+        920 => ['$\Theta$'],
+        921 => ['$I$'],
+        922 => ['$K$'],
+        923 => ['$\Lambda$'],
+        924 => ['$M$'],
+        925 => ['$N$'],
+        926 => ['$\Xi$'],
+        927 => ['$O$'],
+        928 => ['$\Pi$'],
+        929 => ['$P$'],
+        931 => ['$\Sigma$'],
+        932 => ['$T$'],
+        933 => ['$Y$'],
+        934 => ['$\Phi$'],
+        935 => ['$X$'],
+        936 => ['$\Psi$'],
+        937 => ['$\Omega$'],
+        945 => ['$\alpha$'],
+        946 => ['$\beta$'],
+        947 => ['$\gamma$'],
+        948 => ['$\delta$'],
+        949 => ['$\epsilon$'],
+        950 => ['$\zeta$'],
+        951 => ['$\eta$'],
+        952 => ['$\theta$'],
+        953 => ['$\iota$'],
+        954 => ['$\kappa$'],
+        955 => ['$\lambda$'],
+        956 => ['$\mu$'],
+        957 => ['$\nu$'],
+        958 => ['$\xi$'],
+        959 => ['$o$'],
+        960 => ['$\pi$'],
+        961 => ['$\rho$'],
+        963 => ['$\sigma$'],
+        964 => ['$\tau$'],
+        965 => ['$\upsilon$'],
+        966 => ['$\phi$'],
+        967 => ['$\chi$'],
+        968 => ['$\psi$'],
+        969 => ['$\omega$'],
+        962 => ['$\varsigma$'],
+        977 => ['$\vartheta$'],
+        982 => ['$\varpi$'],
+        8230 => ['\ldots'],
+        8242 => ['$\prime$'],
+        8254 => ['-'],
+        8260 => ['/'],
+        8472 => ['$\wp$'],
+        8465 => ['$\Im$'],
+        8476 => ['$\Re$'],
+        8501 => ['$\aleph$'],
+        8226 => ['$\bullet$'],
+        8482 => ['$^{\rm TM}$'],
+        8592 => ['$\leftarrow$'],
+        8594 => ['$\rightarrow$'],
+        8593 => ['$\uparrow$'],
+        8595 => ['$\downarrow$'],
+        8596 => ['$\leftrightarrow$'],
+        8629 => ['$\hookleftarrow$'],
+        8657 => ['$\Uparrow$'],
+        8659 => ['$\Downarrow$'],
+        8656 => ['$\Leftarrow$'],
+        8658 => ['$\Rightarrow$'],
+        8660 => ['$\Leftrightarrow$'],
+        8704 => ['$\forall$'],
+        8706 => ['$\partial$'],
+        8707 => ['$\exists$'],
+        8709 => ['$\emptyset$'],
+        8711 => ['$\nabla$'],
+        8712 => ['$\in$'],
+        8715 => ['$\ni$'],
+        8713 => ['$\notin$'],
+        8721 => ['$\sum$'],
+        8719 => ['$\prod$'],
+        8722 => ['$-$'],
+        8727 => ['$\ast$'],
+        8730 => ['$\surd$'],
+        8733 => ['$\propto$'],
+        8734 => ['$\infty$'],
+        8736 => ['$\angle$'],
+        8743 => ['$\wedge$'],
+        8744 => ['$\vee$'],
+        8745 => ['$\cup$'],
+        8746 => ['$\cap$'],
+        8747 => ['$\int$'],
+        8756 => ['$\therefore$', 'amssymb'],
+        8764 => ['$\sim$'],
+        8776 => ['$\approx$'],
+        8773 => ['$\cong$'],
+        8800 => ['$\neq$'],
+        8801 => ['$\equiv$'],
+        8804 => ['$\leq$'],
+        8805 => ['$\geq$'],
+        8834 => ['$\subset$'],
+        8835 => ['$\supset$'],
+        8838 => ['$\subseteq$'],
+        8839 => ['$\supseteq$'],
+        8836 => ['$\nsubset$', 'amssymb'],
+        8853 => ['$\oplus$'],
+        8855 => ['$\otimes$'],
+        8869 => ['$\perp$'],
+        8901 => ['$\cdot$'],
+        8968 => ['$\rceil$'],
+        8969 => ['$\lceil$'],
+        8970 => ['$\lfloor$'],
+        8971 => ['$\rfloor$'],
+        9001 => ['$\rangle$'],
+        9002 => ['$\langle$'],
+        9674 => ['$\lozenge$', 'amssymb'],
+        9824 => ['$\spadesuit$'],
+        9827 => ['$\clubsuit$'],
+        9829 => ['$\heartsuit$'],
+        9830 => ['$\diamondsuit$'],
+        38 => ['\&'],
+        34 => ['"'],
+        39 => ['\''],
+        169 => ['\copyright'],
+        60 => ['\textless{}'],
+        62 => ['\textgreater{}'],
+        338 => ['\OE'],
+        339 => ['\oe'],
+        352 => ['\v{S}'],
+        353 => ['\v{s}'],
+        376 => ['\"Y'],
+        710 => ['\textasciicircum'],
+        732 => ['\textasciitilde'],
+        8211 => ['--'],
+        8212 => ['---'],
+        8216 => ['`'],
+        8217 => ['\''],
+        8220 => ['``'],
+        8221 => ['\'\''],
+        8224 => ['\dag'],
+        8225 => ['\ddag'],
+        8240 => ['\permil', 'wasysym'],
+        8364 => ['\euro', 'eurosym'],
+        8249 => ['\guilsinglleft'],
+        8250 => ['\guilsinglright'],
+        8218 => ['\quotesinglbase', 'mathcomp'],
+        8222 => ['\quotedblbase', 'mathcomp'],
+        402 => ['\textflorin', 'mathcomp'],
+        381 => ['\v{Z}'],
+        382 => ['\v{z}'],
+        160 => ['\nolinebreak'],
+        161 => ['\textexclamdown'],
+        163 => ['\pounds'],
+        164 => ['\currency', 'wasysym'],
+        165 => ['\textyen', 'textcomp'],
+        166 => ['\brokenvert', 'wasysym'],
+        167 => ['\S'],
+        171 => ['\guillemotleft'],
+        187 => ['\guillemotright'],
+        174 => ['\textregistered'],
+        170 => ['\textordfeminine'],
+        172 => ['$\neg$'],
+        176 => ['$\degree$', 'mathabx'],
+        177 => ['$\pm$'],
+        180 => ['\''],
+        181 => ['$\mu$'],
+        182 => ['\P'],
+        183 => ['$\cdot$'],
+        186 => ['\textordmasculine'],
+        162 => ['\cent', 'wasysym'],
+        185 => ['$^1$'],
+        178 => ['$^2$'],
+        179 => ['$^3$'],
+        189 => ['$\frac{1}{2}$'],
+        188 => ['$\frac{1}{4}$'],
+        190 => ['$\frac{3}{4}'],
+        192 => ['\`A'],
+        193 => ['\\\'A'],
+        194 => ['\^A'],
+        195 => ['\~A'],
+        196 => ['\"A'],
+        197 => ['\AA'],
+        198 => ['\AE'],
+        199 => ['\cC'],
+        200 => ['\`E'],
+        201 => ['\\\'E'],
+        202 => ['\^E'],
+        203 => ['\"E'],
+        204 => ['\`I'],
+        205 => ['\\\'I'],
+        206 => ['\^I'],
+        207 => ['\"I'],
+        208 => ['$\eth$', 'amssymb'],
+        209 => ['\~N'],
+        210 => ['\`O'],
+        211 => ['\\\'O'],
+        212 => ['\^O'],
+        213 => ['\~O'],
+        214 => ['\"O'],
+        215 => ['$\times$'],
+        216 => ['\O'],
+        217 => ['\`U'],
+        218 => ['\\\'U'],
+        219 => ['\^U'],
+        220 => ['\"U'],
+        221 => ['\\\'Y'],
+        222 => ['\Thorn', 'wasysym'],
+        223 => ['\ss'],
+        224 => ['\`a'],
+        225 => ['\\\'a'],
+        226 => ['\^a'],
+        227 => ['\~a'],
+        228 => ['\"a'],
+        229 => ['\aa'],
+        230 => ['\ae'],
+        231 => ['\cc'],
+        232 => ['\`e'],
+        233 => ['\\\'e'],
+        234 => ['\^e'],
+        235 => ['\"e'],
+        236 => ['\`i'],
+        237 => ['\\\'i'],
+        238 => ['\^i'],
+        239 => ['\"i'],
+        240 => ['$\eth$'],
+        241 => ['\~n'],
+        242 => ['\`o'],
+        243 => ['\\\'o'],
+        244 => ['\^o'],
+        245 => ['\~o'],
+        246 => ['\"o'],
+        247 => ['$\divide$'],
+        248 => ['\o'],
+        249 => ['\`u'],
+        250 => ['\\\'u'],
+        251 => ['\^u'],
+        252 => ['\"u'],
+        253 => ['\\\'y'],
+        254 => ['\thorn', 'wasysym'],
+        255 => ['\"y'],
+      }
+      ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k] = v.unshift(v.shift + '{}')}
 
       def convert_entity(el, opts)
-        result = ENTITY_MAP[el.value]
-        if result
-          @doc.conversion_infos[:packages] << result[1] if result[1]
-          result[0]
+        text, package = ENTITY_CONV_TABLE[el.value.code_point]
+        if text
+          @doc.conversion_infos[:packages] << package if package
+          text
         else
           @doc.warnings << "Couldn't find entity in substitution table!"
           ''
