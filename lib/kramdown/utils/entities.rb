@@ -26,7 +26,13 @@ module Kramdown
 
     module Entities
 
-      Entity = Struct.new(:code_point, :name)
+      class Entity < Struct.new(:code_point, :name)
+
+        def char
+          [code_point].pack('U*') rescue nil
+        end
+
+      end
 
       ENTITY_TABLE = [
                       [913, 'Alpha'],

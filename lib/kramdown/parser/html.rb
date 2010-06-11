@@ -302,23 +302,25 @@ module Kramdown
           raw = ''
           extract_text(el, raw)
           result = process_text(raw, true)
-          if RUBY_VERSION >= '1.9'
-            begin
-              str = result.inject('') do |mem, c|
-                if c.type == :text
-                  mem << c.value
-                elsif c.type == :entity
-                  mem << [c.value.code_point].pack('U*').encode(@doc.parse_infos[:encoding])
-                elsif c.type == :smart_quote || c.type == :typographic_sym
-                  mem << [entity(c.value.to_s).code_point].pack('U*').encode(@doc.parse_infos[:encoding])
-                else
-                  raise "Bug - please report"
+          begin
+            str = result.inject('') do |mem, c|
+              if c.type == :text
+                mem << c.value
+              elsif c.type == :entity
+                if RUBY_VERSION >= '1.9'
+                  mem << c.value.char.encode(@doc.parse_infos[:encoding])
+                elsif [60, 62, 34, 38].include?(c.value.code_point)
+                  mem << c.value.code_point.chr
                 end
+              elsif c.type == :smart_quote || c.type == :typographic_sym
+                mem << entity(c.value.to_s).char.encode(@doc.parse_infos[:encoding])
+              else
+                raise "Bug - please report"
               end
-              result.clear
-              result << Element.new(:text, str)
-            rescue
             end
+            result.clear
+            result << Element.new(:text, str)
+          rescue
           end
           if result.length > 1 || result.first.type != :text
             process_html_element(el, false)

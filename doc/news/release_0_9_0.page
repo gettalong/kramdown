@@ -18,6 +18,8 @@ modified_at: 2010-06-08 15:30:00 +02:00
 
   - Added option `numeric_entities` that defines whether entities are output using their names or
     their numeric values
+  - Ruby 1.9 only: The HTML converter now always tries to convert entities to their character
+    equivalences if possible.
 
 * Bug fixes:
 

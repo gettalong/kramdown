@@ -366,7 +366,9 @@ module Kramdown
 
       # Convert the +entity+ to a string.
       def entity_to_str(e)
-        if @doc.options[:numeric_entities] || e.name.nil?
+        if RUBY_VERSION >= '1.9' && (c = e.char.encode(@doc.parse_infos[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
+          c
+        elsif @doc.options[:numeric_entities] || e.name.nil?
           "&##{e.code_point};"
         else
           "&#{e.name};"

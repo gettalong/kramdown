@@ -25,6 +25,8 @@ require 'kramdown'
 require 'yaml'
 require 'tmpdir'
 
+Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
+
 class TestFiles < Test::Unit::TestCase
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -32,7 +34,8 @@ class TestFiles < Test::Unit::TestCase
     basename = text_file.sub(/\.text$/, '')
     opts_file = text_file.sub(/\.text$/, '.options')
     (Dir[basename + ".*"] - [text_file, opts_file]).each do |output_file|
-      output_format = File.extname(output_file)[1..-1]
+      next if RUBY_VERSION >= '1.9' && File.exist?(output_file + '.19')
+      output_format = File.extname(output_file.sub(/\.19$/, ''))[1..-1]
       next if !Kramdown::Converter.const_defined?(output_format[0..0].upcase + output_format[1..-1])
       define_method('test_' + text_file.tr('.', '_') + "_to_#{output_format}") do
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
@@ -61,7 +64,8 @@ class TestFiles < Test::Unit::TestCase
   end
 
   def tidy_output(out)
-    result = IO.popen("tidy -q -raw 2>/dev/null", 'r+') do |io|
+    cmd = "tidy -q --doctype omit #{RUBY_VERSION >= '1.9' ? '-utf8' : '-raw'} 2>/dev/null"
+    result = IO.popen(cmd, 'r+') do |io|
       io.write(out)
       io.close_write
       io.read
