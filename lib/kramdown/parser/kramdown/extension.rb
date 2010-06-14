@@ -44,6 +44,7 @@ module Kramdown
           stop_re = (type == :block ? /#{EXT_BLOCK_STOP_STR % ext}/ : /#{EXT_STOP_STR % ext}/)
           if result = @src.scan_until(stop_re)
             body = result.sub!(stop_re, '')
+            body.chomp! if type == :block
           else
             warning("No stop tag for extension '#{ext}' found - treating it as extension without body")
           end
@@ -55,7 +56,7 @@ module Kramdown
       def handle_extension(name, opts, body, type)
         case name
         when 'comment'
-          # nothing to do
+          @tree.children << Element.new(:comment, body, :category => type) if body.kind_of?(String)
         when 'nomarkdown'
           @tree.children << Element.new(:raw, body, :category => type) if body.kind_of?(String)
         when 'options'

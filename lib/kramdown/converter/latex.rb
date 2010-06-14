@@ -186,6 +186,10 @@ module Kramdown
       end
       alias :convert_th :convert_td
 
+      def convert_comment(el, opts)
+        el.value.split(/\n/).map {|l| "% #{l}"}.join("\n") + "\n"
+      end
+
       def convert_br(el, opts)
         "\\newline\n"
       end

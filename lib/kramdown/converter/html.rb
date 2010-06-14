@@ -204,6 +204,14 @@ module Kramdown
       end
       alias :convert_th :convert_td
 
+      def convert_comment(el, indent, opts)
+        if el.options[:category] == :block
+          "#{' '*indent}<!-- #{el.value} -->\n"
+        else
+          "<!-- #{el.value} -->"
+        end
+      end
+
       def convert_br(el, indent, opts)
         "<br />"
       end
@@ -237,7 +245,7 @@ module Kramdown
       end
 
       def convert_raw(el, indent, opts)
-        el.value
+        el.value + (el.options[:category] == :block ? "\n" : '')
       end
 
       def convert_em(el, indent, opts)
