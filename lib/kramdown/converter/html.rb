@@ -73,10 +73,6 @@ module Kramdown
         escape_html(el.value, :text)
       end
 
-      def convert_eob(el, indent, opts)
-        ''
-      end
-
       def convert_p(el, indent, opts)
         "#{' '*indent}<p#{options_for_element(el)}>#{inner(el, indent, opts)}</p>\n"
       end

@@ -174,6 +174,8 @@ module Kramdown
             @src = StringScanner.new(child.value)
             parse_spans(child)
             child.children
+          elsif child.type == :eob
+            []
           else
             update_tree(child)
             update_attr_with_ial(child.options[:attr] ||= {}, child.options[:ial]) if child.options[:ial]

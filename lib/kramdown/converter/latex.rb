@@ -64,10 +64,6 @@ module Kramdown
         escape(el.value)
       end
 
-      def convert_eob(el, opts)
-        ''
-      end
-
       def convert_p(el, opts)
         "#{inner(el, opts)}\n\n"
       end
