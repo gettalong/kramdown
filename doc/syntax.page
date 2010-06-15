@@ -530,8 +530,9 @@ after the list item marker:
 Definition lists allow you to assign one or more definitions to one or more terms.
 
 A definition list is started when a normal paragraph is followed by a line with a definition marker
-(a colon which may be optionally indented up to three spaces), then at least one tab or one space
-and then the first part of the definition. The line with the definition marker may optionally be
+(a colon which may be optionally indented up to three spaces), then at least one tab or one space,
+optionally followed by an [IAL](#inline-attribute-lists) that should be applied to the list item and
+then the first part of the definition. The line with the definition marker may optionally be
 separated from the preceding paragraph by a blank line. The leading tabs or spaces are stripped away
 from this first line of the definition to allow for a nice alignment with the following definition
 content. Each line of the preceding paragraph is taken to be a term and the lines separately parsed
