@@ -266,7 +266,7 @@ EOF
 Defines whether entities are output using names or numeric values
 
 Default: false
-Used by: HTML converter
+Used by: HTML converter, kramdown converter
 EOF
 
   end
