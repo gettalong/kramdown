@@ -7,22 +7,31 @@ modified_at: 2010-06-08 15:30:00 +02:00
 ---
 ## kramdown 0.9.0 released
 
-
+The biggest change in this release is the addition of a kramdown converter. This converter together
+with the HTML parser can be used to convert an HTML document into a kramdown document.
 
 ## Changes
 
 * Major changes:
 
+  - New *kramdown converter* that converts an element tree into a kramdown document
 
 * Minor changes:
 
   - Added option `numeric_entities` that defines whether entities are output using their names or
     their numeric values
   - Ruby 1.9 only: The HTML converter now always tries to convert entities to their character
-    equivalences if possible.
+    equivalences if possible
+  - Change in HTML parser: conversion of `pre` and `code` elements to their native counterpart is
+    only done if they contain no entities (under Ruby 1.9 entities are converted to characters
+    before this check if possible)
+  - The comment extension now produces comment elements that are used by the converters
+  - IALs can now also be assigned to definitions (i.e. `dd` elements)
 
 * Bug fixes:
 
+  - Fixed problem with list item IALs: the IAL was not recognized when first element was a code
+    block
 
 * Deprecation notes:
 

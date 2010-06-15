@@ -10,7 +10,7 @@ HTML. However, due to its modular architecture it is able to support additional 
 formats. The following input and output formats are currently supported:
 
 * Input: [kramdown](parser/kramdown.html) (a superset of Markdown), [html](parser/html.html)
-* Output: [HTML](converter/html.html), [LaTeX](converter/latex.html)
+* Output: [HTML](converter/html.html), [LaTeX](converter/latex.html), [kramdown](converter/kramdown.html)
 
 
 ## Usage

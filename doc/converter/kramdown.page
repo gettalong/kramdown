@@ -1,0 +1,16 @@
+---
+title: kramdown Converter
+---
+# kramdown Converter
+
+This converter converts a kramdown element tree into a kramdown document and supports all available
+element types. This converter, together with the [HTML parser](../parser/html.html), can be used to
+convert HTML documents to kramdown documents.
+
+
+## Options
+
+The kramdown converter supports the following options:
+
+{options: {items: [:numeric_entities, :template]}}
+
