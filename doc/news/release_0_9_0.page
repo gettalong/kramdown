@@ -27,3 +27,6 @@ modified_at: 2010-06-08 15:30:00 +02:00
 * Deprecation notes:
 
   - The `filter_html` option has been removed.
+  - The method `Kramdown::Converter::Html#options_for_element` has been renamed to
+    `html_attributes`, using the old name is deprecated and the alias will be removed in the next
+    release

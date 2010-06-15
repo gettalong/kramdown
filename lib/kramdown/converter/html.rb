@@ -31,6 +31,12 @@ module Kramdown
 
       include ::Kramdown::Utils::HTML
 
+      # DEPRECATED: use #html_attributes
+      def options_for_element(el)
+        warn("DEPRECATION WARNING: this method will be deprecated in the next release, use #html_attributes instead")
+        html_attributes(el)
+      end
+
       # :stopdoc:
 
       # Defines the amount of indentation used when nesting HTML tags.
