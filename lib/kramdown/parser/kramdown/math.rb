@@ -44,7 +44,7 @@ module Kramdown
       # Parse the inline math at the current location.
       def parse_inline_math
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:math, @src[1], :category => :inline)
+        @tree.children << Element.new(:math, @src[1], :category => :span)
       end
       define_parser(:inline_math, INLINE_MATH_START, '\$')
 
