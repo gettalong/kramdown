@@ -29,6 +29,7 @@ module Kramdown
   module Utils
 
     autoload :Entities, 'kramdown/utils/entities'
+    autoload :HTML, 'kramdown/utils/html'
 
   end
 
