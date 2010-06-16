@@ -1,5 +1,5 @@
-@text-color: #354146;
-@link-color: #1666A3;
+$text-color: #354146;
+$link-color: #1666A3;
 
 * {
     padding: 0;
@@ -32,7 +32,7 @@ body, table, code {
 }
 
 #header {
-    .with-margin;
+    @extend .with-margin;
 
     position: relative;
     padding: 0 0 0 30px;
@@ -66,7 +66,7 @@ body, table, code {
 }
 
 #nav {
-    .with-margin;
+    @extend .with-margin;
 
     ul {
         height: 40px;
@@ -120,7 +120,8 @@ body, table, code {
 }
 
 #intro {
-    .with-margin;
+    @extend .with-margin;
+
     background: #e6e8e9;
     height: auto;
 
@@ -133,7 +134,7 @@ body, table, code {
     }
 
     a {
-        color: @link-color;
+        color: $link-color;
         background-color: inherit;
         text-decoration: underline;
     }
@@ -146,7 +147,8 @@ body, table, code {
 
 /* content */
 #container {
-    .with-margin;
+    @extend .with-margin;
+
     position: relative;
     clear: both;
     background-color: #fff;
@@ -154,7 +156,7 @@ body, table, code {
     background-image: -webkit-gradient(linear, 0 0, 0 200, from(#eee), to(#fff));
 
     a {
-        color: @link-color;
+        color: $link-color;
         background-color: inherit;
         text-decoration: underline;
     }
@@ -462,7 +464,8 @@ body, table, code {
 
 /* footer */
 #footer {
-    .with-margin;
+    @extend .with-margin;
+
     clear: both;
     margin-top: 20px;
     padding: 5px 20px 30px;
