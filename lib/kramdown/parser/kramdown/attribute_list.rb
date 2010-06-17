@@ -62,6 +62,7 @@ module Kramdown
       def parse_ald
         @src.pos += @src.matched_size
         parse_attribute_list(@src[2], @doc.parse_infos[:ald][@src[1]] ||= {})
+        @tree.children << Element.new(:eob)
         true
       end
       define_parser(:ald, ALD_START)
@@ -77,6 +78,7 @@ module Kramdown
         else
           parse_attribute_list(@src[1], @block_ial = {})
         end
+        @tree.children << Element.new(:eob) unless @src.check(IAL_BLOCK_START)
         true
       end
       define_parser(:block_ial, IAL_BLOCK_START)
