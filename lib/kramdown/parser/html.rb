@@ -175,7 +175,7 @@ module Kramdown
         end
 
         # Convert the element +el+ and its children.
-        def process(el, convert_simple = true, parent = nil)
+        def process(el, do_conversion = true, preserve_text = false, parent = nil)
           case el.type
           when :xml_comment, :xml_pi, :html_doctype
             ptype = if parent.nil?
@@ -199,25 +199,25 @@ module Kramdown
           remove_text_children(el) if REMOVE_TEXT_CHILDREN.include?(type)
 
           mname = "convert_#{el.value}"
-          if self.class.method_defined?(mname)
+          if do_conversion && self.class.method_defined?(mname)
             send(mname, el)
-          elsif convert_simple && SIMPLE_ELEMENTS.include?(type)
+          elsif do_conversion && SIMPLE_ELEMENTS.include?(type)
             set_basics(el, type.intern, HTML_SPAN_ELEMENTS.include?(type) ? :span : :block)
-            process_children(el, convert_simple)
+            process_children(el, do_conversion, preserve_text)
           else
-            process_html_element(el, convert_simple)
+            process_html_element(el, do_conversion, preserve_text)
           end
 
           strip_whitespace(el) if STRIP_WHITESPACE.include?(type)
           remove_whitespace_children(el) if REMOVE_WHITESPACE_CHILDREN.include?(type)
         end
 
-        def process_children(el, convert_simple = true)
+        def process_children(el, do_conversion = true, preserve_text = false)
           el.children.map! do |c|
             if c.type == :text
-              process_text(c.value)
+              process_text(c.value, preserve_text)
             else
-              process(c, convert_simple, el)
+              process(c, do_conversion, preserve_text, el)
               c
             end
           end.flatten!
@@ -248,12 +248,12 @@ module Kramdown
           result
         end
 
-        def process_html_element(el, convert_simple = true)
+        def process_html_element(el, do_conversion = true, preserve_text = false)
           el.options = {:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
             :parse_type => HTML_PARSE_AS[el.value],
             :attr => el.options[:attr]
           }
-          process_children(el, convert_simple)
+          process_children(el, do_conversion, preserve_text)
         end
 
         def remove_text_children(el)
@@ -323,7 +323,7 @@ module Kramdown
           rescue
           end
           if result.length > 1 || result.first.type != :text
-            process_html_element(el, false)
+            process_html_element(el, false, true)
           else
             if el.value == 'code'
               set_basics(el, :codespan, :span)
