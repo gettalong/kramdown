@@ -116,6 +116,8 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/09_html/html_to_native/table_simple.text', # bc of invalid html-to-native conversion
                           'test/testcases/block/09_html/html_to_native/header.text', # bc of auto_ids option that interferes
                           'test/testcases/block/09_html/simple.text',        # bc of webgen:block elements
+                          'test/testcases/block/16_toc/no_toc_depth.text',
+                          'test/testcases/block/16_toc/toc_depth_2.text',
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
