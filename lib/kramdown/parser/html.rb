@@ -296,7 +296,9 @@ module Kramdown
           extract_text(el, el.options[:raw_text] = '')
           process_children(el)
         end
-        %w{h2 h3 h4 h5 h6}.each {|i| alias_method("convert_#{i}".intern, :convert_h1)}
+        %w{h2 h3 h4 h5 h6}.each do |i| 
+          alias_method("convert_#{i}".to_sym, :convert_h1)
+        end
 
         def convert_code(el)
           raw = ''
