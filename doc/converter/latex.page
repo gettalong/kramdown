@@ -12,6 +12,25 @@ default, one should always use the `template` option (see below) to include the 
 "framework".
 
 
+## Needed Packages
+
+Some packages are always required (when using the provided `document` template):
+
+* `inputenc` and `fontenc`
+* `listings` (see [Code Blocks](#code-blocks))
+* `ucs` (when using Ruby 1.8)
+* `hyperref`
+
+The following LaTeX packages are needed to support certain features and are only included if such a
+feature is actually used:
+
+* `amssymb`, `amsmath`, `amsthm`, `amsfonts` (for math support)
+* `graphicx` (for image support)
+* `wasysym`, `amssymb`, `mathabx`, `textcomp`, `mathcomp`, `eurosym` (for special entity character
+  support)
+* `fancyvrb` (see [Footnotes](#footnotes))
+
+
 ## Hyper Targets and Links
 
 Headers which have an ID set (either manually or, if the option `auto_ids` is set to `true`, an
