@@ -69,7 +69,7 @@ list is replaced by the table of contents using the `\tableofcontents` command.
 
 The LaTeX converter supports the following options:
 
-{options: {items: [:auto_ids, :template]}}
+{options: {items: [:auto_ids, :toc_depth, :template]}}
 
 
 {include_file: doc/links.markdown}

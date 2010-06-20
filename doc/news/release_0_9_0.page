@@ -20,6 +20,8 @@ with the HTML parser can be used to convert an HTML document into a kramdown doc
 
   - Added option `numeric_entities` that defines whether entities are output using their names or
     their numeric values
+  - Added option `toc_depth` for specifying how many header levels to include in the table of
+    contents (patch by Alex Marandon)
   - Ruby 1.9 only: The HTML converter now always tries to convert entities to their character
     equivalences if possible
   - Change in HTML parser: conversion of `pre` and `code` elements to their native counterpart is

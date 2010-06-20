@@ -137,7 +137,7 @@ Here is an example:
 
 The HTML converter supports the following options:
 
-{options: {items: [:auto_ids, :template, :footnote_nr, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
+{options: {items: [:auto_ids, :template, :footnote_nr, :toc_depth, :coderay_wrap, :coderay_line_numbers, :coderay_line_number_start, :coderay_tab_width, :coderay_bold_every, :coderay_css]}}
 
 
 {include_file: doc/links.markdown}
