@@ -29,6 +29,8 @@ with the HTML parser can be used to convert an HTML document into a kramdown doc
     before this check if possible)
   - The comment extension now produces comment elements that are used by the converters
   - IALs can now also be assigned to definitions (i.e. `dd` elements)
+  - Image links may now be specified without alternative text (requested by Rune Myrland, fixes
+    RF#28292)
 
 * Bug fixes:
 

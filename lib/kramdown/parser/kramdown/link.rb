@@ -86,7 +86,7 @@ module Kramdown
           end
           count - el.children.select {|c| c.type == :img}.size == 0
         end
-        if !found || el.children.empty?
+        if !found || (link_type == :a && el.children.empty?)
           @src.pos = reset_pos
           add_text(result)
           return
@@ -98,7 +98,10 @@ module Kramdown
         # reference style link or no link url
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
           link_id = (@src[1] || conv_link_id).downcase
-          if @doc.parse_infos[:link_defs].has_key?(link_id)
+          if link_id.empty?
+            @src.pos = reset_pos
+            add_text(result)
+          elsif @doc.parse_infos[:link_defs].has_key?(link_id)
             add_link(el, @doc.parse_infos[:link_defs][link_id].first, @doc.parse_infos[:link_defs][link_id].last, alt_text)
           else
             warning("No link definition for link ID '#{link_id}' found")

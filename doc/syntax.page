@@ -985,9 +985,9 @@ As the wording suggests, inline links provide all information inline in the text
 style links only provide the link text in the text flow and everything else is defined
 elsewhere. This also allows you to reuse link definitions.
 
-An inline style link can be created by surrounding the link text with square brackets, followed
-immediately by the link URL (and an optional title in single or double quotes preceded by at least
-one space) in normal parentheses. For example:
+An inline style link can be created by surrounding the link text which must contain at least one
+character with square brackets, followed immediately by the link URL (and an optional title in
+single or double quotes preceded by at least one space) in normal parentheses. For example:
 
     This is [a link](http://rubyforge.org) to a page.
     A [link](../test "local URI") can also have a title.
@@ -1050,11 +1050,13 @@ The link definition has the following structure:
 
 Images can be specified via a syntax that is similar to the one used by links. The difference is
 that you have to use an exclamation mark before the first square bracket and that the link text of a
-normal link becomes the alternative text of the image link. As with normal links, image links can be
-written inline or reference style. For example:
+normal link, which may also be the empty string in case of image links, becomes the alternative text
+of the image link. As with normal links, image links can be written inline or reference style. For
+example:
 
     Here comes a ![smiley](../images/smiley.png)! And here
     ![too](../images/other.png 'Title text'). Or ![here].
+    With empty alt text ![](see.jpg)
 
 The link definition for images is exactly the same as the link definition for normal links.
 
