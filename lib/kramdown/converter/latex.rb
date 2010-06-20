@@ -99,8 +99,9 @@ module Kramdown
       }
       def convert_header(el, opts)
         type = HEADER_TYPES[el.options[:level]]
-        if (el.options[:attr] && (id = el.options[:attr]['id'])) ||
-            (@doc.options[:auto_ids] && (id = generate_id(el.options[:raw_text])))
+        if ((el.options[:attr] && (id = el.options[:attr]['id'])) ||
+            (@doc.options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) &&
+            (@doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth])
           "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"
         else
           "\\#{type}*{#{inner(el, opts)}}\n\n"
