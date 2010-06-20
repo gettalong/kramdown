@@ -34,6 +34,7 @@ with the HTML parser can be used to convert an HTML document into a kramdown doc
 
   - Fixed problem with list item IALs: the IAL was not recognized when first element was a code
     block
+  - Fixed ri documentation error on gem installation (patch by Alex Marandon)
 
 * Deprecation notes:
 
