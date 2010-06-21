@@ -81,12 +81,14 @@ module Kramdown
         end
       end
 
-      def latex_environment(type, text)
-        "\\begin{#{type}}\n#{text}\n\\end{#{type}}\n"
+      def latex_environment(type, el, text)
+        attrs = attribute_list(el)
+        attrs = "   % #{attrs}" if !attrs.empty?
+        "\\begin{#{type}}#{attrs}\n#{text}\n\\end{#{type}}\n"
       end
 
       def convert_blockquote(el, opts)
-        latex_environment('quote', inner(el, opts))
+        latex_environment('quote', el, inner(el, opts))
       end
 
       HEADER_TYPES = {
@@ -117,13 +119,13 @@ module Kramdown
           @doc.conversion_infos[:has_toc] = true
           '\tableofcontents'
         else
-          latex_environment(el.type == :ul ? 'itemize' : 'enumerate', inner(el, opts))
+          latex_environment(el.type == :ul ? 'itemize' : 'enumerate', el, inner(el, opts))
         end
       end
       alias :convert_ol :convert_ul
 
       def convert_dl(el, opts)
-        latex_environment('description', inner(el, opts))
+        latex_environment('description', el, inner(el, opts))
       end
 
       def convert_li(el, opts)
@@ -516,7 +518,7 @@ module Kramdown
           if el.value =~ /\A\s*\\begin\{/
             el.value
           else
-            latex_environment('displaymath', el.value)
+            latex_environment('displaymath', el, el.value)
           end
         else
           "$#{el.value}$"
@@ -539,6 +541,10 @@ module Kramdown
 
       def escape(str)
         str.gsub(ESCAPE_RE) {|m| ESCAPE_MAP[m]}
+      end
+
+      def attribute_list(el)
+        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
       end
 
     end
