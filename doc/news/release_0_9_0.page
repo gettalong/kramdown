@@ -31,12 +31,17 @@ with the HTML parser can be used to convert an HTML document into a kramdown doc
   - IALs can now also be assigned to definitions (i.e. `dd` elements)
   - Image links may now be specified without alternative text (requested by Rune Myrland, fixes
     RF#28292)
+  - The HTML parser gained the ability to convert conforming `span` and `div` elements to `math`
+    elements
+  - The LaTeX converter now outputs the element attributes as LaTeX comment for some elements
+    (blockquotes, lists and math environments; requested by Michael Franzl)
 
 * Bug fixes:
 
   - Fixed problem with list item IALs: the IAL was not recognized when first element was a code
     block
   - Fixed ri documentation error on gem installation (patch by Alex Marandon)
+  - Math content is now correctly escaped when using the HTML converter
 
 * Deprecation notes:
 

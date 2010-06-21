@@ -65,6 +65,27 @@ If you add a "toc" reference to a list as described on the [HTML converter page]
 list is replaced by the table of contents using the `\tableofcontents` command.
 
 
+## Element Attributes
+
+Since the element attributes cannot be used directly by the LaTeX converter in most cases, the
+converter outputs them as LaTeX comment when possible so that a post-processor can make use of them.
+The attributes are output as key value pairs (like XHTML attributes) and sorted by the key.
+
+Here is an example input and output:
+
+    > This is a quote.
+    {: #my-id .cls}
+
+will be converted by the LaTeX converter to:
+
+    \begin{quote}   % class="cls" id="my-id"
+    This is a quote.
+    \end{quote}
+
+The attributes are output for the following elements: blockquotes; ordered, unordered and definition
+lists; code blocks that use the `listings` environment; tables; and math blocks.
+
+
 ## Options
 
 The LaTeX converter supports the following options:
