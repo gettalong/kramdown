@@ -297,7 +297,7 @@ module Kramdown
         el.options[:attr]['class'] += (el.options[:attr]['class'].empty? ? '' : ' ') + 'math'
         type = 'span'
         type = 'div' if el.options[:category] == :block
-        "<#{type}#{html_attributes(el)}>#{escape_html(el.value, :text)}</#{type}>#{type == 'div' ? "\n" : ''}"
+        "<#{type}#{html_attributes(el)}>#{escape_html(el.value)}</#{type}>#{type == 'div' ? "\n" : ''}"
       end
 
       def convert_abbreviation(el, indent, opts)
