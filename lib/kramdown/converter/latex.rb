@@ -127,7 +127,7 @@ module Kramdown
       end
 
       def convert_li(el, opts)
-        "\\item #{inner(el, opts)}\n"
+        "\\item #{inner(el, opts).sub(/\n+\Z/, '')}\n"
       end
 
       def convert_dt(el, opts)

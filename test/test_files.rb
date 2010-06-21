@@ -132,4 +132,26 @@ class TestFiles < Test::Unit::TestCase
     end
   end
 
+  # Generate test methods for html-to-kramdown-to-html conversion
+  `tidy -v 2>&1`
+  if $?.exitstatus != 0
+    warn("Skipping html-to-kramdown-to-html tests because tidy executable is missing")
+  else
+    EXCLUDE_HTML_KD_FILES = ['test/testcases/span/extension/options.html',        # bc of parse_span_html option
+                             'test/testcases/span/05_html/normal.html',           # bc of br tag before closing p tag
+                             'test/testcases/block/12_extension/nomarkdown.html', # bc of nomarkdown extension
+                             'test/testcases/block/09_html/simple.html',          # bc of webgen:block elements
+                             'test/testcases/block/09_html/markdown_attr.html',   # bc of markdown attr
+                             'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
+                            ]
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
+      next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
+      define_method('test_' + html_file.tr('.', '_') + "_to_kramdown_to_html") do
+        kd = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1).to_kramdown
+        doc = Kramdown::Document.new(kd, :auto_ids => false, :footnote_nr => 1)
+        assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
+      end
+    end
+  end
+
 end
