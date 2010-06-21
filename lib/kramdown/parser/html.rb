@@ -164,6 +164,8 @@ module Kramdown
         include ::Kramdown::Utils::Entities
 
         REMOVE_TEXT_CHILDREN =  %w{html head hgroup ol ul dl table colgroup tbody thead tfoot tr select optgroup}
+        WRAP_TEXT_CHILDREN = %w{body section nav article aside header footer address div li dd blockquote figure
+                                figcaption fieldset form}
         REMOVE_WHITESPACE_CHILDREN = %w{body section nav article aside header footer address
                                         div li dd blockquote figure figcaption td th fieldset form}
         STRIP_WHITESPACE = %w{address article aside blockquote body caption dd div dl dt fieldset figcaption form footer
@@ -210,6 +212,7 @@ module Kramdown
 
           strip_whitespace(el) if STRIP_WHITESPACE.include?(type)
           remove_whitespace_children(el) if REMOVE_WHITESPACE_CHILDREN.include?(type)
+          wrap_text_children(el) if WRAP_TEXT_CHILDREN.include?(type)
         end
 
         def process_children(el, do_conversion = true, preserve_text = false)
@@ -260,6 +263,27 @@ module Kramdown
           el.children.delete_if {|c| c.type == :text}
         end
 
+        SPAN_ELEMENTS = [:em, :strong, :br, :a, :img, :codespan, :entity, :smart_quote, :typographic_sym, :math]
+
+        def wrap_text_children(el)
+          tmp = []
+          last_is_p = false
+          el.children.each do |c|
+            if c.options[:category] != :block || c.type == :text
+              if !last_is_p
+                tmp << Element.new(:p, nil, :transparent => true)
+                last_is_p = true
+              end
+              tmp.last.children << c
+              tmp
+            else
+              tmp << c
+              last_is_p = false
+            end
+          end
+          el.children = tmp
+        end
+
         def strip_whitespace(el)
           return if el.children.empty?
           if el.children.first.type == :text
@@ -296,7 +320,7 @@ module Kramdown
           extract_text(el, el.options[:raw_text] = '')
           process_children(el)
         end
-        %w{h2 h3 h4 h5 h6}.each do |i| 
+        %w{h2 h3 h4 h5 h6}.each do |i|
           alias_method("convert_#{i}".to_sym, :convert_h1)
         end
 
