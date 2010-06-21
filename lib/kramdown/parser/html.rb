@@ -398,6 +398,37 @@ module Kramdown
           true
         end
 
+        def convert_div(el)
+          if !is_math_tag?(el)
+            process_html_element(el)
+          else
+            handle_math_tag(el)
+          end
+        end
+        alias :convert_span :convert_div
+
+        def is_math_tag?(el)
+          el.options[:attr] && el.options[:attr]['class'].to_s =~ /\bmath\b/ &&
+            el.children.size == 1 && el.children.first.type == :text
+        end
+
+        def handle_math_tag(el)
+          set_basics(el, :math, (el.value == 'div' ? :block : :span))
+          el.value = el.children.shift.value
+          if el.options[:attr]['class'] =~ /^\s*math\s*$/
+            el.options[:attr].delete('class')
+          else
+            el.options[:attr]['class'].sub!(/\s?math/, '')
+          end
+          el.value.gsub!(/&(amp|quot|gt|lt);/) do |m|
+            case m
+            when '&amp;'   then '&'
+            when '&quot;'  then '"'
+            when '&gt;'    then '>'
+            when '&lt;'    then '<'
+            end
+          end
+        end
       end
 
       include Parser
