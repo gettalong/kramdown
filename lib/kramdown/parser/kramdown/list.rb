@@ -119,10 +119,10 @@ module Kramdown
 
           if it.children.first.type == :p && (it.children.length < 2 || it.children[1].type != :blank ||
                                               (it == list.children.last && it.children.length == 2 && !eob_found)) &&
-              (list.children.last != it || list.children.size == 1 || list.children[0..-2].any? {|cit| cit.children.first.type != :p})
-            text = it.children.shift.children.first
-            text.value += "\n" if !it.children.empty? && it.children[0].type != :blank
-            it.children.unshift(text)
+              (list.children.last != it || list.children.size == 1 ||
+               list.children[0..-2].any? {|cit| cit.children.first.type != :p || cit.children.first.options[:transparent]})
+            it.children.first.children.first.value += "\n" if it.children.size > 1 && it.children[1].type != :blank
+            it.children.first.options[:transparent] = true
           end
 
           if it.children.last.type == :blank
@@ -207,9 +207,8 @@ module Kramdown
             last = nil
           end
           if it.children.first.type == :p && !it.options.delete(:first_as_para)
-            text = it.children.shift.children.first
-            text.value += "\n" if !it.children.empty?
-            it.children.unshift(text)
+            it.children.first.children.first.value += "\n" if it.children.size > 1
+            it.children.first.options[:transparent] = true
           end
         end
 

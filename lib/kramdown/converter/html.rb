@@ -82,7 +82,11 @@ module Kramdown
       end
 
       def convert_p(el, indent, opts)
-        "#{' '*indent}<p#{html_attributes(el)}>#{inner(el, indent, opts)}</p>\n"
+        if el.options[:transparent]
+          "#{inner(el, indent, opts)}"
+        else
+          "#{' '*indent}<p#{html_attributes(el)}>#{inner(el, indent, opts)}</p>\n"
+        end
       end
 
       def convert_codeblock(el, indent, opts)
@@ -145,7 +149,7 @@ module Kramdown
       def convert_li(el, indent, opts)
         output = ' '*indent << "<#{el.type}" << html_attributes(el) << ">"
         res = inner(el, indent, opts)
-        if el.children.empty? || el.children.first.options[:category] != :block
+        if el.children.empty? || (el.children.first.type == :p && el.children.first.options[:transparent])
           output << res << (res =~ /\n\Z/ ? ' '*indent : '')
         else
           output << "\n" << res << ' '*indent
@@ -322,9 +326,10 @@ module Kramdown
         stack = []
         toc.each do |level, id, children|
           li = Element.new(:li, nil, {:level => level})
+          li.children << Element.new(:p, nil, {:transparent => true})
           a = Element.new(:a, nil, {:attr => {:href => "##{id}"}})
           a.children += children
-          li.children << a
+          li.children.last.children << a
           li.children << Element.new(type)
 
           success = false
