@@ -369,16 +369,20 @@ module Kramdown
           process_children(el)
           set_basics(el, :table, :block)
           el.options[:alignment] = []
-          helper = lambda do |c|
+          calc_alignment = lambda do |c|
             if c.type == :tr && el.options[:alignment].empty?
               el.options[:alignment] = [:default] * c.children.length
               break
             else
-              c.children.each {|cc| helper.call(cc)}
+              c.children.each {|cc| calc_alignment.call(cc)}
             end
           end
-          helper.call(el)
-          true
+          calc_alignment.call(el)
+          if el.children.first.type == :tr
+            tbody = Element.new(:tbody, nil, :category => :block)
+            tbody.children = el.children
+            el.children = [tbody]
+          end
         end
 
         def is_simple_table?(el)
@@ -387,15 +391,23 @@ module Kramdown
               (cc.type == :text || !HTML_BLOCK_ELEMENTS.include?(cc.value)) && only_phrasing_content.call(cc)
             end
           end
-          helper = Proc.new do |c|
+          check_cells = Proc.new do |c|
             if c.value == 'th' || c.value == 'td'
               return false if !only_phrasing_content.call(c)
             else
-              c.children.each {|cc| helper.call(cc)}
+              c.children.each {|cc| check_cells.call(cc)}
             end
           end
-          helper.call(el)
-          true
+          check_cells.call(el)
+
+          check_rows = lambda do |t, type|
+            t.children.all? {|r| (r.value == 'tr' || r.type == :text) && r.children.all? {|c| c.value == type || c.type == :text}}
+          end
+          check_rows.call(el, 'td') ||
+            (el.children.all? do |t|
+               t.type == :text || (t.value == 'thead' && check_rows.call(t, 'th')) ||
+                 ((t.value == 'tfoot' || t.value == 'tbody') && check_rows.call(t, 'td'))
+             end && el.children.any? {|t| t.value == 'tbody'})
         end
 
         def convert_div(el)

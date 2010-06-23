@@ -1,5 +1,47 @@
 <table class="examples">
 <tr>
+  <td>Usage</td>
+  <td>
+Output
+  </td>
+</tr>
+<tr>
+  <td>Some *data*</td>
+  <td>
+Some more
+  </td>
+</tr>
+</table>
+
+<table class="examples">
+<thead>
+<tr>
+  <th>Usage</th>
+  <th>
+Output
+  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Some *data*</td>
+  <td>
+Some more
+  </td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+  <td>foot</td>
+  <td>
+locker
+  </td>
+</tr>
+</tfoot>
+</table>
+
+<table class="examples">
+<tr>
   <th>Usage</th>
   <th>
 Output

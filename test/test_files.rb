@@ -113,7 +113,6 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/12_extension/options.text',  # bc of options option
                           'test/testcases/block/12_extension/options3.text', # bc of options option
                           'test/testcases/block/09_html/content_model/tables.text',  # bc of parse_block_html option
-                          'test/testcases/block/09_html/html_to_native/table_simple.text', # bc of invalid html-to-native conversion
                           'test/testcases/block/09_html/html_to_native/header.text', # bc of auto_ids option that interferes
                           'test/testcases/block/09_html/simple.text',        # bc of webgen:block elements
                          ]

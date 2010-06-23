@@ -42,6 +42,7 @@ with the HTML parser can be used to convert an HTML document into a kramdown doc
     block
   - Fixed ri documentation error on gem installation (patch by Alex Marandon)
   - Math content is now correctly escaped when using the HTML converter
+  - Fixed html-to-native conversion of tables to only convert conforming tables
 
 * Deprecation notes:
 
