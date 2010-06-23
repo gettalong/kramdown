@@ -142,6 +142,7 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/09_html/simple.html',          # bc of webgen:block elements
                              'test/testcases/block/09_html/markdown_attr.html',   # bc of markdown attr
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
+                             'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
