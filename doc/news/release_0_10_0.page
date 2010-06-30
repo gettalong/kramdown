@@ -15,6 +15,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
 
 * Minor changes:
 
+  - The LaTeX converter now also outputs the element attributes on the end tag (requested by Michael
+    Franzl)
 
 * Bug fixes:
 

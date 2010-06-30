@@ -75,14 +75,16 @@ module Kramdown
           result = "\\lstset{showspaces=%s,showtabs=%s}\n" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
           result += "\\lstset{language=#{lang}}\n" if lang
           result += "\\lstset{basicstyle=\\ttfamily\\footnotesize}\\lstset{columns=fixed,frame=tlbr}\n"
-          "#{result}\\begin{lstlisting}#{attribute_list(el)}\n#{el.value}\n\\end{lstlisting}\n"
+          attrs = attribute_list(el)
+          "#{result}\\begin{lstlisting}#{attrs}\n#{el.value}\n\\end{lstlisting}#{attrs}\n"
         else
           "\\begin{verbatim}#{el.value}\\end{verbatim}\n"
         end
       end
 
       def latex_environment(type, el, text)
-        "\\begin{#{type}}#{attribute_list(el)}\n#{text}\n\\end{#{type}}\n"
+        attrs = attribute_list(el)
+        "\\begin{#{type}}#{attrs}\n#{text}\n\\end{#{type}}#{attrs}\n"
       end
 
       def convert_blockquote(el, opts)
@@ -109,7 +111,8 @@ module Kramdown
       end
 
       def convert_hr(el, opts)
-        "\\begin{center}#{attribute_list(el)}\n\\rule{3in}{0.4pt}\n\\end{center}\n"
+        attrs = attribute_list(el)
+        "\\begin{center}#{attrs}\n\\rule{3in}{0.4pt}\n\\end{center}#{attrs}\n"
       end
 
       def convert_ul(el, opts)
@@ -163,7 +166,8 @@ module Kramdown
 
       def convert_table(el, opts)
         align = el.options[:alignment].map {|a| TABLE_ALIGNMENT_CHAR[a]}.join('|')
-        "\\begin{tabular}{|#{align}|}#{attribute_list(el)}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{tabular}\n\n"
+        attrs = attribute_list(el)
+        "\\begin{tabular}{|#{align}|}#{attrs}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{tabular}#{attrs}\n\n"
       end
 
       def convert_thead(el, opts)
