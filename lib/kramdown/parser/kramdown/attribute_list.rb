@@ -48,9 +48,9 @@ module Kramdown
       end
 
 
-      ALD_ID_CHARS = /[\w\d-]/
+      ALD_ID_CHARS = /[\w-]/
       ALD_ANY_CHARS = /\\\}|[^\}]/
-      ALD_ID_NAME = /(?:\w|\d)#{ALD_ID_CHARS}*/
+      ALD_ID_NAME = /\w#{ALD_ID_CHARS}*/
       ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])*?)\2/
       ALD_TYPE_CLASS_NAME = /\.(#{ALD_ID_NAME})/
       ALD_TYPE_ID_NAME = /#(#{ALD_ID_NAME})/

@@ -25,11 +25,13 @@ module Kramdown
     class Kramdown
 
       if RUBY_VERSION == '1.8.5'
-        ACHARS = '\x80-\xFF'
+        ACHARS = '\w\x80-\xFF'
+      elsif RUBY_VERSION < '1.9.0'
+        ACHARS = '\w'
       else
-        ACHARS = ''
+        ACHARS = '[[:alnum:]]'
       end
-      AUTOLINK_START = /<((mailto|https?|ftps?):.+?|[-.\w#{ACHARS}]+@[-\w#{ACHARS}]+(\.[-\w#{ACHARS}]+)*\.[a-z]+)>/u
+      AUTOLINK_START = /<((mailto|https?|ftps?):.+?|[-.#{ACHARS}]+@[-#{ACHARS}]+(\.[-#{ACHARS}]+)*\.[a-z]+)>/u
 
       # Parse the autolink at the current location.
       def parse_autolink
