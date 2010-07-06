@@ -275,8 +275,6 @@ module Kramdown
                       [8218, 'sbquo'],
                       [402, 'fnof'],
                       [8222, 'bdquo'],
-                      [381, 'Zcaron'],
-                      [382, 'zcaron'],
 
                       [128, 8364],
                       [130, 8218],
@@ -318,7 +316,6 @@ module Kramdown
         if data.kind_of?(String)
           ENTITY_MAP[code_point] = ENTITY_MAP[data] = Entity.new(code_point, data)
         else
-          raise "No entity object for code point #{data} found" unless ENTITY_MAP.has_key?(data)
           ENTITY_MAP[code_point] = ENTITY_MAP[data]
         end
       end

@@ -21,6 +21,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
 * Bug fixes:
 
   - LaTeX converter now outputs line breaks correctly (reported by Michael Franzl)
+  - Always outputting the entities `zcaron` and `Zcaron` numerically since browser support seems to
+    be non-existing (reported by Eric Sunshine)
 
 * Deprecation notes:
 
