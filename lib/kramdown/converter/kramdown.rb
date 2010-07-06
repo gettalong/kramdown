@@ -55,7 +55,6 @@ module Kramdown
         result = ''
         el.children.each_with_index do |inner_el, index|
           options = opts.dup
-          #p [index, inner_el]
           options[:index] = index
           options[:prev] = (index == 0 ? nil : el.children[index-1])
           options[:next] = (index == el.children.length - 1 ? nil : el.children[index+1])
