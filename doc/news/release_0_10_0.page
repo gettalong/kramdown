@@ -20,6 +20,7 @@ modified_at: 2010-06-23 08:10:00 +02:00
 
 * Bug fixes:
 
+  - LaTeX converter now outputs line breaks correctly (reported by Michael Franzl)
 
 * Deprecation notes:
 

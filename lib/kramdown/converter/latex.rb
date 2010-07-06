@@ -46,8 +46,10 @@ module Kramdown
 
       def inner(el, opts)
         result = ''
-        el.children.each do |inner_el|
-          result << send("convert_#{inner_el.type}", inner_el, opts)
+        options = opts.dup.merge(:parent => el)
+        el.children.each_with_index do |inner_el, index|
+          options[:index] = index
+          result << send("convert_#{inner_el.type}", inner_el, options)
         end
         result
       end
@@ -196,7 +198,9 @@ module Kramdown
       end
 
       def convert_br(el, opts)
-        "\\newline\n"
+        res = "\\newline"
+        res += "\n" if (c = opts[:parent].children[opts[:index]+1]) && (c.type != :text || c.value !~ /^\s*\n/)
+        res
       end
 
       def convert_a(el, opts)
