@@ -316,7 +316,7 @@ module Kramdown
       end
 
       def convert_entity(el, opts)
-        entity_to_str(el.value)
+        entity_to_str(el.value, el.options[:original])
       end
 
       TYPOGRAPHIC_SYMS = {

@@ -29,7 +29,8 @@ module Kramdown
       # Parse the HTML entity at the current location.
       def parse_html_entity
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity(@src[1] || (@src[2] && @src[2].to_i) || @src[3].hex))
+        @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity(@src[1] || (@src[2] && @src[2].to_i) || @src[3].hex),
+                                      :original => @src.matched)
       end
       define_parser(:html_entity, Kramdown::Parser::Html::Constants::HTML_ENTITY_RE, '&')
 

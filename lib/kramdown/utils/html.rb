@@ -27,10 +27,13 @@ module Kramdown
     module HTML
 
       # Convert the +entity+ to a string.
-      def entity_to_str(e)
-        if RUBY_VERSION >= '1.9' && (c = e.char.encode(@doc.parse_infos[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
+      def entity_to_str(e, original = nil)
+        if RUBY_VERSION >= '1.9' && @doc.options[:entity_output] == :as_char &&
+            (c = e.char.encode(@doc.parse_infos[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
           c
-        elsif @doc.options[:numeric_entities] || e.name.nil?
+        elsif (@doc.options[:entity_output] == :as_input || @doc.options[:entity_output] == :as_char) && original
+          original
+        elsif @doc.options[:entity_output] == :numeric || e.name.nil?
           "&##{e.code_point};"
         else
           "&#{e.name};"

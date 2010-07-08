@@ -17,6 +17,7 @@ modified_at: 2010-06-23 08:10:00 +02:00
 
   - The LaTeX converter now also outputs the element attributes on the end tag (requested by Michael
     Franzl)
+  - New option `entity_output` for specifying how entities should be output
 
 * Bug fixes:
 
@@ -27,4 +28,6 @@ modified_at: 2010-06-23 08:10:00 +02:00
 
 * Deprecation notes:
 
+  - The option `numeric_entities` is replaced by the new option `entity_output` and will be removed
+    in the next version
   - The method `Kramdown::Converter::Html#options_for_element` has been removed

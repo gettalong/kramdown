@@ -264,7 +264,7 @@ module Kramdown
       alias :convert_strong :convert_em
 
       def convert_entity(el, indent, opts)
-        entity_to_str(el.value)
+        entity_to_str(el.value, el.options[:original])
       end
 
       TYPOGRAPHIC_SYMS = {

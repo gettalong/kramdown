@@ -242,7 +242,7 @@ module Kramdown
                         elsif %w{mdash ndash hellip laquo raquo}.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
-                          Element.new(:entity, entity(val))
+                          Element.new(:entity, entity(val), :original => src.matched)
                         end
             else
               result << Element.new(:text, src.scan(/.*/m))

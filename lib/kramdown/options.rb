@@ -263,9 +263,25 @@ Used by: HTML converter
 EOF
 
     define(:numeric_entities, Boolean, false, <<EOF)
-Defines whether entities are output using names or numeric values
+DEPRECATED: Defines whether entities are output using names or numeric values
+
+Note that this option is deprecated and replaced by the entities option.
+This option will be removed in a future release.
 
 Default: false
+Used by: HTML converter, kramdown converter
+EOF
+
+    define(:entity_output, Symbol, :as_char, <<EOF)
+Defines how entities are output
+
+The possible values are :as_input (entities are output in the same
+form as found in the input), :numeric (entities are output in numeric
+form), :symbolic (entities are output in symbolic form if possible) or
+:as_char (entities are output as characters if possible, only available
+on Ruby 1.9).
+
+Default: :as_char
 Used by: HTML converter, kramdown converter
 EOF
 

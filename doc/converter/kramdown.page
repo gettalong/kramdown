@@ -12,5 +12,5 @@ convert HTML documents to kramdown documents.
 
 The kramdown converter supports the following options:
 
-{options: {items: [:numeric_entities, :template]}}
+{options: {items: [:entity_output, :template]}}
 
