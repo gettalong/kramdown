@@ -1,4 +1,4 @@
-.TH "KRAMDOWN" 1 "February 2010"
+.TH "KRAMDOWN" 1 "July 2010"
 .SH NAME
 kramdown \- a fast, pure-Ruby Markdown-superset converter
 .SH SYNOPSIS
@@ -32,6 +32,7 @@ Show the help.
 require 'kramdown/document'
 
 Kramdown::Options.definitions.each do |n, definition|
+  n = n.to_s.tr('_', '-')
   if definition.type == Kramdown::Options::Boolean %>
 .TP
 .B \-\-[no\-]<%= n %>
@@ -45,7 +46,7 @@ Kramdown::Options.definitions.each do |n, definition|
 <%= definition.desc %>
 <% end %>
 .SH SEE ALSO
-The kramdown website, http://kramdown.rubyforge.org/ for more information, especially on the support
+The kramdown website, http://kramdown.rubyforge.org/ for more information, especially on the supported
 input syntax.
 .SH AUTHOR
 kramdown was written by Thomas Leitner <t_leitner@gmx.at>.
