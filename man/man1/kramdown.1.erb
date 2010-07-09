@@ -6,9 +6,10 @@ kramdown \- a fast, pure-Ruby Markdown-superset converter
 [\fIoptions\fR]
 [\fIFILE\fR ...]
 .SH DESCRIPTION
-kramdown parses a superset of Markdown and converts it to different output formats. It is supports
-standard Markdown (with some minor modifications) and various extensions like tables and definition
-lists.
+kramdown is primarily used for parsing a superset of Markdown and converting it to different output
+formats. It supports standard Markdown (with some minor modifications) and various extensions like
+tables and definition lists. Due to its modular architecture it also allows other input formats than
+Markdown, for example, HTML.
 
 If \fIFILE\fR is not specified, kramdown reads from the standard input. The result is written to the
 standard output.
@@ -18,8 +19,11 @@ used directly by the kramdown binary. The second set of options controls how kra
 converts its input.
 .SH OPTIONS
 .TP
-.B \-f, \-\-format ARG
-Specify the output format. Available output formats: html (this is the default) or latex.
+.B \-i, \-\-input ARG
+Specify the input format. Available input formats: kramdown (this is the default) or html.
+.TP
+.B \-o, \-\-output ARG
+Specify the output format. Available output formats: html (this is the default), kramdown or latex.
 .TP
 .B \-v, \-\-version
 Show the version of kramdown.
@@ -45,6 +49,8 @@ Kramdown::Options.definitions.each do |n, definition|
 <% end %>
 <%= definition.desc %>
 <% end %>
+.SH EXIT STATUS
+The exit status is 0 if no error happened. Otherwise it is 1.
 .SH SEE ALSO
 The kramdown website, http://kramdown.rubyforge.org/ for more information, especially on the supported
 input syntax.
