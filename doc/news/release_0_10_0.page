@@ -21,6 +21,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
   - The underscore in the option names is now replaced with a hyphen for nicer CLI option names
   - Paragraphs that contain only an image are converted to figures in the LaTeX converter (requested
     by Michael Franzl)
+  - Added information to the LaTeX converter documentation on how to change the header types and
+    quotation marks
 
 * Bug fixes:
 

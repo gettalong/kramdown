@@ -71,6 +71,26 @@ It is possible to change the header types by writing some code, like in the foll
 {: lang="ruby"}
 
 
+## Quotation Marks
+
+The default quotation marks that are used are the English ones:
+
+* left single quote (`lsquo`): `` ` ``
+* right single quote (`rsquo`): `'`
+* left double quote (`ldquo`): ``` `` ```
+* right double quote (`rdquo`): `''`
+
+You can change the used quotation marks by writing some code, like in the following example:
+
+    require 'kramdown'
+
+    my_quotes = {:lsquo => '\\glq{}', :rsquo => '\\grq{}', :ldquo => '"`', :rdquo => '"\''}
+    Kramdown::Converter::Latex::SMART_QUOTE_SYMS.merge!(my_quotes)
+
+    puts Kramdown::Document.new(ARGF.read).to_latex
+{: lang="ruby"}
+
+
 ## Emphasis
 
 The latex command `emph` is used for light and the command `textbf` for strong emphasis.
