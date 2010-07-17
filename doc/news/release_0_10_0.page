@@ -34,6 +34,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
     Michael Franzl)
   - Fixed problem in the HTML parser that prevented `<body markdown="1">` from being processed
     correctly (reported by Eric Sunshine)
+  - Blockquotes with multiple child elements are now output with the `quotation` environment instead
+    of the `quote` environment by the LaTeX converter (reported by Michael Franzl)
 
 * Deprecation notes:
 

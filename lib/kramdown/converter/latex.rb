@@ -99,7 +99,7 @@ module Kramdown
       end
 
       def convert_blockquote(el, opts)
-        latex_environment('quote', el, inner(el, opts))
+        latex_environment(el.children.size > 1 ? 'quotation' : 'quote', el, inner(el, opts))
       end
 
       HEADER_TYPES = {
