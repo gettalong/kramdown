@@ -43,7 +43,7 @@ module Kramdown
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
 
-        HTML_PARSE_AS_BLOCK = %w{applet button blockquote colgroup dd div dl fieldset form iframe li
+        HTML_PARSE_AS_BLOCK = %w{applet button blockquote body colgroup dd div dl fieldset form iframe li
                                map noscript object ol table tbody thead tfoot tr td ul}
         HTML_PARSE_AS_SPAN  = %w{a abbr acronym address b bdo big cite caption del dfn dt em
                                h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc

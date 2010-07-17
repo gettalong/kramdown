@@ -32,6 +32,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
   - Fixed warnings and problems when running under Ruby 1.9.2-rc1
   - Fixed problem with smart quote directly after smart quote output in LaTeX converter (reported by
     Michael Franzl)
+  - Fixed problem in the HTML parser that prevented `<body markdown="1">` from being processed
+    correctly (reported by Eric Sunshine)
 
 * Deprecation notes:
 

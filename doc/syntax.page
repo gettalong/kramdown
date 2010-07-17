@@ -868,7 +868,7 @@ Parse as raw HTML block
 
 Parse as block level elements
 : 
-        applet button blockquote colgroup dd div dl fieldset form iframe li
+        applet button blockquote body colgroup dd div dl fieldset form iframe li
         map noscript object ol table tbody thead tfoot tr td ul
 
 Parse as span level elements
