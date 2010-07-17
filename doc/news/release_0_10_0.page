@@ -19,6 +19,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
     Franzl)
   - New option `entity_output` for specifying how entities should be output
   - The underscore in the option names is now replaced with a hyphen for nicer CLI option names
+  - Paragraphs that contain only an image are converted to figures in the LaTeX converter (requested
+    by Michael Franzl)
 
 * Bug fixes:
 

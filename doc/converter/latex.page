@@ -65,6 +65,12 @@ If you add a "toc" reference to a list as described on the [HTML converter page]
 list is replaced by the table of contents using the `\tableofcontents` command.
 
 
+## Standalone Images
+
+The LaTeX converter handles images that are the only child of a paragraph specially. Such images are
+not shown inline but rather in a `figure` environment, using the alternative text as caption.
+
+
 ## Element Attributes
 
 Since the element attributes cannot be used directly by the LaTeX converter in most cases, the

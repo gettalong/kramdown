@@ -67,7 +67,16 @@ module Kramdown
       end
 
       def convert_p(el, opts)
-        "#{inner(el, opts)}\n\n"
+        if el.children.size == 1 && el.children.first.type == :img && !(img = convert_img(el.children.first, opts)).empty?
+          convert_standalone_image(el, opts, img)
+        else
+          "#{inner(el, opts)}\n\n"
+        end
+      end
+
+      def convert_standalone_image(el, opts, img)
+        attrs = attribute_list(el)
+        "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.options[:attr]['alt'])}}\n\\end{figure}#{attrs}\n"
       end
 
       def convert_codeblock(el, opts)
