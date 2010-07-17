@@ -48,6 +48,28 @@ the [HTML converter documentation](html.html#code-blocks). Syntax highlighting a
 whitespace in a code block is done using the `listings` package. So all languages supported by the
 `listings` package can be highlighted.
 
+## Headers
+
+The LaTeX converter uses the following fixed header types for converting the different levels of
+headers:
+
+* `h1` -> `section`
+* `h2` -> `subsection`
+* `h3` -> `subsubsection`
+* `h4` -> `paragraph`
+* `h5` -> `subparagraph`
+* `h6` -> `subparagraph`
+
+It is possible to change the header types by writing some code, like in the following example:
+
+    require 'kramdown'
+
+    my_headers = {1 => 'chapter', 2 => 'section', 3 => 'subsection', 4 => 'subsubsection'}
+    Kramdown::Converter::Latex::HEADER_TYPES.merge!(my_headers)
+
+    puts Kramdown::Document.new(ARGF.read).to_latex
+{: lang="ruby"}
+
 
 ## Emphasis
 
