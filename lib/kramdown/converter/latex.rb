@@ -524,7 +524,9 @@ module Kramdown
 
       SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''}
       def convert_smart_quote(el, opts)
-        SMART_QUOTE_SYMS[el.value]
+        res = SMART_QUOTE_SYMS[el.value]
+        res += "{}" if (nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote
+        res
       end
 
       def convert_math(el, opts)

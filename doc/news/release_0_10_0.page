@@ -28,6 +28,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
   - Always outputting the entities `zcaron` and `Zcaron` numerically since browser support seems to
     be non-existing (reported by Eric Sunshine)
   - Fixed warnings and problems when running under Ruby 1.9.2-rc1
+  - Fixed problem with smart quote directly after smart quote output in LaTeX converter (reported by
+    Michael Franzl)
 
 * Deprecation notes:
 
