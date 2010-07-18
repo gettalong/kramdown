@@ -170,7 +170,7 @@ module Kramdown
                                         div li dd blockquote figure figcaption td th fieldset form}
         STRIP_WHITESPACE = %w{address article aside blockquote body caption dd div dl dt fieldset figcaption form footer
                               header h1 h2 h3 h4 h5 h6 legend li nav p section td th}
-        SIMPLE_ELEMENTS = %w{em strong blockquote hr br a img p thead tbody tfoot tr td th ul ol dl li dl dt dd}
+        SIMPLE_ELEMENTS = %w{em strong blockquote hr br img p thead tbody tfoot tr td th ul ol dl li dl dt dd}
 
         def initialize(doc)
           @doc = doc
@@ -313,6 +313,15 @@ module Kramdown
         def extract_text(el, raw)
           raw << el.value.to_s if el.type == :text
           el.children.each {|c| extract_text(c, raw)}
+        end
+
+        def convert_a(el)
+          if el.options[:attr].has_key?('href')
+            set_basics(el, :a, :span)
+            process_children(el)
+          else
+            process_html_element(el, false)
+          end
         end
 
         def convert_h1(el)
