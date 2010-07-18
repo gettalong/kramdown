@@ -36,6 +36,8 @@ modified_at: 2010-06-23 08:10:00 +02:00
     correctly (reported by Eric Sunshine)
   - Blockquotes with multiple child elements are now output with the `quotation` environment instead
     of the `quote` environment by the LaTeX converter (reported by Michael Franzl)
+  - Fixed problem with parsing autolinks when using an encoding different from UTF-8 (reported by
+    Eric Sunshine)
 
 * Deprecation notes:
 
