@@ -2,16 +2,16 @@
 title: kramdown 0.10.0 released
 no_output: true
 sort_info: r0010
-created_at: 2010-06-23 08:10:00 +02:00
-modified_at: 2010-06-23 08:10:00 +02:00
+created_at: 2010-07-19 08:30:00 +02:00
+modified_at: 2010-07-19 08:30:00 +02:00
 ---
 ## kramdown 0.10.0 released
 
+This release contains many small changes and improvements as well as many bug fixes, thanks to all
+the people on the kramdown mailing list!
+
 
 ## Changes
-
-* Major changes:
-
 
 * Minor changes:
 

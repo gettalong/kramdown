@@ -29,6 +29,7 @@ body, table, code {
     background: #364147;
     background-image: -moz-linear-gradient(top, rgba(54,65,71,1), rgba(81,92,96,1));
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(54,65,71,1)), to(rgba(81,92,96,1)));
+    position: relative;
 }
 
 #header {
@@ -57,6 +58,11 @@ body, table, code {
     }
 }
 
+#donation {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
 
 /* menu */
 #fullnav {
