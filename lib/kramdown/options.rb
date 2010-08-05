@@ -262,16 +262,6 @@ Default: style
 Used by: HTML converter
 EOF
 
-    define(:numeric_entities, Boolean, false, <<EOF)
-DEPRECATED: Defines whether entities are output using names or numeric values
-
-Note that this option is deprecated and replaced by the entities option.
-This option will be removed in a future release.
-
-Default: false
-Used by: HTML converter, kramdown converter
-EOF
-
     define(:entity_output, Symbol, :as_char, <<EOF)
 Defines how entities are output
 

@@ -19,3 +19,5 @@ modified_at: 2010-07-19 08:30:00 +02:00
 
 * Deprecation notes:
 
+  - The option `numeric_entities` has been removed
+
