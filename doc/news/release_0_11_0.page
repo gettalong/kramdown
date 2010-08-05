@@ -13,6 +13,8 @@ modified_at: 2010-07-19 08:30:00 +02:00
 
 * Minor changes:
 
+  - The HTML converter does not escape the quotation mark in code blocks anymore (requested by Matt
+    Neuburg)
 
 * Bug fixes:
 

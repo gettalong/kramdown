@@ -42,7 +42,7 @@ module Kramdown
 
       # Return the string with the attributes of the element +el+.
       def html_attributes(el)
-        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :no_entities)}\"" }.sort.join('')
+        (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.sort.join('')
       end
 
       ESCAPE_MAP = {
@@ -51,19 +51,19 @@ module Kramdown
         '&' => '&amp;',
         '"' => '&quot;'
       }
-      ESCAPE_ALL_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| k})
-      ESCAPE_NO_ENTITIES_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, ESCAPE_ALL_RE)
-      ESCAPE_NORMAL = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, /<|>|&/)
+      ESCAPE_ALL_RE = /<|>|&/
+      ESCAPE_TEXT_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, /<|>|&/)
+      ESCAPE_ATTRIBUTE_RE = Regexp.union(REXML::Parsers::BaseParser::REFERENCE_RE, /<|>|&|"/)
       ESCAPE_RE_FROM_TYPE = {
         :all => ESCAPE_ALL_RE,
-        :no_entities => ESCAPE_NO_ENTITIES_RE,
-        :text => ESCAPE_NORMAL
+        :text => ESCAPE_TEXT_RE,
+        :attribute => ESCAPE_ATTRIBUTE_RE
       }
 
       # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
-      # is escaped: <tt>:all</tt> - all special HTML characters as well as entities,
-      # <tt>:no_entities</tt> - all special HTML characters but no entities, <tt>:text</tt> - all
-      # special HTML characters except the quotation mark but no entities.
+      # is escaped: <tt>:all</tt> - all special HTML characters as well as entities, <tt>:text</tt>
+      # - all special HTML characters except the quotation mark but no entities and
+      # <tt>:attribute</tt> - all special HTML characters including the quotation mark but no entities.
       def escape_html(str, type = :all)
         str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
       end
