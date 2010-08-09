@@ -84,16 +84,16 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent, opts)
-        if el.options[:attr] && el.options[:attr]['lang'] && HIGHLIGHTING_AVAILABLE
+        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
           el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
           opts = {:wrap => @doc.options[:coderay_wrap], :line_numbers => @doc.options[:coderay_line_numbers],
             :line_number_start => @doc.options[:coderay_line_number_start], :tab_width => @doc.options[:coderay_tab_width],
             :bold_every => @doc.options[:coderay_bold_every], :css => @doc.options[:coderay_css]}
-          result = CodeRay.scan(el.value, el.options[:attr].delete('lang').to_sym).html(opts).chomp + "\n"
+          result = CodeRay.scan(el.value, el.attr.delete('lang').to_sym).html(opts).chomp + "\n"
           "#{' '*indent}<div#{html_attributes(el)}>#{result}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
-          if el.options[:attr] && el.options[:attr].has_key?('class') && el.options[:attr]['class'] =~ /\bshow-whitespaces\b/
+          if el.attr['class'].to_s =~ /\bshow-whitespaces\b/
             result.gsub!(/(?:(^[ \t]+)|([ \t]+$)|([ \t]+))/) do |m|
               suffix = ($1 ? '-l' : ($2 ? '-r' : ''))
               m.scan(/./).map do |c|
@@ -114,10 +114,10 @@ module Kramdown
 
       def convert_header(el, indent, opts)
         el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        if @doc.options[:auto_ids] && !(el.options[:attr] && el.options[:attr]['id'])
-          (el.options[:attr] ||= {})['id'] = generate_id(el.options[:raw_text])
+        if @doc.options[:auto_ids] && !el.attr['id']
+          el.attr['id'] = generate_id(el.options[:raw_text])
         end
-        @toc << [el.options[:level], el.options[:attr]['id'], el.children] if el.options[:attr] && el.options[:attr]['id'] && within_toc_depth?(el)
+        @toc << [el.options[:level], el.attr['id'], el.children] if el.attr['id'] && within_toc_depth?(el)
         "#{' '*indent}<h#{el.options[:level]}#{html_attributes(el)}>#{inner(el, indent, opts)}</h#{el.options[:level]}>\n"
       end
 
@@ -131,7 +131,7 @@ module Kramdown
 
       def convert_ul(el, indent, opts)
         if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil) && (el.type == :ul || el.type == :ol)
-          @toc_code = [el.type, el.options[:attr], (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
+          @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
         else
           "#{' '*indent}<#{el.type}#{html_attributes(el)}>\n#{inner(el, indent, opts)}#{' '*indent}</#{el.type}>\n"
@@ -227,12 +227,12 @@ module Kramdown
       end
 
       def convert_a(el, indent, opts)
-        do_obfuscation = el.options[:attr]['href'] =~ /^mailto:/
+        do_obfuscation = el.attr['href'] =~ /^mailto:/
         if do_obfuscation
           el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-          href = obfuscate(el.options[:attr]['href'].sub(/^mailto:/, ''))
+          href = obfuscate(el.attr['href'].sub(/^mailto:/, ''))
           mailto = obfuscate('mailto')
-          el.options[:attr]['href'] = "#{mailto}:#{href}"
+          el.attr['href'] = "#{mailto}:#{href}"
         end
         res = inner(el, indent, opts)
         res = obfuscate(res) if do_obfuscation
@@ -286,9 +286,8 @@ module Kramdown
 
       def convert_math(el, indent, opts)
         el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        el.options[:attr] ||= {}
-        el.options[:attr]['class'] ||= ''
-        el.options[:attr]['class'] += (el.options[:attr]['class'].empty? ? '' : ' ') + 'math'
+        el.attr['class'] ||= ''
+        el.attr['class'] += (el.attr['class'].empty? ? '' : ' ') + 'math'
         type = 'span'
         type = 'div' if el.options[:category] == :block
         "<#{type}#{html_attributes(el)}>#{escape_html(el.value)}</#{type}>#{type == 'div' ? "\n" : ''}"
@@ -316,12 +315,13 @@ module Kramdown
       end
 
       def generate_toc_tree(toc, type, attr)
-        sections = Element.new(type, nil, {:attr => {'id' => 'markdown-toc'}.merge(attr)})
+        sections = Element.new(type, nil, attr)
+        sections.attr['id'] ||= 'markdown-toc'
         stack = []
         toc.each do |level, id, children|
-          li = Element.new(:li, nil, {:level => level})
-          li.children << Element.new(:p, nil, {:transparent => true})
-          a = Element.new(:a, nil, {:attr => {:href => "##{id}"}})
+          li = Element.new(:li, nil, nil, {:level => level})
+          li.children << Element.new(:p, nil, nil, {:transparent => true})
+          a = Element.new(:a, nil, {'href' => "##{id}"})
           a.children += children
           li.children.last.children << a
           li.children << Element.new(type)
@@ -362,10 +362,10 @@ module Kramdown
       # Return a HTML list with the footnote content for the used footnotes.
       def footnote_content
         ol = Element.new(:ol)
-        ol.options[:attr] = {'start' => @footnote_start} if @footnote_start != 1
+        ol.attr['start'] = @footnote_start if @footnote_start != 1
         @footnotes.each do |name, data|
-          li = Element.new(:li, nil, {:attr => {:id => "fn:#{name}"}, :first_is_block => true})
-          li.children = Marshal.load(Marshal.dump(data[:content].children)) #TODO: probably remove this!!!!
+          li = Element.new(:li, nil, {'id' => "fn:#{name}"}, {:first_is_block => true})
+          li.children = Marshal.load(Marshal.dump(data[:content].children))
           ol.children << li
 
           ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")

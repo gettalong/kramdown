@@ -34,9 +34,9 @@ module Kramdown
         end
         @src.pos += @src.matched_size
         text, id, level = @src[1].strip, @src[2], @src[3]
-        el = new_block_el(:header, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
+        el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
         add_text(text, el)
-        el.options[:attr] = {'id' => id} if id
+        el.attr['id'] = id if id
         @tree.children << el
         true
       end
@@ -53,9 +53,9 @@ module Kramdown
         end
         result = @src.scan(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2].strip, @src[3]
-        el = new_block_el(:header, nil, :level => level.length, :raw_text => text)
+        el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text)
         add_text(text, el)
-        el.options[:attr] = {'id' => id} if id
+        el.attr['id'] = id if id
         @tree.children << el
         true
       end

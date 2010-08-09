@@ -34,7 +34,7 @@ module Kramdown
                      else
                        :raw
                      end
-        if val = html_parse_type(el.options[:attr].delete('markdown'))
+        if val = html_parse_type(el.attr.delete('markdown'))
           parse_type = (val == :default ? HTML_PARSE_AS[el.value] : val)
         end
 
@@ -87,11 +87,11 @@ module Kramdown
       # Parse the HTML at the current position as block level HTML.
       def parse_block_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:xml_comment, result, :category => :block)
+          @tree.children << Element.new(:xml_comment, result, nil, :category => :block)
           @src.scan(/[ \t]*\n/)
           true
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:xml_pi, result, :category => :block)
+          @tree.children << Element.new(:xml_pi, result, nil, :category => :block)
           @src.scan(/[ \t]*\n/)
           true
         else
@@ -123,16 +123,16 @@ module Kramdown
       # Parse the HTML at the current position as span level HTML.
       def parse_span_html
         if result = @src.scan(HTML_COMMENT_RE)
-          @tree.children << Element.new(:xml_comment, result, :category => :span)
+          @tree.children << Element.new(:xml_comment, result, nil, :category => :span)
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
-          @tree.children << Element.new(:xml_pi, result, :category => :span)
+          @tree.children << Element.new(:xml_pi, result, nil, :category => :span)
         elsif result = @src.scan(HTML_TAG_CLOSE_RE)
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
         elsif result = @src.scan(HTML_TAG_RE)
           return if HTML_BLOCK_ELEMENTS.include?(@src[1])
 
           reset_pos = @src.pos
-          attrs = {}
+          attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
           do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) || @tree.options[:parse_type] == :raw ? false : @doc.options[:parse_span_html])
@@ -148,7 +148,7 @@ module Kramdown
             end
           end
 
-          el = Element.new(:html_element, @src[1], :attr => attrs, :category => :span, :parse_type => (do_parsing ? :span : :raw))
+          el = Element.new(:html_element, @src[1], attrs, :category => :span, :parse_type => (do_parsing ? :span : :raw))
           @tree.children << el
           stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
           if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)

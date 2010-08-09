@@ -76,12 +76,12 @@ module Kramdown
 
       def convert_standalone_image(el, opts, img)
         attrs = attribute_list(el)
-        "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.options[:attr]['alt'])}}\n\\end{figure}#{attrs}\n"
+        "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.attr['alt'])}}\n\\end{figure}#{attrs}\n"
       end
 
       def convert_codeblock(el, opts)
-        show_whitespace = el.options[:attr] && el.options[:attr]['class'].to_s =~ /\bshow-whitespaces\b/
-        lang = el.options[:attr] && el.options[:attr]['lang']
+        show_whitespace = el.attr['class'].to_s =~ /\bshow-whitespaces\b/
+        lang = el.attr['lang']
         if show_whitespace || lang
           result = "\\lstset{showspaces=%s,showtabs=%s}\n" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
           result += "\\lstset{language=#{lang}}\n" if lang
@@ -112,7 +112,7 @@ module Kramdown
       }
       def convert_header(el, opts)
         type = HEADER_TYPES[el.options[:level]]
-        if ((el.options[:attr] && (id = el.options[:attr]['id'])) ||
+        if ((id = el.attr['id']) ||
             (@doc.options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) &&
             (@doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth])
           "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"
@@ -213,7 +213,7 @@ module Kramdown
       end
 
       def convert_a(el, opts)
-        url = el.options[:attr]['href']
+        url = el.attr['href']
         if url =~ /^#/
           "\\hyperlink{#{url[1..-1]}}{#{inner(el, opts)}}"
         else
@@ -222,12 +222,12 @@ module Kramdown
       end
 
       def convert_img(el, opts)
-        if el.options[:attr]['src'] =~ /^(https?|ftps?):\/\//
+        if el.attr['src'] =~ /^(https?|ftps?):\/\//
           @doc.warnings << "Cannot include non-local image"
           ''
-        elsif !el.options[:attr]['src'].empty?
+        elsif !el.options.attr['src'].empty?
           @doc.conversion_infos[:packages] << 'graphicx'
-          "\\includegraphics{#{el.options[:attr]['src']}}"
+          "\\includegraphics{#{el.attr['src']}}"
         else
           @doc.warnings << "Cannot include image with empty path"
           ''
@@ -561,7 +561,7 @@ module Kramdown
       end
 
       def attribute_list(el)
-        attrs = (el.options[:attr] || {}).map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
+        attrs = el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
         attrs = "   % #{attrs}" if !attrs.empty?
         attrs
       end

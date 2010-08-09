@@ -111,7 +111,7 @@ module Kramdown
         res = ''
         res << "\n" if opts[:prev] && opts[:prev].type != :blank
         res << "#{'#' * el.options[:level]} #{inner(el, opts)}"
-        res << "   {##{el.options[:attr]['id']}}" if el.options[:attr] && el.options[:attr]['id']
+        res << "   {##{el.attr['id']}}" if el.attr['id']
         res << "\n" if opts[:next] && opts[:next].type != :blank
         res << "\n"
       end
@@ -274,7 +274,7 @@ module Kramdown
       end
 
       def convert_a(el, opts)
-        if el.options[:attr]['href'].empty?
+        if el.attr['href'].empty?
           "[#{inner(el, opts)}]()"
         else
           @linkrefs << el
@@ -283,8 +283,8 @@ module Kramdown
       end
 
       def convert_img(el, opts)
-        title = (el.options[:attr]['title'] ? ' "' + el.options[:attr]['title'].gsub(/"/, "&quot;") + '"' : '')
-        "![#{el.options[:attr]['alt']}](<#{el.options[:attr]['src']}>#{title})"
+        title = (el.attr['title'] ? ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"' : '')
+        "![#{el.attr['alt']}](<#{el.attr['src']}>#{title})"
       end
 
       def convert_codespan(el, opts)
@@ -352,9 +352,9 @@ module Kramdown
         res = ''
         res << "\n\n" if @linkrefs.size > 0
         @linkrefs.each_with_index do |el, i|
-          link = (el.type == :a ? el.options[:attr]['href'] : el.options[:attr]['src'])
+          link = (el.type == :a ? el.attr['href'] : el.attr['src'])
           link = "<#{link}>" if link =~ / /
-          title = el.options[:attr]['title']
+          title = el.attr['title']
           res << "[#{i+1}]: #{link} #{title ? '"' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
         end
         res
@@ -381,11 +381,11 @@ module Kramdown
 
       # Return the IAL containing the attributes of the element +el+.
       def ial_for_element(el)
-        res = (el.options[:attr] || {}).map do |k,v|
+        res = el.attr.map do |k,v|
           next if [:img, :a].include?(el.type) && ['href', 'src', 'alt', 'title'].include?(k)
           next if el.type == :header && k == 'id'
           v.nil? ? '' : " #{k}=\"#{v.to_s}\""
-        end.compact.sort.join('')
+        end.compact.join('')
         res = "toc" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('toc') rescue nil)
         res.strip.empty? ? nil : "{:#{res}}"

@@ -43,8 +43,13 @@ module Kramdown
       # Update the +ial+ with the information from the inline attribute list +opts+.
       def update_ial_with_ial(ial, opts)
         (ial[:refs] ||= []) << opts[:refs]
-        ial['class'] = ((ial['class'] || '') + " #{opts['class']}").lstrip if opts['class']
-        opts.each {|k,v| ial[k] = v if k != :refs && k != 'class' }
+        opts.each do |k,v|
+          if k == 'class'
+            ial[k] = ((ial[k] || '') + " #{v}").lstrip
+          elsif k.kind_of?(String)
+            ial[k] = v
+          end
+        end
       end
 
 
@@ -61,7 +66,7 @@ module Kramdown
       # Parse the attribute list definition at the current location.
       def parse_ald
         @src.pos += @src.matched_size
-        parse_attribute_list(@src[2], @doc.parse_infos[:ald][@src[1]] ||= {})
+        parse_attribute_list(@src[2], @doc.parse_infos[:ald][@src[1]] ||= Utils::OrderedHash.new)
         @tree.children << Element.new(:eob)
         true
       end
@@ -74,9 +79,9 @@ module Kramdown
       def parse_block_ial
         @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
-          parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
+          parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
         else
-          parse_attribute_list(@src[1], @block_ial = {})
+          parse_attribute_list(@src[1], @block_ial = Utils::OrderedHash.new)
         end
         @tree.children << Element.new(:eob) unless @src.check(IAL_BLOCK_START)
         true
@@ -90,10 +95,10 @@ module Kramdown
       def parse_span_ial
         @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type != :text
-          attr = {}
+          attr = Utils::OrderedHash.new
           parse_attribute_list(@src[1], attr)
-          update_ial_with_ial(@tree.children.last.options[:ial] ||= {}, attr)
-          update_attr_with_ial(@tree.children.last.options[:attr] ||= {}, attr)
+          update_ial_with_ial(@tree.children.last.options[:ial] ||= Utils::OrderedHash.new, attr)
+          update_attr_with_ial(@tree.children.last.attr, attr)
         else
           warning("Ignoring span IAL because preceding element is just text")
         end

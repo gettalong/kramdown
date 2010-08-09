@@ -7,7 +7,8 @@ modified_at: 2010-07-19 08:30:00 +02:00
 ---
 ## kramdown 0.11.0 released
 
-
+**Note**: The "internal" API (which is everything except the `Kramdown::Document` class) has changed
+and developers may therefore need to update their extensions!
 
 ## Changes
 
@@ -15,6 +16,8 @@ modified_at: 2010-07-19 08:30:00 +02:00
 
   - The HTML converter does not escape the quotation mark in code blocks anymore (requested by Matt
     Neuburg)
+  - The order of HTML attributes and attributes defined via IALs and ALDs is now preserved
+    (requested by Matt Neuburg)
 
 * Bug fixes:
 

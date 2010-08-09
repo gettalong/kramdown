@@ -37,8 +37,7 @@ module Kramdown
       # Parse the table at the current location.
       def parse_table
         orig_pos = @src.pos
-        table = new_block_el(:table, nil, :alignment => [])
-
+        table = new_block_el(:table, nil, nil, :alignment => [])
         @src.scan(TABLE_SEP_LINE)
 
         rows = []

@@ -56,9 +56,9 @@ module Kramdown
       def handle_extension(name, opts, body, type)
         case name
         when 'comment'
-          @tree.children << Element.new(:comment, body, :category => type) if body.kind_of?(String)
+          @tree.children << Element.new(:comment, body, nil, :category => type) if body.kind_of?(String)
         when 'nomarkdown'
-          @tree.children << Element.new(:raw, body, :category => type) if body.kind_of?(String)
+          @tree.children << Element.new(:raw, body, nil, :category => type) if body.kind_of?(String)
         when 'options'
           opts.select do |k,v|
             k = k.to_sym

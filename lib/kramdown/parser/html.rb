@@ -80,10 +80,10 @@ module Kramdown
         def handle_html_start_tag
           name = @src[1]
           closed = !@src[4].nil?
-          attrs = {}
+          attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val}
 
-          el = Element.new(:html_element, name, :attr => attrs, :category => :block)
+          el = Element.new(:html_element, name, attrs, :category => :block)
           @tree.children << el
 
           if !closed && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
@@ -129,9 +129,9 @@ module Kramdown
             if result = @src.scan_until(HTML_RAW_START)
               add_text(result, @tree, :text)
               if result = @src.scan(HTML_COMMENT_RE)
-                @tree.children << Element.new(:xml_comment, result, :category => :block, :parent_is_raw => true)
+                @tree.children << Element.new(:xml_comment, result, nil, :category => :block, :parent_is_raw => true)
               elsif result = @src.scan(HTML_INSTRUCTION_RE)
-                @tree.children << Element.new(:xml_pi, result, :category => :block, :parent_is_raw => true)
+                @tree.children << Element.new(:xml_pi, result, nil, :category => :block, :parent_is_raw => true)
               elsif @src.scan(HTML_TAG_RE)
                 handle_html_start_tag(&block)
               elsif @src.scan(HTML_TAG_CLOSE_RE)
@@ -242,7 +242,7 @@ module Kramdown
                         elsif %w{mdash ndash hellip laquo raquo}.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
-                          Element.new(:entity, entity(val), :original => src.matched)
+                          Element.new(:entity, entity(val), nil, :original => src.matched)
                         end
             else
               result << Element.new(:text, src.scan(/.*/m))
@@ -253,8 +253,7 @@ module Kramdown
 
         def process_html_element(el, do_conversion = true, preserve_text = false)
           el.options = {:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
-            :parse_type => HTML_PARSE_AS[el.value],
-            :attr => el.options[:attr]
+            :parse_type => HTML_PARSE_AS[el.value]
           }
           process_children(el, do_conversion, preserve_text)
         end
@@ -271,7 +270,7 @@ module Kramdown
           el.children.each do |c|
             if c.options[:category] != :block || c.type == :text
               if !last_is_p
-                tmp << Element.new(:p, nil, :transparent => true)
+                tmp << Element.new(:p, nil, nil, :transparent => true)
                 last_is_p = true
               end
               tmp.last.children << c
@@ -306,7 +305,7 @@ module Kramdown
 
         def set_basics(el, type, category, opts = {})
           el.type = type
-          el.options = {:category => category, :attr => el.options[:attr]}.merge(opts)
+          el.options = {:category => category}.merge(opts)
           el.value = nil
         end
 
@@ -316,7 +315,7 @@ module Kramdown
         end
 
         def convert_a(el)
-          if el.options[:attr].has_key?('href')
+          if el.attr['href']
             set_basics(el, :a, :span)
             process_children(el)
           else
@@ -388,7 +387,7 @@ module Kramdown
           end
           calc_alignment.call(el)
           if el.children.first.type == :tr
-            tbody = Element.new(:tbody, nil, :category => :block)
+            tbody = Element.new(:tbody, nil, nil, :category => :block)
             tbody.children = el.children
             el.children = [tbody]
           end
@@ -429,17 +428,17 @@ module Kramdown
         alias :convert_span :convert_div
 
         def is_math_tag?(el)
-          el.options[:attr] && el.options[:attr]['class'].to_s =~ /\bmath\b/ &&
+          el.attr['class'].to_s =~ /\bmath\b/ &&
             el.children.size == 1 && el.children.first.type == :text
         end
 
         def handle_math_tag(el)
           set_basics(el, :math, (el.value == 'div' ? :block : :span))
           el.value = el.children.shift.value
-          if el.options[:attr]['class'] =~ /^\s*math\s*$/
-            el.options[:attr].delete('class')
+          if el.attr['class'] =~ /^\s*math\s*$/
+            el.attr.delete('class')
           else
-            el.options[:attr]['class'].sub!(/\s?math/, '')
+            el.attr['class'].sub!(/\s?math/, '')
           end
           el.value.gsub!(/&(amp|quot|gt|lt);/) do |m|
             case m
@@ -462,11 +461,11 @@ module Kramdown
 
         while true
           if result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/)
-            @tree.children << Element.new(:xml_pi, result.strip, :category => :block)
+            @tree.children << Element.new(:xml_pi, result.strip, nil, :category => :block)
           elsif result = @src.scan(/\s*#{HTML_DOCTYPE_RE}/)
-            @tree.children << Element.new(:html_doctype, result.strip, :category => :block)
+            @tree.children << Element.new(:html_doctype, result.strip, nil, :category => :block)
           elsif result = @src.scan(/\s*#{HTML_COMMENT_RE}/)
-            @tree.children << Element.new(:xml_comment, result.strip, :category => :block)
+            @tree.children << Element.new(:xml_comment, result.strip, nil, :category => :block)
           else
             break
           end

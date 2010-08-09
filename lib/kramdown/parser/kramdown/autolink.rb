@@ -43,7 +43,7 @@ module Kramdown
         @src.pos += @src.matched_size
         href = @src[1]
         href= "mailto:#{href}" if @src[2].nil?
-        el = Element.new(:a, nil, {:attr => {'href' => href}})
+        el = Element.new(:a, nil, {'href' => href})
         add_text(@src[1].sub(/^mailto:/, ''), el)
         @tree.children << el
       end

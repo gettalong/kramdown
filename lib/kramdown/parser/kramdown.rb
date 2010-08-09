@@ -178,7 +178,7 @@ module Kramdown
             []
           else
             update_tree(child)
-            update_attr_with_ial(child.options[:attr] ||= {}, child.options[:ial]) if child.options[:ial]
+            update_attr_with_ial(child.attr, child.options[:ial]) if child.options[:ial]
             child
           end
         end.flatten!
@@ -227,8 +227,13 @@ module Kramdown
         ial[:refs].each do |ref|
           update_attr_with_ial(attr, ref) if ref = @doc.parse_infos[:ald][ref]
         end if ial[:refs]
-        attr['class'] = ((attr['class'] || '') + " #{ial['class']}").lstrip if ial['class']
-        ial.each {|k,v| attr[k] = v if k.kind_of?(String) && k != 'class' }
+        ial.each do |k,v|
+          if k == 'class'
+            attr[k] = ((attr[k] || '') + " #{v}").lstrip
+          elsif k.kind_of?(String)
+            attr[k] = v
+          end
+        end
       end
 
       # Create a new block level element, taking care of applying a preceding block IAL if it exists.

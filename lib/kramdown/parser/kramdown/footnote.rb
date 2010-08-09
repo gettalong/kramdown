@@ -54,7 +54,7 @@ module Kramdown
             par.children.include?(child)
           end
           if !fn_def[:marker] || !valid
-            fn_def[:marker] = Element.new(:footnote, nil, :name => @src[1])
+            fn_def[:marker] = Element.new(:footnote, nil, nil, :name => @src[1])
             fn_def[:marker].options[:stack] = [@stack.map {|s| s.first}, @tree, fn_def[:marker]].flatten.compact
             @tree.children << fn_def[:marker]
           else
