@@ -21,6 +21,7 @@ and developers may therefore need to update their extensions!
 
 * Bug fixes:
 
+  - The LaTeX converter now removes trailing whitespace in footnotes (reported by Michael Franzl)
 
 * Deprecation notes:
 
