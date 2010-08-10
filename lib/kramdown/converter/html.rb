@@ -84,12 +84,13 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent, opts)
-        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
-          el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+        lang = el.attr.delete('lang')
+        if lang && HIGHLIGHTING_AVAILABLE
           opts = {:wrap => @doc.options[:coderay_wrap], :line_numbers => @doc.options[:coderay_line_numbers],
             :line_number_start => @doc.options[:coderay_line_number_start], :tab_width => @doc.options[:coderay_tab_width],
             :bold_every => @doc.options[:coderay_bold_every], :css => @doc.options[:coderay_css]}
-          result = CodeRay.scan(el.value, el.attr.delete('lang').to_sym).html(opts).chomp + "\n"
+          result = CodeRay.scan(el.value, lang.to_sym).html(opts).chomp + "\n"
           "#{' '*indent}<div#{html_attributes(el)}>#{result}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
@@ -244,7 +245,14 @@ module Kramdown
       end
 
       def convert_codespan(el, indent, opts)
-        "<code#{html_attributes(el)}>#{escape_html(el.value)}</code>"
+        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
+        lang = el.attr.delete('lang')
+        if lang && HIGHLIGHTING_AVAILABLE
+          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @doc.options[:coderay_css]).chomp
+          "<code#{html_attributes(el)}>#{result}</code>"
+        else
+          "<code#{html_attributes(el)}>#{escape_html(el.value)}</code>"
+        end
       end
 
       def convert_footnote(el, indent, opts)

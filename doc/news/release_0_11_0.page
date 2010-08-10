@@ -18,6 +18,8 @@ and developers may therefore need to update their extensions!
     Neuburg)
   - The order of HTML attributes and attributes defined via IALs and ALDs is now preserved
     (requested by Matt Neuburg)
+  - Syntax highlighting is now supported in code spans when using the HTML converter (requested by
+    Josh Cheek)
 
 * Bug fixes:
 

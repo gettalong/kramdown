@@ -79,15 +79,16 @@ following CSS classes:
 * `ws-space`, `ws-tab`: spaces/tabs in between
 
 
-### Automatic Syntax Highlighting   {#syntax-highlighting}
+## Automatic Syntax Highlighting   {#syntax-highlighting}
 
-kramdown supports syntax highlighting of code blocks. Just add the key `lang` to a code block (using
-a [block IAL](../syntax.html#block-inline-attribute-lists)) and it will be highlighted using the
-specified language.
+kramdown supports syntax highlighting of code blocks and code spans. Just add the key `lang` to a
+code block (using a [block IAL](../syntax.html#block-inline-attribute-lists) or a [span
+IAL](../syntax.html#span-inline-attribute-lists)) and it will be highlighted using the specified
+language.
 
-Syntax highlighting for text in a code blocks is done using the
-[CodeRay](http://coderay.rubychan.de) library which can be installed, for example, via Rubygems.
-Have a look at the CodeRay homepage to see all supported languages.
+Syntax highlighting for text is done using the [CodeRay](http://coderay.rubychan.de) library which
+can be installed, for example, via Rubygems. Have a look at the CodeRay homepage to see all
+supported languages.
 
 Here is an example on how Ruby code is highlighted:
 

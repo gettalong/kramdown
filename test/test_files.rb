@@ -53,7 +53,8 @@ class TestFiles < Test::Unit::TestCase
     warn("Skipping html-to-html tests because tidy executable is missing")
   else
     EXCLUDE_HTML_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
-                          'test/testcases/block/09_html/simple.html' # bc of xml elements
+                          'test/testcases/block/09_html/simple.html', # bc of xml elements
+                          'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
@@ -145,6 +146,7 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
+                             'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
