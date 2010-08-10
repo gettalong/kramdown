@@ -156,7 +156,7 @@ module Kramdown
         "#{' '*indent}<dt#{html_attributes(el)}>#{inner(el, indent, opts)}</dt>\n"
       end
 
-      HTML_TAGS_WITH_BODY=['div', 'script']
+      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe']
 
       def convert_html_element(el, indent, opts)
         res = inner(el, indent, opts)

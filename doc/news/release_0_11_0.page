@@ -22,6 +22,7 @@ and developers may therefore need to update their extensions!
 * Bug fixes:
 
   - The LaTeX converter now removes trailing whitespace in footnotes (reported by Michael Franzl)
+  - Fixed bug RF#28429: HTML output of `iframe` HTML element was invalid (reported by Matthew Riley)
 
 * Deprecation notes:
 
