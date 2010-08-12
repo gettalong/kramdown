@@ -49,6 +49,7 @@ module Kramdown
         options = opts.dup.merge(:parent => el)
         el.children.each_with_index do |inner_el, index|
           options[:index] = index
+          options[:result] = result
           result << send("convert_#{inner_el.type}", inner_el, options)
         end
         result
@@ -59,7 +60,7 @@ module Kramdown
       end
 
       def convert_blank(el, opts)
-        ""
+        opts[:result] =~ /\n\n\Z|\A\Z/ ? "" : "\n"
       end
 
       def convert_text(el, opts)
@@ -95,7 +96,7 @@ module Kramdown
 
       def latex_environment(type, el, text)
         attrs = attribute_list(el)
-        "\\begin{#{type}}#{attrs}\n#{text}\n\\end{#{type}}#{attrs}\n"
+        "\\begin{#{type}}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
       end
 
       def convert_blockquote(el, opts)
