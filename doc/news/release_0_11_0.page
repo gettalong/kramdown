@@ -29,6 +29,7 @@ and developers may therefore need to update their extensions!
   - Fixed bug RF#28429: HTML output of `iframe` HTML element was invalid (reported by Matthew Riley)
   - Fixed bug RF#28420: LaTeX converter shouldn't escape the content of the `nomarkdown` extension
     (reported by Bj Wilson)
+  - Fixed bug RF#28469: HTML "document" template did not work (reported by Vofa Ethe)
 
 * Deprecation notes:
 
