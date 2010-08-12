@@ -20,11 +20,15 @@ and developers may therefore need to update their extensions!
     (requested by Matt Neuburg)
   - Syntax highlighting is now supported in code spans when using the HTML converter (requested by
     Josh Cheek)
+  - Updated `nomarkdown` extension and converters to support restricting the output to certain or
+    all converters
 
 * Bug fixes:
 
   - The LaTeX converter now removes trailing whitespace in footnotes (reported by Michael Franzl)
   - Fixed bug RF#28429: HTML output of `iframe` HTML element was invalid (reported by Matthew Riley)
+  - Fixed bug RF#28420: LaTeX converter shouldn't escape the content of the `nomarkdown` extension
+    (reported by Bj Wilson)
 
 * Deprecation notes:
 

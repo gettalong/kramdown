@@ -263,7 +263,11 @@ module Kramdown
       end
 
       def convert_raw(el, indent, opts)
-        el.value + (el.options[:category] == :block ? "\n" : '')
+        if !el.options[:type] || el.options[:type].empty? || el.options[:type].include?('html')
+          el.value + (el.options[:category] == :block ? "\n" : '')
+        else
+          ''
+        end
       end
 
       def convert_em(el, indent, opts)

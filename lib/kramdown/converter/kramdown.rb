@@ -298,12 +298,14 @@ module Kramdown
       end
 
       def convert_raw(el, opts)
+        attr = (el.options[:type] || []).join(' ')
+        attr = " type=\"#{attr}\"" if attr.length > 0
         if @stack.last.first.type == :html_element
           el.value
         elsif el.options[:category] == :block
-          "{::nomarkdown}\n#{el.value}\n{:/}\n"
+          "{::nomarkdown#{attr}}\n#{el.value}\n{:/}\n"
         else
-          "{::nomarkdown}#{el.value}{:/}"
+          "{::nomarkdown#{attr}}#{el.value}{:/}"
         end
       end
 

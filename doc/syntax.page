@@ -1509,7 +1509,10 @@ The following extensions can be used with kramdown:
 
 `nomarkdown`
 
-:   Don't process the body with kramdown but output it as-is.
+:   Don't process the body with kramdown but output it as-is. The attribute `type` specifies which
+    converters should output the body: if the attribute is missing, all converters should output it.
+    Otherwise the attribute value has to be a space separated list of converter names and these
+    converters should output the body.
 
 `options`
 

@@ -1,12 +1,10 @@
 This is a simple paragraph.
-{::nomarkdown}  
+{::nomarkdown}
 This *is* not processed 
-  {:/nomarkdown}
+{:/}
 And another paragraph
 
-{::nomarkdown this='is' .ignore /}
-
-{::nomarkdown type='html'}
+{::nomarkdown type="html"}
 <b>bold</b>
 {:/}
 {::nomarkdown type="latex"}
@@ -15,6 +13,4 @@ And another paragraph
 \end{itemize}
 {:/}
 
-Paragraph
-{::nomarkdown}
-Another paragraph
+Paragraph Another paragraph
