@@ -12,6 +12,11 @@ and developers may therefore need to update their extensions!
 
 ## Changes
 
+* Major changes:
+
+  - Link URLs in inline links and link definitions may now also contain spaces, even if not enclosed
+    in angle brackets (requested by Matt Neuburg)
+
 * Minor changes:
 
   - The HTML converter does not escape the quotation mark in code blocks anymore (requested by Matt

@@ -5,6 +5,10 @@ This is a para.
 [otherid2]: http://wwww.example.com/ 'title 2'
 [otherid3]: <some spaces.html>
 [otherid4]: <some spaces.html> 'title'
+[otherid5]: some spaces.html
+[otherid6]: some spaces.html 'title'
+[otherid7]: some spaces
+            "title"
 
 [break]:	http://www.example.com/test/asdf.html
                 'Another title'

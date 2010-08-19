@@ -24,16 +24,22 @@ simple [URL broken
 on line](something.html
 "title")
 
+simple [URL with spaces](with spaces.html)
+
+simple [URL with spaces](with spaces.html 'title')
+
+simple [URL with spaces](with (spaces).html)
+
+simple [leading/trailing spaces](  spaces.html)
+
+simple [leading/trailing spaces](spaces.html  )
+
+simple [leading/trailing spaces](  spaces.html  )
+
 
 bad [URL [not](something.html)
 
 bad [URL with parens](something(new.html)
-
-bad [URL with leading spaces]( something.html)
-
-bad [URL with trailing spaces](something.html  )
-
-bad [URL with spaces](this is some url.html)
 
 bad [URL with empty title](something.html '')
 

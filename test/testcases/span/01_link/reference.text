@@ -40,3 +40,8 @@ test [url but no title]
 test [urldef]
 
 [urldef]: some.url 'title"
+
+
+some [with spaces]
+
+[with spaces]: with spaces.html "title"

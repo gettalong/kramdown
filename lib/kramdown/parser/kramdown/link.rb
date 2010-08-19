@@ -27,7 +27,7 @@ module Kramdown
       PUNCTUATION_CHARS = "_.:,;!?-"
       LINK_ID_CHARS = /[a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
       LINK_ID_NON_CHARS = /[^a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
-      LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*(?:<(.*?)>|([^\s]+))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
+      LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*(?:<(.*?)>|([^'"\n]*?\S[^'"\n]*?))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
 
       # Parse the link definition at the current location.
       def parse_link_definition
@@ -119,7 +119,7 @@ module Kramdown
           end
         else
           link_url = ''
-          re = /\(|\)|\s/
+          re = /\(|\)|\s(?=['"])/
           nr_of_brackets = 0
           while temp = @src.scan_until(re)
             link_url += temp
@@ -133,7 +133,7 @@ module Kramdown
               break if nr_of_brackets == 0
             end
           end
-          link_url = link_url[1..-2]
+          link_url = link_url[1..-2].strip
 
           if nr_of_brackets == 0
             add_link(el, link_url, nil, alt_text)
