@@ -365,6 +365,7 @@ module Kramdown
               set_basics(el, :codeblock, :block)
             end
             el.value = result.first.value
+            el.children.clear
           end
         end
         alias :convert_pre :convert_code
