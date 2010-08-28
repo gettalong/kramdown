@@ -46,6 +46,13 @@ module Kramdown
         if el.type != :html_element && el.type != :li && el.type != :dd && (ial = ial_for_element(el))
           res << ial
           res << "\n\n" if el.options[:category] == :block
+        elsif [:ul, :dl, :ol, :codeblock].include?(el.type) && opts[:next] &&
+            ([el.type, :codeblock].include?(opts[:next].type) ||
+             (opts[:next].type == :blank && opts[:nnext] && [el.type, :codeblock].include?(opts[:nnext].type)))
+          res << "^\n\n"
+        elsif el.options[:category] == :block && ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) && @stack.last.first.children.last != el &&
+            !(el.type == :p && el.options[:transparent])
+          res << "\n"
         end
         res
       end
@@ -57,7 +64,9 @@ module Kramdown
           options = opts.dup
           options[:index] = index
           options[:prev] = (index == 0 ? nil : el.children[index-1])
+          options[:pprev] = (index <= 1 ? nil : el.children[index-2])
           options[:next] = (index == el.children.length - 1 ? nil : el.children[index+1])
+          options[:nnext] = (index >= el.children.length - 2 ? nil : el.children[index+2])
           result << convert(inner_el, options)
         end
         @stack.pop
@@ -65,7 +74,7 @@ module Kramdown
       end
 
       def convert_blank(el, opts)
-        "\n"
+        ""
       end
 
       ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{\}"'])|^[ ]{0,3}(:)/
@@ -75,44 +84,31 @@ module Kramdown
           el.value
         else
           nl = (el.value =~ /\n$/)
-          el.value.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) { "\\#{$1 || $2}" } + (nl ? "\n" : '')
+          el.value.gsub(/\A\n/) do
+            opts[:prev] && opts[:prev].type == :br ? '' : "\n"
+          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) { "\\#{$1 || $2}" } + (nl ? "\n" : '')
         end
       end
 
       def convert_p(el, opts)
-        res = inner(el, opts).strip.gsub(/\A(?:([#|])|(\d+)\.|([+-]\s))/) do
+        inner(el, opts).strip.gsub(/\A(?:([#|])|(\d+)\.|([+-]\s))/) do
           $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."
         end + "\n"
-        if opts[:next] && opts[:next].type == :p && !ial_for_element(el)
-          res += "\n"
-        end
-        res
       end
 
-      CODEBLOCK_PREV_EL = [:ul, :ol, :dl, :codeblock]
 
       def convert_codeblock(el, opts)
-        res = ''
-        res << "^\n" if opts[:prev] && ((CODEBLOCK_PREV_EL.include?(opts[:prev].type) && !ial_for_element(opts[:prev])) ||
-                                        (opts[:prev].type == :blank &&
-                                         opts[:index]-2 >= 0 &&
-                                         (tmp = @stack.last.first.children[opts[:index]-2]) &&
-                                         CODEBLOCK_PREV_EL.include?(tmp.type) && !ial_for_element(tmp)))
-        res << el.value.split(/\n/).map {|l| l.empty? ? "    " : "    #{l}"}.join("\n") + "\n"
+        el.value.split(/\n/).map {|l| l.empty? ? "    " : "    #{l}"}.join("\n") + "\n"
       end
 
       def convert_blockquote(el, opts)
-        res = ''
-        res << "\n" if opts[:prev] && opts[:prev].type == :blockquote
-        res << inner(el, opts).chomp.split(/\n/).map {|l| "> #{l}"}.join("\n") << "\n"
+        inner(el, opts).chomp.split(/\n/).map {|l| "> #{l}"}.join("\n") << "\n"
       end
 
       def convert_header(el, opts)
         res = ''
-        res << "\n" if opts[:prev] && opts[:prev].type != :blank
         res << "#{'#' * el.options[:level]} #{inner(el, opts)}"
         res << "   {##{el.attr['id']}}" if el.attr['id']
-        res << "\n" if opts[:next] && opts[:next].type != :blank
         res << "\n"
       end
 
@@ -121,13 +117,7 @@ module Kramdown
       end
 
       def convert_ul(el, opts)
-        res = ''
-        res << "\n" if opts[:prev] && (opts[:prev].type == :p && !opts[:prev].options[:transparent])
-        res << "^\n" if opts[:prev] && ((opts[:prev].type == el.type && !ial_for_element(opts[:prev])) ||
-                                        (opts[:prev].type == :blank && opts[:index]-2 >= 0 &&
-                                         (tmp = @stack.last.first.children[opts[:index]-2]) &&
-                                         tmp.type == el.type && !ial_for_element(tmp)))
-        res + inner(el, opts).sub(/\n+\Z/, "\n")
+        inner(el, opts).sub(/\n+\Z/, "\n")
       end
       alias :convert_ol :convert_ul
       alias :convert_dl :convert_ul
@@ -176,8 +166,7 @@ module Kramdown
       end
 
       def convert_dt(el, opts)
-        res = ''
-        res << inner(el, opts) << "\n"
+        inner(el, opts) << "\n"
       end
 
       HTML_TAGS_WITH_BODY=['div', 'script']
@@ -386,7 +375,15 @@ module Kramdown
         res = el.attr.map do |k,v|
           next if [:img, :a].include?(el.type) && ['href', 'src', 'alt', 'title'].include?(k)
           next if el.type == :header && k == 'id'
-          v.nil? ? '' : " #{k}=\"#{v.to_s}\""
+          if v.nil?
+            ''
+          elsif k == 'class'
+            " " + v.split(/\s+/).map {|w| ".#{w}"}.join(" ")
+          elsif k == 'id'
+            " ##{v}"
+          else
+            " #{k}=\"#{v.to_s}\""
+          end
         end.compact.join('')
         res = "toc" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('toc') rescue nil)

@@ -1,12 +1,15 @@
 This is a simple paragraph.
+
 {::nomarkdown}
 This *is* not processed 
 {:/}
+
 And another paragraph
 
 {::nomarkdown type="html"}
 <b>bold</b>
 {:/}
+
 {::nomarkdown type="latex"}
 \begin{itemize}
 \item[Yes] YESSSS!
