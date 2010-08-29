@@ -274,15 +274,32 @@ module Kramdown
       def convert_a(el, opts)
         if el.attr['href'].empty?
           "[#{inner(el, opts)}]()"
+        elsif el.attr['href'] =~ /^(?:http|ftp)/ || el.attr['href'].count("()") > 0
+          index = if link_el = @linkrefs.find {|c| c.attr['href'] == el.attr['href']}
+                    @linkrefs.index(link_el) + 1
+                  else
+                    @linkrefs << el
+                    @linkrefs.size
+                  end
+          "[#{inner(el, opts)}][#{index}]"
         else
-          @linkrefs << el
-          "[#{inner(el, opts)}][#{@linkrefs.size}]"
+          title = el.attr['title'].to_s.empty? ? '' : ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"'
+          "[#{inner(el, opts)}](#{el.attr['href']}#{title})"
         end
       end
 
       def convert_img(el, opts)
-        title = (el.attr['title'] ? ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"' : '')
-        "![#{el.attr['alt']}](<#{el.attr['src']}>#{title})"
+        if el.attr['src'].empty?
+          "![#{el.attr['alt']}]()"
+        else
+          title = (el.attr['title'] ? ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"' : '')
+          link = if el.attr['src'].count("()") > 0
+                   "<#{el.attr['src']}>"
+                 else
+                   el.attr['src']
+                 end
+          "![#{el.attr['alt']}](#{link}#{title})"
+        end
       end
 
       def convert_codespan(el, opts)
@@ -352,10 +369,8 @@ module Kramdown
         res = ''
         res << "\n\n" if @linkrefs.size > 0
         @linkrefs.each_with_index do |el, i|
-          link = (el.type == :a ? el.attr['href'] : el.attr['src'])
-          link = "<#{link}>" if link =~ / /
           title = el.attr['title']
-          res << "[#{i+1}]: #{link} #{title ? '"' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
+          res << "[#{i+1}]: #{el.attr['href']} #{title ? '"' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
         end
         res
       end
