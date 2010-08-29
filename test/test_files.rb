@@ -117,6 +117,7 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/09_html/html_to_native/header.text', # bc of auto_ids option that interferes
                           'test/testcases/block/09_html/simple.text',        # bc of webgen:block elements
                           'test/testcases/block/11_ial/simple.text',         # bc of change of ordering of attributes in header
+                          'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}

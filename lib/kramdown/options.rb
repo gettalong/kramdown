@@ -284,6 +284,13 @@ Default: 0
 Used by: HTML/Latex converter
 EOF
 
+    define(:line_width, Integer, 72, <<EOF)
+Defines the line width to be used when outputting a document
+
+Default: 72
+Used by: kramdown converter
+EOF
+
   end
 
 end

@@ -41,7 +41,7 @@ module Kramdown
         @stack = []
       end
 
-      def convert(el, opts = {})
+      def convert(el, opts = {:indent => 0})
         res = send("convert_#{el.type}", el, opts)
         if el.type != :html_element && el.type != :li && el.type != :dd && (ial = ial_for_element(el))
           res << ial
@@ -50,14 +50,14 @@ module Kramdown
             ([el.type, :codeblock].include?(opts[:next].type) ||
              (opts[:next].type == :blank && opts[:nnext] && [el.type, :codeblock].include?(opts[:nnext].type)))
           res << "^\n\n"
-        elsif el.options[:category] == :block && ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) && @stack.last.first.children.last != el &&
-            !(el.type == :p && el.options[:transparent])
+        elsif el.options[:category] == :block && ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
+            (el.type != :p || !el.options[:transparent])
           res << "\n"
         end
         res
       end
 
-      def inner(el, opts = {})
+      def inner(el, opts = {:indent => 0})
         @stack.push([el, opts])
         result = ''
         el.children.each_with_index do |inner_el, index|
@@ -91,9 +91,10 @@ module Kramdown
       end
 
       def convert_p(el, opts)
-        inner(el, opts).strip.gsub(/\A(?:([#|])|(\d+)\.|([+-]\s))/) do
+        w = @doc.options[:line_width] - opts[:indent].to_s.to_i
+        inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").gsub(/^(?:([#|])|(\d+)\.|([+-]\s))/) do
           $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."
-        end + "\n"
+        end
       end
 
 
@@ -102,6 +103,7 @@ module Kramdown
       end
 
       def convert_blockquote(el, opts)
+        opts[:indent] += 2
         inner(el, opts).chomp.split(/\n/).map {|l| "> #{l}"}.join("\n") << "\n"
       end
 
@@ -132,18 +134,21 @@ module Kramdown
           sym += ial + " "
         end
 
-        first, *last = inner(el, opts).chomp.split(/\n/)
+        opts[:indent] += width
+        text = inner(el, opts)
+        newlines = text.scan(/\n*\Z/).first
+        first, *last = text.split(/\n/)
         last = last.map {|l| " "*width + l}.join("\n")
-        last = last.empty? ? "\n" : "\n#{last}\n"
+        text = first + (last.empty? ? "" : "\n") + last + newlines
         if el.children.first.type == :p && !el.children.first.options[:transparent]
-          res = "#{sym}#{first}\n#{last}"
+          res = "#{sym}#{text}"
           res << "^\n" if el.children.size == 1 && @stack.last.first.children.last == el &&
             (@stack.last.first.children.any? {|c| c.children.first.type != :p} || @stack.last.first.children.size == 1)
           res
         elsif el.children.first.type == :codeblock
-          "#{sym}\n    #{first}#{last}"
+          "#{sym}\n    #{text}"
         else
-          "#{sym}#{first}#{last}"
+          "#{sym}#{text}"
         end
       end
 
@@ -153,15 +158,19 @@ module Kramdown
           sym += ial + " "
         end
 
-        first, *last = inner(el, opts).chomp.split(/\n/)
+        opts[:indent] += width
+        text = inner(el, opts)
+        newlines = text.scan(/\n*\Z/).first
+        first, *last = text.split(/\n/)
         last = last.map {|l| " "*width + l}.join("\n")
-        text = first + (last.empty? ? '' : "\n" + last)
+        text = first + (last.empty? ? "" : "\n") + last + newlines
+        text.chomp! if text =~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dd
         if el.children.first.type == :p && !el.children.first.options[:transparent]
-          "\n#{sym}#{text}\n"
+          "\n#{sym}#{text}"
         elsif el.children.first.type == :codeblock
-          "#{sym}\n    #{text}\n"
+          "#{sym}\n    #{text}"
         else
-          "#{sym}#{text}\n"
+          "#{sym}#{text}"
         end
       end
 
