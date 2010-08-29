@@ -58,7 +58,7 @@ module Kramdown
       ALD_ID_NAME = /\w#{ALD_ID_CHARS}*/
       ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])*?)\2/
       ALD_TYPE_CLASS_NAME = /\.(#{ALD_ID_NAME})/
-      ALD_TYPE_ID_NAME = /#(#{ALD_ID_NAME})/
+      ALD_TYPE_ID_NAME = /#(\w[\w:-]*)/
       ALD_TYPE_REF = /(#{ALD_ID_NAME})/
       ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}|#{ALD_TYPE_REF})(?=\s|\Z)/
       ALD_START = /^#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}\s*?\n/

@@ -1359,37 +1359,38 @@ spaces:
 
 references
 
-:   This must be a valid reference name. It is used to reference an other ALD so that the attributes
-    of the other ALD are also included in this one. The reference name is ignored when collecting the
-    attributes if no attribute definition list with this reference name exists. For example, a
-    simple reference looks like `id`.
+: This must be a valid reference name. It is used to reference an other ALD so that the attributes
+  of the other ALD are also included in this one. The reference name is ignored when collecting the
+  attributes if no attribute definition list with this reference name exists. For example, a simple
+  reference looks like `id`.
 
 key-value pairs
 
-:   A key-value pair is defined by a key name, which must follow the rules for reference names, then
-    an equal sign and then the value in single or double quotes. If you need to use the value
-    delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
-    Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
-    example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
+: A key-value pair is defined by a key name, which must follow the rules for reference names, then
+  an equal sign and then the value in single or double quotes. If you need to use the value
+  delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
+  Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
+  example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
 
 ID name
 
-:   An ID name is defined by using a hash and then the identifier name which must follow the rules
-    for reference names. This is a short hand for the key-value pair `id="IDNAME"` since this is
-    often used. The ID name specifies the unique ID of a block or span level element. For example,
-    an ID name looks like `#myid`.
+: An ID name is defined by using a hash and then the identifier name which needs to start with a
+  word character or a digit, optionally followed by other word characters, digits, dashes or colons.
+  This is a short hand for the key-value pair `id="IDNAME"` since this is often used. The ID name
+  specifies the unique ID of a block or span level element. For example, an ID name looks like
+  `#myid`.
 
 class names
 
-:   A class name is defined by using a dot and then the class name. This is (almost, but not quite)
-    a short hand for the key-value pair `class="class-name"`. Almost because it actually means that
-    the class name should be appended to the current value of the `class` attribute. The following
-    ALDs are all equivalent:
+: A class name is defined by using a dot and then the class name. This is (almost, but not quite) a
+  short hand for the key-value pair `class="class-name"`. Almost because it actually means that the
+  class name should be appended to the current value of the `class` attribute. The following ALDs
+  are all equivalent:
 
-        {:id: .cls1 .cls2}
-        {:id: class="cls1" .cls2}
-        {:id: class="something" class="cls1" .cls2}
-        {:id: class="cls1 cls2}
+      {:id: .cls1 .cls2}
+      {:id: class="cls1" .cls2}
+      {:id: class="something" class="cls1" .cls2}
+      {:id: class="cls1 cls2}
 
 As can be seen from the example of the class names, attributes that are defined earlier are
 overwritten by ones with the same name defined later. Also, everything in the attribute definitions
