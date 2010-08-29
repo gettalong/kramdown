@@ -1473,7 +1473,7 @@ Here are some examples of how to specify extensions and afterwards is the syntax
 An extension can be specified with or without a body. Therefore there exist a start and an end tag
 for extensions. The start tag has the following structure:
 
-* an left brace,
+* a left brace,
 * followed by two colons and the extension name,
 * optionally followed by a space and attribute definitions (allowed characters are backslash-escaped
   closing braces or any character except a not escaped closing brace -- same as with ALDs),
@@ -1505,22 +1505,22 @@ The following extensions can be used with kramdown:
 
 `comment`
 
-:   Treat the body text as a comment which does not show in the output.
+: Treat the body text as a comment which does not show in the output.
 
 `nomarkdown`
 
-:   Don't process the body with kramdown but output it as-is. The attribute `type` specifies which
-    converters should output the body: if the attribute is missing, all converters should output it.
-    Otherwise the attribute value has to be a space separated list of converter names and these
-    converters should output the body.
+: Don't process the body with kramdown but output it as-is. The attribute `type` specifies which
+  converters should output the body: if the attribute is missing, all converters should output it.
+  Otherwise the attribute value has to be a space separated list of converter names and these
+  converters should output the body.
 
 `options`
 
-:   Should be used without a body since the body is ignored. Is used for setting the global options
-    for the kramdown processor (for example, to disable automatic header ID generation). Note that
-    options that are used by the parser are immediately effective whereas all other options are not!
-    This means, for example, that it is not possible to set converter options only for some part of
-    a kramdown document.
+: Should be used without a body since the body is ignored. Is used for setting the global options
+  for the kramdown processor (for example, to disable automatic header ID generation). Note that
+  options that are used by the parser are immediately effective whereas all other options are not!
+  This means, for example, that it is not possible to set converter options only for some part of a
+  kramdown document.
 
 
 
