@@ -16,6 +16,7 @@ and developers may therefore need to update their extensions!
 
   - Link URLs in inline links and link definitions may now also contain spaces, even if not enclosed
     in angle brackets (requested by Matt Neuburg)
+  - The kramdown converter produces nicer output, using the new option `line_width`
 
 * Minor changes:
 
@@ -27,6 +28,7 @@ and developers may therefore need to update their extensions!
     Josh Cheek)
   - Updated `nomarkdown` extension and converters to support restricting the output to certain or
     all converters
+  - Colons are now allowed in ID names for ALDs and IALs
 
 * Bug fixes:
 
