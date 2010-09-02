@@ -157,12 +157,12 @@ module Kramdown
         "#{' '*indent}<dt#{html_attributes(el)}>#{inner(el, indent, opts)}</dt>\n"
       end
 
-      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe']
+      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea']
 
       def convert_html_element(el, indent, opts)
         res = inner(el, indent, opts)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
           output << ' '*indent if !el.options[:parent_is_raw]

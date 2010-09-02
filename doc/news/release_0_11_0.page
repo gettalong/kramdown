@@ -7,8 +7,8 @@ modified_at: 2010-07-19 08:30:00 +02:00
 ---
 ## kramdown 0.11.0 released
 
-**Note**: The "internal" API (which is everything except the `Kramdown::Document` class) has changed
-and developers may therefore need to update their extensions!
+**Note**: The "internal" API (which is currently everything except the `Kramdown::Document` class)
+has changed and developers may therefore need to update their extensions!
 
 ## Changes
 
@@ -37,6 +37,7 @@ and developers may therefore need to update their extensions!
   - Fixed bug RF#28420: LaTeX converter shouldn't escape the content of the `nomarkdown` extension
     (reported by Bj Wilson)
   - Fixed bug RF#28469: HTML "document" template did not work (reported by Vofa Ethe)
+  - Fixed bug: HTML/kramdown output of `textarea` HTML element was invalid (reported by John Muhl)
 
 * Deprecation notes:
 

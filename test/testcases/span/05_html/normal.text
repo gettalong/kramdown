@@ -17,6 +17,8 @@ This is _something<span test="do_it" /> strange_.
 
 Auto-closing: <br>
 
+Expanding: <textarea></textarea>
+
 An invalid tag: <hr>
 
 A <p>block tag</p>.

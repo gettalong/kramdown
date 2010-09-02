@@ -178,7 +178,7 @@ module Kramdown
         inner(el, opts) << "\n"
       end
 
-      HTML_TAGS_WITH_BODY=['div', 'script']
+      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea']
 
       def convert_html_element(el, opts)
         markdown_attr = el.options[:category] == :block && el.children.any? do |c|
@@ -189,7 +189,7 @@ module Kramdown
         opts[:block_raw_text] = true if el.options[:category] == :block && opts[:raw_text]
         res = inner(el, opts)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el)}" << (!res.empty? ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
           output << "<#{el.value}#{html_attributes(el)}"
