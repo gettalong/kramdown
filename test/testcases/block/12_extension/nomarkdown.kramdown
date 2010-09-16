@@ -16,5 +16,5 @@ And another paragraph
 \end{itemize}
 {:/}
 
-Paragraph Another paragraph
+\{::nomarkdown} Another paragraph
 

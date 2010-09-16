@@ -27,12 +27,19 @@ module Kramdown
     class Kramdown
 
       def parse_extension_start_tag(type)
+        orig_pos = @src.pos
         @src.pos += @src.matched_size
+
+        error_block = lambda do |msg|
+          warning(msg)
+          @src.pos = orig_pos
+          add_text(@src.scan(/./)) if type == :span
+          false
+        end
 
         if @src[4] || @src.matched == '{:/}'
           name = (@src[4] ? "for '#{@src[4]}' " : '')
-          warning("Invalid extension stop tag #{name}found - ignoring it")
-          return
+          return error_block.call("Invalid extension stop tag #{name}found - ignoring it")
         end
 
         ext = @src[1]
@@ -46,19 +53,25 @@ module Kramdown
             body = result.sub!(stop_re, '')
             body.chomp! if type == :block
           else
-            warning("No stop tag for extension '#{ext}' found - treating it as extension without body")
+            return error_block.call("No stop tag for extension '#{ext}' found - ignoring it")
           end
         end
 
-        handle_extension(ext, opts, body, type)
+        if !handle_extension(ext, opts, body, type)
+          error_block.call("Invalid extension with name '#{ext}' specified - ignoring it")
+        else
+          true
+        end
       end
 
       def handle_extension(name, opts, body, type)
         case name
         when 'comment'
           @tree.children << Element.new(:comment, body, nil, :category => type) if body.kind_of?(String)
+          true
         when 'nomarkdown'
           @tree.children << Element.new(:raw, body, nil, :category => type, :type => opts['type'].to_s.split(/\s+/)) if body.kind_of?(String)
+          true
         when 'options'
           opts.select do |k,v|
             k = k.to_sym
@@ -71,8 +84,9 @@ module Kramdown
           end.each do |k,v|
             warning("Unknown kramdown option '#{k}'")
           end
+          true
         else
-          warning("Invalid extension name '#{name}' specified - ignoring extension")
+          false
         end
       end
 
@@ -86,7 +100,6 @@ module Kramdown
       # Parse the extension block at the current location.
       def parse_block_extension
         parse_extension_start_tag(:block)
-        true
       end
       define_parser(:block_extension, EXT_BLOCK_START)
 
