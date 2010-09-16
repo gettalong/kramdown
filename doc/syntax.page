@@ -75,6 +75,7 @@ Following is a list of all the characters (character sequences) that can be esca
     _         underscore
     +         plus
     -         minus
+    =         equal sign
     `         backtick
     ()[]{}    left and right parens/brackets/braces
     #         hash

@@ -24,7 +24,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      ESCAPED_CHARS = /\\([\\.*_+`()\[\]{}#!:|"'\$-])/
+      ESCAPED_CHARS = /\\([\\.*_+`()\[\]{}#!:|"'\$=-])/
 
       # Parse the backslash-escaped character at the current location.
       def parse_escaped_chars
