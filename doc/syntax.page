@@ -744,8 +744,10 @@ kramdown has built-in support for block and span level mathematics written in La
 A math block is started using two dollar signs, optionally indented up to three spaces. The math
 block continues until the next two dollar signs (which may be on the same line or on one of the next
 lines) that appear at the end of a line, i.e. they may only be followed by whitespace characters.
-The content of a math block has to be valid LaTeX math. It is always wrapped inside a
-`\begin{displaymath}...\end{displaymath}` enviroment except if it begins with a `\begin` statement.
+Math blocks need to be separated from other block level elements by [blank lines](#blank-lines) or
+[EOB markers](#eob-marker). The content of a math block has to be valid LaTeX math. It is always
+wrapped inside a `\begin{displaymath}...\end{displaymath}` enviroment except if it begins with a
+`\begin` statement.
 
 The following kramdown fragment
 
