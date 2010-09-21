@@ -35,6 +35,7 @@ module Kramdown
         link_id, link_url, link_title = @src[1].downcase, @src[2] || @src[3], @src[5]
         warning("Duplicate link ID '#{link_id}' - overwriting") if @doc.parse_infos[:link_defs][link_id]
         @doc.parse_infos[:link_defs][link_id] = [link_url, link_title]
+        @tree.children << Element.new(:eob, :link_def)
         true
       end
       define_parser(:link_definition, LINK_DEFINITION_START)

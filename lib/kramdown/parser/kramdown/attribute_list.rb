@@ -67,23 +67,24 @@ module Kramdown
       def parse_ald
         @src.pos += @src.matched_size
         parse_attribute_list(@src[2], @doc.parse_infos[:ald][@src[1]] ||= Utils::OrderedHash.new)
-        @tree.children << Element.new(:eob)
+        @tree.children << Element.new(:eob, :ald)
         true
       end
       define_parser(:ald, ALD_START)
 
 
-      IAL_BLOCK_START = /^#{OPT_SPACE}\{:(?!:)(#{ALD_ANY_CHARS}+)\}\s*?\n/
+      IAL_BLOCK = /\{:(?!:|\/)(#{ALD_ANY_CHARS}+)\}\s*?\n/
+      IAL_BLOCK_START = /^#{OPT_SPACE}#{IAL_BLOCK}/
 
       # Parse the inline attribute list at the current location.
       def parse_block_ial
         @src.pos += @src.matched_size
         if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
           parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
+          @tree.children << Element.new(:eob, :ial) unless @src.check(IAL_BLOCK_START)
         else
           parse_attribute_list(@src[1], @block_ial = Utils::OrderedHash.new)
         end
-        @tree.children << Element.new(:eob) unless @src.check(IAL_BLOCK_START)
         true
       end
       define_parser(:block_ial, IAL_BLOCK_START)

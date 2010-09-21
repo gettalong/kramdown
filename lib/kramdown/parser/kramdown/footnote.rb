@@ -38,6 +38,7 @@ module Kramdown
         parse_blocks(el, @src[2].gsub(INDENT, ''))
         warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @doc.parse_infos[:footnotes][@src[1]]
         (@doc.parse_infos[:footnotes][@src[1]] = {})[:content] = el
+        @tree.children << Element.new(:eob, :footnote_def)
         true
       end
       define_parser(:footnote_definition, FOOTNOTE_DEFINITION_START)

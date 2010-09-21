@@ -32,6 +32,7 @@ module Kramdown
         abbrev_id, abbrev_text = @src[1], @src[2].strip
         warning("Duplicate abbreviation ID '#{abbrev_id}' - overwriting") if @doc.parse_infos[:abbrev_defs][abbrev_id]
         @doc.parse_infos[:abbrev_defs][abbrev_id] = abbrev_text
+        @tree.children << Element.new(:eob, :abbrev_def)
         true
       end
       define_parser(:abbrev_definition, ABBREV_DEFINITION_START)

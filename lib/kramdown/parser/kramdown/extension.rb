@@ -84,6 +84,7 @@ module Kramdown
           end.each do |k,v|
             warning("Unknown kramdown option '#{k}'")
           end
+          @tree.children << Element.new(:eob, :extension) if type == :block
           true
         else
           false
