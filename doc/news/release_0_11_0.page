@@ -39,6 +39,7 @@ has changed and developers may therefore need to update their extensions!
   - Fixed bug RF#28469: HTML "document" template did not work (reported by Vofa Ethe)
   - Fixed bug: HTML/kramdown output of `textarea` HTML element was invalid (reported by John Muhl)
   - Invalid or unknown extension tags are now left alone and not removed anymore
+  - Fixed a minor problem in list parsing which arised due to compact nested list detection
 
 * Deprecation notes:
 

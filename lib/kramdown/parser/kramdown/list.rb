@@ -87,12 +87,7 @@ module Kramdown
             result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
             result.sub!(indent_re, '')
             if !nested_list_found && result =~ LIST_START
-              parse_blocks(item, item.value)
-              if item.children.length == 1 && item.children.first.type == :p
-                item.value = ''
-              else
-                item.children.clear
-              end
+              item.value << "^\n"
               nested_list_found = true
             end
             item.value << result
