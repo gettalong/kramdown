@@ -20,9 +20,7 @@
 #++
 #
 
-require 'kramdown/parser/kramdown/blank_line'
-require 'kramdown/parser/kramdown/eob'
-require 'kramdown/parser/kramdown/horizontal_rule'
+require 'kramdown/parser/kramdown/block_boundary'
 
 module Kramdown
   module Parser
@@ -36,6 +34,8 @@ module Kramdown
 
       # Parse the table at the current location.
       def parse_table
+        return false if !after_block_boundary?
+
         orig_pos = @src.pos
         table = new_block_el(:table, nil, nil, :alignment => [])
         @src.scan(TABLE_SEP_LINE)
@@ -89,6 +89,11 @@ module Kramdown
           else
             break
           end
+        end
+
+        if !before_block_boundary?
+          @src.pos = orig_pos
+          return false
         end
 
         add_container.call(has_footer ? :tfoot : :tbody, false) if !rows.empty?

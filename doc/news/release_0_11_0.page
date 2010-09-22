@@ -29,6 +29,7 @@ has changed and developers may therefore need to update their extensions!
   - Updated `nomarkdown` extension and converters to support restricting the output to certain or
     all converters
   - Colons are now allowed in ID names for ALDs and IALs
+  - Tables and math blocks now have to start and end on block boundaries
 
 * Bug fixes:
 

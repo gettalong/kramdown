@@ -20,6 +20,8 @@
 #++
 #
 
+require 'kramdown/parser/kramdown/block_boundary'
+
 module Kramdown
   module Parser
     class Kramdown
@@ -29,9 +31,8 @@ module Kramdown
 
       # Parse the Setext header at the current location.
       def parse_setext_header
-        if @tree.children.last && @tree.children.last.type != :blank
-          return false
-        end
+        return false if !after_block_boundary?
+
         @src.pos += @src.matched_size
         text, id, level = @src[1].strip, @src[2], @src[3]
         el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
@@ -48,9 +49,8 @@ module Kramdown
 
       # Parse the Atx header at the current location.
       def parse_atx_header
-        if @tree.children.last && @tree.children.last.type != :blank
-          return false
-        end
+        return false if !after_block_boundary?
+
         result = @src.scan(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2].strip, @src[3]
         el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text)

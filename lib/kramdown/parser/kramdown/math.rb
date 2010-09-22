@@ -20,19 +20,17 @@
 #++
 #
 
-require 'kramdown/parser/kramdown/blank_line'
-require 'kramdown/parser/kramdown/eob'
+require 'kramdown/parser/kramdown/block_boundary'
 
 module Kramdown
   module Parser
     class Kramdown
 
-      BLOCK_MATH_END   = /#{BLANK_LINE}|#{EOB_MARKER}|\Z/
       BLOCK_MATH_START = /^#{OPT_SPACE}(\\)?\$\$(.*?)\$\$\s*?\n/m
 
       # Parse the math block at the current location.
       def parse_block_math
-        if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
+        if !after_block_boundary?
           return false
         elsif @src[1]
           @src.scan(/^#{OPT_SPACE}\\/)
@@ -41,7 +39,7 @@ module Kramdown
         orig_pos = @src.pos
         @src.pos += @src.matched_size
         data = @src[2]
-        if @src.check(BLOCK_MATH_END)
+        if before_block_boundary?
           @tree.children << new_block_el(:math, data)
           true
         else
