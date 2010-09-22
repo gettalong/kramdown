@@ -77,22 +77,21 @@ module Kramdown
         ""
       end
 
-      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{\}"'])|^[ ]{0,3}(:)/
+      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{"'])|^[ ]{0,3}(:)/
 
       def convert_text(el, opts)
         if opts[:raw_text]
           el.value
         else
-          nl = (el.value =~ /\n$/)
           el.value.gsub(/\A\n/) do
             opts[:prev] && opts[:prev].type == :br ? '' : "\n"
-          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) { "\\#{$1 || $2}" } + (nl ? "\n" : '')
+          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) { "\\#{$1 || $2}" }
         end
       end
 
       def convert_p(el, opts)
         w = @doc.options[:line_width] - opts[:indent].to_s.to_i
-        inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").gsub(/^(?:([#|])|(\d+)\.|([+-]\s))/) do
+        inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").gsub(/\A(?:([#|])|(\d+)\.|([+-]\s|[=-]+\s*?$))/) do
           $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."
         end
       end
@@ -165,6 +164,7 @@ module Kramdown
         last = last.map {|l| " "*width + l}.join("\n")
         text = first + (last.empty? ? "" : "\n") + last + newlines
         text.chomp! if text =~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dd
+        text += "\n" if text !~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dt
         if el.children.first.type == :p && !el.children.first.options[:transparent]
           "\n#{sym}#{text}"
         elsif el.children.first.type == :codeblock
@@ -377,10 +377,9 @@ module Kramdown
 
       def create_footnote_defs
         res = ''
-        res = "\n" if @footnotes.size > 0
         @footnotes.each do |name, data|
-          res << "\n[^#{name}]:\n"
-          res << inner(data[:content]).chomp.split(/\n/).map {|l| "    #{l}"}.join("\n")
+          res << "[^#{name}]:\n"
+          res << inner(data[:content]).chomp.split(/\n/).map {|l| "    #{l}"}.join("\n") + "\n\n"
         end
         res
       end

@@ -26,8 +26,9 @@ document is converted.
 ## Source Text Formatting
 
 A kramdown document may be in any encoding, for example ASCII, UTF-8 or ISO-8859-1, and the output
-will have the same encoding as the source. The document consists of two types of elements, block
-level elements and span level elements:
+will have the same encoding as the source.
+
+The document consists of two types of elements, block level elements and span level elements:
 
 * Block level elements define the main structure of the content, for example, what part of the text
   should be a paragraph, a list, a blockquote and so on.
@@ -41,6 +42,32 @@ element descriptions. Such a reference is always to be taken relative to the cur
 level because some block level elements open up a new indentation level (e.g. blockquotes). The
 beginning of a kramdown document opens up the default indentation level which begins at the first
 column of the text.
+
+
+## Line Wrapping
+
+Some lightweight markup syntax don't work well in environments where lines are hard-wrapped. For
+example, this is the case with many email programs. Therefore kramdown allows content like
+paragraphs or blockquotes to be hard-wrapped, i.e. broken across lines. This is sometimes referred
+to as "lazy syntax" since the indentation or line prefix required for the first line of content is
+not required for the consecutive lines.
+
+Block level elements that support line wrapping always end when one of the following conditions is
+encountered:
+
+* a [blank line](#blank-lines), an [EOB marker line](#eob-marker), a [block IAL](#block-ials) or the
+  end of the document (i.e. a [block boundary](#block-boundaries)),
+
+*  or an [HTML block](#html-blocks).
+
+Line wrapping is allowed throughout a kramdown document. There is one exception, however:
+[headers](#headers) may not be wrapped across lines. This is not an issue in most situations since
+headers normally fit on one line. If a header text gets too long for one line, use HTML syntax
+instead.
+
+**Note** that it is **NOT** recommended to use lazy syntax to write a kramdown document. The
+flexibility that the kramdown syntax offers due to the issue of line wrapping hinders readability
+and should therefore not be used.
 
 
 ### Usage of Tabs
@@ -58,7 +85,7 @@ when converting a kramdown document to HTML one needs to take care of the charac
 depending on the output format.
 
 This means, for example, that you can just use `<`, `>` and `&` in a kramdown document and need not
-think about when to use their HTML entity counterparts. However, if you *do use* HTML entitys or
+think about when to use their HTML entity counterparts. However, if you *do use* HTML entities or
 HTML tags which use one of the characters, the result will be correct nonetheless!
 
 Since kramdown also uses some characters to mark-up the text, there needs to be a way to escape
@@ -89,6 +116,21 @@ Following is a list of all the characters (character sequences) that can be esca
     $         dollar sign
 
 
+## Block Boundaries
+
+Some block level elements have to start and/or end on so called block boundaries, as stated in their
+documentation. There are two cases where block boundaries come into play:
+
+* If a block level element has to start on a block boundary, it has to be preceded by either a
+  [blank line](#blank-lines), an [EOB marker](#eob-marker), a [block IAL](#block-ials) or it has to
+  be the first element.
+
+* If a block level element has to end on a block boundary, it has to be followed by either a [blank
+  line](#blank-lines), an [EOB marker](#eob-marker), a [block IAL](#block-ials) or it has to be the
+  last element.
+
+
+
 # Structural Elements
 
 All structural elements are block level elements and they are used to structure the content. They
@@ -99,30 +141,36 @@ can mark up some text as, for example, a simple paragraph, a quote or as a list 
 
 Any line that just contains white space characters such as spaces and tabs is considered a blank
 line by kramdown. One or more consecutive blank lines are handled as one empty blank line. Blank
-lines are mostly used to visually separate block level elements from each other and in this case
-they don't have semantic meaning. However, there are some cases where blank lines do have a semantic
-meaning:
+lines are used to separate block level elements from each other and in this case they don't have
+semantic meaning. However, there are some cases where blank lines do have a semantic meaning:
 
-* When used in paragraphs -- see the [paragraphs section](#paragraphs)
 * When used in headers -- see the [headers section](#headers)
+* When used in code blocks -- see the [code blocks section](#code-blocks)
 * When used in lists -- see the [lists section](#lists)
+* When used in math blocks -- see the [math blocks section](#math-blocks)
+* When used for elements that have to start/end on [block boundaries](#block-boundaries)
 
 
 ## Paragraphs
 
 Paragraphs are the most used block level elements. One or more consecutive lines of text are
-interpreted as one paragraph. Every line of a paragraph may be indented up to three spaces. You can
-separate two consecutive paragraphs from each other by using one or more blank lines. Notice that a
-line break in the source does not mean a line break in the output! If you want to have an explicit
-line break (i.e. a `<br />` tag) you need to end a line with two or more spaces or two backslashes!
-Note, however, that a line break on the last text line of a paragraph is not possible and will be
-ignored. Leading and trailing spaces will be stripped from the paragraph text.
+interpreted as one paragraph. The first line of a paragraph may be indented up to three spaces, the
+other lines can have any amount of indentation because paragraphs support [line
+wrapping](#line-wrapping). In addition to the rules outlined in the section about line wrapping, a
+paragraph ends when a [definition list line](#definition-lists) is encountered.
+
+You can separate two consecutive paragraphs from each other by using one or more blank lines. Notice
+that a line break in the source does not mean a line break in the output (due to the [lazy
+syntax](#line-wrapping))!. If you want to have an explicit line break (i.e. a `<br />` tag) you need
+to end a line with two or more spaces or two backslashes! Note, however, that a line break on the
+last text line of a paragraph is not possible and will be ignored. Leading and trailing spaces will
+be stripped from the paragraph text.
 
 The following gives you an example of how paragraphs look like:
 
     This para line starts at the first column. However,
-       the lines can be indented up to three spaces.
-    The para continues here.
+          the following lines can be indented any number of spaces/tabs.
+       The para continues here.
 
       This is another paragraph, not connected to the above one. But  
     with a hard line break. \\
@@ -137,12 +185,12 @@ single document.
 
 ### Setext Style
 
-Setext style headers are specified by a [blank line](#blank-lines) (except at the beginning of a
-document), followed by a line of text (the header text) and a line with only equal signs (for a
-first level header) or dashes (for a second level header). The header text may be indented up to
-three spaces but any leading or trailing spaces are stripped from the header text. The amount of
-equal signs or dashes is not significant, just one is enough but more may look better. The equal
-signs or dashes have to begin at the first column. For example:
+Setext style headers have to start on a [block boundary](#block-boundaries) with a line of text (the
+header text) and a line with only equal signs (for a first level header) or dashes (for a second
+level header). The header text may be indented up to three spaces but any leading or trailing spaces
+are stripped from the header text. The amount of equal signs or dashes is not significant, just one
+is enough but more may look better. The equal signs or dashes have to begin at the first column. For
+example:
 
     First level header
     ==================
@@ -153,7 +201,8 @@ signs or dashes have to begin at the first column. For example:
        Other first level header
     =
 
-As mentioned you need to insert a blank line before (but not necessarily after) a Setext header:
+Since Setext headers start on block boundaries, this means in most situations that they have to be
+preceded by a blank line. However, blank lines are not necessary after a Setext header:
 
     This is a normal
     paragraph.
@@ -168,7 +217,7 @@ As mentioned you need to insert a blank line before (but not necessarily after) 
     ------------
 
 However, it is generally a good idea to also use a blank line after a Setext header because it looks
-more appropriate.
+more appropriate and eases reading of the document.
 
 > The original Markdown syntax allows one to omit the blank line before a Setext header. However,
 > this leads to ambiguities and makes reading the document harder than necessary. Therefore it is
@@ -187,13 +236,12 @@ the case. The general rule is that Setext headers are processed before horizonta
 
 ### atx Style
 
-atx style headers are specified by a [blank line](#blank-lines) (except at the beginning of a
-document), followed by a line with one or more hash characters and then the header text. No spaces
-are allowed before the hash characters. The number of hash characters specifies the heading level:
-one hash character gives you a first level heading, two a second level heading and so on until the
-maximum of six hash characters for a sixth level heading. You may optionally use any number of
-hashes at the end of the line to close the header. Any leading or trailing spaces are stripped from
-the header text. For example:
+atx style headers have to start on a [block boundary](#block-boundaries) with a line that contains
+one or more hash characters and then the header text. No spaces are allowed before the hash
+characters. The number of hash characters specifies the heading level: one hash character gives you
+a first level heading, two a second level heading and so on until the maximum of six hash characters
+for a sixth level heading. You may optionally use any number of hashes at the end of the line to
+close the header. Any leading or trailing spaces are stripped from the header text. For example:
 
     # First level header
 
@@ -227,20 +275,25 @@ trailing hashes. For example:
 ## Blockquotes
 
 A blockquote is started using the `>` marker followed by an optional space and the content of the
-blockquote. The marker itself may be indented up to three spaces. All following lines that are also
-started with the blockquote marker belong to the blockquote. The contents of a blockquote are block
-level elements. This means that if you are just using text as content that it will be wrapped in a
-paragraph. For example, the following gives you one blockquote with two paragraphs in it:
+blockquote. The marker itself may be indented up to three spaces. All following lines, whether they
+are started with the blockquote marker or just contain text, belong to the blockquote because
+blockquotes support [line wrapping](#line-wrapping).
+
+The contents of a blockquote are block level elements. This means that if you are just using text as
+content that it will be wrapped in a paragraph. For example, the following gives you one blockquote
+with two paragraphs in it:
 
     > This is a blockquote.
-    >on multiple lines.
+    >     on multiple lines
+    that may be lazy.
     >
     > This is the second paragraph.
 
 Since the contents of a blockquote are block level elements, you can nest blockquotes and use other
-block level elements:
+block level elements (this is also the reason why blockquotes need to support line wrapping):
 
     > This is a paragraph.
+    >
     > > A nested blockquote.
     >
     > ## Headers work
@@ -257,17 +310,16 @@ will have to be indented with five spaces or one space and one tab, like this:
     >
     >     ruby -e 'puts :works'
 
-> The original Markdown syntax allowed "lazy" blockquotes, i.e. blockquotes where only the first line
-> needs a blockquote marker. This is disallowed in kramdown, you always need to use a blockquote
-> marker! The rational behind this is that most email programs and good text editors put the `>`
-> maker automatically before every quoted line and that things like the following work like
-> expected:
->
->     > > This is some quoted text.
->     > > Spanning multiple lines.
->     > This is the answer to the quoted text above.
->     This is just a normal paragraph, with the answer to the above.
-{: .markdown-difference}
+[Line wrapping](#line-wrapping) allows one to be lazy but hinders readability and should therefore
+be avoided, especially with blockquotes. Here is an example of using blockquotes with line wrapping:
+
+    > This is a paragraph inside
+    a blockquote.
+    >
+    > > This is a nested paragraph
+    that continues here
+    > and here
+    > > and here
 
 
 ## Code Blocks
@@ -275,12 +327,19 @@ will have to be indented with five spaces or one space and one tab, like this:
 Code blocks can be used to represent verbatim text like markup, HTML or a program fragment because
 no syntax is parsed within a code block.
 
-### Standard Code Block
+### Standard Code Blocks
 
 A code block can be started by using four spaces or one tab and then the text of the code block. All
-following lines that adhere to this syntax belong to the same code block. The indentation (four
-spaces or one tab) is stripped from the text. Note that blank lines don't separate consecutive code
-blocks:
+following lines containing text, whether they adhere to this syntax or not, belong to the code block
+because code blocks support [line wrapping](#line-wrapping)). A wrapped code line is automatically
+appended to the preceding code line by substituting the line break with a space character. The
+indentation (four spaces or one tab) is stripped from each line of the code block.
+
+> The original Markdown syntax does not allow line wrapping in code blocks.
+{: .markdown-difference}
+
+Note that consecutive code blocks that are only separate by [blank lines](#blank-lines) are merged
+together into one code block:
 
         Here comes some code
 
@@ -293,7 +352,7 @@ marker](#eob-marker) to separate the two:
     ^
         This one is separate.
 
-### Fenced Code Block
+### Fenced Code Blocks
 
 > This alternative syntax is not part of the original Markdown syntax. The idea and syntax comes
 > from the [PHP Markdown Extra] package.
@@ -359,22 +418,36 @@ The following gives you an unordered list and an ordered list:
 The first list marker in a list may be indented up to three spaces. The column number of the first
 non-space character which appears after the list item marker on the same line specifies the
 indentation that has to be used for the following lines of content of the list item. If there is no
-such character, the indentation that needs to be used is four spaces or one tab. If a line does not
-have the needed amount of indentation, it is not treated as list item content. The indentation is
-stripped from the content and the content (note that the content naturally also contains the content
-of the line with the item marker) is processed as text containing block level elements. All other
-list markers in the list may be indented up to three spaces or the number of spaces used for the
-indentation of the last list item minus one, whichever number is smaller. For example:
+such character, the indentation that needs to be used is four spaces or one tab. Indented lines may
+be followed by lines containg text with any amount of indentation due to [line
+wrapping](#line-wrapping). Note, however, that in addition to the rules outlined in the section
+about line wrapping, a list item also ends when a line with another list item marker is encountered
+-- see the next paragraph.
+
+The indentation is stripped from the content and the content (note that the content naturally also
+contains the content of the line with the item marker) is processed as text containing block level
+elements. All other list markers in the list may be indented up to three spaces or the number of
+spaces used for the indentation of the last list item minus one, whichever number is smaller. For
+example:
 
     * This is the first line. Since the first non-space characters appears in column 3, all other
-      lines have to be indented 2 spaces so that the first characters align. This tells kramdown
-      that the lines belong to the list item.
+      indented lines have to be indented 2 spaces.
+    However, one could be lazy and not indent a line but this is not recommened.
     *       This is the another item of the list. It uses a different number of spaces for
-            indentation which is okay but should generally be avoided.
-       * The list item marker is indented 3 spaces which is allowed but should also be avoided.
+       indentation which is okay but should generally be avoided.
+       * The list item marker is indented 3 spaces which is allowed but should also be avoided and
+         starts the third list item. Note that the lazy line in the second list item may make you
+         believe that this is a sub-list which it isn't! So avoid being lazy!
 
 So, while the above is possible and creates one list with three items, it is not advised to use
-different (marker and list content) indents for same level list items!
+different (marker and list content) indents for same level list items as well as lazy indentation!
+It is much better to write such a list in the following way:
+
+    * This is the first list item bla blabla blabla blabla blabla blabla blabla blabla blabla blabla
+      blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla
+      blabla blabla blabla bla
+    * This is the another item of the list. bla blabla blabla blabla blabla blabla blabla blabla
+      blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla
 
 > The original Markdown syntax also allows you to indent the marker, however, the behaviour of what
 > happens with the list items is not clearly specified and may surprise you.
@@ -389,9 +462,9 @@ example:
     *   Using a tab to indent this line, the tab only counts as three spaces and therefore the
         overall indentation is four spaces.
 
-       1.   The tab after the marker counts here as two spaces. Since the indentation of the marker
-            is three spaces and the marker itself takes two characters, the overall indentation
-            needed for the following lines is eight spaces or two tabs.
+       1.   The tab after the marker counts here as three spaces. Since the indentation of the
+            marker is three spaces and the marker itself takes two characters, the overall
+            indentation needed for the following lines is eight spaces or two tabs.
 
 It is clear that you might get unexpected results if you mix tabs and spaces or if you don't have
 the tab stops set to multiples of four in your editor! Therefore this should be avoided!
@@ -444,6 +517,7 @@ Since the content of a list item can contain block level elements, you can do th
         A second paragraph
 
         * nested list
+
         > blockquote
 
     *   Second item
@@ -470,17 +544,6 @@ Note that the list marker needs to be followed with at least one space or tab! O
 not recognized as the start of a list item but interpreted as a paragraph containing the list
 marker.
 
-> The original Markdown syntax allows you to be lazy when you just use text for a list item. So the
-> following is possible with Markdown:
->
->     * First list item
->     continued here
->     *   Second list item
->       continued here.
->
-> This kind of syntax is disallowed in kramdown.
-{: .markdown-difference}
-
 If you want to have one list directly after another one (both with the same list type, i.e. ordered
 or unordered), you need to use an EOB marker to separate the two:
 
@@ -488,16 +551,9 @@ or unordered), you need to use an EOB marker to separate the two:
     ^
     * List two
 
-It is possible that a line gets parsed as ordered or unordered list although it shouldn't. This
-would be the case in the following example:
-
-    I have read the book
-    1984. It was great
-    - others say that, too!
-
-Therefore you have to insert a blank line after a paragraph if you want to follow the paragraph with
-a list. The only exception to this rule is when you want to create a compact nested list, i.e. a
-list where the text is not wrapped in paragraphs:
+Since paragraphs support [line wrapping](#line-wrapping), it would usually not be possible to create
+compact nested list, i.e. a list where the text is not wrapped in paragraphs because there is no
+blank line but a sub list after it:
 
     *   This is just text.
         * this is a sub list item
@@ -506,9 +562,11 @@ list where the text is not wrapped in paragraphs:
         spanning two lines
       * this is a nested list item.
 
-Another way to remedy the problem with the list item marker appearing in plain text is by escaping
-the period in an ordered list or the list item marker in an unordered list (this is especially
-useful when the paragraph starts with something looking like a list item marker):
+However, this is an often used syntax and is therefore support by kramdown.
+
+If you want to start a paragraph with something that looks like a list item marker, you need to
+escape it. This is done by escaping the period in an ordered list or the list item marker in an
+unordered list:
 
     1984\. It was great
     \- others say that, too!
@@ -549,26 +607,29 @@ The following is a simple definition list:
 
 The column number of the first non-space character which appears after a definition marker on the
 same line specifies the indentation that has to be used for the following lines of the definition.
-If there is no such character, the indentation that needs to be used is four spaces or one tab. If
-one of the following lines does not have the needed amount of indentation, it is not treated as part
-of the definition. The indentation is stripped from the definition and it (note that the definition
-naturally also contains the content of the line with the definition marker) is processed as text
-containing block level elements. If there is more than one definition, all other definition markers
-for the term may be indented up to three spaces or the number of spaces used for the indentation of
-the last definition minus one, whichever number is smaller. For example:
+If there is no such character, the indentation that needs to be used is four spaces or one tab.
+Indented lines may be followed by lines containg text with any amount of indentation due to [line
+wrapping](#line-wrapping). Note, however, that in addition to the rules outlined in the section
+about line wrapping, a list item also ends when a line with another definition marker is encountered.
+
+The indentation is stripped from the definition and it (note that the definition naturally also
+contains the content of the line with the definition marker) is processed as text containing block
+level elements. If there is more than one definition, all other definition markers for the term may
+be indented up to three spaces or the number of spaces used for the indentation of the last
+definition minus one, whichever number is smaller. For example:
 
     definition term 1
     definition term 2
     : This is the first line. Since the first non-space characters appears in column 3, all other
-      lines have to be indented 2 spaces so that they first characters align. This tells kramdown
-      that the lines belong to the definition.
+    lines have to be indented 2 spaces (or lazy syntax may be used after an indented line). This
+      tells kramdown that the lines belong to the definition.
     :       This is the another definition for the same term. It uses a different number of spaces
             for indentation which is okay but should generally be avoided.
        : The definition marker is indented 3 spaces which is allowed but should also be avoided.
 
 So, while the above is possible and creates a definition list with two terms and three definitions
 for them, it is not advised to use different (definition marker and definition) indents in the same
-definition list!
+definition list as well as lazy indentation!
 
 The definition for a term is made up of text and/or block level elements. If a definition is *not*
 preceded by a blank line, the first part of the definition will just be text if it would be a
@@ -596,7 +657,7 @@ Sometimes one wants to include simple tabular data in a kramdown document for wh
 full-blown HTML table is just too much. kramdown supports this with a simple syntax for ASCII
 tables.
 
-There are three different text line types that can be used in a table:
+There are four different line types that can be used in a table:
 
 * *Table rows* define the content of a table.
 
@@ -678,12 +739,15 @@ Given the above components, a table is specified by
 * optionally followed by a footer separator line and zero, one or more table rows and
 * an optional trailing separator line.
 
+Also note that tables have to start and end on [block boundaries](#block-boundaries)!
+
 > The table syntax differs from the one used in [PHP Markdown Extra] as follows:
 >
 > * kramdown tables have to begin with a pipe character, this is optional in [PHP Markdown Extra].
 > * kramdown tables do not need to have a table header.
 > * kramdown tables can be structured using separator lines.
 > * kramdown tables can contain a table footer.
+> * kramdown tables need to be separted from other block level elements.
 {: .markdown-difference}
 
 Here is an example for a kramdown table with a table header row, two table bodies and a table footer
@@ -742,13 +806,12 @@ three spaces. The following examples show different possibilities to create a ho
 
 kramdown has built-in support for block and span level mathematics written in LaTeX.
 
-A math block is started using two dollar signs, optionally indented up to three spaces. The math
-block continues until the next two dollar signs (which may be on the same line or on one of the next
-lines) that appear at the end of a line, i.e. they may only be followed by whitespace characters.
-Math blocks need to be separated from other block level elements by [blank lines](#blank-lines) or
-[EOB markers](#eob-marker). The content of a math block has to be valid LaTeX math. It is always
-wrapped inside a `\begin{displaymath}...\end{displaymath}` enviroment except if it begins with a
-`\begin` statement.
+A math block needs to start and end on [block boundaries](#block-boundaries). It is started using
+two dollar signs, optionally indented up to three spaces. The math block continues until the next
+two dollar signs (which may be on the same line or on one of the next lines) that appear at the end
+of a line, i.e. they may only be followed by whitespace characters. The content of a math block has
+to be valid LaTeX math. It is always wrapped inside a `\begin{displaymath}...\end{displaymath}`
+enviroment except if it begins with a `\begin` statement.
 
 The following kramdown fragment
 
@@ -957,8 +1020,8 @@ comments is not processed:
 
 # Text Markup
 
-These elements are used inside block level elements to markup text fragments. For example, one can
-easily create links or apply emphasis to certain text parts.
+These elements are all span level elements and used inside block level elements to markup text
+fragments. For example, one can easily create links or apply emphasis to certain text parts.
 
 Note that empty span level elements are not converted to empty HTML tags but are copied as-is to the
 output.
@@ -1032,7 +1095,7 @@ definition looks like this:
 
     [linkid]: http://www.example.com/ "Optional Title"
 
-> Link definitions are, despite being described here, block level elements.
+> Link definitions are, despite being described here, non-content block level elements.
 {: .information}
 
 The link definition has the following structure:
@@ -1208,10 +1271,11 @@ A footnote definition is used to define the content of a footnote and has the fo
 * The footnote name in square brackets, optionally indented up to three spaces,
 * then a colon and one or more optional spaces,
 * then the text of the footnote
-* and optionally more text on the following lines which have have to be indented by four spaces or
-  one tab (like with list items).
+* and optionally more text on the following lines which have to follow the syntax for [standard code
+  blocks](#standard-code-blocks) (the leading four spaces/one tab are naturally stripped from the
+  text)
 
-> Footnote definitions are, despite being described here, block level elements.
+> Footnote definitions are, despite being described here, non-content block level elements.
 {: .information}
 
 The whole footnote content is treated like block level text and can therefore contain any valid
@@ -1235,8 +1299,8 @@ Here are some example footnote definitions:
 
 It does not matter where you put a footnote definition in a kramdown document; the content of all
 referenced footnote definitions will be placed at the end of the kramdown document. Not referenced
-foot note definitions are ignored. If more than one footnote definitions have the same footnote
-name, all footnote definitions but the last are ignored.
+footnote definitions are ignored. If more than one footnote definitions have the same footnote name,
+all footnote definitions but the last are ignored.
 
 
 ## Abbreviations
@@ -1268,7 +1332,7 @@ Here are some examples:
     *[another language]: It's called Markdown
     *[HTML]: HyperTextMarkupLanguage
 
-> Abbreviation definitions are, despite being described here, block level elements.
+> Abbreviation definitions are, despite being described here, non-content block level elements.
 {: .information}
 
 
@@ -1287,16 +1351,24 @@ kramdown converts the following plain ASCII character into their corresponding t
 * `>>` will become a right guillemet (like this >>) -- an optional leading space will become a
   non-breakable space
 
-It also replaces normal single `'` and double quotes `"` with "fancy quotes". There *may* be times
-when kramdown falsely replace the quotes. If this is the case, just \'escape\" the quotes and they
-won't be replaced with fancy ones.
+The parser also replaces normal single `'` and double quotes `"` with "fancy quotes". There *may* be
+times when kramdown falsely replace the quotes. If this is the case, just \'escape\" the quotes and
+they won't be replaced with fancy ones.
 
 
 
-# Other Markup
+# Non-content elements
 
-This section describes markup that is not widely used in kramdown documents but which are sometimes
-needed nonetheless.
+This section describes the non-content elements that are used in kramdown documents, i.e. elements
+that don't provide content for the document but have other uses such as separating block level
+elements or attaching attributes to elements.
+
+Three non-content block level elements are not described here because they fit better where they
+are:
+
+* [link definitions](#link-definitions)
+* [footnote definitions](#footnotes)
+* [abbreviation definition](#abbreviations)
 
 
 ## End-Of-Block Marker    {#eob-marker}
@@ -1334,10 +1406,9 @@ By using an EOB marker, you can make two lists with one item each:
 
 This is an implementation of [Maruku]'s feature for adding attributes to block and span level
 elements (the naming is also taken from Maruku). This block level element is used to define
-attributes which can be referenced later. The [Block Inline Attribute
-List](#block-inline-attribute-lists) is used to attach attributes to a block level element and the
-[Span Inline Attribute List](#span-inline-attribute-lists) is used to attach attributes to a span
-level element.
+attributes which can be referenced later. The [Block Inline Attribute List](#block-ials) is used to
+attach attributes to a block level element and the [Span Inline Attribute List](#span-ials) is used
+to attach attributes to a span level element.
 
 Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
 explanation:
@@ -1354,8 +1425,8 @@ An ALD line has the following structure:
   character except a not escaped closing brace),
 * followed by a closing brace and optional spaces until the end of the line.
 
-The reference name needs to start with a word character or a digit, optionally followed by other word
-characters, digits or dashes.
+The reference name needs to start with a word character or a digit, optionally followed by other
+word characters, digits or dashes.
 
 There are four different types of attribute definitions which have to be separated by one or more
 spaces:
@@ -1407,7 +1478,7 @@ ALDs are processed like they are defined in one ALD.
 
 These elements are used to attach attributes to another element.
 
-### Block Inline Attribute Lists
+### Block Inline Attribute Lists   {#block-ials}
 
 > This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
 > the [Maruku] package.
@@ -1435,17 +1506,17 @@ Here are some examples for block IALs:
     {:.ruby}
         Some code here
 
-### Span Inline Attribute Lists
+### Span Inline Attribute Lists      {#span-ials}
 
 > This syntax feature is not part of the original Markdown syntax. The idea and syntax comes from
 > the [Maruku] package.
 {: .markdown-difference}
 
-This is a version of the [block inline attribute list](#block-inline-attribute-lists) for span level
-elements. It has the same structure as the block IAL except that leading and trailing spaces are not
-allowed. A span IAL (or two or more span IALs) has to be put directly after the span level element
-to which it should be applied, no additional character is allowed between, otherwise it is ignored
-and only removed from the output.
+This is a version of the [block inline attribute list](#block-ials) for span level elements. It has
+the same structure as the block IAL except that leading and trailing spaces are not allowed. A span
+IAL (or two or more span IALs) has to be put directly after the span level element to which it
+should be applied, no additional character is allowed between, otherwise it is ignored and only
+removed from the output.
 
 Here are some examples for span IALs:
 

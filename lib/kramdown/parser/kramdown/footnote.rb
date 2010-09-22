@@ -28,7 +28,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n(?:#{BLANK_LINE}?#{CODEBLOCK_LINE})*)/
+      FOOTNOTE_DEFINITION_START = /^#{OPT_SPACE}\[\^(#{ALD_ID_NAME})\]:\s*?(.*?\n#{CODEBLOCK_MATCH})/
 
       # Parse the foot note definition at the current location.
       def parse_footnote_definition

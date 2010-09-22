@@ -14,6 +14,7 @@ has changed and developers may therefore need to update their extensions!
 
 * Major changes:
 
+  - Line wrapping a.k.a. "lazy syntax" is now supported
   - Link URLs in inline links and link definitions may now also contain spaces, even if not enclosed
     in angle brackets (requested by Matt Neuburg)
   - The kramdown converter produces nicer output, using the new option `line_width`

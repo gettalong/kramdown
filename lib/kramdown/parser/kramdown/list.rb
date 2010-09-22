@@ -24,15 +24,18 @@ require 'kramdown/parser/kramdown/blank_line'
 require 'kramdown/parser/kramdown/eob'
 require 'kramdown/parser/kramdown/horizontal_rule'
 require 'kramdown/parser/kramdown/attribute_list'
+require 'kramdown/parser/kramdown/paragraph'
 
 module Kramdown
   module Parser
     class Kramdown
 
+      LIST_ITEM_IAL = /^\s*(#{IAL_SPAN_START})?\s*\n/
+
       # Used for parsing the first line of a list item or a definition, i.e. the line with list item
       # marker or the definition marker.
       def parse_first_list_line(indentation, content)
-        if content =~ /^\s*(#{IAL_SPAN_START})?\s*\n/
+        if content =~ LIST_ITEM_IAL
           indentation = 4
         else
           while content =~ /^ *\t/
@@ -44,8 +47,9 @@ module Kramdown
         content.sub!(/^\s*/, '')
 
         indent_re = /^ {#{indentation}}/
-        content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*?\n/
-        [content, indentation, content_re, indent_re]
+        content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*\S.*\n/
+        lazy_re = /(?!^ {0,#{[indentation, 3].min}}(?:#{IAL_BLOCK}|#{LAZY_END_HTML_STOP}|#{LAZY_END_HTML_START})).*\S.*\n/
+        [content, indentation, content_re, lazy_re, indent_re]
       end
 
 
@@ -55,24 +59,23 @@ module Kramdown
 
       # Parse the ordered or unordered list at the current location.
       def parse_list
-        if @tree.children.last && @tree.children.last.type == :p # last element must not be a paragraph
-          return false
-        end
-
         type, list_start_re = (@src.check(LIST_START_UL) ? [:ul, LIST_START_UL] : [:ol, LIST_START_OL])
         list = new_block_el(type)
 
         item = nil
-        indent_re = nil
-        content_re = nil
+        content_re, lazy_re, indent_re = nil
         eob_found = false
         nested_list_found = false
+        last_is_blank = false
         while !@src.eos?
-          if @src.check(HR_START)
+          if last_is_blank && @src.check(HR_START)
+            break
+          elsif @src.scan(EOB_MARKER)
+            eob_found = true
             break
           elsif @src.scan(list_start_re)
             item = Element.new(:li)
-            item.value, indentation, content_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
+            item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
 
             item.value.sub!(/^#{IAL_SPAN_START}\s*/) do |match|
@@ -82,8 +85,9 @@ module Kramdown
 
             list_start_re = (type == :ul ? /^( {0,#{[3, indentation - 1].min}}[+*-])([\t| ].*?\n)/ :
                              /^( {0,#{[3, indentation - 1].min}}\d+\.)([\t| ].*?\n)/)
-            nested_list_found = false
-          elsif result = @src.scan(content_re)
+            nested_list_found = (item.value =~ LIST_START)
+            last_is_blank = false
+          elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
             result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
             result.sub!(indent_re, '')
             if !nested_list_found && result =~ LIST_START
@@ -91,12 +95,11 @@ module Kramdown
               nested_list_found = true
             end
             item.value << result
+            last_is_blank = false
           elsif result = @src.scan(BLANK_LINE)
             nested_list_found = true
+            last_is_blank = true
             item.value << result
-          elsif @src.scan(EOB_MARKER)
-            eob_found = true
-            break
           else
             break
           end
@@ -108,12 +111,17 @@ module Kramdown
         list.children.each do |it|
           temp = Element.new(:temp)
           parse_blocks(temp, it.value)
-          it.children += temp.children
+          it.children = temp.children
           it.value = nil
           next if it.children.size == 0
 
-          if it.children.first.type == :p && (it.children.length < 2 || it.children[1].type != :blank ||
-                                              (it == list.children.last && it.children.length == 2 && !eob_found)) &&
+          # Handle the case where an EOB marker is inserted by a block IAL for the first paragraph
+          it.children.delete_at(1) if it.children.first.type == :p &&
+            it.children.length >= 2 && it.children[1].type == :eob && it.children.first.options[:ial]
+
+          if it.children.first.type == :p &&
+              (it.children.length < 2 || it.children[1].type != :blank ||
+               (it == list.children.last && it.children.length == 2 && !eob_found)) &&
               (list.children.last != it || list.children.size == 1 ||
                list.children[0..-2].any? {|cit| cit.children.first.type != :p || cit.children.first.options[:transparent]})
             it.children.first.children.first.value += "\n" if it.children.size > 1 && it.children[1].type != :blank
@@ -158,14 +166,14 @@ module Kramdown
         end
 
         item = nil
-        indent_re = nil
-        content_re = nil
+        content_re, lazy_re, indent_re = nil
         def_start_re = DEFINITION_LIST_START
+        last_is_blank = false
         while !@src.eos?
           if @src.scan(def_start_re)
             item = Element.new(:dd)
             item.options[:first_as_para] = first_as_para
-            item.value, indentation, content_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
+            item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             deflist.children << item
 
             item.value.sub!(/^#{IAL_SPAN_START}\s*/) do |match|
@@ -175,14 +183,19 @@ module Kramdown
 
             def_start_re = /^( {0,#{[3, indentation - 1].min}}:)([\t| ].*?\n)/
             first_as_para = false
-          elsif result = @src.scan(content_re)
+            last_is_blank = false
+          elsif @src.check(EOB_MARKER)
+            break
+          elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
             result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
             result.sub!(indent_re, '')
             item.value << result
             first_as_para = false
+            last_is_blank = false
           elsif result = @src.scan(BLANK_LINE)
             first_as_para = true
             item.value << result
+            last_is_blank = true
           else
             break
           end

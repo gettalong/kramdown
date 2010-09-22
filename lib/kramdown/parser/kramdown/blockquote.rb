@@ -20,22 +20,26 @@
 #++
 #
 
+require 'kramdown/parser/kramdown/blank_line'
+require 'kramdown/parser/kramdown/attribute_list'
+require 'kramdown/parser/kramdown/eob'
+
 module Kramdown
   module Parser
     class Kramdown
 
       BLOCKQUOTE_START = /^#{OPT_SPACE}> ?/
-      BLOCKQUOTE_MATCH = /(^#{OPT_SPACE}>.*?\n)+/
+      BLOCKQUOTE_MATCH = /(^.*\n)+?(?=#{BLANK_LINE}|#{IAL_BLOCK_START}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/
 
       # Parse the blockquote at the current location.
       def parse_blockquote
-        result = @src.scan(BLOCKQUOTE_MATCH).gsub(BLOCKQUOTE_START, '')
         el = new_block_el(:blockquote)
         @tree.children << el
-        parse_blocks(el, result)
+        parse_blocks(el, @src.scan(BLOCKQUOTE_MATCH).gsub!(BLOCKQUOTE_START, ''))
         true
       end
       define_parser(:blockquote, BLOCKQUOTE_START)
+
 
     end
   end

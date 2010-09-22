@@ -310,7 +310,7 @@ This can contain only *span* level elements.
 
 ## Block Attributes
 
-{kdlink: {oid: block-inline-attribute-lists, part: "block IALs"}}
+{kdlink: {oid: block-ials, part: "block IALs"}}
 {kdlink: {oid: attribute-list-definitions, part: "ALDs"}}
 
 You can assign any attribute to a block level element. Just directly follow the block with a *block
@@ -553,7 +553,7 @@ red</span>.
 
 ## Inline Attributes
 
-{kdlink: {oid: span-inline-attribute-lists, part: "span IALs"}}
+{kdlink: {oid: span-ials, part: "span IALs"}}
 
 As with a block level element you can assign any attribute to a span level elements using a *span
 inline attribute list* (or short: span IAL). A span IAL has the same syntax as a block IAL and must

@@ -20,21 +20,28 @@
 #++
 #
 
+require 'kramdown/parser/kramdown/blank_line'
+require 'kramdown/parser/kramdown/attribute_list'
+require 'kramdown/parser/kramdown/eob'
+require 'kramdown/parser/kramdown/list'
+require 'kramdown/parser/kramdown/html'
+
 module Kramdown
   module Parser
     class Kramdown
 
+      LAZY_END_HTML_SPAN_ELEMENTS = HTML_SPAN_ELEMENTS + %w{script}
+      LAZY_END_HTML_START = /<(?>(?!#{LAZY_END_HTML_SPAN_ELEMENTS.join('|')})#{REXML::Parsers::BaseParser::UNAME_STR})\s*(?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\1)*\s*\/?>/m
+      LAZY_END_HTML_STOP = /<\/(?!#{LAZY_END_HTML_SPAN_ELEMENTS.join('|')})#{REXML::Parsers::BaseParser::UNAME_STR}\s*>/m
+
       PARAGRAPH_START = /^#{OPT_SPACE}[^ \t].*?\n/
+      PARAGRAPH_MATCH = /(?:^.*\n)+?(?=#{BLANK_LINE}|#{IAL_BLOCK_START}|#{EOB_MARKER}|#{DEFINITION_LIST_START}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        @src.pos += @src.matched_size
-        if @tree.children.last && @tree.children.last.type == :p
-          @tree.children.last.children.first.value << "\n" << @src.matched.chomp
-        else
-          @tree.children << new_block_el(:p)
-          add_text(@src.matched.lstrip.chomp, @tree.children.last)
-        end
+        result = @src.scan(PARAGRAPH_MATCH)
+        @tree.children << new_block_el(:p)
+        @tree.children.last.children << Element.new(@text_type, result.lstrip.chomp)
         true
       end
       define_parser(:paragraph, PARAGRAPH_START)

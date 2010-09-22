@@ -8,8 +8,10 @@ blockquote
 \item a list
 with some text
 \end{itemize}
+
 \begin{itemize}
 \item other list
 \end{itemize}
 \begin{verbatim}code
 \end{verbatim}
+

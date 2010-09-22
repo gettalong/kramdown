@@ -61,8 +61,7 @@ A code block is wrapped in both `<pre>` and  `<code>` tags.
 ### Showing Whitespace in a Code Block
 
 It is sometimes useful to visualize whitespace within a code block. This can be achieved by adding
-the class `show-whitespaces` to a code block (using a [block
-IAL](../syntax.html#block-inline-attribute-lists)).
+the class `show-whitespaces` to a code block (using a [block IAL](../syntax.html#block-ials)).
 
 Here is an example where the whitespaces are shown:
 
@@ -82,9 +81,8 @@ following CSS classes:
 ## Automatic Syntax Highlighting   {#syntax-highlighting}
 
 kramdown supports syntax highlighting of code blocks and code spans. Just add the key `lang` to a
-code block (using a [block IAL](../syntax.html#block-inline-attribute-lists) or a [span
-IAL](../syntax.html#span-inline-attribute-lists)) and it will be highlighted using the specified
-language.
+code block (using a [block IAL](../syntax.html#block-ials) or a [span
+IAL](../syntax.html#span-ials)) and it will be highlighted using the specified language.
 
 Syntax highlighting for text is done using the [CodeRay](http://coderay.rubychan.de) library which
 can be installed, for example, via Rubygems. Have a look at the CodeRay homepage to see all
