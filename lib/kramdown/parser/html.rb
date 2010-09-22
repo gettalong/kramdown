@@ -39,7 +39,7 @@ module Kramdown
         HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
         HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})\s*=\s*(["'])(.*?)\2/m
         HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\3)*)\s*(\/)?>/m
-        HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::NAME_STR})\s*>/m
+        HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
 
@@ -261,8 +261,6 @@ module Kramdown
         def remove_text_children(el)
           el.children.delete_if {|c| c.type == :text}
         end
-
-        SPAN_ELEMENTS = [:em, :strong, :br, :a, :img, :codespan, :entity, :smart_quote, :typographic_sym, :math]
 
         def wrap_text_children(el)
           tmp = []
