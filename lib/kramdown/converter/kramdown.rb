@@ -58,7 +58,7 @@ module Kramdown
       end
 
       def inner(el, opts = {:indent => 0})
-        @stack.push([el, opts])
+        @stack.push(el)
         result = ''
         el.children.each_with_index do |inner_el, index|
           options = opts.dup
@@ -124,7 +124,7 @@ module Kramdown
       alias :convert_dl :convert_ul
 
       def convert_li(el, opts)
-        sym, width = if @stack.last.first.type == :ul
+        sym, width = if @stack.last.type == :ul
                        ['* ', el.children.first.type == :codeblock ? 4 : 2]
                      else
                        ["#{opts[:index] + 1}.".ljust(4), 4]
@@ -141,8 +141,8 @@ module Kramdown
         text = first + (last.empty? ? "" : "\n") + last + newlines
         if el.children.first.type == :p && !el.children.first.options[:transparent]
           res = "#{sym}#{text}"
-          res << "^\n" if el.children.size == 1 && @stack.last.first.children.last == el &&
-            (@stack.last.first.children.any? {|c| c.children.first.type != :p} || @stack.last.first.children.size == 1)
+          res << "^\n" if el.children.size == 1 && @stack.last.children.last == el &&
+            (@stack.last.children.any? {|c| c.children.first.type != :p} || @stack.last.children.size == 1)
           res
         elsif el.children.first.type == :codeblock
           "#{sym}\n    #{text}"
@@ -203,13 +203,13 @@ module Kramdown
           else
             output << " />"
           end
-          output << "\n" if el.options[:outer_element] || !el.options[:parent_is_raw]
+          output << "\n" if @stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw
           output
         end
       end
 
       def convert_xml_comment(el, opts)
-        if el.options[:category] == :block && !el.options[:parent_is_raw]
+        if el.options[:category] == :block && (@stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw)
           el.value + "\n"
         else
           el.value
@@ -315,7 +315,7 @@ module Kramdown
       def convert_raw(el, opts)
         attr = (el.options[:type] || []).join(' ')
         attr = " type=\"#{attr}\"" if attr.length > 0
-        if @stack.last.first.type == :html_element
+        if @stack.last.type == :html_element
           el.value
         elsif el.options[:category] == :block
           "{::nomarkdown#{attr}}\n#{el.value}\n{:/}\n"
@@ -350,7 +350,7 @@ module Kramdown
       end
 
       def convert_math(el, opts)
-        (@stack.last.first.type == :p && opts[:prev].nil? ? "\\" : '') + "$$#{el.value}$$" + (el.options[:category] == :block ? "\n" : '')
+        (@stack.last.type == :p && opts[:prev].nil? ? "\\" : '') + "$$#{el.value}$$" + (el.options[:category] == :block ? "\n" : '')
       end
 
       def convert_abbreviation(el, opts)

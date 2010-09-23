@@ -62,6 +62,7 @@ module Kramdown
         result = ''
         indent += INDENTATION
         el.children.each do |inner_el|
+          opts[:parent] = el
           result << send("convert_#{inner_el.type}", inner_el, indent, opts)
         end
         result
@@ -160,29 +161,30 @@ module Kramdown
       HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea']
 
       def convert_html_element(el, indent, opts)
+        parent = opts[:parent]
         res = inner(el, indent, opts)
         if el.options[:category] == :span
           "<#{el.value}#{html_attributes(el)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
-          output << ' '*indent if !el.options[:parent_is_raw]
+          output << ' '*indent if parent.type != :html_element || parent.options[:parse_type] != :raw
           output << "<#{el.value}#{html_attributes(el)}"
           if !res.empty? && el.options[:parse_type] != :block
             output << ">#{res}</#{el.value}>"
           elsif !res.empty?
-            output << ">\n#{res}"  << ' '*indent << "</#{el.value}>"
+            output << ">\n#{res.chomp}\n"  << ' '*indent << "</#{el.value}>"
           elsif HTML_TAGS_WITH_BODY.include?(el.value)
             output << "></#{el.value}>"
           else
             output << " />"
           end
-          output << "\n" if el.options[:outer_element] || !el.options[:parent_is_raw]
+          output << "\n" if parent.type != :html_element || parent.options[:parse_type] != :raw
           output
         end
       end
 
       def convert_xml_comment(el, indent, opts)
-        if el.options[:category] == :block && !el.options[:parent_is_raw]
+        if el.options[:category] == :block && (opts[:parent].type != :html_element || opts[:parent].options[:parse_type] != :raw)
           ' '*indent + el.value + "\n"
         else
           el.value

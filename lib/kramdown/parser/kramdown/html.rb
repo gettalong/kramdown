@@ -39,8 +39,6 @@ module Kramdown
         end
 
         @src.scan(/[ \t]*\n/) if parse_type == :block
-        el.options[:outer_element] = true if @tree.type != :html_element
-        el.options[:parent_is_raw] = true if @tree.type == :html_element && @tree.options[:parse_type] == :raw
         el.options[:parse_type] = parse_type
 
         if !closed
