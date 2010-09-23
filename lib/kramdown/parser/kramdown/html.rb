@@ -99,14 +99,13 @@ module Kramdown
             Kramdown::Parser::Html::ElementConverter.new(@doc).process(@tree.children.last) if @doc.options[:html_to_native]
             true
           elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
-            @src.pos += @src.matched_size
             name = @src[1]
 
             if @tree.type == :html_element && @tree.value == name
+              @src.pos += @src.matched_size
               throw :stop_block_parsing, :found
             else
-              warning("Found invalidly used HTML closing tag for '#{name}' - ignoring it")
-              true
+              false
             end
           else
             false
@@ -125,9 +124,14 @@ module Kramdown
         elsif result = @src.scan(HTML_INSTRUCTION_RE)
           @tree.children << Element.new(:xml_pi, result, nil, :category => :span)
         elsif result = @src.scan(HTML_TAG_CLOSE_RE)
-          warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
+          warning("Found invalidly used HTML closing tag for '#{@src[1]}'")
+          add_text(result)
         elsif result = @src.scan(HTML_TAG_RE)
-          return if HTML_BLOCK_ELEMENTS.include?(@src[1])
+          if HTML_BLOCK_ELEMENTS.include?(@src[1])
+            warning("Found block HTML tag '#{@src[1]}' in span level text")
+            add_text(result)
+            return
+          end
 
           reset_pos = @src.pos
           attrs = Utils::OrderedHash.new
