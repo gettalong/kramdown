@@ -7,14 +7,26 @@ modified_at: 2010-07-19 08:30:00 +02:00
 ---
 ## kramdown 0.11.0 released
 
+The biggest change in this release is the implementation of the "lazy syntax" which allows one to
+not use the correct indent or block marker and still continue a paragraph, blockquote, ... The
+original Markdown syntax allows this and it was requested that kramdown allows this, too. However,
+the main reason for adding this syntax to kramdown is not to encourage authors to be lazy but to
+allow kramdown texts to be hard-wrapped by other applications (think, for example, email programs).
+Therefore you shouldn't make active use of this feature!
+
+Another important, though minor, change is that invalid HTML tags and extensions are not removed
+anymore. This is done because of the general rule that unrecognized elements are treated as simple
+text.
+
 **Note**: The "internal" API (which is currently everything except the `Kramdown::Document` class)
 has changed and developers may therefore need to update their extensions!
+
 
 ## Changes
 
 * Major changes:
 
-  - Line wrapping a.k.a. "lazy syntax" is now supported
+  - Line wrapping a.k.a. "lazy syntax" is now supported (requested by Shawn Van Ittersum)
   - Link URLs in inline links and link definitions may now also contain spaces, even if not enclosed
     in angle brackets (requested by Matt Neuburg)
   - The kramdown converter produces nicer output, using the new option `line_width`
