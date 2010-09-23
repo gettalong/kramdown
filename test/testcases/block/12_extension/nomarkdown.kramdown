@@ -7,7 +7,7 @@ This *is* not processed
 And another paragraph
 
 {::nomarkdown type="html"}
-<b>bold</b>
+<em>bold</em>
 {:/}
 
 {::nomarkdown type="latex"}

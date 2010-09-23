@@ -321,6 +321,16 @@ module Kramdown
           end
         end
 
+        def convert_b(el)
+          set_basics(el, :strong, :span)
+          process_children(el)
+        end
+
+        def convert_i(el)
+          set_basics(el, :em, :span)
+          process_children(el)
+        end
+
         def convert_h1(el)
           set_basics(el, :header, :block, :level => el.value[1..1].to_i)
           extract_text(el, el.options[:raw_text] = '')

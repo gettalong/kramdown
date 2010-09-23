@@ -16,6 +16,9 @@ Here is a description of the HTML tags that have native representations and how 
 : These HTML tags are just transformed into their native representation and don't need any further
   processing.
 
+`b i`
+: The HTML `<b>` tag is converted to the `strong` element and the `<i>` tag to the `em` element.
+
 `h1 h2 h3 h4 h5 h6`
 : These six header tags are all mapped to the single `header` element with different header levels.
 

@@ -31,6 +31,8 @@ has changed and developers may therefore need to update their extensions!
     all converters
   - Colons are now allowed in ID names for ALDs and IALs
   - Tables and math blocks now have to start and end on block boundaries
+  - HTML elements `<b>` and `<i>` are now converted to `<strong>` and `<em>` when using
+    HTML-to-native conversion
 
 * Bug fixes:
 

@@ -9,7 +9,7 @@ And another paragraph
 {::nomarkdown this='is' .ignore /}
 
 {::nomarkdown type='html'}
-<b>bold</b>
+<em>bold</em>
 {:/}
 {::nomarkdown type="latex"}
 \begin{itemize}
