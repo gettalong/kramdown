@@ -26,11 +26,12 @@ module Kramdown
   module Parser
     class Kramdown
 
-      TABLE_SEP_LINE = /^#{OPT_SPACE}(?:\||\+)([ ]?:?-[+|: -]*)[ \t]*\n/
+      TABLE_SEP_LINE = /^([+|: -]*?-[+|: -]*?)[ \t]*\n/
       TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
-      TABLE_FSEP_LINE = /^#{OPT_SPACE}(\||\+)[ ]?:?=[+|: =]*[ \t]*\n/
-      TABLE_ROW_LINE = /^#{OPT_SPACE}\|(.*?)[ \t]*\n/
-      TABLE_START = /^#{OPT_SPACE}\|(?:-|(?!=))/
+      TABLE_FSEP_LINE = /^[+|: =]*?=[+|: =]*?[ \t]*\n/
+      TABLE_ROW_LINE = /^(.*?)[ \t]*\n/
+      TABLE_LINE = /(?:\||.*?[^\\\n]\|).*?\n/
+      TABLE_START = /^#{OPT_SPACE}(?=\S)#{TABLE_LINE}/
 
       # Parse the table at the current location.
       def parse_table
@@ -38,6 +39,7 @@ module Kramdown
 
         orig_pos = @src.pos
         table = new_block_el(:table, nil, nil, :alignment => [])
+        leading_pipe = (@src.check(TABLE_LINE) =~ /^\s*\|/)
         @src.scan(TABLE_SEP_LINE)
 
         rows = []
@@ -53,6 +55,7 @@ module Kramdown
         end
 
         while !@src.eos?
+          break if !@src.check(TABLE_LINE)
           if @src.scan(TABLE_SEP_LINE) && !rows.empty?
             if table.options[:alignment].empty? && !has_footer
               add_container.call(:thead, false)
@@ -78,6 +81,7 @@ module Kramdown
                 i += 1
               end
             end
+            cells.shift if leading_pipe && cells.first.strip.empty?
             cells.pop if cells.last.strip.empty?
             cells.each do |cell_text|
               tcell = Element.new(:td)

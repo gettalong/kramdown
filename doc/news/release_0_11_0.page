@@ -43,6 +43,8 @@ has changed and developers may therefore need to update their extensions!
     all converters
   - Colons are now allowed in ID names for ALDs and IALs
   - Tables and math blocks now have to start and end on block boundaries
+  - The table syntax was relaxed to allow table lines that don't start with a pipe character (to be
+    more compatible with PHP Markdown Extra tables)
   - HTML elements `<b>` and `<i>` are now converted to `<strong>` and `<em>` when using
     HTML-to-native conversion
 

@@ -657,13 +657,19 @@ Sometimes one wants to include simple tabular data in a kramdown document for wh
 full-blown HTML table is just too much. kramdown supports this with a simple syntax for ASCII
 tables.
 
+Tables can be created with or without a leading pipe character: If the first line of a table
+contains a pipe character at the start of the line (optionally indented up to three spaces), then
+all leading pipe characters (i.e. pipe characters that are only preceded by whitespace) are ignored
+on all table lines. Otherwise they are not ignored and count when dividing a table line into table
+cells.
+
 There are four different line types that can be used in a table:
 
 * *Table rows* define the content of a table.
 
-  A table row is started with a pipe character, optionally indented up to three spaces, and then the
-  text of the first table cell. Subsequent table cells consist of a pipe character followed by the
-  cell text. One may optionally use a pipe character at the the end of a table row line.
+  A table row is any line that contains at least one pipe character and is not identified as any
+  other type of table line! The table row is divided into indivdual table cells by pipe characters.
+  An optional trailing pipe character is ignored.
 
   Header rows, footer rows and normal rows are all done using these table rows. Table cells can only
   contain a single line of text, no multiline text is supported. The text of a table cell is parsed
@@ -675,13 +681,14 @@ There are four different line types that can be used in a table:
       | First cell|Second cell|Third cell
       | First | Second | Third |
 
+      First | Second | | Fourth |
+
 * *Separator lines* are used to split the table body into multiple body parts.
 
-  A separator line is started with a pipe or plus character, optionally indented up to three spaces,
-  followed by an optional space, an optional colon, a dash and then any number and combination of
-  pipes, dashes, pluses, colons and spaces. The pipe and plus characters can be used to visually
-  separate columns although this is not needed. Multiple separator lines after another are treated
-  as one separator line.
+  A separator line is any line that contains only pipes, dashes, pluses, colons and spaces and which
+  contains at least one dash and one pipe character. The pipe and plus characters can be used to
+  visually separate columns although this is not needed. Multiple separator lines after another are
+  treated as one separator line.
 
   Here are some example separator lines:
 
@@ -690,6 +697,7 @@ There are four different line types that can be used in a table:
       |---------|
       |-
       | :-----: |
+      -|-
 
 * The first separator line after at least one table row is treated specially, namely as *header
   separator line*. It is used to demarcate header rows from normal table rows and/or to set column
@@ -710,6 +718,7 @@ There are four different line types that can be used in a table:
       |---+---+---|
       + :-: |:------| ---:|
       | :-: :- -: -
+      :-: | :-
 
 * A *footer separator line* is used to demarcate footer rows from normal table rows. All table rows
   below the footer separator line are considered to be footer rows.
@@ -739,11 +748,16 @@ Given the above components, a table is specified by
 * optionally followed by a footer separator line and zero, one or more table rows and
 * an optional trailing separator line.
 
-Also note that tables have to start and end on [block boundaries](#block-boundaries)!
+Also note
+
+* that the first line of a table must not have more than three spaces of indentation before the
+  first none space character,
+* that each line of a table needs to have at least one not escaped pipe character so that kramdown
+  recognizes it as a line belonging to the table and
+* that tables have to start and end on [block boundaries](#block-boundaries)!
 
 > The table syntax differs from the one used in [PHP Markdown Extra] as follows:
 >
-> * kramdown tables have to begin with a pipe character, this is optional in [PHP Markdown Extra].
 > * kramdown tables do not need to have a table header.
 > * kramdown tables can be structured using separator lines.
 > * kramdown tables can contain a table footer.
