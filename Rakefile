@@ -236,7 +236,7 @@ EOF
 
   desc "Upload the website to Rubyforge"
   task :publish_website => ['doc'] do
-    sh "rsync -avc --delete --exclude 'wiki' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
+    sh "rsync -avc --delete --exclude 'wiki' --exclude 'js/jsMath' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
   end
 
 
