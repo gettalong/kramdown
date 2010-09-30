@@ -24,7 +24,6 @@ require 'kramdown/parser/kramdown/blank_line'
 require 'kramdown/parser/kramdown/eob'
 require 'kramdown/parser/kramdown/horizontal_rule'
 require 'kramdown/parser/kramdown/attribute_list'
-require 'kramdown/parser/kramdown/paragraph'
 
 module Kramdown
   module Parser
