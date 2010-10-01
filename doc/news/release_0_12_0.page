@@ -17,8 +17,9 @@ modified_at: 2010-10-01 08:31:00 +02:00
 
   - Angle brackets can now also be escaped
 
-* 1 bug fix:
+* 2 bug fixes:
 
   - Fixed output of HTML doctype in kramdown converter
+  - Fixed output of paragraphs starting with a right angle bracket in the kramdown converter
 
 
