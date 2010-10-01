@@ -72,7 +72,6 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Maruku]:             http://maruku.rubyforge.org
-[RedCloth]: http://whytheluckystiff.net/ruby/redcloth/
 [BlueCloth]: http://www.deveiate.org/projects/BlueCloth
 
 
@@ -89,7 +88,7 @@ It is probably the fastest pure-Ruby Markdown converter available (June 2010), b
 than [Maruku] and about 9x faster than [BlueFeather].
 
 <p class="a-center">
-The latest version of kramdown is <b>0.10.0</b> and it was released on <b>2010-07-19</b>.
+The latest version of kramdown is <b>0.11.0</b> and it was released on <b>2010-10-01</b>.
 </p>
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/

@@ -2,8 +2,8 @@
 title: kramdown 0.11.0 released
 no_output: true
 sort_info: r0011
-created_at: 2010-07-19 08:30:00 +02:00
-modified_at: 2010-07-19 08:30:00 +02:00
+created_at: 2010-10-01 08:31:00 +02:00
+modified_at: 2010-10-01 08:31:00 +02:00
 ---
 ## kramdown 0.11.0 released
 
@@ -12,7 +12,7 @@ not use the correct indent or block marker and still continue a paragraph, block
 original Markdown syntax allows this and it was requested that kramdown allows this, too. However,
 the main reason for adding this syntax to kramdown is not to encourage authors to be lazy but to
 allow kramdown texts to be hard-wrapped by other applications (think, for example, email programs).
-Therefore you shouldn't make active use of this feature!
+Therefore you shouldn't make active use of this feature when creating a kramdown document!
 
 Another important, though minor, change is that invalid HTML tags and extensions are not removed
 anymore. This is done because of the general rule that unrecognized elements are treated as simple
@@ -24,14 +24,14 @@ has changed and developers may therefore need to update their extensions!
 
 ## Changes
 
-* Major changes:
+* 3 major changes:
 
   - Line wrapping a.k.a. "lazy syntax" is now supported (requested by Shawn Van Ittersum)
   - Link URLs in inline links and link definitions may now also contain spaces, even if not enclosed
     in angle brackets (requested by Matt Neuburg)
   - The kramdown converter produces nicer output, using the new option `line_width`
 
-* Minor changes:
+* 9 minor changes:
 
   - The HTML converter does not escape the quotation mark in code blocks anymore (requested by Matt
     Neuburg)
@@ -49,7 +49,7 @@ has changed and developers may therefore need to update their extensions!
     HTML-to-native conversion
   - The `document.html` template now uses the text of the first not-nested header as title text
 
-* Bug fixes:
+* 9 bug fixes:
 
   - The LaTeX converter now removes trailing whitespace in footnotes (reported by Michael Franzl)
   - Fixed bug RF#28429: HTML output of `iframe` HTML element was invalid (reported by Matthew Riley)
@@ -63,7 +63,7 @@ has changed and developers may therefore need to update their extensions!
   - Link/Abbreviation/Footnote definitions as well as extensions, ALDs and block IALs now work
     correctly as block separators
 
-* Deprecation notes:
+* 1 deprecation note:
 
   - The option `numeric_entities` has been removed
 
