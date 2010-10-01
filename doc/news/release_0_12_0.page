@@ -16,5 +16,8 @@ modified_at: 2010-10-01 08:31:00 +02:00
 * 0 minor changes:
 
 
-* 0 bug fix:
+* 1 bug fix:
+
+  - Fixed output of HTML doctype in kramdown converter
+
 
