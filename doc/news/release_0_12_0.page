@@ -13,8 +13,9 @@ modified_at: 2010-10-01 08:31:00 +02:00
 * 0 major changes:
 
 
-* 0 minor changes:
+* 1 minor change:
 
+  - Angle brackets can now also be escaped
 
 * 1 bug fix:
 

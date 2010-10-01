@@ -104,7 +104,7 @@ Following is a list of all the characters (character sequences) that can be esca
     -         minus
     =         equal sign
     `         backtick
-    ()[]{}    left and right parens/brackets/braces
+    ()[]{}<>  left and right parens/brackets/braces/angle brackets
     #         hash
     !         bang
     <<        left guillemet
