@@ -35,7 +35,7 @@ module Kramdown
       def parse_blockquote
         el = new_block_el(:blockquote)
         @tree.children << el
-        parse_blocks(el, @src.scan(BLOCKQUOTE_MATCH).gsub!(BLOCKQUOTE_START, ''))
+        parse_blocks(el, @src.scan(self.class::BLOCKQUOTE_MATCH).gsub!(BLOCKQUOTE_START, ''))
         true
       end
       define_parser(:blockquote, BLOCKQUOTE_START)

@@ -23,20 +23,22 @@ opts: |
   level 2 concept/.append style={font=\Large},
 }
 \node[concept, font=\Large] (lib) {kramdown's internal representation}
-  child[concept color=orange, grow=150, ->] {node[concept] (i-kramdown) {kramdown}}
-  child[concept color=orange, grow=210] {node[concept] (i-html) {HTML}}
+  child[concept color=orange, grow=140, ->] {node[concept] (i-kramdown) {kramdown}}
+  child[concept color=orange, grow=180] {node[concept] (i-html) {HTML}}
+  child[concept color=orange, grow=220] {node[concept] (i-markdown) {Markdown}}
   child[concept color=green!50!black, grow=40] {node[concept] (o-html) {HTML}}
   child[concept color=green!50!black, grow=0] {node[concept] (o-kramdown) {kramdown}}
-  child[concept color=green!50!black, grow=-45] {
+  child[concept color=green!50!black, grow=-40] {
     node[concept] (o-latex) {\LaTeX}
     child[grow=0] {
       node[concept] (o-latex-pdf) {PDF}
     }
   }
-  child[concept color=green!50!black, grow=-45] {node[concept] {\LaTeX}}
+  child[concept color=green!50!black, grow=-40] {node[concept] {\LaTeX}}
 ;
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=15pt,shorten <=10pt,color=orange]
    (i-kramdown) edge(lib)
+   (i-markdown) edge(lib)
    (i-html) edge (lib);
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=10pt,shorten <=15pt,color=green!50!black]
    (lib) edge(o-html)

@@ -39,7 +39,7 @@ module Kramdown
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        result = @src.scan(PARAGRAPH_MATCH)
+        result = @src.scan(self.class::PARAGRAPH_MATCH)
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << result.chomp
         else

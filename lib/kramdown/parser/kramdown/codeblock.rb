@@ -34,7 +34,7 @@ module Kramdown
 
       # Parse the indented codeblock at the current location.
       def parse_codeblock
-        @tree.children << new_block_el(:codeblock, @src.scan(CODEBLOCK_MATCH).gsub(/\n( {0,3}\S)/, ' \\1').gsub!(INDENT, ''))
+        @tree.children << new_block_el(:codeblock, @src.scan(self.class::CODEBLOCK_MATCH).gsub(/\n( {0,3}\S)/, ' \\1').gsub!(INDENT, ''))
         true
       end
       define_parser(:codeblock, CODEBLOCK_START)

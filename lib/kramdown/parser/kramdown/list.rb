@@ -34,7 +34,7 @@ module Kramdown
       # Used for parsing the first line of a list item or a definition, i.e. the line with list item
       # marker or the definition marker.
       def parse_first_list_line(indentation, content)
-        if content =~ LIST_ITEM_IAL
+        if content =~ self.class::LIST_ITEM_IAL
           indentation = 4
         else
           while content =~ /^ *\t/
@@ -77,7 +77,7 @@ module Kramdown
             item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
 
-            item.value.sub!(/^#{IAL_SPAN_START}\s*/) do |match|
+            item.value.sub!(/^#{self.class::IAL_SPAN_START}\s*/) do |match|
               parse_attribute_list($~[1], item.options[:ial] ||= {})
               ''
             end

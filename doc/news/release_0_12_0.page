@@ -10,8 +10,9 @@ modified_at: 2010-10-01 08:31:00 +02:00
 
 ## Changes
 
-* 0 major changes:
+* 1 major change:
 
+  - Added Markdown-only parser
 
 * 1 minor change:
 
