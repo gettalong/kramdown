@@ -47,6 +47,7 @@ has changed and developers may therefore need to update their extensions!
     more compatible with PHP Markdown Extra tables)
   - HTML elements `<b>` and `<i>` are now converted to `<strong>` and `<em>` when using
     HTML-to-native conversion
+  - The `document.html` template now uses the text of the first not-nested header as title text
 
 * Bug fixes:
 
