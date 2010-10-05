@@ -173,14 +173,15 @@ module Kramdown
         if @src.check(EXT_SPAN_START)
           parse_extension_start_tag(:span)
         elsif @src.check(IAL_SPAN_START)
-          @src.pos += @src.matched_size
           if @tree.children.last && @tree.children.last.type != :text
+            @src.pos += @src.matched_size
             attr = Utils::OrderedHash.new
             parse_attribute_list(@src[1], attr)
             update_ial_with_ial(@tree.children.last.options[:ial] ||= Utils::OrderedHash.new, attr)
             update_attr_with_ial(@tree.children.last.attr, attr)
           else
-            warning("Ignoring span IAL because preceding element is just text")
+            warning("Found span IAL after text - ignoring it")
+            add_text(@src.scan(/./))
           end
         else
           add_text(@src.scan(/./))
