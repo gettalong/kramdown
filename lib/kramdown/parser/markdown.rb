@@ -37,9 +37,9 @@ module Kramdown
     # also fail but those failures are negligible).
     class Markdown < Kramdown
 
-      EXTENDED = [:codeblock_fenced, :table, :definition_list, :footnote_definition, :abbrev_definition, :ald, :block_math,
-                  :block_extension, :block_ial,
-                  :footnote_marker, :smart_quotes, :inline_math, :span_extension, :span_ial, :typographic_syms]
+      EXTENDED = [:codeblock_fenced, :table, :definition_list, :footnote_definition, :abbrev_definition, :block_math,
+                  :block_extensions,
+                  :footnote_marker, :smart_quotes, :inline_math, :span_extensions, :typographic_syms]
 
       def initialize(doc)
         super(doc)

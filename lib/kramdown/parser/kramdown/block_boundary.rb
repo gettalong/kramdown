@@ -20,7 +20,7 @@
 #++
 #
 
-require 'kramdown/parser/kramdown/attribute_list'
+require 'kramdown/parser/kramdown/extensions'
 require 'kramdown/parser/kramdown/blank_line'
 require 'kramdown/parser/kramdown/eob'
 
