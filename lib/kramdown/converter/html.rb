@@ -211,9 +211,11 @@ module Kramdown
       alias :convert_tfoot :convert_thead
       alias :convert_tr  :convert_thead
 
+      ENTITY_NBSP = ::Kramdown::Utils::Entities.entity('nbsp')
+
       def convert_td(el, indent, opts)
         res = inner(el, indent, opts)
-        "#{' '*indent}<#{el.type}#{html_attributes(el)}>#{res.empty? ? "&nbsp;" : res}</#{el.type}>\n"
+        "#{' '*indent}<#{el.type}#{html_attributes(el)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{el.type}>\n"
       end
       alias :convert_th :convert_td
 

@@ -18,11 +18,13 @@ modified_at: 2010-10-01 08:31:00 +02:00
 
   - Angle brackets can now also be escaped
 
-* 3 bug fixes:
+* 4 bug fixes:
 
   - Fixed output of HTML doctype in kramdown converter
   - Fixed output of paragraphs starting with a right angle bracket in the kramdown converter
   - Invalid span IALs are now left alone and not removed anymore
+  - Option `entity_output` is now respected when outputting a non-breaking space for emtpy table
+    cells in the HTML converter (reported by Matt Neuburg)
 
 
 
