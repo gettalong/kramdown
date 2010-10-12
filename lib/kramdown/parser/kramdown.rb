@@ -83,9 +83,9 @@ module Kramdown
 
         @src = nil
         @tree = nil
+        @block_ial = nil
         @stack = []
         @text_type = :raw_text
-        @block_ial = nil
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
@@ -141,8 +141,8 @@ module Kramdown
 
       # Parse all block level elements in +text+ into the element +el+.
       def parse_blocks(el, text = nil)
-        @stack.push([@tree, @src])
-        @tree, @src = el, (text.nil? ? @src : StringScanner.new(text))
+        @stack.push([@tree, @src, @block_ial])
+        @tree, @src, @block_ial = el, (text.nil? ? @src : StringScanner.new(text)), nil
 
         status = catch(:stop_block_parsing) do
           while !@src.eos?
@@ -161,7 +161,7 @@ module Kramdown
           end
         end
 
-        @tree, @src = *@stack.pop
+        @tree, @src, @block_ial = *@stack.pop
         status
       end
 

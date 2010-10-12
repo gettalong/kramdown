@@ -29,6 +29,8 @@ module Kramdown
       include Kramdown::Parser::Html::Parser
 
       def handle_kramdown_html_tag(el, closed)
+        el.options[:ial] = @block_ial if @block_ial
+
         parse_type = if @tree.type != :html_element || @tree.options[:parse_type] != :raw
                        (@doc.options[:parse_block_html] ? HTML_PARSE_AS[el.value] : :raw)
                      else
