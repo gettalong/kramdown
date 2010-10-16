@@ -30,7 +30,8 @@ module Kramdown
       TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
       TABLE_FSEP_LINE = /^[+|: =]*?=[+|: =]*?[ \t]*\n/
       TABLE_ROW_LINE = /^(.*?)[ \t]*\n/
-      TABLE_LINE = /(?:\||.*?[^\\\n]\|).*?\n/
+      TABLE_PIPE_CHECK = /(?:\||.*?[^\\\n]\|)/
+      TABLE_LINE = /#{TABLE_PIPE_CHECK}.*?\n/
       TABLE_START = /^#{OPT_SPACE}(?=\S)#{TABLE_LINE}/
 
       # Parse the table at the current location.
@@ -70,17 +71,32 @@ module Kramdown
             has_footer = true
           elsif @src.scan(TABLE_ROW_LINE)
             trow = Element.new(:tr)
-            cells = (@src[1] + ' ').split(/\|/)
-            i = 0
-            while i < cells.length - 1
-              backslashes = cells[i].scan(/\\+$/).first
-              if backslashes && backslashes.length % 2 == 1
-                cells[i] = cells[i].chop + '|' + cells[i+1]
-                cells.delete_at(i+1)
+
+            # parse possible code spans on the line
+            env = save_env
+            reset_env(:src => StringScanner.new(@src[1] + ' '))
+            root = Element.new(:root)
+            parse_spans(root, nil, [:codespan])
+            restore_env(env)
+
+            # correctly split the line into cells
+            cells = []
+            root.children.each do |c|
+              if c.type == :raw_text
+                # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
+                f, *l = c.value.split(/\\\|/).map {|t| t.split(/\|/)}.inject([]) do |memo, t|
+                  memo.last << "|" << t.shift if memo.size > 0
+                  memo += t
+                end
+                (cells.empty? ? cells : cells.last) << f
+                cells += l
               else
-                i += 1
+                delim = (c.value.scan(/`+/).max || '') + '`'
+                tmp = "#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
+                (cells.empty? ? cells : cells.last) << tmp
               end
             end
+
             cells.shift if leading_pipe && cells.first.strip.empty?
             cells.pop if cells.last.strip.empty?
             cells.each do |cell_text|
@@ -100,9 +116,33 @@ module Kramdown
           return false
         end
 
+        # Parse all lines of the table with the code span parser
+        env = save_env
+        reset_env(:src => StringScanner.new(extract_string(orig_pos...(@src.pos-1), @src)))
+        root = Element.new(:root)
+        parse_spans(root, nil, [:codespan])
+        restore_env(env)
+
+        # Check if each line has at least one unescaped backslash that is not inside a code span
+        pipe_on_line = false
+        while (c = root.children.shift)
+          lines = c.value.split(/\n/)
+          if c.type == :codespan
+            if lines.size > 2 || (lines.size == 2 && !pipe_on_line)
+              break
+            elsif lines.size == 2 && pipe_on_line
+              pipe_on_line = false
+            end
+          else
+            break if lines.size > 1 && !pipe_on_line && lines.first !~ /^#{TABLE_PIPE_CHECK}/
+            pipe_on_line = (lines.size > 1 ? false : pipe_on_line) || (lines.last =~ /^#{TABLE_PIPE_CHECK}/)
+          end
+        end
+        @src.pos = orig_pos and return false if !pipe_on_line
+
         add_container.call(has_footer ? :tfoot : :tbody, false) if !rows.empty?
 
-        if !table.children.any? {|c| c.type == :tbody}
+        if !table.children.any? {|el| el.type == :tbody}
           warning("Found table without body - ignoring it")
           @src.pos = orig_pos
           return false

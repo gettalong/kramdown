@@ -673,7 +673,7 @@ There are four different line types that can be used in a table:
 
   Header rows, footer rows and normal rows are all done using these table rows. Table cells can only
   contain a single line of text, no multiline text is supported. The text of a table cell is parsed
-  as span level elements. Note that literal pipe characters need to be escaped, even if they occur
+  as span level elements. Note that literal pipe characters need to be escaped except if they occur
   in code spans!
 
   Here are some example table rows:

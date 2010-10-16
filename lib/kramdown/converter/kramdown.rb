@@ -77,7 +77,7 @@ module Kramdown
         ""
       end
 
-      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{"'])|^[ ]{0,3}(:)/
+      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{"'|])|^[ ]{0,3}(:)/
 
       def convert_text(el, opts)
         if opts[:raw_text]
@@ -93,7 +93,6 @@ module Kramdown
         w = @doc.options[:line_width] - opts[:indent].to_s.to_i
         first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split(/\n/)
         first.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."}
-        first.gsub!(/\|/, '\\|')
         second.gsub!(/^([=-]+\s*?)$/, "\\\1") if second
         [first, second, *rest].compact.join("\n") + "\n"
       end
@@ -260,7 +259,7 @@ module Kramdown
       end
 
       def convert_td(el, opts)
-        inner(el, opts).gsub(/\|/, '\\|')
+        inner(el, opts)
       end
       alias :convert_th :convert_td
 

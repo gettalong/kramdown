@@ -13,7 +13,7 @@ Escaped pipe characters
 
 | cell1 \| cell1 | cell2 |
 | cell1          | cell2 \|
-| cell1 `\|` con | cell2
+| cell1 `|` con | cell2
 
 {:.cls}
 | table | with | ial

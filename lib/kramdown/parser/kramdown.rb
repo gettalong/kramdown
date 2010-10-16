@@ -81,11 +81,7 @@ module Kramdown
       def initialize(doc)
         super(doc)
 
-        @src = nil
-        @tree = nil
-        @block_ial = nil
-        @stack = []
-        @text_type = :raw_text
+        reset_env
 
         @doc.parse_infos[:ald] = {}
         @doc.parse_infos[:link_defs] = {}
@@ -172,8 +168,7 @@ module Kramdown
         element.children.map! do |child|
           if child.type == :raw_text
             last_blank = nil
-            @stack, @tree, @text_type = [], nil, :text
-            @src = StringScanner.new(child.value)
+            reset_env(:src => StringScanner.new(child.value), :text_type => :text)
             parse_spans(child)
             child.children
           elsif child.type == :eob
@@ -231,6 +226,27 @@ module Kramdown
         @tree, @text_type = @stack.pop
 
         stop_re_found
+      end
+
+      # Reset the current parsing environment. The parameter +env+ can be used to set initial
+      # values for one or more environment variables.
+      def reset_env(opts = {})
+        opts = {:text_type => :raw_text, :stack => []}.merge(opts)
+        @src = opts[:src]
+        @tree = opts[:tree]
+        @block_ial = opts[:block_ial]
+        @stack = opts[:stack]
+        @text_type = opts[:text_type]
+      end
+
+      # Return the current parsing environment.
+      def save_env
+        [@src, @tree, @block_ial, @stack,  @text_type]
+      end
+
+      # Restore the current parsing environment.
+      def restore_env(env)
+        @src, @tree, @block_ial, @stack,  @text_type = *env
       end
 
       # Update the attributes with the information from the inline attribute list and all referenced ALDs.
