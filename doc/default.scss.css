@@ -231,7 +231,7 @@ body, table, code {
         }
 
         p, ul, ol, dl, table, pre, blockquote {
-            margin: 20px 0px 0px
+            margin: 20px 0px 0px;
         }
 
         ul, ol {
@@ -252,6 +252,11 @@ body, table, code {
         dd {
             margin: 5px 0px 10px 20px;
             padding: 2px;
+
+            p, ul, ol, dl, table, pre, blockquote {
+                margin-top: 0px;
+            }
+
         }
 
         *:target::after {
