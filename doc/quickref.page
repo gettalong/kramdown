@@ -16,8 +16,8 @@ given. However, a link to the detailed syntax for each element is provided (whic
 differences to the standard Markdown syntax). The quick reference is for version **<%=
 ::Kramdown::VERSION %>** of the syntax documentation.
 
-kramdown has two main classes of elements: block and span level elements. Block level elements are
-used to create paragraphs, headers, lists and so on whereas span level elements are used to markup
+kramdown has two main classes of elements: block and span-level elements. Block-level elements are
+used to create paragraphs, headers, lists and so on whereas span-level elements are used to markup
 text phrases as emphasized, as a link and so on.
 
 All examples below feature the kramdown source, the converted HTML source and the output as it
@@ -33,7 +33,7 @@ Live browser view of example code
 <div class="clear"></div>
 
 
-# Block Level Elements - Main Structural Elements
+# Block-level Elements - Main Structural Elements
 
 ## Paragraphs
 
@@ -99,7 +99,7 @@ If you set the option `auto_ids` to `false` (for example, by using the `options`
 {kdlink: {oid: blockquotes, part: "blockquotes"}}
 
 A blockquote is started using the `>` marker followed by an optional space; all following lines that
-are also started with the blockquote marker belong to the blockquote. You can use any block level
+are also started with the blockquote marker belong to the blockquote. You can use any block-level
 elements inside a blockquote:
 
 {kdexample::}
@@ -159,7 +159,7 @@ underscores, optionally separated by spaces or tabs, on an otherwise blank line:
 {kdlink: {oid: lists, part: "lists"}}
 
 kramdown supports ordered and unordered lists. Ordered lists are started by using a number followed
-by a period, a space and then the list item text. The content of a list item consists of block level
+by a period, a space and then the list item text. The content of a list item consists of block-level
 elements. All lines which have the same indent as the text of the line with the list marker belong
 to the list item:
 
@@ -170,7 +170,7 @@ to the list item:
    with additional. text
 {kdexample}
 
-As the content consists of block level elements you can do things like the following:
+As the content consists of block-level elements you can do things like the following:
 
 {kdexample::}
 1.  This is a list item
@@ -192,7 +192,7 @@ Nested lists are also easy to create:
 2. Item two
 {kdexample}
 
-Lists can occur directly after other block level elements, however, there has to be at least one
+Lists can occur directly after other block-level elements, however, there has to be at least one
 blank line if you want to follow a paragraph with a list:
 
 {kdexample::}
@@ -240,8 +240,8 @@ term
 : definition
 {kdexample}
 
-Each term can be styled using span level elements and each definition is parsed as block level
-elements, i.e. you can use any block level in a definition. Just use the same indent for the lines
+Each term can be styled using span-level elements and each definition is parsed as block-level
+elements, i.e. you can use any block-level in a definition. Just use the same indent for the lines
 following the definition line:
 
 {kdexample::}
@@ -288,11 +288,11 @@ footer.
 
 {kdlink: {oid: html-blocks, part: "HTML blocks"}}
 
-kramdown allows you to use block level HTML tags (`div`, `p`, `pre`, ...) to markup whole blocks of
-text -- just start a line with a block level HTML tag. kramdown syntax is normally not processed
+kramdown allows you to use block-level HTML tags (`div`, `p`, `pre`, ...) to markup whole blocks of
+text -- just start a line with a block-level HTML tag. kramdown syntax is normally not processed
 inside an HTML tag but this can be changed with the `parse_block_html` option. If this options is
-set to `true`, then the content of a block level HTML tag is parsed by kramdown either as block
-level or span level text, depending on the tag:
+set to `true`, then the content of a block-level HTML tag is parsed by kramdown either as block
+level or span-level text, depending on the tag:
 
 {kdexample::}
 <div style="float: right">
@@ -313,7 +313,7 @@ This can contain only *span* level elements.
 {kdlink: {oid: block-ials, part: "block IALs"}}
 {kdlink: {oid: attribute-list-definitions, part: "ALDs"}}
 
-You can assign any attribute to a block level element. Just directly follow the block with a *block
+You can assign any attribute to a block-level element. Just directly follow the block with a *block
 inline attribute list* (or short: block IAL). A block IAL consists of a left curly brace, followed
 by a colon, the attribute definitions and a right curly brace. Here is a simple example which sets the
 `title` attribute of a block quote:
@@ -398,7 +398,7 @@ before the closing brace:
 
 
 
-# Span Level Elements - Text Modifiers
+# Span-Level Elements - Text Modifiers
 
 ## Emphasis
 
@@ -507,7 +507,7 @@ footnote[^1].
 [^1]: And here is the definition.
 {kdexample}
 
-The footnote definition can contain any block level element, all lines following a footnote
+The footnote definition can contain any block-level element, all lines following a footnote
 definition indented with four spaces or one tab belong to the definition:
 
 {kdexample::}
@@ -543,7 +543,7 @@ example.
 
 {kdlink: {oid: html-spans, part: "HTML spans"}}
 
-HTML is not only supported on the block level but also on the span level:
+HTML is not only supported on the block-level but also on the span-level:
 
 {kdexample::}
 This is <span style="color: red">written in
@@ -555,9 +555,9 @@ red</span>.
 
 {kdlink: {oid: span-ials, part: "span IALs"}}
 
-As with a block level element you can assign any attribute to a span level elements using a *span
+As with a block-level element you can assign any attribute to a span-level elements using a *span
 inline attribute list* (or short: span IAL). A span IAL has the same syntax as a block IAL and must
-immediately follow the span level element:
+immediately follow the span-level element:
 
 {kdexample::}
 This is *red*{: style="color: red"}.

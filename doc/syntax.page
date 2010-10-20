@@ -28,23 +28,23 @@ document is converted.
 A kramdown document may be in any encoding, for example ASCII, UTF-8 or ISO-8859-1, and the output
 will have the same encoding as the source.
 
-The document consists of two types of elements, block level elements and span level elements:
+The document consists of two types of elements, block-level elements and span-level elements:
 
-* Block level elements define the main structure of the content, for example, what part of the text
+* Block-level elements define the main structure of the content, for example, what part of the text
   should be a paragraph, a list, a blockquote and so on.
 
-* Span level elements mark up small text parts as, for example, emphasized text or a link.
+* Span-level elements mark up small text parts as, for example, emphasized text or a link.
 
-Thus span level elements can only occur inside block level elements or other span level elements.
+Thus span-level elements can only occur inside block-level elements or other span-level elements.
 
-You will often find references to the "first column" or "first character" of a line in a block level
+You will often find references to the "first column" or "first character" of a line in a block-level
 element descriptions. Such a reference is always to be taken relative to the current indentation
-level because some block level elements open up a new indentation level (e.g. blockquotes). The
+level because some block-level elements open up a new indentation level (e.g. blockquotes). The
 beginning of a kramdown document opens up the default indentation level which begins at the first
 column of the text.
 
 
-## Line Wrapping
+### Line Wrapping
 
 Some lightweight markup syntax don't work well in environments where lines are hard-wrapped. For
 example, this is the case with many email programs. Therefore kramdown allows content like
@@ -52,18 +52,37 @@ paragraphs or blockquotes to be hard-wrapped, i.e. broken across lines. This is 
 to as "lazy syntax" since the indentation or line prefix required for the first line of content is
 not required for the consecutive lines.
 
-Block level elements that support line wrapping always end when one of the following conditions is
-encountered:
+Block-level elements that support line wrapping always end when one of the following conditions is
+met:
 
 * a [blank line](#blank-lines), an [EOB marker line](#eob-marker), a [block IAL](#block-ials) or the
   end of the document (i.e. a [block boundary](#block-boundaries)),
 
 *  or an [HTML block](#html-blocks).
 
-Line wrapping is allowed throughout a kramdown document. There is one exception, however:
-[headers](#headers) may not be wrapped across lines. This is not an issue in most situations since
-headers normally fit on one line. If a header text gets too long for one line, use HTML syntax
-instead.
+Line wrapping is allowed throughout a kramdown document but there are some block-level elements that
+do *not* support being hard-wrapped:
+
+[headers](#headers)
+
+: This is not an issue in most situations since headers normally fit on one line. If a header text
+  gets too long for one line, you need to use HTML syntax instead.
+
+[fenced code blocks](#fenced-code-blocks)
+
+: The delimiting lines of a fenced code block do not support hard-wrapping. Since everything between
+  the delimiting lines is taken as is, the content of a fenced code block does also not support
+  hard-wrapping.
+
+[definition list terms](#definition-lists)
+
+: Each definition term has to appear on a separate line. Hard-wrapping would therefore introduce
+  additional definition terms. The definitions themselves, however, do support hard-wrapping.
+
+[tables](#tables)
+
+: Since each line of a kramdown table describes one table row or a separator, it is not possible to
+  hard-wrap tables.
 
 **Note** that it is **NOT** recommended to use lazy syntax to write a kramdown document. The
 flexibility that the kramdown syntax offers due to the issue of line wrapping hinders readability
@@ -90,7 +109,7 @@ HTML tags which use one of the characters, the result will be correct nonetheles
 
 Since kramdown also uses some characters to mark-up the text, there needs to be a way to escape
 these special characters so that they can have their normal meaning. This can be done by using
-backslash escapes. For example, you can use a literal backtick like this:
+backslash escapes. For example, you can use a literal back tick like this:
 
     This \`is not a code\` span!
 
@@ -103,7 +122,7 @@ Following is a list of all the characters (character sequences) that can be esca
     +         plus
     -         minus
     =         equal sign
-    `         backtick
+    `         back tick
     ()[]{}<>  left and right parens/brackets/braces/angle brackets
     #         hash
     !         bang
@@ -118,14 +137,14 @@ Following is a list of all the characters (character sequences) that can be esca
 
 ## Block Boundaries
 
-Some block level elements have to start and/or end on so called block boundaries, as stated in their
+Some block-level elements have to start and/or end on so called block boundaries, as stated in their
 documentation. There are two cases where block boundaries come into play:
 
-* If a block level element has to start on a block boundary, it has to be preceded by either a
+* If a block-level element has to start on a block boundary, it has to be preceded by either a
   [blank line](#blank-lines), an [EOB marker](#eob-marker), a [block IAL](#block-ials) or it has to
   be the first element.
 
-* If a block level element has to end on a block boundary, it has to be followed by either a [blank
+* If a block-level element has to end on a block boundary, it has to be followed by either a [blank
   line](#blank-lines), an [EOB marker](#eob-marker), a [block IAL](#block-ials) or it has to be the
   last element.
 
@@ -133,7 +152,7 @@ documentation. There are two cases where block boundaries come into play:
 
 # Structural Elements
 
-All structural elements are block level elements and they are used to structure the content. They
+All structural elements are block-level elements and they are used to structure the content. They
 can mark up some text as, for example, a simple paragraph, a quote or as a list item.
 
 
@@ -141,7 +160,7 @@ can mark up some text as, for example, a simple paragraph, a quote or as a list 
 
 Any line that just contains white space characters such as spaces and tabs is considered a blank
 line by kramdown. One or more consecutive blank lines are handled as one empty blank line. Blank
-lines are used to separate block level elements from each other and in this case they don't have
+lines are used to separate block-level elements from each other and in this case they don't have
 semantic meaning. However, there are some cases where blank lines do have a semantic meaning:
 
 * When used in headers -- see the [headers section](#headers)
@@ -153,7 +172,7 @@ semantic meaning. However, there are some cases where blank lines do have a sema
 
 ## Paragraphs
 
-Paragraphs are the most used block level elements. One or more consecutive lines of text are
+Paragraphs are the most used block-level elements. One or more consecutive lines of text are
 interpreted as one paragraph. The first line of a paragraph may be indented up to three spaces, the
 other lines can have any amount of indentation because paragraphs support [line
 wrapping](#line-wrapping). In addition to the rules outlined in the section about line wrapping, a
@@ -279,7 +298,7 @@ blockquote. The marker itself may be indented up to three spaces. All following 
 are started with the blockquote marker or just contain text, belong to the blockquote because
 blockquotes support [line wrapping](#line-wrapping).
 
-The contents of a blockquote are block level elements. This means that if you are just using text as
+The contents of a blockquote are block-level elements. This means that if you are just using text as
 content that it will be wrapped in a paragraph. For example, the following gives you one blockquote
 with two paragraphs in it:
 
@@ -289,8 +308,8 @@ with two paragraphs in it:
     >
     > This is the second paragraph.
 
-Since the contents of a blockquote are block level elements, you can nest blockquotes and use other
-block level elements (this is also the reason why blockquotes need to support line wrapping):
+Since the contents of a blockquote are block-level elements, you can nest blockquotes and use other
+block-level elements (this is also the reason why blockquotes need to support line wrapping):
 
     > This is a paragraph.
     >
@@ -300,10 +319,10 @@ block level elements (this is also the reason why blockquotes need to support li
     >
     > * lists too
     >
-    > and all other block level elements
+    > and all other block-level elements
 
 Note that the first space character after the `>` marker does *not* count when counting spaces for
-the indentation of the block level elements inside the blockquote! So [code blocks](#code-blocks)
+the indentation of the block-level elements inside the blockquote! So [code blocks](#code-blocks)
 will have to be indented with five spaces or one space and one tab, like this:
 
     > A code block:
@@ -419,20 +438,20 @@ The first list marker in a list may be indented up to three spaces. The column n
 non-space character which appears after the list item marker on the same line specifies the
 indentation that has to be used for the following lines of content of the list item. If there is no
 such character, the indentation that needs to be used is four spaces or one tab. Indented lines may
-be followed by lines containg text with any amount of indentation due to [line
+be followed by lines containing text with any amount of indentation due to [line
 wrapping](#line-wrapping). Note, however, that in addition to the rules outlined in the section
 about line wrapping, a list item also ends when a line with another list item marker is encountered
 -- see the next paragraph.
 
 The indentation is stripped from the content and the content (note that the content naturally also
-contains the content of the line with the item marker) is processed as text containing block level
+contains the content of the line with the item marker) is processed as text containing block-level
 elements. All other list markers in the list may be indented up to three spaces or the number of
 spaces used for the indentation of the last list item minus one, whichever number is smaller. For
 example:
 
     * This is the first line. Since the first non-space characters appears in column 3, all other
       indented lines have to be indented 2 spaces.
-    However, one could be lazy and not indent a line but this is not recommened.
+    However, one could be lazy and not indent a line but this is not recommended.
     *       This is the another item of the list. It uses a different number of spaces for
        indentation which is okay but should generally be avoided.
        * The list item marker is indented 3 spaces which is allowed but should also be avoided and
@@ -469,7 +488,7 @@ example:
 It is clear that you might get unexpected results if you mix tabs and spaces or if you don't have
 the tab stops set to multiples of four in your editor! Therefore this should be avoided!
 
-The content of a list item is made up of either text or block level elements. Simple list items only
+The content of a list item is made up of either text or block-level elements. Simple list items only
 contain text like in the above examples. They are not even wrapped in a paragraph tag. If the first
 list text is followed by one or more blank lines, it will be wrapped in a paragraph tag:
 
@@ -503,14 +522,14 @@ a proper paragraph as first element. This makes the following use case work like
 
 > The original Markdown syntax page specifies that list items which are separated by one or more
 > blank lines are wrapped in paragraph tags. This means that the first text will also be wrapped in
-> a paragraph if you have block level elements in a list which are separated by blank lines. The
+> a paragraph if you have block-level elements in a list which are separated by blank lines. The
 > above rule is easy to remember and lets you exactly specify when the first list text should be
 > wrapped in a paragraph. The idea for the above rule comes from the [Pandoc] package.
 {: .markdown-difference}
 
 As seen in the examples above, blank lines between list items are allowed.
 
-Since the content of a list item can contain block level elements, you can do the following:
+Since the content of a list item can contain block-level elements, you can do the following:
 
     *   First item
 
@@ -531,7 +550,7 @@ can use an EOB marker to circumvent this problem:
     ^
         A code block following the list item.
 
-You can have any block level element as first element in a list item. However, as described above,
+You can have any block-level element as first element in a list item. However, as described above,
 the leading tabs or spaces of the line with the list item marker are stripped away. This leads to a
 problem when you want to have a code block as first element. The solution to this problem is the
 following construct:
@@ -595,7 +614,7 @@ then the first part of the definition. The line with the definition marker may o
 separated from the preceding paragraph by a blank line. The leading tabs or spaces are stripped away
 from this first line of the definition to allow for a nice alignment with the following definition
 content. Each line of the preceding paragraph is taken to be a term and the lines separately parsed
-as span level elements.
+as span-level elements.
 
 The following is a simple definition list:
 
@@ -608,7 +627,7 @@ The following is a simple definition list:
 The column number of the first non-space character which appears after a definition marker on the
 same line specifies the indentation that has to be used for the following lines of the definition.
 If there is no such character, the indentation that needs to be used is four spaces or one tab.
-Indented lines may be followed by lines containg text with any amount of indentation due to [line
+Indented lines may be followed by lines containing text with any amount of indentation due to [line
 wrapping](#line-wrapping). Note, however, that in addition to the rules outlined in the section
 about line wrapping, a list item also ends when a line with another definition marker is encountered.
 
@@ -631,7 +650,7 @@ So, while the above is possible and creates a definition list with two terms and
 for them, it is not advised to use different (definition marker and definition) indents in the same
 definition list as well as lazy indentation!
 
-The definition for a term is made up of text and/or block level elements. If a definition is *not*
+The definition for a term is made up of text and/or block-level elements. If a definition is *not*
 preceded by a blank line, the first part of the definition will just be text if it would be a
 paragraph otherwise:
 
@@ -639,11 +658,11 @@ paragraph otherwise:
     : This definition will just be text because it would normally be a paragraph and the there is
       no preceding blank line.
 
-      > although the definition contains other block level elements
+      > although the definition contains other block-level elements
 
     : This definition *will* be a paragraph since it is preceded by a blank line.
 
-The rules about having any block level element as first element in a list item also apply to a
+The rules about having any block-level element as first element in a list item also apply to a
 definition.
 
 
@@ -668,12 +687,12 @@ There are four different line types that can be used in a table:
 * *Table rows* define the content of a table.
 
   A table row is any line that contains at least one pipe character and is not identified as any
-  other type of table line! The table row is divided into indivdual table cells by pipe characters.
+  other type of table line! The table row is divided into individual table cells by pipe characters.
   An optional trailing pipe character is ignored.
 
   Header rows, footer rows and normal rows are all done using these table rows. Table cells can only
-  contain a single line of text, no multiline text is supported. The text of a table cell is parsed
-  as span level elements. Note that literal pipe characters need to be escaped except if they occur
+  contain a single line of text, no multi-line text is supported. The text of a table cell is parsed
+  as span-level elements. Note that literal pipe characters need to be escaped except if they occur
   in code spans!
 
   Here are some example table rows:
@@ -761,7 +780,7 @@ Also note
 > * kramdown tables do not need to have a table header.
 > * kramdown tables can be structured using separator lines.
 > * kramdown tables can contain a table footer.
-> * kramdown tables need to be separted from other block level elements.
+> * kramdown tables need to be separated from other block-level elements.
 {: .markdown-difference}
 
 Here is an example for a kramdown table with a table header row, two table bodies and a table footer
@@ -818,7 +837,7 @@ three spaces. The following examples show different possibilities to create a ho
 > and [Pandoc] packages.
 {: .markdown-difference}
 
-kramdown has built-in support for block and span level mathematics written in LaTeX.
+kramdown has built-in support for block and span-level mathematics written in LaTeX.
 
 A math block needs to start and end on [block boundaries](#block-boundaries). It is started using
 two dollar signs, optionally indented up to three spaces. The math block continues until the next
@@ -884,7 +903,7 @@ the beginning of a paragraph, just escape the first dollar sign.
 An HTML block is potentially started if a line is encountered that begins with a non-span-level HTML
 tag or a general XML tag (opening or closing) which may be indented up to three spaces.
 
-The following HTML tags count as span level HTML tags and *won't* start an HTML block if found at
+The following HTML tags count as span-level HTML tags and *won't* start an HTML block if found at
 the beginning of an HTML block line:
 
     a abbr acronym b big bdo br button cite code del dfn em i img input
@@ -904,16 +923,16 @@ content is parsed:
   instead of `<hr>` (although kramdown tries to fix such things if possible). If an invalid closing
   tag is found, it is ignored.
 
-* Parse as block level elements: If the HTML/XML tag content should be parsed as text containing
-  block level elements, the remaining text on the line will be parsed by the block level parser as
+* Parse as block-level elements: If the HTML/XML tag content should be parsed as text containing
+  block-level elements, the remaining text on the line will be parsed by the block-level parser as
   if it appears on a separate line (**Caution**: This also means that if the line consists of the
   start tag, text and the end tag, the end tag will not be found!). All following lines are parsed
-  as block level elements until an HTML block line with the matching end tag is found or until the
+  as block-level elements until an HTML block line with the matching end tag is found or until the
   end of the document.
 
-* Parse as span level elements: If the HTML/XML tag content should be parsed as text containing span
+* Parse as span-level elements: If the HTML/XML tag content should be parsed as text containing span
   level elements, then all text until the *next* matching end tag or until the end of the document
-  will be the content of the tag and will later be parsed by the span level parser. This also means
+  will be the content of the tag and will later be parsed by the span-level parser. This also means
   that if the matching end tag is inside what appears to be a code span, it is still used!
 
 If there is text after an end tag, it will be parsed as if it appears on a separate line except when
@@ -946,19 +965,19 @@ Parse as raw HTML block
 
     Also, all general XML tags are parsed as raw HTML blocks.
 
-Parse as block level elements
+Parse as block-level elements
 : 
         applet button blockquote body colgroup dd div dl fieldset form iframe li
         map noscript object ol table tbody thead tfoot tr td ul
 
-Parse as span level elements
+Parse as span-level elements
 : 
         a abbr acronym address b bdo big cite caption code del dfn dt em
         h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p pre q rb rbc
         rp rt rtc ruby samp select small span strong sub sup th tt var
 
-> Remember that all span level HTML tags like `a` or `b` do not start a HTML block! However, the
-> above lists also include span level HTML tags in the case the `markdown` attribute is used on a
+> Remember that all span-level HTML tags like `a` or `b` do not start a HTML block! However, the
+> above lists also include span-level HTML tags in the case the `markdown` attribute is used on a
 > tag inside a raw HTML block.
 
 Here is a simple example input and its HTML output with `parse_block_html` set to `false`:
@@ -977,7 +996,7 @@ Here is a simple example input and its HTML output with `parse_block_html` set t
 
 As one can see the content of the `div` tag will be parsed as raw HTML block and left alone.
 However, if the `markdown="1"` attribute was used on the `div` tag, the content would be parsed as
-block level elements and therefore converted to a paragraph.
+block-level elements and therefore converted to a paragraph.
 
 You can also use several HTML tags at once:
 
@@ -988,23 +1007,23 @@ You can also use several HTML tags at once:
     </div></div>
     This is a para outside the HTML block.
 
-However, remember that if the content of a tag is parsed as block level elements, the content that
+However, remember that if the content of a tag is parsed as block-level elements, the content that
 appears after a start/end tag but on the same line, is processed as if it appears on a new line:
 
     <div markdown="1">This is the first part of a para,
     which is continued here.
     </div>
 
-    <p markdown="1">This works without problems because it is parsed as span level elements</p>
+    <p markdown="1">This works without problems because it is parsed as span-level elements</p>
 
     <div markdown="1">The end tag is not found because
     this line is parsed as a paragraph</div>
 
 Since setting `parse_block_html` to `true` can lead to some not wanted behaviour, it is generally
-better to selectively enable or disable block/span level elements parsing by using the `markdown`
+better to selectively enable or disable block/span-level elements parsing by using the `markdown`
 attribute!
 
-Unclosed block level HTML tags are correctly closed at the end of the document to ensure correct
+Unclosed block-level HTML tags are correctly closed at the end of the document to ensure correct
 nesting and invalidly used end tags are removed from the output:
 
     This is a para.
@@ -1034,19 +1053,19 @@ comments is not processed:
 
 # Text Markup
 
-These elements are all span level elements and used inside block level elements to markup text
+These elements are all span-level elements and used inside block-level elements to markup text
 fragments. For example, one can easily create links or apply emphasis to certain text parts.
 
-Note that empty span level elements are not converted to empty HTML tags but are copied as-is to the
+Note that empty span-level elements are not converted to empty HTML tags but are copied as-is to the
 output.
 
 
 
 ## Links and Images
 
-Three types of links are supported: autolinks, inline links and reference links.
+Three types of links are supported: automatic links, inline links and reference links.
 
-### Autolinks
+### Automatic Links
 
 This is the easiest one to create: Just surround a web address or an email address with angle
 brackets and the address will be turned into a proper link. The address will be used as link target
@@ -1055,8 +1074,8 @@ and as link text. For example:
     Information can be found on the <http://example.com> homepage.
     You can also mail me: <me.example@example.com>
 
-It is not possible to specify a different link text using autolinks -- use the other link types for
-this!
+It is not possible to specify a different link text using automatic links -- use the other link
+types for this!
 
 
 ### Inline Links
@@ -1075,7 +1094,7 @@ single or double quotes preceded by at least one space) in normal parentheses. F
 
 Notes:
 
-* The link text is treated like normal span level text and therefore is parsed and converted.
+* The link text is treated like normal span-level text and therefore is parsed and converted.
   However, if you use square brackets within the link text, you have to either properly nest them or
   to escape them. It is not possible to create nested links!
 
@@ -1109,7 +1128,7 @@ definition looks like this:
 
     [linkid]: http://www.example.com/ "Optional Title"
 
-> Link definitions are, despite being described here, non-content block level elements.
+> Link definitions are, despite being described here, non-content block-level elements.
 {: .information}
 
 The link definition has the following structure:
@@ -1177,7 +1196,7 @@ want to force the literal meaning of an asterisk or an underscore you can backsl
 
 ## Code Spans
 
-This is the span level equivalent of the code block element. You can markup a text part as code span
+This is the span-level equivalent of the code block element. You can markup a text part as code span
 by surrounding it with backticks `` ` ``. For example:
 
     Use `<html>` tags for this.
@@ -1202,8 +1221,8 @@ literal meaning of a backtick you can backslash-escape it:
 
 ## HTML Spans
 
-HTML tags cannot only be used on the block level but also on the span level. Span level HTML tags
-can only be used inside one block level element, it is not possible to use a start tag in one block
+HTML tags cannot only be used on the block-level but also on the span-level. Span-level HTML tags
+can only be used inside one block-level element, it is not possible to use a start tag in one block
 level element and the end tag in another. Note that only correct XHTML is supported! This means that
 you have to use, for example, `<br />` instead of `<br>` (although kramdown tries to fix such errors
 if possible).
@@ -1220,23 +1239,23 @@ enable/disable syntax parsing on a tag per tag basis using the `markdown` attrib
   level elements.
 
 * If an HTML tag has an attribute `markdown="block"`, then a warning is issued because HTML spans
-  cannot contain block level elements and the attribute is ignored.
+  cannot contain block-level elements and the attribute is ignored.
 
 * If an HTML tag has an attribute `markdown="span"`, then the content of the tag is parsed as span
   level elements.
 
-The content of a span level HTML tag is normally parsed as span level elements. Note, however, that
+The content of a span-level HTML tag is normally parsed as span-level elements. Note, however, that
 some tags like `<script>` are not parsed, i.e. their content is not modified.
 
 Processing instructions and XML comments can also be used (their content is not parsed). However, as
-with HTML tags the start and the end have to appear in the same block level element.
+with HTML tags the start and the end have to appear in the same block-level element.
 
-Span level PIs and span level XML comments as well as general span level HTML and XML tags have to
+Span-level PIs and span-level XML comments as well as general span-level HTML and XML tags have to
 be preceded by at least one non whitespace character on the same line so that kramdown correctly
-recognizes them as span level element and not as block level element. However, all span HTML tags,
+recognizes them as span-level element and not as block-level element. However, all span HTML tags,
 i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
 
-Unclosed span level HTML tags are correctly closed at the end of the span level text to ensure
+Unclosed span-level HTML tags are correctly closed at the end of the span-level text to ensure
 correct nesting and invalidly used end tags or block HTML tags are removed from the output:
 
     This is </invalid>.
@@ -1289,11 +1308,11 @@ A footnote definition is used to define the content of a footnote and has the fo
   blocks](#standard-code-blocks) (the leading four spaces/one tab are naturally stripped from the
   text)
 
-> Footnote definitions are, despite being described here, non-content block level elements.
+> Footnote definitions are, despite being described here, non-content block-level elements.
 {: .information}
 
-The whole footnote content is treated like block level text and can therefore contain any valid
-block level element (also, any block level element can be the first element). If you want to have a
+The whole footnote content is treated like block-level text and can therefore contain any valid
+block-level element (also, any block-level element can be the first element). If you want to have a
 code block as first element, note that all leading spaces/tabs on the first line are stripped away.
 Here are some example footnote definitions:
 
@@ -1346,7 +1365,7 @@ Here are some examples:
     *[another language]: It's called Markdown
     *[HTML]: HyperTextMarkupLanguage
 
-> Abbreviation definitions are, despite being described here, non-content block level elements.
+> Abbreviation definitions are, despite being described here, non-content block-level elements.
 {: .information}
 
 
@@ -1374,10 +1393,10 @@ they won't be replaced with fancy ones.
 # Non-content elements
 
 This section describes the non-content elements that are used in kramdown documents, i.e. elements
-that don't provide content for the document but have other uses such as separating block level
+that don't provide content for the document but have other uses such as separating block-level
 elements or attaching attributes to elements.
 
-Three non-content block level elements are not described here because they fit better where they
+Three non-content block-level elements are not described here because they fit better where they
 are:
 
 * [link definitions](#link-definitions)
@@ -1391,13 +1410,13 @@ are:
 {: .markdown-difference}
 
 The End-Of-Block (EOB) marker -- a `^` as first character on an otherwise empty line -- is a block
-level element that can be used to specify the end of a block level element even if the block level
-element, after which it is used, would continue otherwise. If there is no block level element to
+level element that can be used to specify the end of a block-level element even if the block-level
+element, after which it is used, would continue otherwise. If there is no block-level element to
 end, the EOB marker is simply ignored.
 
 You won't find an EOB marker in most kramdown documents but sometimes it is necessary to use it to
 achieve the wanted results which would be impossible otherwise. However, it should only be used when
-absolutely necesary!
+absolutely necessary!
 
 For example, the following gives you one list with two items:
 
@@ -1418,11 +1437,11 @@ By using an EOB marker, you can make two lists with one item each:
 > the [Maruku] package.
 {: .markdown-difference}
 
-This is an implementation of [Maruku]'s feature for adding attributes to block and span level
-elements (the naming is also taken from Maruku). This block level element is used to define
+This is an implementation of [Maruku]'s feature for adding attributes to block and span-level
+elements (the naming is also taken from Maruku). This block-level element is used to define
 attributes which can be referenced later. The [Block Inline Attribute List](#block-ials) is used to
-attach attributes to a block level element and the [Span Inline Attribute List](#span-ials) is used
-to attach attributes to a span level element.
+attach attributes to a block-level element and the [Span Inline Attribute List](#span-ials) is used
+to attach attributes to a span-level element.
 
 Following are some examples of attribute list definitions (ALDs) and afterwards comes the syntax
 explanation:
@@ -1457,7 +1476,7 @@ key-value pairs
 : A key-value pair is defined by a key name, which must follow the rules for reference names, then
   an equal sign and then the value in single or double quotes. If you need to use the value
   delimiter (a single or a double quote) inside the value, you need to escape it with a backslash.
-  Key-value pairs can be used to specify arbitrary attributes for block or span level elements. For
+  Key-value pairs can be used to specify arbitrary attributes for block or span-level elements. For
   example, a key-value pair looks like `key1="bef \"quoted\" aft"` or `title='This is a title'`.
 
 ID name
@@ -1465,7 +1484,7 @@ ID name
 : An ID name is defined by using a hash and then the identifier name which needs to start with a
   word character or a digit, optionally followed by other word characters, digits, dashes or colons.
   This is a short hand for the key-value pair `id="IDNAME"` since this is often used. The ID name
-  specifies the unique ID of a block or span level element. For example, an ID name looks like
+  specifies the unique ID of a block or span-level element. For example, an ID name looks like
   `#myid`.
 
 class names
@@ -1498,11 +1517,11 @@ These elements are used to attach attributes to another element.
 > the [Maruku] package.
 {: .markdown-difference}
 
-This block level element is used to attach attributes to a block level element. A block inline
+This block-level element is used to attach attributes to a block-level element. A block inline
 attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
 that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
-IALs) has to be put directly before or after the block level element to which the attributes should
-be attached. If a block IAL is directly after *and* before a block level element, it is applied to
+IALs) has to be put directly before or after the block-level element to which the attributes should
+be attached. If a block IAL is directly after *and* before a block-level element, it is applied to
 preceding element. The block IAL is ignored in all other cases, for example, when the block IAL is
 surrounded by blank lines.
 
@@ -1526,9 +1545,9 @@ Here are some examples for block IALs:
 > the [Maruku] package.
 {: .markdown-difference}
 
-This is a version of the [block inline attribute list](#block-ials) for span level elements. It has
+This is a version of the [block inline attribute list](#block-ials) for span-level elements. It has
 the same structure as the block IAL except that leading and trailing spaces are not allowed. A span
-IAL (or two or more span IALs) has to be put directly after the span level element to which it
+IAL (or two or more span IALs) has to be put directly after the span-level element to which it
 should be applied, no additional character is allowed between, otherwise it is ignored and only
 removed from the output.
 
@@ -1544,7 +1563,7 @@ Here are some examples for span IALs:
 {: .markdown-difference}
 
 Extensions provide additional functionality but use the same syntax for it. They are available as
-block as well as span level elements.
+block as well as span-level elements.
 
 The syntax for an extension is very similar to the syntax of [ALDs](#attribute-list-definitions).
 Here are some examples of how to specify extensions and afterwards is the syntax definition:
@@ -1577,7 +1596,7 @@ The stop tag has the following structure:
 
 A stop tag is only needed if the extension has a body!
 
-The above syntax can be used as is for span level extensions. The starting and ending lines for block level
+The above syntax can be used as is for span-level extensions. The starting and ending lines for block-level
 extensions are defined as:
 
 * The starting line consists of the extension start tag, optionally preceded by up to three spaces,

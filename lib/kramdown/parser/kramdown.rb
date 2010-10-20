@@ -40,7 +40,7 @@ module Kramdown
     #   methods
     #
     # Here is a small example for an extended parser class that parses ERB style tags as raw text if
-    # they are used as span level elements (an equivalent block level parser should probably also be
+    # they are used as span-level elements (an equivalent block-level parser should probably also be
     # made to handle the block case):
     #
     #   require 'kramdown/parser/kramdown'
@@ -135,7 +135,7 @@ module Kramdown
         [span_start, /(?=#{span_start})/]
       end
 
-      # Parse all block level elements in +text+ into the element +el+.
+      # Parse all block-level elements in +text+ into the element +el+.
       def parse_blocks(el, text = nil)
         @stack.push([@tree, @src, @block_ial])
         @tree, @src, @block_ial = el, (text.nil? ? @src : StringScanner.new(text)), nil
@@ -161,7 +161,7 @@ module Kramdown
         status
       end
 
-      # Update the tree by parsing all <tt>:raw_text</tt> elements with the span level parser
+      # Update the tree by parsing all <tt>:raw_text</tt> elements with the span-level parser
       # (resets +@tree+, +@src+ and the +@stack+) and by updating the attributes from the IALs.
       def update_tree(element)
         last_blank = nil
@@ -190,7 +190,7 @@ module Kramdown
         end.flatten!
       end
 
-      # Parse all span level elements in the source string.
+      # Parse all span-level elements in the source string.
       def parse_spans(el, stop_re = nil, parsers = nil, text_type = @text_type)
         @stack.push([@tree, @text_type]) unless @tree.nil?
         @tree, @text_type = el, text_type
@@ -263,7 +263,7 @@ module Kramdown
         end
       end
 
-      # Create a new block level element, taking care of applying a preceding block IAL if it exists.
+      # Create a new block-level element, taking care of applying a preceding block IAL if it exists.
       def new_block_el(*args)
         el = Element.new(*args)
         el.options[:category] ||= :block
@@ -273,7 +273,7 @@ module Kramdown
 
       @@parsers = {}
 
-      # Holds all the needed data for one block/span level parser.
+      # Holds all the needed data for one block/span-level parser.
       Data = Struct.new(:name, :start_re, :span_start, :method)
 
       # Add a parser method

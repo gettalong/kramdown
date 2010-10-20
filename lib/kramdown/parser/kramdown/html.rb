@@ -84,7 +84,7 @@ module Kramdown
 
       HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
-      # Parse the HTML at the current position as block level HTML.
+      # Parse the HTML at the current position as block-level HTML.
       def parse_block_html
         if result = @src.scan(HTML_COMMENT_RE)
           @tree.children << Element.new(:xml_comment, result, nil, :category => :block)
@@ -119,7 +119,7 @@ module Kramdown
 
       HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
 
-      # Parse the HTML at the current position as span level HTML.
+      # Parse the HTML at the current position as span-level HTML.
       def parse_span_html
         if result = @src.scan(HTML_COMMENT_RE)
           @tree.children << Element.new(:xml_comment, result, nil, :category => :span)
@@ -130,7 +130,7 @@ module Kramdown
           add_text(result)
         elsif result = @src.scan(HTML_TAG_RE)
           if HTML_BLOCK_ELEMENTS.include?(@src[1])
-            warning("Found block HTML tag '#{@src[1]}' in span level text")
+            warning("Found block HTML tag '#{@src[1]}' in span-level text")
             add_text(result)
             return
           end
@@ -142,7 +142,7 @@ module Kramdown
           do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) || @tree.options[:parse_type] == :raw ? false : @doc.options[:parse_span_html])
           if val = html_parse_type(attrs.delete('markdown'))
             if val == :block
-              warning("Cannot use block level parsing in span level HTML tag - using default mode")
+              warning("Cannot use block-level parsing in span-level HTML tag - using default mode")
             elsif val == :span
               do_parsing = true
             elsif val == :default

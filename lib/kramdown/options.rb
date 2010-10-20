@@ -169,7 +169,7 @@ EOF
 Process kramdown syntax in block HTML tags
 
 If this option is `true`, the kramdown parser processes the content of
-block HTML tags as text containing block level elements. Since this is
+block HTML tags as text containing block-level elements. Since this is
 not wanted normally, the default is `false`. It is normally better to
 selectively enable kramdown processing via the markdown attribute.
 
@@ -181,7 +181,7 @@ EOF
 Process kramdown syntax in span HTML tags
 
 If this option is `true`, the kramdown parser processes the content of
-span HTML tags as text containing span level elements.
+span HTML tags as text containing span-level elements.
 
 Default: true
 Used by: kramdown parser

@@ -37,7 +37,7 @@ The following general transformations are also applied:
       html head hgroup ol ul dl table colgroup tbody thead tfoot tr select optgroup
 
 * Text elements containing only whitespace and appearing either directly after the start tag,
-  directly before the end tag or between block level child elements are removed from the following
+  directly before the end tag or between block-level child elements are removed from the following
   HTML tags:
 
       body section nav article aside header footer address
