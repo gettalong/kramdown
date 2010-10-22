@@ -26,11 +26,21 @@ module Kramdown
 
   module Converter
 
-    # Converts a Kramdown::Document to LaTeX. This converter uses ideas from other Markdown-to-LaTeX
-    # converters like Pandoc and Maruku.
+    # Converts a Kramdown::Document to LaTeX.
+    #
+    # This converter uses ideas from other Markdown-to-LaTeX converters like Pandoc and Maruku.
+    #
+    # You can customize this converter by sub-classing it and overriding the <tt>convert_NAME</tt>
+    # methods. Each such method takes the following parameters:
+    #
+    # [+el+] The element of type +NAME+ to be converted.
+    #
+    # [+opts+] A hash containing processing options that are passed down from parent elements. The
+    #          key <tt>:parent</tt> is always set and contains the parent element as value.
+    #
+    # The return value of such a method has to be a string containing the element +el+ formatted
+    # correctly as LaTeX markup.
     class Latex < Base
-
-      # :stopdoc:
 
       # Initialize the LaTeX converter with the given Kramdown document +doc+.
       def initialize(doc)
@@ -40,10 +50,13 @@ module Kramdown
         @doc.conversion_infos[:packages] = Set.new
       end
 
+      # Dispatch the conversion of the element +el+ to a <tt>convert_TYPE</tt> method using the
+      # +type+ of the element.
       def convert(el, opts = {})
         send("convert_#{el.type}", el, opts)
       end
 
+      # Return the converted content of the children of +el+ as a string.
       def inner(el, opts)
         result = ''
         options = opts.dup.merge(:parent => el)
@@ -75,6 +88,8 @@ module Kramdown
         end
       end
 
+      # Helper method used by +convert_p+ to convert a paragraph that only contains a single
+      # <tt>:img</tt> element.
       def convert_standalone_image(el, opts, img)
         attrs = attribute_list(el)
         "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.attr['alt'])}}\n\\end{figure}#{attrs}\n"
@@ -94,11 +109,6 @@ module Kramdown
         end
       end
 
-      def latex_environment(type, el, text)
-        attrs = attribute_list(el)
-        "\\begin{#{type}}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
-      end
-
       def convert_blockquote(el, opts)
         latex_environment(el.children.size > 1 ? 'quotation' : 'quote', el, inner(el, opts))
       end
@@ -110,7 +120,7 @@ module Kramdown
         4 => 'paragraph',
         5 => 'subparagraph',
         6 => 'subparagraph'
-      }
+      } # :nodoc:
       def convert_header(el, opts)
         type = HEADER_TYPES[el.options[:level]]
         if ((id = el.attr['id']) ||
@@ -174,7 +184,7 @@ module Kramdown
       end
       alias :convert_html_doctype :convert_xml_pi
 
-      TABLE_ALIGNMENT_CHAR = {:default => 'l', :left => 'l', :center => 'c', :right => 'r'}
+      TABLE_ALIGNMENT_CHAR = {:default => 'l', :left => 'l', :center => 'c', :right => 'r'} # :nodoc:
 
       def convert_table(el, opts)
         align = el.options[:alignment].map {|a| TABLE_ALIGNMENT_CHAR[a]}.join('|')
@@ -504,7 +514,7 @@ module Kramdown
         253 => ['\\\'y'],
         254 => ['\thorn', 'wasysym'],
         255 => ['\"y'],
-      }
+      } # :nodoc:
       ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k] = v.unshift(v.shift + '{}')}
 
       def convert_entity(el, opts)
@@ -522,12 +532,12 @@ module Kramdown
         :mdash => '---', :ndash => '--', :hellip => '\ldots{}',
         :laquo_space => '\guillemotleft{}~', :raquo_space => '~\guillemotright{}',
         :laquo => '\guillemotleft{}', :raquo => '\guillemotright{}'
-      }
+      } # :nodoc:
       def convert_typographic_sym(el, opts)
         TYPOGRAPHIC_SYMS[el.value]
       end
 
-      SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''}
+      SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''} # :nodoc:
       def convert_smart_quote(el, opts)
         res = SMART_QUOTE_SYMS[el.value]
         res += "{}" if (nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote
@@ -551,6 +561,22 @@ module Kramdown
         el.value
       end
 
+      # Wrap the +text+ inside a LaTeX environment of type +type+. The element +el+ is passed on to
+      # the method #attribute_list -- the resulting string is appended to both the <tt>\\begin</tt>
+      # and the <tt>\\end</tt> lines of the LaTeX environment for easier post-processing of LaTeX
+      # environments.
+      def latex_environment(type, el, text)
+        attrs = attribute_list(el)
+        "\\begin{#{type}}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
+      end
+
+      # Return a LaTeX comment containing all attributes as <tt>key="value"</tt> pairs.
+      def attribute_list(el)
+        attrs = el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
+        attrs = "   % #{attrs}" if !attrs.empty?
+        attrs
+      end
+
       ESCAPE_MAP = {
         "^"  => "\\^{}",
         "\\" => "\\textbackslash{}",
@@ -558,17 +584,12 @@ module Kramdown
         "|"  => "\\textbar{}",
         "<"  => "\\textless{}",
         ">"  => "\\textgreater{}"
-      }.merge(Hash[*("{}$%&_#".scan(/./).map {|c| [c, "\\#{c}"]}.flatten)])
-      ESCAPE_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| k})
+      }.merge(Hash[*("{}$%&_#".scan(/./).map {|c| [c, "\\#{c}"]}.flatten)]) # :nodoc:
+      ESCAPE_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| k}) # :nodoc:
 
+      # Escape the special LaTeX characters in the string +str+.
       def escape(str)
         str.gsub(ESCAPE_RE) {|m| ESCAPE_MAP[m]}
-      end
-
-      def attribute_list(el)
-        attrs = el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
-        attrs = "   % #{attrs}" if !attrs.empty?
-        attrs
       end
 
     end

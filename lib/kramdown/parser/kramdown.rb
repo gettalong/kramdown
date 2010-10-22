@@ -162,7 +162,7 @@ module Kramdown
       end
 
       # Update the tree by parsing all <tt>:raw_text</tt> elements with the span-level parser
-      # (resets +@tree+, +@src+ and the +@stack+) and by updating the attributes from the IALs.
+      # (resets the environment) and by updating the attributes from the IALs.
       def update_tree(element)
         last_blank = nil
         element.children.map! do |child|
@@ -190,7 +190,15 @@ module Kramdown
         end.flatten!
       end
 
-      # Parse all span-level elements in the source string.
+      # Parse all span-level elements in the source string of <tt>@src</tt> into +el+.
+      #
+      # If the parameter +stop_re+ (a regexp) is used, parsing is immediately stopped if the regexp
+      # matches and if no block is given or if a block is given and it returns +true+.
+      #
+      # The parameter +parsers+ can be used to specify the (span-level) parsing methods that should
+      # be used for parsing.
+      #
+      # The parameter +text_type+ specifies the type which should be used for created text nodes.
       def parse_spans(el, stop_re = nil, parsers = nil, text_type = @text_type)
         @stack.push([@tree, @text_type]) unless @tree.nil?
         @tree, @text_type = el, text_type
@@ -249,7 +257,8 @@ module Kramdown
         @src, @tree, @block_ial, @stack,  @text_type = *env
       end
 
-      # Update the attributes with the information from the inline attribute list and all referenced ALDs.
+      # Update the given attributes hash +attr+ with the information from the inline attribute list
+      # +ial+ and all referenced ALDs.
       def update_attr_with_ial(attr, ial)
         ial[:refs].each do |ref|
           update_attr_with_ial(attr, ref) if ref = @doc.parse_infos[:ald][ref]
@@ -263,7 +272,8 @@ module Kramdown
         end
       end
 
-      # Create a new block-level element, taking care of applying a preceding block IAL if it exists.
+      # Create a new block-level element, taking care of applying a preceding block IAL if it
+      # exists. This method should always be used for creating a block-level element!
       def new_block_el(*args)
         el = Element.new(*args)
         el.options[:category] ||= :block
@@ -273,7 +283,7 @@ module Kramdown
 
       @@parsers = {}
 
-      # Holds all the needed data for one block/span-level parser.
+      # Struct class holding all the needed data for one block/span-level parser method.
       Data = Struct.new(:name, :start_re, :span_start, :method)
 
       # Add a parser method
@@ -300,7 +310,9 @@ module Kramdown
         @@parsers.has_key?(name)
       end
 
+      # Regexp for matching indentation (one tab or four spaces)
       INDENT = /^(?:\t| {4})/
+      # Regexp for matching the optional space (zero or up to three spaces)
       OPT_SPACE = / {0,3}/
 
       require 'kramdown/parser/kramdown/blank_line'

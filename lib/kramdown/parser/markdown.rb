@@ -37,15 +37,18 @@ module Kramdown
     # also fail but those failures are negligible).
     class Markdown < Kramdown
 
+      # Array with all the parsing methods that should be removed from the standard kramdown parser.
       EXTENDED = [:codeblock_fenced, :table, :definition_list, :footnote_definition, :abbrev_definition, :block_math,
                   :block_extensions,
                   :footnote_marker, :smart_quotes, :inline_math, :span_extensions, :typographic_syms]
 
-      def initialize(doc)
+      def initialize(doc) # :nodoc:
         super(doc)
         @block_parsers.delete_if {|i| EXTENDED.include?(i)}
         @span_parsers.delete_if {|i| EXTENDED.include?(i)}
       end
+
+      # :stopdoc:
 
       BLOCK_BOUNDARY = /#{BLANK_LINE}|#{EOB_MARKER}|\Z/
       BLOCKQUOTE_MATCH = /(^.*\n)+?(?=#{BLANK_LINE}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/

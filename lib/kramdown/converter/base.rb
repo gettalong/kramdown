@@ -26,30 +26,35 @@ module Kramdown
 
   module Converter
 
-    # == Base class for converters
+    # == \Base class for converters
     #
     # This class serves as base class for all converters. It provides methods that can/should be
     # used by all converters (like #generate_id) as well as common functionality that is
     # automatically applied to the result (for example, embedding the output into a template).
     #
+    # Have a look at the Base::convert method for additional information!
+    #
     # == Implementing a converter
     #
-    # Implementing a new converter is rather easy: just create a new sub class from this class and
-    # put it in the Kramdown::Converter module (the latter is only needed if auto-detection should
-    # work properly). Then you need to implement the #convert(tree) method which takes a document
-    # tree and should return the converted output.
+    # Implementing a new converter is rather easy: just derive a new class from this class and put
+    # it in the Kramdown::Converter module (the latter is only needed if auto-detection should work
+    # properly). Then you need to implement the <tt>#convert(tree)</tt> method which takes a
+    # document tree (i.e. a <tt>:root</tt> element) and should return the converted output.
     #
-    # The document instance is automatically set as @doc in Base#initialize. Furthermore, the
-    # document instance provides a hash called `conversion_infos` that is also automatically cleared
-    # and can be used to store information about the conversion process.
+    # The document instance is automatically set as <tt>@doc</tt> in <tt>Base#new(doc)</tt> which
+    # takes the document instance as parameter. Furthermore, the document instance provides a hash
+    # called `conversion_infos` that is also automatically cleared and can be used to store
+    # information about the conversion process.
     #
     # The actual transformation of the document tree can be done in any way. However, writing one
     # method per tree element type is a straight forward way to do it - this is how the Html and
     # Latex converters do the transformation.
+    #
+    # Have a look at the Base::convert method for additional information!
     class Base
 
       # Initialize the converter with the given Kramdown document +doc+.
-      def initialize(doc)
+      def initialize(doc) # :nodoc:
         @doc = doc
         @doc.conversion_infos.clear
       end
@@ -59,7 +64,19 @@ module Kramdown
       #
       # Initializes a new instance of the calling class and then calls the #convert method that must
       # be implemented by each subclass. If the +template+ option is specified and non-empty, the
-      # result is rendered into the specified template.
+      # result is rendered into the specified template. The template resolution is done in the
+      # following way:
+      #
+      # 1. Look in the current working directory for the template.
+      #
+      # 2. Append <tt>.convertername</tt> (e.g. +.html+) to the template name and look for the
+      #    resulting file in the current working directory.
+      #
+      # 3. Append <tt>.convertername</tt> to the template name and look for it in the kramdown data
+      #    directory.
+      #
+      # *Note* that this method is called by Kramdown::Document. If you don't derive your converter
+      # class from this base class, you have to implement at least this method!
       def self.convert(doc)
         result = new(doc).convert(doc.tree)
         result = apply_template(doc, result) if !doc.options[:template].empty?
@@ -67,7 +84,7 @@ module Kramdown
       end
 
       # Apply the template specified in the +doc+ options, using +body+ as the body string.
-      def self.apply_template(doc, body)
+      def self.apply_template(doc, body) # :nodoc:
         erb = ERB.new(get_template(doc.options[:template]))
         obj = Object.new
         obj.instance_variable_set(:@doc, doc)
@@ -76,7 +93,7 @@ module Kramdown
       end
 
       # Return the template specified by +template+.
-      def self.get_template(template)
+      def self.get_template(template) # :nodoc:
         format_ext = '.' + self.name.split(/::/).last.downcase
         shipped = File.join(::Kramdown.data_dir, template + format_ext)
         if File.exist?(template)
@@ -91,7 +108,7 @@ module Kramdown
       end
 
 
-      # Generate an unique alpha-numeric ID from the the string +str+ for use as header ID.
+      # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
       def generate_id(str)
         gen_id = str.gsub(/[^a-zA-Z0-9 -]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '-').downcase
         gen_id = 'section' if gen_id.length == 0

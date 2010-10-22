@@ -27,14 +27,21 @@ module Kramdown
   module Converter
 
     # Converts a Kramdown::Document to HTML.
+    #
+    # You can customize the HTML converter by sub-classing it and overriding the
+    # <tt>convert_NAME</tt> methods. Each such method takes the following parameters:
+    #
+    # [+el+] The element of type +NAME+ to be converted.
+    #
+    # [+indent+] A number representing the current amount of spaces for indent (only used for
+    #            block-level elements).
+    #
+    # [+opts+] A hash containing processing options. The key <tt>:parent</tt> is always set and
+    #          contains the parent element as value.
+    #
+    # The return value of such a method has to be a string containing the element +el+ formatted as
+    # HTML element.
     class Html < Base
-
-      include ::Kramdown::Utils::HTML
-
-      # :stopdoc:
-
-      # Defines the amount of indentation used when nesting HTML tags.
-      INDENTATION = 2
 
       begin
         require 'coderay'
@@ -42,8 +49,14 @@ module Kramdown
         # Highlighting via coderay is available if this constant is +true+.
         HIGHLIGHTING_AVAILABLE = true
       rescue LoadError => e
-        HIGHLIGHTING_AVAILABLE = false
+        HIGHLIGHTING_AVAILABLE = false  # :nodoc:
       end
+
+      include ::Kramdown::Utils::HTML
+
+
+      # The amount of indentation used when nesting HTML tags.
+      attr_accessor :indent
 
       # Initialize the HTML converter with the given Kramdown document +doc+.
       def initialize(doc)
@@ -52,15 +65,20 @@ module Kramdown
         @footnotes = []
         @toc = []
         @toc_code = nil
+        @indent = 2
       end
 
-      def convert(el, indent = -INDENTATION, opts = {})
+      # Dispatch the conversion of the element +el+ to a <tt>convert_TYPE</tt> method using the
+      # +type+ of the element.
+      def convert(el, indent = -@indent, opts = {})
         send("convert_#{el.type}", el, indent, opts)
       end
 
+      # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
+      # to be the amount of indentation used for the element +el+.
       def inner(el, indent, opts)
         result = ''
-        indent += INDENTATION
+        indent += @indent
         el.children.each do |inner_el|
           opts[:parent] = el
           result << send("convert_#{inner_el.type}", inner_el, indent, opts)
@@ -123,10 +141,6 @@ module Kramdown
         "#{' '*indent}<h#{el.options[:level]}#{html_attributes(el)}>#{inner(el, indent, opts)}</h#{el.options[:level]}>\n"
       end
 
-      def within_toc_depth?(el)
-        @doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth]
-      end
-
       def convert_hr(el, indent, opts)
         "#{' '*indent}<hr />\n"
       end
@@ -158,7 +172,8 @@ module Kramdown
         "#{' '*indent}<dt#{html_attributes(el)}>#{inner(el, indent, opts)}</dt>\n"
       end
 
-      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea']
+      # A list of all HTML tags that need to have a body (even if the body is empty).
+      HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea'] # :nodoc:
 
       def convert_html_element(el, indent, opts)
         parent = opts[:parent]
@@ -198,7 +213,7 @@ module Kramdown
           alignment = ''
         else
           alignment = el.options[:alignment].map do |a|
-            "#{' '*(indent + INDENTATION)}" + (a == :default ? "<col />" : "<col align=\"#{a}\" />") + "\n"
+            "#{' '*(indent + @indent)}" + (a == :default ? "<col />" : "<col align=\"#{a}\" />") + "\n"
           end.join('')
         end
         "#{' '*indent}<table#{html_attributes(el)}>\n#{alignment}#{inner(el, indent, opts)}#{' '*indent}</table>\n"
@@ -211,7 +226,7 @@ module Kramdown
       alias :convert_tfoot :convert_thead
       alias :convert_tr  :convert_thead
 
-      ENTITY_NBSP = ::Kramdown::Utils::Entities.entity('nbsp')
+      ENTITY_NBSP = ::Kramdown::Utils::Entities.entity('nbsp') # :nodoc:
 
       def convert_td(el, indent, opts)
         res = inner(el, indent, opts)
@@ -291,7 +306,7 @@ module Kramdown
         :raquo_space => [::Kramdown::Utils::Entities.entity('nbsp'), ::Kramdown::Utils::Entities.entity('raquo')],
         :laquo => [::Kramdown::Utils::Entities.entity('laquo')],
         :raquo => [::Kramdown::Utils::Entities.entity('raquo')]
-      }
+      } # :nodoc:
       def convert_typographic_sym(el, indent, opts)
         TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e)}.join('')
       end
@@ -330,6 +345,12 @@ module Kramdown
         result
       end
 
+      # Return +true+ if the header element +el+ is within the value of the +toc_depth+ option.
+      def within_toc_depth?(el)
+        @doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth]
+      end
+
+      # Generate and return an element tree for the table of contents.
       def generate_toc_tree(toc, type, attr)
         sections = Element.new(type, nil, attr)
         sections.attr['id'] ||= 'markdown-toc'
@@ -365,7 +386,7 @@ module Kramdown
         sections
       end
 
-      # Helper method for obfuscating the +text+ by using HTML entities.
+      # Obfuscate the +text+ by using HTML entities.
       def obfuscate(text)
         result = ""
         text.each_byte do |b|
@@ -375,7 +396,7 @@ module Kramdown
         result
       end
 
-      # Return a HTML list with the footnote content for the used footnotes.
+      # Return a HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1

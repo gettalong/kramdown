@@ -40,10 +40,10 @@ module Kramdown
     # ----------------------------
     # :section: Option definitions
     #
-    # This sections informs describes the methods that can be used on the Options module.
+    # This sections describes the methods that can be used on the Options module.
     # ----------------------------
 
-    # Contains the definition of an option.
+    # Struct class for storing the definition of an option.
     Definition = Struct.new(:name, :type, :default, :desc)
 
     # Allowed option types.
@@ -55,7 +55,7 @@ module Kramdown
     # Symbol, Boolean, Array, Object), default value +default+ and the description +desc+.
     #
     # The type 'Object' should only be used if none of the other types suffices because such an
-    # option will be opaque and cannot be used, for example, by CLI command!
+    # option will be opaque and cannot be used, for example, by the CLI command!
     def self.define(name, type, default, desc)
       raise ArgumentError, "Option name #{name} is already used" if @options.has_key?(name)
       raise ArgumentError, "Invalid option type #{type} specified" if !ALLOWED_TYPES.include?(type)

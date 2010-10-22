@@ -24,9 +24,16 @@ module Kramdown
 
   module Utils
 
+    # Provides convenience methods for HTML related tasks.
+    #
+    # *Note* that this module has to be mixed into a class that has a <tt>@doc</tt> instance
+    # variable (e.g. a parser or converter class) so that some of the methods can work correctly.
     module HTML
 
-      # Convert the +entity+ to a string.
+      # Convert the entity +e+ to a string. The optional parameter +original+ may contain the
+      # original representation of the entity.
+      #
+      # This method uses the option +entity_output+ to determine the output form for the entity.
       def entity_to_str(e, original = nil)
         if RUBY_VERSION >= '1.9' && @doc.options[:entity_output] == :as_char &&
             (c = e.char.encode(@doc.parse_infos[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
@@ -45,6 +52,7 @@ module Kramdown
         el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
       end
 
+      # :stopdoc:
       ESCAPE_MAP = {
         '<' => '&lt;',
         '>' => '&gt;',
@@ -59,6 +67,7 @@ module Kramdown
         :text => ESCAPE_TEXT_RE,
         :attribute => ESCAPE_ATTRIBUTE_RE
       }
+      # :startdoc:
 
       # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
       # is escaped: <tt>:all</tt> - all special HTML characters as well as entities, <tt>:text</tt>

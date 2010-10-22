@@ -22,7 +22,7 @@
 
 module Kramdown
 
-  # == Utils Module
+  # == \Utils Module
   #
   # This module contains utility class/modules/methods that can be used by both parsers and
   # converters.

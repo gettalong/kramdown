@@ -19,8 +19,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++
 #
-
 # All the code in this file is backported from Ruby 1.8.7 sothat kramdown works under 1.8.5
+#
+# :stopdoc:
 
 if RUBY_VERSION == '1.8.5'
   require 'rexml/parsers/baseparser'

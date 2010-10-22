@@ -24,11 +24,24 @@ module Kramdown
 
   module Parser
 
-    # == Base class for parsers
+    # == \Base class for parsers
     #
     # This class serves as base class for parsers. It provides common methods that can/should be
     # used by all parsers, especially by those using StringScanner for parsing.
     #
+    # == Implementing a parser
+    #
+    # Implementing a new parser is rather easy: just derive a new class from this class and put it
+    # in the Kramdown::Parser module -- the latter is needed so that the auto-detection of the new
+    # parser works correctly. Then you need to implement the <tt>#parse(source)</tt> method which
+    # takes the input string and should return the root element of the created document tree.
+    #
+    # The document instance is automatically set as <tt>@doc</tt> in <tt>Base#new(doc)</tt> which
+    # takes the document instance as parameter. Furthermore, the document instance provides a hash
+    # called `parse_infos` that is also automatically cleared and can be used to store information
+    # about the parse process.
+    #
+    # Have a look at the Base::parse method for additional information!
     class Base
 
       # Initialize the parser with the given Kramdown document +doc+.
@@ -48,13 +61,14 @@ module Kramdown
       end
 
 
-      # Add the given warning +text+ to the warning array of the Kramdown document.
+      # Add the given warning +text+ to the warning array of the Kramdown::Document.
       def warning(text)
         @doc.warnings << text
         #TODO: add position information
       end
 
-      # Modify the string +source+ to be usable by the parser.
+      # Modify the string +source+ to be usable by the parser (unifies line ending characters to
+      # <tt>\n</tt> and makes sure +source+ ends with a new line character).
       def adapt_source(source)
         source.gsub(/\r\n?/, "\n").chomp + "\n"
       end
@@ -70,7 +84,7 @@ module Kramdown
       end
 
       # Extract the part of the StringScanner +srcscan+ backed string specified by the +range+. This
-      # method also works correctly under Ruby 1.9.
+      # method works correctly under Ruby 1.8 and Ruby 1.9.
       def extract_string(range, strscan)
         result = nil
         if RUBY_VERSION >= '1.9'

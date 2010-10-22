@@ -24,16 +24,23 @@ module Kramdown
 
   module Utils
 
+    # Provides convenience methods for handling named and numeric entities.
     module Entities
 
+      # Represents an entity that has a +code_point+ and +name+.
       class Entity < Struct.new(:code_point, :name)
 
+        # Return the UTF8 representation of the entity.
         def char
           [code_point].pack('U*') rescue nil
         end
 
       end
 
+      # Array of arrays. Each sub-array specifies a code point and the associated name.
+      #
+      # This table is not used directly -- Entity objects are automatically created from it and put
+      # into a Hash map when this file is loaded.
       ENTITY_TABLE = [
                       [913, 'Alpha'],
                       [914, 'Beta'],
@@ -304,6 +311,8 @@ module Kramdown
                       [158, 382],
                       [159, 376],
                      ]
+
+      # Contains the mapping of code point (or name) to the actual Entity object.
       ENTITY_MAP = Hash.new do |h,k|
         if k.kind_of?(Integer)
           h[k] = Entity.new(k, nil)
@@ -320,7 +329,7 @@ module Kramdown
         end
       end
 
-      # Return the entity for the given +point_or_name+.
+      # Return the entity for the given code point or name +point_or_name+.
       def entity(point_or_name)
         ENTITY_MAP[point_or_name]
       end

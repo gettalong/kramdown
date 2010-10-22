@@ -32,6 +32,7 @@ module Kramdown
 
       # Contains all constants that are used when parsing.
       module Constants
+
         #:stopdoc:
         # The following regexps are based on the ones used by REXML, with some slight modifications.
         HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/m
@@ -69,15 +70,18 @@ module Kramdown
 
       # Contains the parsing methods. This module can be mixed into any parser to get HTML parsing
       # functionality. The only thing that must be provided by the class are instance variable
-      # <tt>@stack</tt> for storing needed state and <tt>@src</tt> (instance of StringScanner) for
-      # the actual parsing.
+      # <tt>@stack</tt> for storing the needed state and <tt>@src</tt> (instance of StringScanner)
+      # for the actual parsing.
       module Parser
 
         include Constants
 
-        # Process the HTML start tag that has already be scanned/checked. Does the common processing
-        # steps and then yields to the caller for further processing.
-        def handle_html_start_tag
+        # Process the HTML start tag that has already be <tt>scan</tt>ned/<tt>check</tt>ed.
+        #
+        # Does the common processing steps and then yields to the caller for further processing
+        # (first parameter is the created element, the second parameter is +true+ if the HTML
+        # element is already closed, ie. contains no body).
+        def handle_html_start_tag # :yields: el, closed
           name = @src[1]
           closed = !@src[4].nil?
           attrs = Utils::OrderedHash.new
@@ -98,6 +102,7 @@ module Kramdown
           end
         end
 
+        # Handle the HTML script tag at the current position.
         def handle_html_script_tag
           curpos = @src.pos
           if result = @src.scan_until(/(?=<\/script\s*>)/m)
@@ -109,7 +114,7 @@ module Kramdown
           end
         end
 
-        HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/
+        HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/ # :nodoc:
 
         # Parse raw HTML from the current source position, storing the found elements in +el+.
         # Parsing continues until one of the following criteria are fulfilled:
@@ -159,6 +164,8 @@ module Kramdown
 
       # Converts HTML elements to native elements if possible.
       class ElementConverter
+
+        # :stopdoc:
 
         include Constants
         include ::Kramdown::Utils::Entities
