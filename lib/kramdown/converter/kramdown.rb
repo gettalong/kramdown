@@ -26,14 +26,14 @@ module Kramdown
 
   module Converter
 
-    # Converts a Kramdown::Document to the kramdown format.
+    # Converts an element tree to the kramdown format.
     class Kramdown < Base
 
       # :stopdoc:
 
-      include ::Kramdown::Utils::HTML
+      include ::Kramdown::Utils::Html
 
-      def initialize(doc)
+      def initialize(root, options)
         super
         @linkrefs = []
         @footnotes = []
@@ -90,7 +90,7 @@ module Kramdown
       end
 
       def convert_p(el, opts)
-        w = @doc.options[:line_width] - opts[:indent].to_s.to_i
+        w = @options[:line_width] - opts[:indent].to_s.to_i
         first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split(/\n/)
         first.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."} if first
         second.gsub!(/^([=-]+\s*?)$/, "\\\1") if second
@@ -312,7 +312,7 @@ module Kramdown
       end
 
       def convert_footnote(el, opts)
-        @footnotes << [el.options[:name], @doc.parse_infos[:footnotes][el.options[:name]]]
+        @footnotes << [el.options[:name], @root.options[:footnotes][el.options[:name]]]
         "[^#{el.options[:name]}]"
       end
 
@@ -389,9 +389,9 @@ module Kramdown
       end
 
       def create_abbrev_defs
-        return '' unless @doc.parse_infos[:abbrev_defs]
+        return '' unless @root.options[:abbrev_defs]
         res = ''
-        @doc.parse_infos[:abbrev_defs].each do |name, text|
+        @root.options[:abbrev_defs].each do |name, text|
           res << "*[#{name}]: #{text}\n"
         end
         res
@@ -416,6 +416,8 @@ module Kramdown
           (el.options[:ial][:refs].include?('toc') rescue nil)
         res.strip.empty? ? nil : "{:#{res}}"
       end
+
+      # :startdoc:
 
     end
 

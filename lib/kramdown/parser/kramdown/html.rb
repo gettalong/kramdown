@@ -32,7 +32,7 @@ module Kramdown
         el.options[:ial] = @block_ial if @block_ial
 
         parse_type = if @tree.type != :html_element || @tree.options[:parse_type] != :raw
-                       (@doc.options[:parse_block_html] ? HTML_PARSE_AS[el.value] : :raw)
+                       (@options[:parse_block_html] ? HTML_PARSE_AS[el.value] : :raw)
                      else
                        :raw
                      end
@@ -98,7 +98,7 @@ module Kramdown
           if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
             @src.pos += @src.matched_size
             handle_html_start_tag(&method(:handle_kramdown_html_tag))
-            Kramdown::Parser::Html::ElementConverter.new(@doc).process(@tree.children.last) if @doc.options[:html_to_native]
+            Kramdown::Parser::Html::ElementConverter.convert(@root, @tree.children.last) if @options[:html_to_native]
             true
           elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
             name = @src[1]
@@ -139,7 +139,7 @@ module Kramdown
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
-          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) || @tree.options[:parse_type] == :raw ? false : @doc.options[:parse_span_html])
+          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) || @tree.options[:parse_type] == :raw ? false : @options[:parse_span_html])
           if val = html_parse_type(attrs.delete('markdown'))
             if val == :block
               warning("Cannot use block-level parsing in span-level HTML tag - using default mode")
@@ -165,7 +165,7 @@ module Kramdown
               add_text(@src.scan(/.*/m), el)
             end
           end
-          Kramdown::Parser::Html::ElementConverter.new(@doc).process(el) if @doc.options[:html_to_native]
+          Kramdown::Parser::Html::ElementConverter.convert(@root, el) if @options[:html_to_native]
         else
           add_text(@src.scan(/./))
         end

@@ -52,16 +52,16 @@ module Kramdown
         HIGHLIGHTING_AVAILABLE = false  # :nodoc:
       end
 
-      include ::Kramdown::Utils::HTML
+      include ::Kramdown::Utils::Html
 
 
       # The amount of indentation used when nesting HTML tags.
       attr_accessor :indent
 
       # Initialize the HTML converter with the given Kramdown document +doc+.
-      def initialize(doc)
+      def initialize(root, options)
         super
-        @footnote_counter = @footnote_start = @doc.options[:footnote_nr]
+        @footnote_counter = @footnote_start = @options[:footnote_nr]
         @footnotes = []
         @toc = []
         @toc_code = nil
@@ -106,9 +106,9 @@ module Kramdown
         el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
         lang = el.attr.delete('lang')
         if lang && HIGHLIGHTING_AVAILABLE
-          opts = {:wrap => @doc.options[:coderay_wrap], :line_numbers => @doc.options[:coderay_line_numbers],
-            :line_number_start => @doc.options[:coderay_line_number_start], :tab_width => @doc.options[:coderay_tab_width],
-            :bold_every => @doc.options[:coderay_bold_every], :css => @doc.options[:coderay_css]}
+          opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
+            :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
+            :bold_every => @options[:coderay_bold_every], :css => @options[:coderay_css]}
           result = CodeRay.scan(el.value, lang.to_sym).html(opts).chomp + "\n"
           "#{' '*indent}<div#{html_attributes(el)}>#{result}#{' '*indent}</div>\n"
         else
@@ -134,7 +134,7 @@ module Kramdown
 
       def convert_header(el, indent, opts)
         el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        if @doc.options[:auto_ids] && !el.attr['id']
+        if @options[:auto_ids] && !el.attr['id']
           el.attr['id'] = generate_id(el.options[:raw_text])
         end
         @toc << [el.options[:level], el.attr['id'], el.children] if el.attr['id'] && within_toc_depth?(el)
@@ -267,7 +267,7 @@ module Kramdown
         el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
         lang = el.attr.delete('lang')
         if lang && HIGHLIGHTING_AVAILABLE
-          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @doc.options[:coderay_css]).chomp
+          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
           "<code#{html_attributes(el)}>#{result}</code>"
         else
           "<code#{html_attributes(el)}>#{escape_html(el.value)}</code>"
@@ -277,7 +277,7 @@ module Kramdown
       def convert_footnote(el, indent, opts)
         number = @footnote_counter
         @footnote_counter += 1
-        @footnotes << [el.options[:name], @doc.parse_infos[:footnotes][el.options[:name]]]
+        @footnotes << [el.options[:name], @root.options[:footnotes][el.options[:name]]]
         "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{number}</a></sup>"
       end
 
@@ -325,7 +325,7 @@ module Kramdown
       end
 
       def convert_abbreviation(el, indent, opts)
-        title = @doc.parse_infos[:abbrev_defs][el.value]
+        title = @root.options[:abbrev_defs][el.value]
         title = nil if title.empty?
         "<abbr#{title ? " title=\"#{title}\"" : ''}>#{el.value}</abbr>"
       end
@@ -347,7 +347,7 @@ module Kramdown
 
       # Return +true+ if the header element +el+ is within the value of the +toc_depth+ option.
       def within_toc_depth?(el)
-        @doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth]
+        @options[:toc_depth] <= 0 || el.options[:level] <= @options[:toc_depth]
       end
 
       # Generate and return an element tree for the table of contents.

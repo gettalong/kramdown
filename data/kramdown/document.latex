@@ -29,10 +29,10 @@ encmap = {
 \usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{hyperref}
-<% @doc.conversion_infos[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
+<% @converter.data[:packages].each {|pkg| %>\usepackage{<%= pkg %>}
 <% } %>
 
-<% if @doc.conversion_infos[:packages].include?('fancyvrb') %>
+<% if @converter.data[:packages].include?('fancyvrb') %>
 \VerbatimFootnotes
 <% end %>
 

@@ -33,8 +33,8 @@ module Kramdown
       def parse_link_definition
         @src.pos += @src.matched_size
         link_id, link_url, link_title = @src[1].downcase, @src[2] || @src[3], @src[5]
-        warning("Duplicate link ID '#{link_id}' - overwriting") if @doc.parse_infos[:link_defs][link_id]
-        @doc.parse_infos[:link_defs][link_id] = [link_url, link_title]
+        warning("Duplicate link ID '#{link_id}' - overwriting") if @root.options[:link_defs][link_id]
+        @root.options[:link_defs][link_id] = [link_url, link_title]
         @tree.children << Element.new(:eob, :link_def)
         true
       end
@@ -101,8 +101,8 @@ module Kramdown
           if link_id.empty?
             @src.pos = reset_pos
             add_text(result)
-          elsif @doc.parse_infos[:link_defs].has_key?(link_id)
-            add_link(el, @doc.parse_infos[:link_defs][link_id].first, @doc.parse_infos[:link_defs][link_id].last, alt_text)
+          elsif @root.options[:link_defs].has_key?(link_id)
+            add_link(el, @root.options[:link_defs][link_id].first, @root.options[:link_defs][link_id].last, alt_text)
           else
             warning("No link definition for link ID '#{link_id}' found")
             @src.pos = reset_pos

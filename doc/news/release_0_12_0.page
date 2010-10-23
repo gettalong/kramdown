@@ -7,6 +7,12 @@ modified_at: 2010-10-01 08:31:00 +02:00
 ---
 ## kramdown 0.12.0 released
 
+The "internal" API (which is currently everything except the `Kramdown::Document` class) has changed
+again and developers may therefore need to update their extensions! The API changes now allow
+parsers and converters to be used without a Kramdown::Document class since this class is just
+provided for convenience. All the needed information is now stored in the element tree itself.
+Information that has no direct representation as an element is stored in the options of the root
+element (e.g. footnote definitions). More information can be found in the API documentation.
 
 ## Changes
 

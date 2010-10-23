@@ -32,7 +32,7 @@ module Kramdown
 
     # Used for parsing a document in kramdown format.
     #
-    # If you want to extend the functionality of the parser, you need to the following:
+    # If you want to extend the functionality of the parser, you need to do the following:
     #
     # * Create a new subclass
     # * add the needed parser methods
@@ -47,8 +47,8 @@ module Kramdown
     #
     #   class Kramdown::Parser::ERBKramdown < Kramdown::Parser::Kramdown
     #
-    #      def initialize(doc)
-    #        super(doc)
+    #      def initialize(source, options)
+    #        super
     #        @span_parsers.unshift(:erb_tags)
     #      end
     #
@@ -73,20 +73,16 @@ module Kramdown
 
       include ::Kramdown
 
-      attr_reader :tree
-      attr_reader :doc
-      attr_reader :options
-
-      # Create a new Kramdown parser object for the Kramdown::Document +doc+.
-      def initialize(doc)
-        super(doc)
+      # Create a new Kramdown parser object with the given +options+.
+      def initialize(source, options)
+        super
 
         reset_env
 
-        @doc.parse_infos[:ald] = {}
-        @doc.parse_infos[:link_defs] = {}
-        @doc.parse_infos[:abbrev_defs] = {}
-        @doc.parse_infos[:footnotes] = {}
+        @root.options[:ald] = {}
+        @root.options[:link_defs] = {}
+        @root.options[:abbrev_defs] = {}
+        @root.options[:footnotes] = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                           :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
@@ -99,17 +95,15 @@ module Kramdown
       private_class_method(:new, :allocate)
 
 
-      # The source string provided on initialization is parsed and the created +tree+ is returned.
-      def parse(source)
+      # The source string provided on initialization is parsed into the <tt>@root</tt> element.
+      def parse
         configure_parser
-        tree = Element.new(:root)
-        parse_blocks(tree, adapt_source(source))
-        update_tree(tree)
-        replace_abbreviations(tree)
-        @doc.parse_infos[:footnotes].each do |name, data|
+        parse_blocks(@root, adapt_source(source))
+        update_tree(@root)
+        replace_abbreviations(@root)
+        @root.options[:footnotes].each do |name, data|
           update_tree(data[:content])
         end
-        tree
       end
 
       #######
@@ -261,7 +255,7 @@ module Kramdown
       # +ial+ and all referenced ALDs.
       def update_attr_with_ial(attr, ial)
         ial[:refs].each do |ref|
-          update_attr_with_ial(attr, ref) if ref = @doc.parse_infos[:ald][ref]
+          update_attr_with_ial(attr, ref) if ref = @root.options[:ald][ref]
         end if ial[:refs]
         ial.each do |k,v|
           if k == 'class'

@@ -42,8 +42,8 @@ module Kramdown
                   :block_extensions,
                   :footnote_marker, :smart_quotes, :inline_math, :span_extensions, :typographic_syms]
 
-      def initialize(doc) # :nodoc:
-        super(doc)
+      def initialize(source, options) # :nodoc:
+        super
         @block_parsers.delete_if {|i| EXTENDED.include?(i)}
         @span_parsers.delete_if {|i| EXTENDED.include?(i)}
       end
@@ -59,6 +59,8 @@ module Kramdown
       IAL_RAND_STRING = (1..20).collect {|a| IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)]}.join
       LIST_ITEM_IAL = /^\s*(#{IAL_RAND_STRING})?\s*\n/
       IAL_SPAN_START = LIST_ITEM_IAL
+
+      # :startdoc:
 
     end
 

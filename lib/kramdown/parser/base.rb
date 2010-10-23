@@ -29,41 +29,69 @@ module Kramdown
     # This class serves as base class for parsers. It provides common methods that can/should be
     # used by all parsers, especially by those using StringScanner for parsing.
     #
+    # A parser object is used as a throw-away object, i.e. it is only used for storing the needed
+    # state information during parsing. Therefore one can't instantiate a parser object directly but
+    # only use the Base::parse method.
+    #
     # == Implementing a parser
     #
     # Implementing a new parser is rather easy: just derive a new class from this class and put it
     # in the Kramdown::Parser module -- the latter is needed so that the auto-detection of the new
-    # parser works correctly. Then you need to implement the <tt>#parse(source)</tt> method which
-    # takes the input string and should return the root element of the created document tree.
+    # parser works correctly. Then you need to implement the <tt>#parse</tt> method which has to
+    # contain the parsing code.
     #
-    # The document instance is automatically set as <tt>@doc</tt> in <tt>Base#new(doc)</tt> which
-    # takes the document instance as parameter. Furthermore, the document instance provides a hash
-    # called `parse_infos` that is also automatically cleared and can be used to store information
-    # about the parse process.
-    #
-    # Have a look at the Base::parse method for additional information!
+    # Have a look at the Base::parse, Base::new and Base#parse methods for additional information!
     class Base
 
-      # Initialize the parser with the given Kramdown document +doc+.
-      def initialize(doc)
-        @doc = doc
+      # The hash with the parsing options.
+      attr_reader :options
+
+      # The array with the parser warnings.
+      attr_reader :warnings
+
+      # The original source string.
+      attr_reader :source
+
+      # The root element of element tree that is created from the source string.
+      attr_reader :root
+
+      # Initialize the parser object with the +source+ string and the parsing +options+.
+      #
+      # The <tt>@root</tt> element, the <tt>@warnings</tt> array and <tt>@text_type</tt> (specifies
+      # the default type for newly created text nodes) are automatically initialized.
+      def initialize(source, options)
+        @source = source
+        @options = Kramdown::Options.merge(options)
+        @root = Element.new(:root, nil, nil, :encoding => (RUBY_VERSION >= '1.9' ? source.encoding : nil))
+        @warnings = []
         @text_type = :text
       end
       private_class_method(:new, :allocate)
 
-      # Parse the +source+ string into an element tree, using the information provided by the
-      # Kramdown document +doc+.
+      # Parse the +source+ string into an element tree, possibly using the parsing +options+, and
+      # return the root element of the element tree and an array with warning messages.
       #
       # Initializes a new instance of the calling class and then calls the #parse method that must
       # be implemented by each subclass.
-      def self.parse(source, doc)
-        new(doc).parse(source)
+      def self.parse(source, options = {})
+        parser = new(source, options)
+        parser.parse
+        [parser.root, parser.warnings]
       end
 
+      # Parse the source string into an element tree.
+      #
+      # The parsing code should parse the source provided in <tt>@source</tt> and build an element
+      # tree the root of which should be <tt>@root</tt>.
+      #
+      # This is the only method that has to be implemented by sub-classes!
+      def parse
+        raise NotImplementedError
+      end
 
-      # Add the given warning +text+ to the warning array of the Kramdown::Document.
+      # Add the given warning +text+ to the warning array.
       def warning(text)
-        @doc.warnings << text
+        @warnings << text
         #TODO: add position information
       end
 
@@ -83,7 +111,7 @@ module Kramdown
         end
       end
 
-      # Extract the part of the StringScanner +srcscan+ backed string specified by the +range+. This
+      # Extract the part of the StringScanner +strscan+ backed string specified by the +range+. This
       # method works correctly under Ruby 1.8 and Ruby 1.9.
       def extract_string(range, strscan)
         result = nil

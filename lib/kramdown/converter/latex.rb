@@ -26,7 +26,7 @@ module Kramdown
 
   module Converter
 
-    # Converts a Kramdown::Document to LaTeX.
+    # Converts an element tree to LaTeX.
     #
     # This converter uses ideas from other Markdown-to-LaTeX converters like Pandoc and Maruku.
     #
@@ -42,12 +42,12 @@ module Kramdown
     # correctly as LaTeX markup.
     class Latex < Base
 
-      # Initialize the LaTeX converter with the given Kramdown document +doc+.
-      def initialize(doc)
+      # Initialize the LaTeX converter with the +root+ element and the conversion +options+.
+      def initialize(root, options)
         super
         #TODO: set the footnote counter at the beginning of the document
-        @doc.options[:footnote_nr]
-        @doc.conversion_infos[:packages] = Set.new
+        @options[:footnote_nr]
+        @data[:packages] = Set.new
       end
 
       # Dispatch the conversion of the element +el+ to a <tt>convert_TYPE</tt> method using the
@@ -124,8 +124,8 @@ module Kramdown
       def convert_header(el, opts)
         type = HEADER_TYPES[el.options[:level]]
         if ((id = el.attr['id']) ||
-            (@doc.options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) &&
-            (@doc.options[:toc_depth] <= 0 || el.options[:level] <= @doc.options[:toc_depth])
+            (@options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) &&
+            (@options[:toc_depth] <= 0 || el.options[:level] <= @options[:toc_depth])
           "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"
         else
           "\\#{type}*{#{inner(el, opts)}}\n\n"
@@ -138,8 +138,8 @@ module Kramdown
       end
 
       def convert_ul(el, opts)
-        if !@doc.conversion_infos[:has_toc] && (el.options[:ial][:refs].include?('toc') rescue nil)
-          @doc.conversion_infos[:has_toc] = true
+        if !@data[:has_toc] && (el.options[:ial][:refs].include?('toc') rescue nil)
+          @data[:has_toc] = true
           '\tableofcontents'
         else
           latex_environment(el.type == :ul ? 'itemize' : 'enumerate', el, inner(el, opts))
@@ -169,7 +169,7 @@ module Kramdown
         elsif el.value == 'b'
           "\\emph{#{inner(el, opts)}}"
         else
-          @doc.warnings << "Can't convert HTML element"
+          warning("Can't convert HTML element")
           ''
         end
       end
@@ -179,7 +179,7 @@ module Kramdown
       end
 
       def convert_xml_pi(el, opts)
-        @doc.warnings << "Can't convert XML PI/HTML document type"
+        warning("Can't convert XML PI/HTML document type")
         ''
       end
       alias :convert_html_doctype :convert_xml_pi
@@ -234,13 +234,13 @@ module Kramdown
 
       def convert_img(el, opts)
         if el.attr['src'] =~ /^(https?|ftps?):\/\//
-          @doc.warnings << "Cannot include non-local image"
+          warning("Cannot include non-local image")
           ''
         elsif !el.options.attr['src'].empty?
-          @doc.conversion_infos[:packages] << 'graphicx'
+          @data[:packages] << 'graphicx'
           "\\includegraphics{#{el.attr['src']}}"
         else
-          @doc.warnings << "Cannot include image with empty path"
+          warning("Cannot include image with empty path")
           ''
         end
       end
@@ -250,8 +250,8 @@ module Kramdown
       end
 
       def convert_footnote(el, opts)
-        @doc.conversion_infos[:packages] << 'fancyvrb'
-        "\\footnote{#{inner(@doc.parse_infos[:footnotes][el.options[:name]][:content], opts).rstrip}}"
+        @data[:packages] << 'fancyvrb'
+        "\\footnote{#{inner(@root.options[:footnotes][el.options[:name]][:content], opts).rstrip}}"
       end
 
       def convert_raw(el, opts)
@@ -520,10 +520,10 @@ module Kramdown
       def convert_entity(el, opts)
         text, package = ENTITY_CONV_TABLE[el.value.code_point]
         if text
-          @doc.conversion_infos[:packages] << package if package
+          @data[:packages] << package if package
           text
         else
-          @doc.warnings << "Couldn't find entity in substitution table!"
+          warning("Couldn't find entity in substitution table!")
           ''
         end
       end
@@ -545,7 +545,7 @@ module Kramdown
       end
 
       def convert_math(el, opts)
-        @doc.conversion_infos[:packages] += %w[amssymb amsmath amsthm amsfonts]
+        @data[:packages] += %w[amssymb amsmath amsthm amsfonts]
         if el.options[:category] == :block
           if el.value =~ /\A\s*\\begin\{/
             el.value

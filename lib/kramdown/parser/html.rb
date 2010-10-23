@@ -28,6 +28,8 @@ module Kramdown
   module Parser
 
     # Used for parsing a HTML document.
+    #
+    # The parsing code is in the Parser module that can also be used by other parsers.
     class Html < Base
 
       # Contains all constants that are used when parsing.
@@ -179,8 +181,12 @@ module Kramdown
                               header h1 h2 h3 h4 h5 h6 legend li nav p section td th}
         SIMPLE_ELEMENTS = %w{em strong blockquote hr br img p thead tbody tfoot tr td th ul ol dl li dl dt dd}
 
-        def initialize(doc)
-          @doc = doc
+        def initialize(root)
+          @root = root
+        end
+
+        def self.convert(root, el = root)
+          new(root).process(el)
         end
 
         # Convert the element +el+ and its children.
@@ -201,6 +207,10 @@ module Kramdown
             el.options = {:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block}
             return
           when :html_element
+          when :root
+            el.children.each {|c| process(c)}
+            remove_whitespace_children(el)
+            return
           else return
           end
 
@@ -357,12 +367,12 @@ module Kramdown
                 mem << c.value
               elsif c.type == :entity
                 if RUBY_VERSION >= '1.9'
-                  mem << c.value.char.encode(@doc.parse_infos[:encoding])
+                  mem << c.value.char.encode(@root.options[:encoding])
                 elsif [60, 62, 34, 38].include?(c.value.code_point)
                   mem << c.value.code_point.chr
                 end
               elsif c.type == :smart_quote || c.type == :typographic_sym
-                mem << entity(c.value.to_s).char.encode(@doc.parse_infos[:encoding])
+                mem << entity(c.value.to_s).char.encode(@root.options[:encoding])
               else
                 raise "Bug - please report"
               end
@@ -469,10 +479,9 @@ module Kramdown
 
       include Parser
 
-      # Parse +source+ as HTML document and return the created +tree+.
-      def parse(source)
-        @stack = []
-        @tree = Element.new(:root)
+      # Parse the source string provided on initialization as HTML document.
+      def parse
+        @stack, @tree = [], @root
         @src = StringScanner.new(adapt_source(source))
 
         while true
@@ -492,10 +501,7 @@ module Kramdown
         end
         parse_raw_html(@tree, &tag_handler)
 
-        ec = ElementConverter.new(@doc)
-        @tree.children.each {|c| ec.process(c)}
-        ec.remove_whitespace_children(@tree)
-        @tree
+        ElementConverter.convert(@tree)
       end
 
     end

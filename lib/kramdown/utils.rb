@@ -29,7 +29,7 @@ module Kramdown
   module Utils
 
     autoload :Entities, 'kramdown/utils/entities'
-    autoload :HTML, 'kramdown/utils/html'
+    autoload :Html, 'kramdown/utils/html'
     autoload :OrderedHash, 'kramdown/utils/ordered_hash'
 
   end

@@ -26,21 +26,22 @@ module Kramdown
 
     # Provides convenience methods for HTML related tasks.
     #
-    # *Note* that this module has to be mixed into a class that has a <tt>@doc</tt> instance
-    # variable (e.g. a parser or converter class) so that some of the methods can work correctly.
-    module HTML
+    # *Note* that this module has to be mixed into a class that has a <tt>@root</tt> (containing an
+    # element of type :root) and an <tt>@options</tt> (containing an options hash) instance variable
+    # so that some of the methods can work correctly.
+    module Html
 
       # Convert the entity +e+ to a string. The optional parameter +original+ may contain the
       # original representation of the entity.
       #
       # This method uses the option +entity_output+ to determine the output form for the entity.
       def entity_to_str(e, original = nil)
-        if RUBY_VERSION >= '1.9' && @doc.options[:entity_output] == :as_char &&
-            (c = e.char.encode(@doc.parse_infos[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
+        if RUBY_VERSION >= '1.9' && @options[:entity_output] == :as_char &&
+            (c = e.char.encode(@root.options[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
           c
-        elsif (@doc.options[:entity_output] == :as_input || @doc.options[:entity_output] == :as_char) && original
+        elsif (@options[:entity_output] == :as_input || @options[:entity_output] == :as_char) && original
           original
-        elsif @doc.options[:entity_output] == :numeric || e.name.nil?
+        elsif @options[:entity_output] == :numeric || e.name.nil?
           "&##{e.code_point};"
         else
           "&#{e.name};"
@@ -71,8 +72,9 @@ module Kramdown
 
       # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
       # is escaped: <tt>:all</tt> - all special HTML characters as well as entities, <tt>:text</tt>
-      # - all special HTML characters except the quotation mark but no entities and
-      # <tt>:attribute</tt> - all special HTML characters including the quotation mark but no entities.
+      # \- all special HTML characters except the quotation mark but no entities and
+      # <tt>:attribute</tt> - all special HTML characters including the quotation mark but no
+      # entities.
       def escape_html(str, type = :all)
         str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
       end

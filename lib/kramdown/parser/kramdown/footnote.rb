@@ -36,8 +36,8 @@ module Kramdown
 
         el = Element.new(:footnote_def)
         parse_blocks(el, @src[2].gsub(INDENT, ''))
-        warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @doc.parse_infos[:footnotes][@src[1]]
-        (@doc.parse_infos[:footnotes][@src[1]] = {})[:content] = el
+        warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @root.options[:footnotes][@src[1]]
+        (@root.options[:footnotes][@src[1]] = {})[:content] = el
         @tree.children << Element.new(:eob, :footnote_def)
         true
       end
@@ -49,7 +49,7 @@ module Kramdown
       # Parse the footnote marker at the current location.
       def parse_footnote_marker
         @src.pos += @src.matched_size
-        fn_def = @doc.parse_infos[:footnotes][@src[1]]
+        fn_def = @root.options[:footnotes][@src[1]]
         if fn_def
           valid = fn_def[:marker] && fn_def[:marker].options[:stack][0..-2].zip(fn_def[:marker].options[:stack][1..-1]).all? do |par, child|
             par.children.include?(child)

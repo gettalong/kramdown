@@ -104,7 +104,12 @@ module Kramdown
           opts.select do |k,v|
             k = k.to_sym
             if Kramdown::Options.defined?(k)
-              @doc.options[k] = Kramdown::Options.parse(k, v) rescue @doc.options[k]
+              begin
+                val = Kramdown::Options.parse(k, v)
+                @options[k] = val
+                (@root.options[:options] ||= {})[k] = val
+              rescue
+              end
               false
             else
               true
@@ -144,7 +149,7 @@ module Kramdown
       # location.
       def parse_block_extensions
         if @src.scan(ALD_START)
-          parse_attribute_list(@src[2], @doc.parse_infos[:ald][@src[1]] ||= Utils::OrderedHash.new)
+          parse_attribute_list(@src[2], @root.options[:ald][@src[1]] ||= Utils::OrderedHash.new)
           @tree.children << Element.new(:eob, :ald)
           true
         elsif @src.check(EXT_BLOCK_START)

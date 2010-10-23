@@ -32,40 +32,52 @@ module Kramdown
     # used by all converters (like #generate_id) as well as common functionality that is
     # automatically applied to the result (for example, embedding the output into a template).
     #
-    # Have a look at the Base::convert method for additional information!
+    # A converter object is used as a throw-away object, i.e. it is only used for storing the needed
+    # state information during conversion. Therefore one can't instantiate a converter object
+    # directly but only use the Base::convert method.
     #
     # == Implementing a converter
     #
     # Implementing a new converter is rather easy: just derive a new class from this class and put
     # it in the Kramdown::Converter module (the latter is only needed if auto-detection should work
-    # properly). Then you need to implement the <tt>#convert(tree)</tt> method which takes a
-    # document tree (i.e. a <tt>:root</tt> element) and should return the converted output.
-    #
-    # The document instance is automatically set as <tt>@doc</tt> in <tt>Base#new(doc)</tt> which
-    # takes the document instance as parameter. Furthermore, the document instance provides a hash
-    # called `conversion_infos` that is also automatically cleared and can be used to store
-    # information about the conversion process.
+    # properly). Then you need to implement the <tt>convert(el)</tt> method which has to contain
+    # the conversion code for converting an element and has to return the conversion result.
     #
     # The actual transformation of the document tree can be done in any way. However, writing one
-    # method per tree element type is a straight forward way to do it - this is how the Html and
-    # Latex converters do the transformation.
+    # method per element type is a straight forward way to do it - this is how the Html and Latex
+    # converters do the transformation.
     #
     # Have a look at the Base::convert method for additional information!
     class Base
 
-      # Initialize the converter with the given Kramdown document +doc+.
-      def initialize(doc) # :nodoc:
-        @doc = doc
-        @doc.conversion_infos.clear
+      # Can be used by a converter for storing arbitrary information during the conversion process.
+      attr_reader :data
+
+      # The hash with the conversion options.
+      attr_reader :options
+
+      # The root element that is converted.
+      attr_reader :root
+
+      # The warnings array.
+      attr_reader :warnings
+
+      # Initialize the converter with the given +root+ element and +options+ hash.
+      def initialize(root, options)
+        @options = options
+        @root = root
+        @data = {}
+        @warnings = []
       end
       private_class_method(:new, :allocate)
 
-      # Convert the Kramdown document +doc+ to the output format implemented by a subclass.
+      # Convert the element tree +tree+ and return the resulting conversion object (normally a
+      # string) and an array with warning messages. The parameter +options+ specifies the conversion
+      # options that should be used.
       #
-      # Initializes a new instance of the calling class and then calls the #convert method that must
-      # be implemented by each subclass. If the +template+ option is specified and non-empty, the
-      # result is rendered into the specified template. The template resolution is done in the
-      # following way:
+      # Initializes a new instance of the calling class and then calls the #convert method with
+      # +tree+ as parameter. If the +template+ option is specified and non-empty, the result is
+      # rendered into the specified template. The template resolution is done in the following way:
       #
       # 1. Look in the current working directory for the template.
       #
@@ -74,20 +86,25 @@ module Kramdown
       #
       # 3. Append <tt>.convertername</tt> to the template name and look for it in the kramdown data
       #    directory.
-      #
-      # *Note* that this method is called by Kramdown::Document. If you don't derive your converter
-      # class from this base class, you have to implement at least this method!
-      def self.convert(doc)
-        result = new(doc).convert(doc.tree)
-        result = apply_template(doc, result) if !doc.options[:template].empty?
-        result
+      def self.convert(tree, options = {})
+        converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))
+        result = converter.convert(tree)
+        result = apply_template(converter, result) if !converter.options[:template].empty?
+        [result, converter.warnings]
       end
 
-      # Apply the template specified in the +doc+ options, using +body+ as the body string.
-      def self.apply_template(doc, body) # :nodoc:
-        erb = ERB.new(get_template(doc.options[:template]))
+      # Convert the element +el+ and return the resulting object.
+      #
+      # This is the only method that has to be implemented by sub-classes!
+      def convert(el)
+        raise NotImplementedError
+      end
+
+      # Apply the +template+ using +body+ as the body string.
+      def self.apply_template(converter, body) # :nodoc:
+        erb = ERB.new(get_template(converter.options[:template]))
         obj = Object.new
-        obj.instance_variable_set(:@doc, doc)
+        obj.instance_variable_set(:@converter, converter)
         obj.instance_variable_set(:@body, body)
         erb.result(obj.instance_eval{binding})
       end
@@ -107,8 +124,15 @@ module Kramdown
         end
       end
 
+      # Add the given warning +text+ to the warning array.
+      def warning(text)
+        @warnings << text
+      end
 
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
+      #
+      # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
+      # ID.
       def generate_id(str)
         gen_id = str.gsub(/[^a-zA-Z0-9 -]/, '').gsub(/^[^a-zA-Z]*/, '').gsub(' ', '-').downcase
         gen_id = 'section' if gen_id.length == 0
@@ -118,7 +142,7 @@ module Kramdown
         else
           @used_ids[gen_id] = 0
         end
-        @doc.options[:auto_id_prefix] + gen_id
+        @options[:auto_id_prefix] + gen_id
       end
 
     end

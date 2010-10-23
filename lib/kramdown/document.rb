@@ -54,29 +54,20 @@ module Kramdown
   #
   # The #to_html method is a shortcut for using the Converter::Html class.
   #
-  # The second argument to the #new method is an options hash for customizing the behaviour of the
-  # used parser and the converter. See Document#new for more information!
+  # The second argument to the ::new method is an options hash for customizing the behaviour of the
+  # used parser and the converter. See Document::new for more information!
   class Document
 
-    # The element tree of the document. It is immediately available after the #new method has been
-    # called.
-    attr_accessor :tree
+    # The root element of the element tree. It is immediately available after the #new method has
+    # been called.
+    attr_accessor :root
 
-    # The options hash which holds the options for parsing/converting the Kramdown document. It is
-    # possible that these values get changed during the parsing phase.
+    # The options hash which holds the options for parsing/converting the Kramdown document.
     attr_reader :options
 
     # An array of warning messages. It is filled with warnings during the parsing phase (i.e. in
-    # #new) and the conversion phase.
+    # ::new) and the conversion phase.
     attr_reader :warnings
-
-    # Holds needed parse information which is dependent on the used parser, like ALDs, link
-    # definitions and so on. This information may be used by converters afterwards.
-    attr_reader :parse_infos
-
-    # Holds conversion information which is dependent on the used converter. A converter clears this
-    # variable before doing the conversion.
-    attr_reader :conversion_infos
 
 
     # Create a new Kramdown document from the string +source+ and use the provided +options+. The
@@ -87,18 +78,14 @@ module Kramdown
     # select the kramdown parser, one would set the <tt>:input</tt> key to +Kramdown+. If this key
     # is not set, it defaults to +Kramdown+.
     #
-    # The +source+ is immediately parsed by the selected parser so that the document tree is
+    # The +source+ is immediately parsed by the selected parser so that the root element is
     # immediately available and the output can be generated.
     def initialize(source, options = {})
-      @options = Options.merge(options)
-      @warnings = []
-      @parse_infos = {}
-      @parse_infos[:encoding] = source.encoding if RUBY_VERSION >= '1.9'
-      @conversion_infos = {}
+      @options = Options.merge(options).freeze
       parser = (options[:input] || 'kramdown').to_s
       parser = parser[0..0].upcase + parser[1..-1]
       if Parser.const_defined?(parser)
-        @tree = Parser.const_get(parser).parse(source, self)
+        @root, @warnings = Parser.const_get(parser).parse(source, @options)
       else
         raise Kramdown::Error.new("kramdown has no parser to handle the specified input format: #{options[:input]}")
       end
@@ -109,23 +96,25 @@ module Kramdown
     #
     # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
     def method_missing(id, *attr, &block)
-      if id.to_s =~ /^to_(\w+)$/
-        Converter.const_get($1[0..0].upcase + $1[1..-1]).convert(self)
+      if id.to_s =~ /^to_(\w+)$/ && (name = $1[0..0].upcase + $1[1..-1]) && Converter.const_defined?(name)
+        output, warnings = Converter.const_get(name).convert(@root, @options)
+        @warnings += warnings
+        output
       else
         super
       end
     end
 
     def inspect #:nodoc:
-      "<KD:Document: options=#{@options.inspect} tree=#{@tree.inspect} warnings=#{@warnings.inspect}>"
+      "<KD:Document: options=#{@options.inspect} root=#{@root.inspect} warnings=#{@warnings.inspect}>"
     end
 
   end
 
 
-  # Represents all elements in the parse tree.
+  # Represents all elements in the element tree.
   #
-  # kramdown only uses this one class for representing all available elements in a parse tree
+  # kramdown only uses this one class for representing all available elements in an element tree
   # (paragraphs, headers, emphasis, ...). The type of element can be set via the #type accessor.
   class Element
 
