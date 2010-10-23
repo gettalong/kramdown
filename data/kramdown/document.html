@@ -1,7 +1,7 @@
 <html>
   <head>
 <%
-extend ::Kramdown::Utils::HTML
+extend ::Kramdown::Utils::Html
 title = ''
 h = @converter.root.children.find {|c| c.type == :header}
 if h
