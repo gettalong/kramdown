@@ -116,6 +116,209 @@ module Kramdown
   #
   # kramdown only uses this one class for representing all available elements in an element tree
   # (paragraphs, headers, emphasis, ...). The type of element can be set via the #type accessor.
+  #
+  # == \Element Descriptions
+  #
+  # Following is a list of all supported element types.
+  #
+  #
+  # === :blank
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Empty
+  #
+  # Represents one or more blank lines. It is not allowed to have two or more consecutive blank
+  # elements.
+  #
+  # The +value+ field may contain the original content of the blank lines.
+  #
+  #
+  # === :p
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Span-level elements
+  #
+  # Represents a paragraph.
+  #
+  # If the option <tt>:transparent</tt> is +true+, this element just represents a block of text.
+  # I.e. this element just functions as a container for span-level elements.
+  #
+  #
+  # === :header
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Span-level elements
+  #
+  # Represents a header.
+  #
+  # The option <tt>:level</tt> specifies the header level and has to contain a number between 1 and
+  # \6. The option <tt>:raw_text</tt> has to contain the raw header text.
+  #
+  #
+  # === :blockquote
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Block-level elements
+  #
+  # Represents a blockquote.
+  #
+  #
+  # === :codeblock
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Empty
+  #
+  # Represents a code block, i.e. a block of text that should be used as-is.
+  #
+  # The +value+ field has to contain the content of the code block.
+  #
+  #
+  # === :ul
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] One or more :li elements
+  #
+  # Represents an unordered list.
+  #
+  #
+  # === :ol
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] One or more :li elements
+  #
+  # Represents an ordered list.
+  #
+  #
+  # === :li
+  #
+  # [Category] None
+  # [Usage context] Inside :ol and :ul elements
+  # [Content model] Block-level elements
+  #
+  # Represents a list item of an ordered or unordered list.
+  #
+  #
+  # === :dl
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] One or more groups each consisting of one or more :dt elements followed by one
+  #                 or more :dd elements.
+  #
+  # Represents a definition list which contains groups consisting of terms and definitions for them.
+  #
+  #
+  # === :dt
+  #
+  # [Category] None
+  # [Usage context] Before :dt or :dd elements inside a :dl elment
+  # [Content model] Span-level elements
+  #
+  # Represents the term part of a term-definition group in a definition list.
+  #
+  #
+  # === :dd
+  #
+  # [Category] None
+  # [Usage context] After :dt or :dd elements inside a :dl elment
+  # [Content model] Block-level elements
+  #
+  # Represents the definition part of a term-definition group in a definition list.
+  #
+  #
+  # === :table
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] Zero or one :thead elements, one or more :tbody elements, zero or one :tfoot
+  #                 elements
+  #
+  # Represents a table. Each table row (i.e. :tr element) of the table has to contain the same
+  # number of :td elements.
+  #
+  # The option <tt>:alignment</tt> has to be an array containing the alignment values, exactly one
+  # for each column of the table. The possible alignment values are <tt>:left</tt>,
+  # <tt>:center</tt>, <tt>:right</tt> and <tt>:default</tt>.
+  #
+  #
+  # === :thead
+  #
+  # [Category] None
+  # [Usage context] As first element inside a :table element
+  # [Content model] One or more :tr elements
+  #
+  # Represents the table header.
+  #
+  #
+  # === :tbody
+  #
+  # [Category] None
+  # [Usage context] After a :thead element but before a :tfoot element inside a :table element
+  # [Content model] One or more :tr elements
+  #
+  # Represents a table body.
+  #
+  #
+  # === :tfoot
+  #
+  # [Category] None
+  # [Usage context] As last element inside a :table element
+  # [Content model] One or more :tr elements
+  #
+  # Represents the table footer.
+  #
+  #
+  # === :tr
+  #
+  # [Category] None
+  # [Usage context] Inside :thead, :tbody and :tfoot elements
+  # [Content model] One or more :td elements
+  #
+  # Represents a table row.
+  #
+  #
+  # === :td
+  #
+  # [Category] None
+  # [Usage context] Inside :tr elements
+  # [Content model] As child of :thead/:tr span-level elements, as child of :tbody/:tr and
+  #                 :tfoot/:tr block-level elements
+  #
+  # Represents a table cell.
+  #
+  #
+  #
+  #
+  #
+  # === :a
+  # === :text
+  # === :hr
+  # === :html_element
+  # === :xml_comment
+  # === :xml_pi
+  # === :html_doctype
+  # === :comment
+  # === :br
+  # === :a
+  # === :img
+  # === :codespan
+  # === :footnote
+  # === :raw
+  # === :em
+  # === :convert_strong
+  # === :entity
+  # === :typographic_sym
+  # === :smart_quote
+  # === :math
+  # === :abbreviation
+  # === :root
   class Element
 
     # A symbol representing the element type. For example, <tt>:p</tt> or <tt>:blockquote</tt>.
