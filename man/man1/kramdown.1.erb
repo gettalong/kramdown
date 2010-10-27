@@ -40,10 +40,7 @@ Kramdown::Options.definitions.each do |n, definition|
   if definition.type == Kramdown::Options::Boolean %>
 .TP
 .B \-\-[no\-]<%= n %>
-<% else
-    next if definition.type == Object
-    type = definition.type
-    type = String if type == Symbol %>
+<% else %>
 .TP
 .B \-\-<%= n %> ARG
 <% end %>

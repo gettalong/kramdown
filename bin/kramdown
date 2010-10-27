@@ -55,9 +55,8 @@ OptionParser.new do |opts|
     if definition.type == Kramdown::Options::Boolean
       opts.on("--[no-]#{no}") {|v| options[n] = Kramdown::Options.parse(n, v)}
     else
-      next if definition.type == Object
       type = definition.type
-      type = String if type == Symbol
+      type = String if type == Symbol || type == Object
       opts.on("--#{no} ARG", type) {|v| options[n] = Kramdown::Options.parse(n, v)}
     end
 

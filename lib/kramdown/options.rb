@@ -44,23 +44,26 @@ module Kramdown
     # ----------------------------
 
     # Struct class for storing the definition of an option.
-    Definition = Struct.new(:name, :type, :default, :desc)
+    Definition = Struct.new(:name, :type, :default, :desc, :validator)
 
     # Allowed option types.
-    ALLOWED_TYPES = [String, Integer, Float, Symbol, Boolean, Array, Object]
+    ALLOWED_TYPES = [String, Integer, Float, Symbol, Boolean, Object]
 
     @options = {}
 
     # Define a new option called +name+ (a Symbol) with the given +type+ (String, Integer, Float,
-    # Symbol, Boolean, Array, Object), default value +default+ and the description +desc+.
+    # Symbol, Boolean, Object), default value +default+ and the description +desc+. If a block is
+    # specified, it should validate the value and either raise an error or return a valid value.
     #
-    # The type 'Object' should only be used if none of the other types suffices because such an
-    # option will be opaque and cannot be used, for example, by the CLI command!
-    def self.define(name, type, default, desc)
+    # The type 'Object' should only be used for complex types for which none of the other types
+    # suffices. A block needs to be specified when using type 'Object' and it has to cope with
+    # a value given as string and as the opaque type.
+    def self.define(name, type, default, desc, &block)
       raise ArgumentError, "Option name #{name} is already used" if @options.has_key?(name)
       raise ArgumentError, "Invalid option type #{type} specified" if !ALLOWED_TYPES.include?(type)
       raise ArgumentError, "Invalid type for default value" if !(type === default) && !default.nil?
-      @options[name] = Definition.new(name, type, default, desc)
+      raise ArgumentError, "Missing validator block" if type == Object && block.nil?
+      @options[name] = Definition.new(name, type, default, desc, block)
     end
 
     # Return all option definitions.
@@ -98,21 +101,22 @@ module Kramdown
     # String and then to the correct type.
     def self.parse(name, data)
       raise ArgumentError, "No option named #{name} defined" if !@options.has_key?(name)
-      return data if @options[name].type === data
-      data = data.to_s
-      if @options[name].type == String
-        data
-      elsif @options[name].type == Integer
-        Integer(data)
-      elsif @options[name].type == Float
-        Float(data)
-      elsif @options[name].type == Symbol
-        (data.strip.empty? ? nil : data.to_sym)
-      elsif @options[name].type == Boolean
-        data.downcase.strip != 'false' && !data.empty?
-      elsif @options[name].type == Array
-        data.split(/\s+/)
+      if !(@options[name].type === data)
+        data = data.to_s
+        data = if @options[name].type == String
+                 data
+               elsif @options[name].type == Integer
+                 Integer(data) rescue raise Kramdown::Error, "Invalid integer value for option '#{name}': '#{data}'"
+               elsif @options[name].type == Float
+                 Float(data) rescue raise Kramdown::Error, "Invalid float value for option '#{name}': '#{data}'"
+               elsif @options[name].type == Symbol
+                 (data.strip.empty? ? nil : data.to_sym)
+               elsif @options[name].type == Boolean
+                 data.downcase.strip != 'false' && !data.empty?
+               end
       end
+      data = @options[name].validator[data] if @options[name].validator
+      data
     end
 
     # ----------------------------
