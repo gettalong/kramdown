@@ -24,6 +24,8 @@ module Kramdown
   module Parser
     class Kramdown
 
+      IAL_CLASS_ATTR = 'class'
+
       # Parse the string +str+ and extract all attributes and add all found attributes to the hash
       # +opts+.
       def parse_attribute_list(str, opts)
@@ -31,11 +33,13 @@ module Kramdown
           if ref
             (opts[:refs] ||= []) << ref
           elsif class_attr
-            opts['class'] = ((opts['class'] || '') + " #{class_attr}").lstrip
+            opts[IAL_CLASS_ATTR] = (opts[IAL_CLASS_ATTR] || '') << " #{class_attr}"
+            opts[IAL_CLASS_ATTR].lstrip!
           elsif id_attr
             opts['id'] = id_attr
           else
-            opts[key] = val.gsub(/\\(\}|#{sep})/, "\\1")
+            val.gsub!(/\\(\}|#{sep})/, "\\1")
+            opts[key] = val
           end
         end
       end
@@ -44,8 +48,9 @@ module Kramdown
       def update_ial_with_ial(ial, opts)
         (ial[:refs] ||= []) << opts[:refs]
         opts.each do |k,v|
-          if k == 'class'
-            ial[k] = ((ial[k] || '') + " #{v}").lstrip
+          if k == IAL_CLASS_ATTR
+            ial[k] = (ial[k] || '') << " #{v}"
+            ial[k].lstrip!
           elsif k.kind_of?(String)
             ial[k] = v
           end
@@ -61,7 +66,7 @@ module Kramdown
         error_block = lambda do |msg|
           warning(msg)
           @src.pos = orig_pos
-          add_text(@src.scan(/./)) if type == :span
+          add_text(@src.getch) if type == :span
           false
         end
 
@@ -186,10 +191,10 @@ module Kramdown
             update_attr_with_ial(@tree.children.last.attr, attr)
           else
             warning("Found span IAL after text - ignoring it")
-            add_text(@src.scan(/./))
+            add_text(@src.getch)
           end
         else
-          add_text(@src.scan(/./))
+          add_text(@src.getch)
         end
       end
       define_parser(:span_extensions, SPAN_EXTENSIONS_START, '\{:')

@@ -100,10 +100,10 @@ module Kramdown
         lang = el.attr['lang']
         if show_whitespace || lang
           result = "\\lstset{showspaces=%s,showtabs=%s}\n" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
-          result += "\\lstset{language=#{lang}}\n" if lang
-          result += "\\lstset{basicstyle=\\ttfamily\\footnotesize}\\lstset{columns=fixed,frame=tlbr}\n"
+          result << "\\lstset{language=#{lang}}\n" if lang
+          result << "\\lstset{basicstyle=\\ttfamily\\footnotesize}\\lstset{columns=fixed,frame=tlbr}\n"
           attrs = attribute_list(el)
-          "#{result}\\begin{lstlisting}#{attrs}\n#{el.value}\n\\end{lstlisting}#{attrs}\n"
+          result << "\\begin{lstlisting}#{attrs}\n#{el.value}\n\\end{lstlisting}#{attrs}\n"
         else
           "\\begin{verbatim}#{el.value}\\end{verbatim}\n"
         end
@@ -219,7 +219,7 @@ module Kramdown
 
       def convert_br(el, opts)
         res = "\\newline"
-        res += "\n" if (c = opts[:parent].children[opts[:index]+1]) && (c.type != :text || c.value !~ /^\s*\n/)
+        res << "\n" if (c = opts[:parent].children[opts[:index]+1]) && (c.type != :text || c.value !~ /^\s*\n/)
         res
       end
 
@@ -540,7 +540,7 @@ module Kramdown
       SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''} # :nodoc:
       def convert_smart_quote(el, opts)
         res = SMART_QUOTE_SYMS[el.value]
-        res += "{}" if (nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote
+        res << "{}" if (nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote
         res
       end
 

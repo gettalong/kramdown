@@ -98,7 +98,7 @@ module Kramdown
     def method_missing(id, *attr, &block)
       if id.to_s =~ /^to_(\w+)$/ && (name = $1[0..0].upcase + $1[1..-1]) && Converter.const_defined?(name)
         output, warnings = Converter.const_get(name).convert(@root, @options)
-        @warnings += warnings
+        @warnings.concat(warnings)
         output
       else
         super
@@ -328,8 +328,21 @@ module Kramdown
     # Many elements don't use this field.
     attr_accessor :value
 
+    # The child elements of this element.
+    attr_accessor :children
+
+
+    # Create a new Element object of type +type+. The optional parameters +value+, +attr+ and
+    # +options+ can also be set in this constructor for convenience.
+    def initialize(type, value = nil, attr = nil, options = nil)
+      @type, @value, @attr, @options = type, value, (Utils::OrderedHash.new.merge!(attr) if attr), options
+      @children = []
+    end
+
     # The attributes of the element. Uses an Utils::OrderedHash to retain the insertion order.
-    attr_reader :attr
+    def attr
+      @attr ||= Utils::OrderedHash.new
+    end
 
     # The options hash for the element. It is used for storing arbitray options as well as the
     # following special contents:
@@ -337,17 +350,8 @@ module Kramdown
     # - Category of the element, either <tt>:block</tt> or <tt>:span</tt>, under the
     #   <tt>:category</tt> key. If this key is absent, it can be assumed that the element is in the
     #   <tt>:span</tt> category.
-    attr_accessor :options
-
-    # The child elements of this element.
-    attr_accessor :children
-
-
-    # Create a new Element object of type +type+. The optional parameters +value+, +attr+ and
-    # +options+ can also be set in this constructor for convenience.
-    def initialize(type, value = nil, attr = nil, options = {})
-      @type, @value, @attr, @options = type, value, Utils::OrderedHash.new(attr), options
-      @children = []
+    def options
+      @options ||= {}
     end
 
     def inspect #:nodoc:

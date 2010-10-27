@@ -7,6 +7,11 @@ modified_at: 2010-10-01 08:31:00 +02:00
 ---
 ## kramdown 0.12.0 released
 
+Some changes in the last release of kramdown lead to a performance drop. Therefore some performance
+optimizations have been done resulting in about 15% less created objects (which reduces the garbage
+collection pressure) and a small performance gain -- see the [tests page](../tests.html) for
+detailed information.
+
 The "internal" API (which is currently everything except the `Kramdown::Document` class) has changed
 again and developers may therefore need to update their extensions! The API changes now allow
 parsers and converters to be used without a Kramdown::Document class since this class is just

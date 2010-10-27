@@ -39,12 +39,13 @@ module Kramdown
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        result = @src.scan(self.class::PARAGRAPH_MATCH)
+        result = @src.scan(self.class::PARAGRAPH_MATCH).chomp!
         if @tree.children.last && @tree.children.last.type == :p
-          @tree.children.last.children.first.value << "\n" << result.chomp
+          @tree.children.last.children.first.value << "\n" << result
         else
           @tree.children << new_block_el(:p)
-          @tree.children.last.children << Element.new(@text_type, result.lstrip.chomp)
+          result.lstrip!
+          @tree.children.last.children << Element.new(@text_type, result)
         end
         true
       end

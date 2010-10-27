@@ -169,7 +169,7 @@ module Kramdown
             []
           elsif child.type == :blank
             if last_blank
-              last_blank.value += child.value
+              last_blank.value << child.value
               []
             else
               last_blank = child
@@ -218,9 +218,9 @@ module Kramdown
                 false
               end
             end unless stop_re_found
-            add_text(@src.scan(/./)) if !processed && !stop_re_found
+            add_text(@src.getch) if !processed && !stop_re_found
           else
-            add_text(@src.scan(/.*/m)) unless stop_re
+            (add_text(@src.rest); @src.terminate) unless stop_re
             break
           end
         end
@@ -258,8 +258,9 @@ module Kramdown
           update_attr_with_ial(attr, ref) if ref = @root.options[:ald][ref]
         end if ial[:refs]
         ial.each do |k,v|
-          if k == 'class'
-            attr[k] = ((attr[k] || '') + " #{v}").lstrip
+          if k == IAL_CLASS_ATTR
+            attr[k] = (attr[k] || '') << " #{v}"
+            attr[k].lstrip!
           elsif k.kind_of?(String)
             attr[k] = v
           end

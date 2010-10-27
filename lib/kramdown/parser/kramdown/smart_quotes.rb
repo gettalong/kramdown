@@ -200,7 +200,7 @@ module Kramdown
         regexp, substs = SQ_RULES.find {|reg, subst| @src.scan(reg)}
         substs.each do |subst|
           if subst.kind_of?(Integer)
-            add_text(@src[subst].to_s)
+            add_text(@src[subst])
           else
             val = SQ_SUBSTS[[subst, @src[subst.to_s[-1,1].to_i]]] || subst
             @tree.children << Element.new(:smart_quote, val)

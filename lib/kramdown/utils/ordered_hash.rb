@@ -24,54 +24,58 @@ module Kramdown
 
   module Utils
 
-    # A very simple class mimicking the most used methods of a Hash. The difference to a normal Hash
-    # is that a OrderedHash retains the insertion order of the keys.
-    class OrderedHash
+    if RUBY_VERSION < '1.9'
 
-      include Enumerable
+      # A partial hash implementation which preserves the insertion order of the keys.
+      #
+      # *Note* that this class is only used on Ruby 1.8 since the built-in Hash on Ruby 1.9
+      # automatically preserves the insertion order. However, to remain compatibility only the
+      # methods defined in this class may be used when working with OrderedHash on Ruby 1.9.
+      class OrderedHash
 
-      # Direct access to the hash with the key-value pairs. May not be used to modify the data!
-      attr_reader :data
+        include Enumerable
 
-      # Initialize the OrderedHash object, optionally with an +hash+. If the optional +hash+ is
-      # used, there is no special order imposed on the keys (additionally set keys will be stored in
-      # insertion order). An OrderedHash object may be used instead of a hash to provide the initial
-      # data.
-      def initialize(hash = {})
-        if hash.kind_of?(OrderedHash)
-          @data, @order = hash.instance_eval { [@data.dup, @order.dup] }
-        else
-          @data = hash || {}
-          @order = @data.keys
+        # Initialize the OrderedHash object.
+        def initialize
+          @data =  {}
+          @order = []
         end
+
+        # Iterate over the stored keys in insertion order.
+        def each
+          @order.each {|k| yield(k, @data[k])}
+        end
+
+        # Return the value for the +key+.
+        def [](key)
+          @data[key]
+        end
+
+        # Set the value for the +key+ to +val+.
+        def []=(key, val)
+          @order << key if !@data.has_key?(key)
+          @data[key] = val
+        end
+
+        # Delete the +key+.
+        def delete(key)
+          @order.delete(key)
+          @data.delete(key)
+        end
+
+        def merge!(other)
+          other.each {|k,v| self[k] = v}
+          self
+        end
+
+        def inspect #:nodoc:
+          "{" + map {|k,v| "#{k.inspect}=>#{v.inspect}"}.join(" ") + "}"
+        end
+
       end
 
-      # Iterate over the stored keys in insertion order.
-      def each
-        @order.each {|k| yield(k, @data[k])}
-      end
-
-      # Return the value for the +key+.
-      def [](key)
-        @data[key]
-      end
-
-      # Set the value for the +key+ to +val+.
-      def []=(key, val)
-        @order << key if !@data.has_key?(key)
-        @data[key] = val
-      end
-
-      # Delete the +key+.
-      def delete(key)
-        @order.delete(key)
-        @data.delete(key)
-      end
-
-      def inspect #:nodoc:
-        "{" + map {|k,v| "#{k.inspect}=>#{v.inspect}"}.join(" ") + "}"
-      end
-
+    else
+      OrderedHash = Hash
     end
 
   end

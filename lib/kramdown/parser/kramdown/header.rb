@@ -34,7 +34,8 @@ module Kramdown
         return false if !after_block_boundary?
 
         @src.pos += @src.matched_size
-        text, id, level = @src[1].strip, @src[2], @src[3]
+        text, id, level = @src[1], @src[2], @src[3]
+        text.strip!
         el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
         add_text(text, el)
         el.attr['id'] = id if id
@@ -52,7 +53,8 @@ module Kramdown
         return false if !after_block_boundary?
 
         result = @src.scan(ATX_HEADER_MATCH)
-        level, text, id = @src[1], @src[2].strip, @src[3]
+        level, text, id = @src[1], @src[2], @src[3]
+        text.strip!
         el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text)
         add_text(text, el)
         el.attr['id'] = id if id

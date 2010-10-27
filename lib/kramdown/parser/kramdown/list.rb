@@ -39,7 +39,7 @@ module Kramdown
         else
           while content =~ /^ *\t/
             temp = content.scan(/^ */).first.length + indentation
-            content.sub!(/^( *)(\t+)/) {$1 + " "*(4 - (temp % 4)) + " "*($2.length - 1)*4}
+            content.sub!(/^( *)(\t+)/) {$1 << " "*(4 - (temp % 4) + ($2.length - 1)*4)}
           end
           indentation += content.scan(/^ */).first.length
         end
@@ -78,7 +78,7 @@ module Kramdown
             list.children << item
 
             item.value.sub!(/^#{self.class::IAL_SPAN_START}\s*/) do |match|
-              parse_attribute_list($~[1], item.options[:ial] ||= {})
+              parse_attribute_list($1, item.options[:ial] ||= {})
               ''
             end
 
@@ -87,7 +87,7 @@ module Kramdown
             nested_list_found = (item.value =~ LIST_START)
             last_is_blank = false
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
-            result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
+            result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
             result.sub!(indent_re, '')
             if !nested_list_found && result =~ LIST_START
               item.value << "^\n"
@@ -123,7 +123,7 @@ module Kramdown
                (it == list.children.last && it.children.length == 2 && !eob_found)) &&
               (list.children.last != it || list.children.size == 1 ||
                list.children[0..-2].any? {|cit| cit.children.first.type != :p || cit.children.first.options[:transparent]})
-            it.children.first.children.first.value += "\n" if it.children.size > 1 && it.children[1].type != :blank
+            it.children.first.children.first.value << "\n" if it.children.size > 1 && it.children[1].type != :blank
             it.children.first.options[:transparent] = true
           end
 
@@ -158,7 +158,7 @@ module Kramdown
           para = @tree.children.pop
           first_as_para = true
         end
-        para.children.first.value.split("\n").each do |term|
+        para.children.first.value.split(/\n/).each do |term|
           el = Element.new(:dt)
           el.children << Element.new(:raw_text, term)
           deflist.children << el
@@ -176,7 +176,7 @@ module Kramdown
             deflist.children << item
 
             item.value.sub!(/^#{IAL_SPAN_START}\s*/) do |match|
-              parse_attribute_list($~[1], item.options[:ial] ||= {})
+              parse_attribute_list($1, item.options[:ial] ||= {})
               ''
             end
 
@@ -186,7 +186,7 @@ module Kramdown
           elsif @src.check(EOB_MARKER)
             break
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
-            result.sub!(/^(\t+)/) { " "*4*($1 ? $1.length : 0) }
+            result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
             result.sub!(indent_re, '')
             item.value << result
             first_as_para = false
@@ -214,16 +214,16 @@ module Kramdown
             last = nil
           end
           if it.children.first.type == :p && !it.options.delete(:first_as_para)
-            it.children.first.children.first.value += "\n" if it.children.size > 1
+            it.children.first.children.first.value << "\n" if it.children.size > 1
             it.children.first.options[:transparent] = true
           end
         end
 
         if @tree.children.length >= 1 && @tree.children.last.type == :dl
-          @tree.children[-1].children += deflist.children
+          @tree.children[-1].children.concat(deflist.children)
         elsif @tree.children.length >= 2 && @tree.children[-1].type == :blank && @tree.children[-2].type == :dl
           @tree.children.pop
-          @tree.children[-1].children += deflist.children
+          @tree.children[-1].children.concat(deflist.children)
         else
           @tree.children << deflist
         end

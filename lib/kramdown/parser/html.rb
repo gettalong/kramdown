@@ -111,7 +111,8 @@ module Kramdown
             add_text(extract_string(curpos...@src.pos, @src), @tree.children.last, :raw)
             @src.scan(HTML_TAG_CLOSE_RE)
           else
-            add_text(@src.scan(/.*/m), @tree.children.last, :raw)
+            add_text(@src.rest, @tree.children.last, :raw)
+            @src.terminate
             warning("Found no end tag for 'script' - auto-closing it")
           end
         end
@@ -148,11 +149,11 @@ module Kramdown
                   warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
                 end
               else
-                add_text(@src.scan(/./), @tree, :text)
+                add_text(@src.getch, @tree, :text)
               end
             else
-              result = @src.scan(/.*/m)
-              add_text(result, @tree, :text)
+              add_text(@src.rest, @tree, :text)
+              @src.terminate
               warning("Found no end tag for '#{@tree.value}' - auto-closing it") if @tree.type == :html_element
               done = true
             end
@@ -204,7 +205,7 @@ module Kramdown
                       else parent.type.to_s
                       end
                     end
-            el.options = {:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block}
+            el.options.replace({:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block})
             return
           when :html_element
           when :root
@@ -262,16 +263,16 @@ module Kramdown
                           Element.new(:entity, entity(val), nil, :original => src.matched)
                         end
             else
-              result << Element.new(:text, src.scan(/.*/m))
+              result << Element.new(:text, src.rest)
+              src.terminate
             end
           end
           result
         end
 
         def process_html_element(el, do_conversion = true, preserve_text = false)
-          el.options = {:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
-            :parse_type => HTML_PARSE_AS[el.value]
-          }
+          el.options.replace(:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
+                             :parse_type => HTML_PARSE_AS[el.value])
           process_children(el, do_conversion, preserve_text)
         end
 
@@ -320,7 +321,7 @@ module Kramdown
 
         def set_basics(el, type, category, opts = {})
           el.type = type
-          el.options = {:category => category}.merge(opts)
+          el.options.replace({:category => category}.merge(opts))
           el.value = nil
         end
 

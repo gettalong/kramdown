@@ -37,8 +37,7 @@ module Kramdown
           return
         end
 
-        text = @src.scan_until(/#{result}/)
-        if text
+        if text = @src.scan_until(/#{result}/)
           text.sub!(/#{result}\Z/, '')
           if !simple
             text = text[1..-1] if text[0..0] == ' '

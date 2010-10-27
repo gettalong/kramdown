@@ -131,7 +131,7 @@ module Kramdown
                        ["#{opts[:index] + 1}.".ljust(4), 4]
                      end
         if ial = ial_for_element(el)
-          sym += ial + " "
+          sym << ial << " "
         end
 
         opts[:indent] += width
@@ -155,7 +155,7 @@ module Kramdown
       def convert_dd(el, opts)
         sym, width = ": ", (el.children.first.type == :codeblock ? 4 : 2)
         if ial = ial_for_element(el)
-          sym += ial + " "
+          sym << ial << " "
         end
 
         opts[:indent] += width
@@ -165,7 +165,7 @@ module Kramdown
         last = last.map {|l| " "*width + l}.join("\n")
         text = first + (last.empty? ? "" : "\n") + last + newlines
         text.chomp! if text =~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dd
-        text += "\n" if text !~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dt
+        text << "\n" if text !~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dt
         if el.children.first.type == :p && !el.children.first.options[:transparent]
           "\n#{sym}#{text}"
         elsif el.children.first.type == :codeblock

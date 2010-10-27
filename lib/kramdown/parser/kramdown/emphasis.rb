@@ -30,7 +30,7 @@ module Kramdown
       def parse_emphasis
         result = @src.scan(EMPHASIS_START)
         element = (result.length == 2 ? :strong : :em)
-        type = (result =~ /_/ ? '_' : '*')
+        type = result[0..0]
         reset_pos = @src.pos
 
         if (type == '_' && @src.pre_match =~ /[[:alpha:]]\z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/) ||

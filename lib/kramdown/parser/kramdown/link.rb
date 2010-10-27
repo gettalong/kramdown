@@ -55,7 +55,8 @@ module Kramdown
         @tree.children << el
       end
 
-      LINK_TEXT_BRACKET_RE = /\\\[|\\\]|\[|\]/
+      LINK_BRACKET_STOP_RE = /(\])|!?\[/
+      LINK_PAREN_STOP_RE = /(\()|(\))|\s(?=['"])/
       LINK_INLINE_ID_RE = /\s*?\[(#{LINK_ID_CHARS}+)?\]/
       LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/
       LINK_START = /!?\[(?=[^^])/
@@ -75,15 +76,9 @@ module Kramdown
         end
         el = Element.new(link_type)
 
-        stop_re = /\]|!?\[/
         count = 1
-        found = parse_spans(el, stop_re) do
-          case @src.matched
-          when "[", "!["
-            count += 1
-          when "]"
-            count -= 1
-          end
+        found = parse_spans(el, LINK_BRACKET_STOP_RE) do
+          count = count + (@src[1] ? -1 : 1)
           count - el.children.select {|c| c.type == :img}.size == 0
         end
         if !found || (link_type == :a && el.children.empty?)
@@ -92,16 +87,12 @@ module Kramdown
           return
         end
         alt_text = extract_string(reset_pos...@src.pos, @src)
-        conv_link_id = alt_text.gsub(/(\s|\n)+/m, ' ').gsub(LINK_ID_NON_CHARS, '').downcase
-        @src.scan(stop_re)
+        @src.scan(LINK_BRACKET_STOP_RE)
 
         # reference style link or no link url
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
-          link_id = (@src[1] || conv_link_id).downcase
-          if link_id.empty?
-            @src.pos = reset_pos
-            add_text(result)
-          elsif @root.options[:link_defs].has_key?(link_id)
+          link_id = (@src[1] || alt_text.gsub(/(\s|\n)+/, ' ').gsub(LINK_ID_NON_CHARS, '')).downcase
+          if @root.options[:link_defs].has_key?(link_id)
             add_link(el, @root.options[:link_defs][link_id].first, @root.options[:link_defs][link_id].last, alt_text)
           else
             warning("No link definition for link ID '#{link_id}' found")
@@ -120,21 +111,20 @@ module Kramdown
           end
         else
           link_url = ''
-          re = /\(|\)|\s(?=['"])/
           nr_of_brackets = 0
-          while temp = @src.scan_until(re)
-            link_url += temp
-            case @src.matched
-            when /\s/
-              break
-            when '('
-              nr_of_brackets += 1
-            when ')'
+          while temp = @src.scan_until(LINK_PAREN_STOP_RE)
+            link_url << temp
+            if @src[2]
               nr_of_brackets -= 1
               break if nr_of_brackets == 0
+            elsif @src[1]
+              nr_of_brackets += 1
+            else
+              break
             end
           end
-          link_url = link_url[1..-2].strip
+          link_url = link_url[1..-2]
+          link_url.strip!
 
           if nr_of_brackets == 0
             add_link(el, link_url, nil, alt_text)

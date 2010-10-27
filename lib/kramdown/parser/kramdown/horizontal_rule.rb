@@ -24,7 +24,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      HR_START = /^#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1[ \t]*(\1|[ \t])*\n/
+      HR_START = /^#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1(\1|[ \t])*\n/
 
       # Parse the horizontal rule at the current location.
       def parse_horizontal_rule

@@ -48,7 +48,7 @@ module Kramdown
         columns = 0
 
         add_container = lambda do |type, force|
-          if force || type != :tbody || !has_footer
+          if !has_footer || type != :tbody || force
             cont = Element.new(type)
             cont.children, rows = rows, []
             table.children << cont
@@ -86,10 +86,10 @@ module Kramdown
                 # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
                 f, *l = c.value.split(/\\\|/).map {|t| t.split(/\|/)}.inject([]) do |memo, t|
                   memo.last << "|" << t.shift if memo.size > 0
-                  memo += t
+                  memo.concat(t)
                 end
                 (cells.empty? ? cells : cells.last) << f
-                cells += l
+                cells.concat(l)
               else
                 delim = (c.value.scan(/`+/).max || '') + '`'
                 tmp = "#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
