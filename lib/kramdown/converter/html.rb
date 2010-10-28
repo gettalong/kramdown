@@ -143,7 +143,7 @@ module Kramdown
         if @options[:auto_ids] && !el.attr['id']
           el.attr['id'] = generate_id(el.options[:raw_text])
         end
-        @toc << [el.options[:level], el.attr['id'], el.children] if el.attr['id'] && within_toc_depth?(el)
+        @toc << [el.options[:level], el.attr['id'], el.children] if el.attr['id'] && in_toc?(el)
         "#{' '*indent}<h#{el.options[:level]}#{html_attributes(el)}>#{inner(el, indent)}</h#{el.options[:level]}>\n"
       end
 
@@ -344,11 +344,6 @@ module Kramdown
           result.sub!(/#{@toc_code.last}/, text)
         end
         result
-      end
-
-      # Return +true+ if the header element +el+ is within the value of the +toc_depth+ option.
-      def within_toc_depth?(el)
-        @options[:toc_depth] <= 0 || el.options[:level] <= @options[:toc_depth]
       end
 
       # Generate and return an element tree for the table of contents.

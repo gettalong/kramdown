@@ -279,14 +279,45 @@ Default: :as_char
 Used by: HTML converter, kramdown converter
 EOF
 
-    define(:toc_depth, Integer, 0, <<EOF)
-Defines the maximum level of headers which will be used to generate the table of
+    define(:toc_depth, Integer, -1, <<EOF)
+DEPRECATED: Defines the maximum level of headers which will be used to generate the table of
 contents. For instance, with a value of 2, toc entries will be generated for h1
 and h2 headers but not for h3, h4, etc. A value of 0 uses all header levels.
 
-Default: 0
+Use option toc_levels instead!
+
+Default: -1
 Used by: HTML/Latex converter
 EOF
+
+    define(:toc_levels, Object, (1..6).to_a, <<EOF) do |val|
+Defines the levels that are used for the table of contents
+
+The individual levels can be specified by separating them with commas
+(e.g. 1,2,3) or by using the range syntax (e.g. 1..3). Only the
+specified levels are used for the table of contents.
+
+Default: 1..6
+Used by: HTML/Latex converter
+EOF
+      if String === val
+        if val =~ /^(\d)\.\.(\d)$/
+          val = Range.new($1.to_i, $2.to_i).to_a
+        elsif val =~ /^\d(?:,\d)*$/
+          val = val.split(/,/).map {|s| s.to_i}.uniq
+        else
+          raise Kramdown::Error, "Invalid syntax for option toc_levels"
+        end
+      elsif Array === val
+        val = val.map {|s| s.to_i}.uniq
+      else
+        raise Kramdown::Error, "Invalid type #{val.class} for option toc_levels"
+      end
+      if val.any? {|i| !(1..6).include?(i)}
+        raise Kramdown::Error, "Level numbers for option toc_levels have to be integers from 1 to 6"
+      end
+      val
+    end
 
     define(:line_width, Integer, 72, <<EOF)
 Defines the line width to be used when outputting a document
