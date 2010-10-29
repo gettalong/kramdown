@@ -113,16 +113,8 @@ module Kramdown
         latex_environment(el.children.size > 1 ? 'quotation' : 'quote', el, inner(el, opts))
       end
 
-      HEADER_TYPES = {
-        1 => 'section',
-        2 => 'subsection',
-        3 => 'subsubsection',
-        4 => 'paragraph',
-        5 => 'subparagraph',
-        6 => 'subparagraph'
-      } # :nodoc:
       def convert_header(el, opts)
-        type = HEADER_TYPES[el.options[:level]]
+        type = @options[:latex_headers][el.options[:level] - 1]
         if ((id = el.attr['id']) ||
             (@options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) && in_toc?(el)
           "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"

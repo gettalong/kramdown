@@ -326,6 +326,26 @@ Default: 72
 Used by: kramdown converter
 EOF
 
+    define(:latex_headers, Object, %w{section subsection subsubsection paragraph subparagraph subparagraph}, <<EOF) do |val|
+Defines the LaTeX commands for different header levels
+
+The commands for the header levels one to six can be specified by
+separating them with commas.
+
+Default: section,subsection,subsubsection,paragraph,subparagraph,subsubparagraph
+Used by: Latex converter
+EOF
+      if String === val
+        val = val.split(/,/)
+      elsif !(Array === val)
+        raise Kramdown::Error, "Invalid type #{val.class} for option latex_headers"
+      end
+      if val.size != 6
+        raise Kramdown::Error, "Option latex_headers needs exactly six LaTeX commands"
+      end
+      val
+    end
+
   end
 
 end

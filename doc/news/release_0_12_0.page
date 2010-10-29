@@ -25,13 +25,14 @@ element (e.g. footnote definitions). More information can be found in the API do
 
   - Added Markdown-only parser
 
-* 4 minor changes:
+* 5 minor changes:
 
   - Angle brackets can now also be escaped
   - Pipe characters in code spans that appear in tables do not need to be escaped anymore
   - New option `toc_levels` for specifying the header levels used for the table of contents
     (requested by Rick Frankel, RF#28672)
   - MathJax instead of jsMath is now used for math output in the HTML converter
+  - New option `latex_headers` for customizing the header commands for the LaTeX converter
 
 * 7 bug fixes:
 

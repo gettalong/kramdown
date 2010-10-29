@@ -9,7 +9,8 @@ file to produce a high quality, printable version.
 
 Since the LaTeX converter outputs just the converted element tree and not a whole LaTeX document by
 default, one should always use the `template` option (see below) to include the necessary
-"framework".
+"framework". There are also some [other options](#options) that can be used to customize the
+generated LaTeX output.
 
 
 ## Needed Packages
@@ -47,28 +48,6 @@ The LaTeX converter supports the visualisation of whitespace and syntax highligh
 the [HTML converter documentation](html.html#code-blocks). Syntax highlighting and visualizing
 whitespace in a code block is done using the `listings` package. So all languages supported by the
 `listings` package can be highlighted.
-
-## Headers
-
-The LaTeX converter uses the following fixed header types for converting the different levels of
-headers:
-
-* `h1` -> `section`
-* `h2` -> `subsection`
-* `h3` -> `subsubsection`
-* `h4` -> `paragraph`
-* `h5` -> `subparagraph`
-* `h6` -> `subparagraph`
-
-It is possible to change the header types by writing some code, like in the following example:
-
-    require 'kramdown'
-
-    my_headers = {1 => 'chapter', 2 => 'section', 3 => 'subsection', 4 => 'subsubsection'}
-    Kramdown::Converter::Latex::HEADER_TYPES.merge!(my_headers)
-
-    puts Kramdown::Document.new(ARGF.read).to_latex
-{: lang="ruby"}
 
 
 ## Quotation Marks
@@ -138,7 +117,7 @@ lists; code blocks that use the `listings` environment; tables; and math blocks.
 
 The LaTeX converter supports the following options:
 
-{options: {items: [:auto_ids, :toc_depth, :template]}}
+{options: {items: [:auto_ids, :toc_levels, :latex_headers, :template]}}
 
 
 {include_file: doc/links.markdown}
