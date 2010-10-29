@@ -261,7 +261,6 @@ module Kramdown
       def convert_td(el, opts)
         inner(el, opts)
       end
-      alias :convert_th :convert_td
 
       def convert_comment(el, opts)
         if el.options[:category] == :block

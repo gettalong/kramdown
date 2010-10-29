@@ -235,9 +235,9 @@ module Kramdown
 
       def convert_td(el, indent)
         res = inner(el, indent)
-        "#{' '*indent}<#{el.type}#{html_attributes(el)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{el.type}>\n"
+        type = (@stack[-2].type == :thead ? :th : :td)
+        "#{' '*indent}<#{type}#{html_attributes(el)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
       end
-      alias :convert_th :convert_td
 
       def convert_comment(el, indent)
         if el.options[:category] == :block

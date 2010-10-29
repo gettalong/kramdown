@@ -404,6 +404,7 @@ module Kramdown
           process_children(el)
           set_basics(el, :table, :block)
           el.options[:alignment] = []
+
           calc_alignment = lambda do |c|
             if c.type == :tr && el.options[:alignment].empty?
               el.options[:alignment] = [:default] * c.children.length
@@ -413,6 +414,16 @@ module Kramdown
             end
           end
           calc_alignment.call(el)
+
+          change_th_type = lambda do |c|
+            if c.type == :th
+              c.type = :td
+            else
+              c.children.each {|cc| change_th_type.call(cc)}
+            end
+          end
+          change_th_type.call(el)
+
           if el.children.first.type == :tr
             tbody = Element.new(:tbody, nil, nil, :category => :block)
             tbody.children = el.children

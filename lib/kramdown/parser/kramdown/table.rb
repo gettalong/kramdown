@@ -154,7 +154,6 @@ module Kramdown
             (columns - row.children.length).times do
               row.children << Element.new(:td)
             end
-            row.children.each {|el| el.type = :th} if kind.type == :thead
           end
         end
         if table.options[:alignment].length > columns
