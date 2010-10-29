@@ -318,12 +318,8 @@ module Kramdown
       end
 
       def convert_math(el, indent)
-        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        el.attr['class'] ||= ''
-        el.attr['class'] << (el.attr['class'].empty? ? '' : ' ') << 'math'
-        type = 'span'
-        type = 'div' if el.options[:category] == :block
-        "<#{type}#{html_attributes(el)}>#{escape_html(el.value)}</#{type}>#{type == 'div' ? "\n" : ''}"
+        block = (el.options[:category] == :block)
+        "<script type=\"math/tex#{block ? '; mode=display' : ''}\">#{el.value}</script>#{block ? "\n" : ''}"
       end
 
       def convert_abbreviation(el, indent)

@@ -445,37 +445,24 @@ module Kramdown
              end && el.children.any? {|t| t.value == 'tbody'})
         end
 
-        def convert_div(el)
+        def convert_script(el)
           if !is_math_tag?(el)
             process_html_element(el)
           else
             handle_math_tag(el)
           end
         end
-        alias :convert_span :convert_div
 
         def is_math_tag?(el)
-          el.attr['class'].to_s =~ /\bmath\b/ &&
-            el.children.size == 1 && el.children.first.type == :text
+          el.attr['type'].to_s =~ /\bmath\/tex\b/
         end
 
         def handle_math_tag(el)
-          set_basics(el, :math, (el.value == 'div' ? :block : :span))
+          set_basics(el, :math, (el.attr['type'] =~ /mode=display/ ? :block : :span))
           el.value = el.children.shift.value
-          if el.attr['class'] =~ /^\s*math\s*$/
-            el.attr.delete('class')
-          else
-            el.attr['class'].sub!(/\s?math/, '')
-          end
-          el.value.gsub!(/&(amp|quot|gt|lt);/) do |m|
-            case m
-            when '&amp;'   then '&'
-            when '&quot;'  then '"'
-            when '&gt;'    then '>'
-            when '&lt;'    then '<'
-            end
-          end
+          el.attr.delete('type')
         end
+
       end
 
       include Parser
