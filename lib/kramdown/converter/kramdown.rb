@@ -45,12 +45,12 @@ module Kramdown
         res = send("convert_#{el.type}", el, opts)
         if el.type != :html_element && el.type != :li && el.type != :dd && (ial = ial_for_element(el))
           res << ial
-          res << "\n\n" if el.options[:category] == :block
+          res << "\n\n" if Element.category(el) == :block
         elsif [:ul, :dl, :ol, :codeblock].include?(el.type) && opts[:next] &&
             ([el.type, :codeblock].include?(opts[:next].type) ||
              (opts[:next].type == :blank && opts[:nnext] && [el.type, :codeblock].include?(opts[:nnext].type)))
           res << "^\n\n"
-        elsif el.options[:category] == :block && ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
+        elsif Element.category(el) == :block && ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
             (el.type != :p || !el.options[:transparent])
           res << "\n"
         end
@@ -183,7 +183,7 @@ module Kramdown
 
       def convert_html_element(el, opts)
         markdown_attr = el.options[:category] == :block && el.children.any? do |c|
-          c.type != :html_element && (c.type != :p || !c.options[:transparent]) && c.options[:category] == :block
+          c.type != :html_element && (c.type != :p || !c.options[:transparent]) && Element.category(c) == :block
         end
         opts[:force_raw_text] = true if %w{script pre code}.include?(el.value)
         opts[:raw_text] = opts[:force_raw_text] || opts[:block_raw_text] || (el.options[:category] != :span && !markdown_attr)

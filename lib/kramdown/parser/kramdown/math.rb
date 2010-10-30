@@ -40,7 +40,7 @@ module Kramdown
         @src.pos += @src.matched_size
         data = @src[2]
         if before_block_boundary?
-          @tree.children << new_block_el(:math, data)
+          @tree.children << new_block_el(:math, data, nil, :category => :block)
           true
         else
           @src.pos = orig_pos

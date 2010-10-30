@@ -271,7 +271,6 @@ module Kramdown
       # exists. This method should always be used for creating a block-level element!
       def new_block_el(*args)
         el = Element.new(*args)
-        el.options[:category] ||= :block
         el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
         el
       end

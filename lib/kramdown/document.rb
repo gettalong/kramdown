@@ -344,18 +344,29 @@ module Kramdown
       @attr ||= Utils::OrderedHash.new
     end
 
-    # The options hash for the element. It is used for storing arbitray options as well as the
-    # following special contents:
-    #
-    # - Category of the element, either <tt>:block</tt> or <tt>:span</tt>, under the
-    #   <tt>:category</tt> key. If this key is absent, it can be assumed that the element is in the
-    #   <tt>:span</tt> category.
+    # The options hash for the element. It is used for storing arbitray options.
     def options
       @options ||= {}
     end
 
     def inspect #:nodoc:
       "<kd:#{@type}#{@value.nil? ? '' : ' ' + @value.inspect} #{@attr.inspect}#{options.empty? ? '' : ' ' + @options.inspect}#{@children.empty? ? '' : ' ' + @children.inspect}>"
+    end
+
+
+    CATEGORY = {} # :nodoc:
+    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :dl, :table,
+     :hr, :html_doctype].each {|b| CATEGORY[b] = :block}
+    [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
+     :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span}
+
+    # Return the category of +el+ which can be <tt>:block</tt>, <tt>:span</tt> or +nil+.
+    #
+    # Most elements have a fixed category, however, some elements can either appear in a block-level
+    # or a span-level context. These elements need to have the option <tt>:category</tt> correctly
+    # set.
+    def self.category(el)
+      CATEGORY[el.type] || el.options[:category]
     end
 
   end

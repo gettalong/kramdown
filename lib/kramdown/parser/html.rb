@@ -222,7 +222,7 @@ module Kramdown
           if do_conversion && self.class.method_defined?(mname)
             send(mname, el)
           elsif do_conversion && SIMPLE_ELEMENTS.include?(type)
-            set_basics(el, type.intern, HTML_SPAN_ELEMENTS.include?(type) ? :span : :block)
+            set_basics(el, type.intern)
             process_children(el, do_conversion, preserve_text)
           else
             process_html_element(el, do_conversion, preserve_text)
@@ -284,7 +284,7 @@ module Kramdown
           tmp = []
           last_is_p = false
           el.children.each do |c|
-            if c.options[:category] != :block || c.type == :text
+            if Element.category(c) != :block || c.type == :text
               if !last_is_p
                 tmp << Element.new(:p, nil, nil, :transparent => true)
                 last_is_p = true
@@ -314,14 +314,14 @@ module Kramdown
           el.children.delete_if do |c|
             i += 1
             c.type == :text && c.value.strip.empty? &&
-              (i == 0 || i == el.children.length - 1 || (el.children[i-1].options[:category] == :block &&
-                                                         el.children[i+1].options[:category] == :block))
+              (i == 0 || i == el.children.length - 1 || (Element.category(el.children[i-1]) == :block &&
+                                                         Element.category(el.children[i+1]) == :block))
           end
         end
 
-        def set_basics(el, type, category, opts = {})
+        def set_basics(el, type, opts = {})
           el.type = type
-          el.options.replace({:category => category}.merge(opts))
+          el.options.replace(opts)
           el.value = nil
         end
 
@@ -332,7 +332,7 @@ module Kramdown
 
         def convert_a(el)
           if el.attr['href']
-            set_basics(el, :a, :span)
+            set_basics(el, :a)
             process_children(el)
           else
             process_html_element(el, false)
@@ -340,17 +340,17 @@ module Kramdown
         end
 
         def convert_b(el)
-          set_basics(el, :strong, :span)
+          set_basics(el, :strong)
           process_children(el)
         end
 
         def convert_i(el)
-          set_basics(el, :em, :span)
+          set_basics(el, :em)
           process_children(el)
         end
 
         def convert_h1(el)
-          set_basics(el, :header, :block, :level => el.value[1..1].to_i)
+          set_basics(el, :header, :level => el.value[1..1].to_i)
           extract_text(el, el.options[:raw_text] = '')
           process_children(el)
         end
@@ -386,9 +386,9 @@ module Kramdown
             process_html_element(el, false, true)
           else
             if el.value == 'code'
-              set_basics(el, :codespan, :span)
+              set_basics(el, :codespan)
             else
-              set_basics(el, :codeblock, :block)
+              set_basics(el, :codeblock)
             end
             el.value = result.first.value
             el.children.clear
@@ -402,7 +402,7 @@ module Kramdown
             return
           end
           process_children(el)
-          set_basics(el, :table, :block)
+          set_basics(el, :table)
           el.options[:alignment] = []
 
           calc_alignment = lambda do |c|
@@ -425,7 +425,7 @@ module Kramdown
           change_th_type.call(el)
 
           if el.children.first.type == :tr
-            tbody = Element.new(:tbody, nil, nil, :category => :block)
+            tbody = Element.new(:tbody)
             tbody.children = el.children
             el.children = [tbody]
           end
@@ -469,7 +469,7 @@ module Kramdown
         end
 
         def handle_math_tag(el)
-          set_basics(el, :math, (el.attr['type'] =~ /mode=display/ ? :block : :span))
+          set_basics(el, :math, :category => (el.attr['type'] =~ /mode=display/ ? :block : :span))
           el.value = el.children.shift.value
           el.attr.delete('type')
         end
@@ -487,7 +487,7 @@ module Kramdown
           if result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/)
             @tree.children << Element.new(:xml_pi, result.strip, nil, :category => :block)
           elsif result = @src.scan(/\s*#{HTML_DOCTYPE_RE}/)
-            @tree.children << Element.new(:html_doctype, result.strip, nil, :category => :block)
+            @tree.children << Element.new(:html_doctype, result.strip)
           elsif result = @src.scan(/\s*#{HTML_COMMENT_RE}/)
             @tree.children << Element.new(:xml_comment, result.strip, nil, :category => :block)
           else
