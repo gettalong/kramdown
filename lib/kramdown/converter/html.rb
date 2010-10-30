@@ -391,7 +391,7 @@ module Kramdown
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1
         @footnotes.each do |name, data|
-          li = Element.new(:li, nil, {'id' => "fn:#{name}"}, {:first_is_block => true})
+          li = Element.new(:li, nil, {'id' => "fn:#{name}"})
           li.children = Marshal.load(Marshal.dump(data[:content].children))
           ol.children << li
 
