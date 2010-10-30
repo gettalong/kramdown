@@ -103,19 +103,18 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         else
-          "#{' '*indent}<p#{html_attributes(el)}>#{inner(el, indent)}</p>\n"
+          "#{' '*indent}<p#{html_attributes(el.attr)}>#{inner(el, indent)}</p>\n"
         end
       end
 
       def convert_codeblock(el, indent)
-        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        lang = el.attr.delete('lang')
-        if lang && HIGHLIGHTING_AVAILABLE
+        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
+          attr = el.attr.dup
           opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
             :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
             :bold_every => @options[:coderay_bold_every], :css => @options[:coderay_css]}
-          result = CodeRay.scan(el.value, lang.to_sym).html(opts).chomp << "\n"
-          "#{' '*indent}<div#{html_attributes(el)}>#{result}#{' '*indent}</div>\n"
+          result = CodeRay.scan(el.value, attr.delete('lang').to_sym).html(opts).chomp << "\n"
+          "#{' '*indent}<div#{html_attributes(attr)}>#{result}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
           result.chomp!
@@ -130,21 +129,21 @@ module Kramdown
               end.join('')
             end
           end
-          "#{' '*indent}<pre#{html_attributes(el)}><code>#{result}\n</code></pre>\n"
+          "#{' '*indent}<pre#{html_attributes(el.attr)}><code>#{result}\n</code></pre>\n"
         end
       end
 
       def convert_blockquote(el, indent)
-        "#{' '*indent}<blockquote#{html_attributes(el)}>\n#{inner(el, indent)}#{' '*indent}</blockquote>\n"
+        "#{' '*indent}<blockquote#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</blockquote>\n"
       end
 
       def convert_header(el, indent)
-        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        if @options[:auto_ids] && !el.attr['id']
-          el.attr['id'] = generate_id(el.options[:raw_text])
+        attr = el.attr.dup
+        if @options[:auto_ids] && !attr['id']
+          attr['id'] = generate_id(el.options[:raw_text])
         end
-        @toc << [el.options[:level], el.attr['id'], el.children] if el.attr['id'] && in_toc?(el)
-        "#{' '*indent}<h#{el.options[:level]}#{html_attributes(el)}>#{inner(el, indent)}</h#{el.options[:level]}>\n"
+        @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
+        "#{' '*indent}<h#{el.options[:level]}#{html_attributes(attr)}>#{inner(el, indent)}</h#{el.options[:level]}>\n"
       end
 
       def convert_hr(el, indent)
@@ -156,14 +155,14 @@ module Kramdown
           @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
         else
-          "#{' '*indent}<#{el.type}#{html_attributes(el)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
+          "#{' '*indent}<#{el.type}#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
         end
       end
       alias :convert_ol :convert_ul
       alias :convert_dl :convert_ul
 
       def convert_li(el, indent)
-        output = ' '*indent << "<#{el.type}" << html_attributes(el) << ">"
+        output = ' '*indent << "<#{el.type}" << html_attributes(el.attr) << ">"
         res = inner(el, indent)
         if el.children.empty? || (el.children.first.type == :p && el.children.first.options[:transparent])
           output << res << (res =~ /\n\Z/ ? ' '*indent : '')
@@ -175,7 +174,7 @@ module Kramdown
       alias :convert_dd :convert_li
 
       def convert_dt(el, indent)
-        "#{' '*indent}<dt#{html_attributes(el)}>#{inner(el, indent)}</dt>\n"
+        "#{' '*indent}<dt#{html_attributes(el.attr)}>#{inner(el, indent)}</dt>\n"
       end
 
       # A list of all HTML tags that need to have a body (even if the body is empty).
@@ -184,11 +183,11 @@ module Kramdown
       def convert_html_element(el, indent)
         res = inner(el, indent)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
           output << ' '*indent if @stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw
-          output << "<#{el.value}#{html_attributes(el)}"
+          output << "<#{el.value}#{html_attributes(el.attr)}"
           if !res.empty? && el.options[:parse_type] != :block
             output << ">#{res}</#{el.value}>"
           elsif !res.empty?
@@ -221,11 +220,11 @@ module Kramdown
             "#{' '*(indent + @indent)}" << (a == :default ? "<col />" : "<col align=\"#{a}\" />") << "\n"
           end.join('')
         end
-        "#{' '*indent}<table#{html_attributes(el)}>\n#{alignment}#{inner(el, indent)}#{' '*indent}</table>\n"
+        "#{' '*indent}<table#{html_attributes(el.attr)}>\n#{alignment}#{inner(el, indent)}#{' '*indent}</table>\n"
       end
 
       def convert_thead(el, indent)
-        "#{' '*indent}<#{el.type}#{html_attributes(el)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
+        "#{' '*indent}<#{el.type}#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
       end
       alias :convert_tbody :convert_thead
       alias :convert_tfoot :convert_thead
@@ -236,7 +235,7 @@ module Kramdown
       def convert_td(el, indent)
         res = inner(el, indent)
         type = (@stack[-2].type == :thead ? :th : :td)
-        "#{' '*indent}<#{type}#{html_attributes(el)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
+        "#{' '*indent}<#{type}#{html_attributes(el.attr)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
       end
 
       def convert_comment(el, indent)
@@ -253,26 +252,25 @@ module Kramdown
 
       def convert_a(el, indent)
         res = inner(el, indent)
-        if el.attr['href'] =~ /^mailto:/
-          el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-          el.attr['href'] = obfuscate('mailto') << ":" << obfuscate(el.attr['href'].sub!(/^mailto:/, ''))
+        attr = el.attr.dup
+        if attr['href'] =~ /^mailto:/
+          attr['href'] = obfuscate('mailto') << ":" << obfuscate(attr['href'].sub(/^mailto:/, ''))
           res = obfuscate(res)
         end
-        "<a#{html_attributes(el)}>#{res}</a>"
+        "<a#{html_attributes(attr)}>#{res}</a>"
       end
 
       def convert_img(el, indent)
-        "<img#{html_attributes(el)} />"
+        "<img#{html_attributes(el.attr)} />"
       end
 
       def convert_codespan(el, indent)
-        el = Marshal.load(Marshal.dump(el)) # so that the original is not changed
-        lang = el.attr.delete('lang')
-        if lang && HIGHLIGHTING_AVAILABLE
-          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
-          "<code#{html_attributes(el)}>#{result}</code>"
+        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
+          attr = el.attr.dup
+          result = CodeRay.scan(el.value, attr.delete('lang').to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
+          "<code#{html_attributes(attr)}>#{result}</code>"
         else
-          "<code#{html_attributes(el)}>#{escape_html(el.value)}</code>"
+          "<code#{html_attributes(el.attr)}>#{escape_html(el.value)}</code>"
         end
       end
 
@@ -292,7 +290,7 @@ module Kramdown
       end
 
       def convert_em(el, indent)
-        "<#{el.type}#{html_attributes(el)}>#{inner(el, indent)}</#{el.type}>"
+        "<#{el.type}#{html_attributes(el.attr)}>#{inner(el, indent)}</#{el.type}>"
       end
       alias :convert_strong :convert_em
 

@@ -190,10 +190,10 @@ module Kramdown
         opts[:block_raw_text] = true if el.options[:category] == :block && opts[:raw_text]
         res = inner(el, opts)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
-          output << "<#{el.value}#{html_attributes(el)}"
+          output << "<#{el.value}#{html_attributes(el.attr)}"
           output << " markdown=\"1\"" if markdown_attr
           if !res.empty? && el.options[:parse_type] != :block
             output << ">#{res}</#{el.value}>"

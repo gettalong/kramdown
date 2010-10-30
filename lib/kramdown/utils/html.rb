@@ -48,9 +48,9 @@ module Kramdown
         end
       end
 
-      # Return the string with the attributes of the element +el+.
-      def html_attributes(el)
-        el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+      # Return the HTML representation of the attributes +attr+.
+      def html_attributes(attr)
+        attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
       end
 
       # :stopdoc:
