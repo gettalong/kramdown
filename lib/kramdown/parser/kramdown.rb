@@ -82,7 +82,7 @@ module Kramdown
         @root.options[:ald] = {}
         @root.options[:link_defs] = {}
         @root.options[:abbrev_defs] = {}
-        @root.options[:footnotes] = {}
+        @footnotes = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
                           :setext_header, :horizontal_rule, :list, :definition_list, :link_definition, :block_html,
@@ -101,9 +101,7 @@ module Kramdown
         parse_blocks(@root, adapt_source(source))
         update_tree(@root)
         replace_abbreviations(@root)
-        @root.options[:footnotes].each do |name, data|
-          update_tree(data[:content])
-        end
+        @footnotes.each {|name,data| update_tree(data[:marker].value) if data[:marker]}
       end
 
       #######

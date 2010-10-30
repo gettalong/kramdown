@@ -241,7 +241,7 @@ module Kramdown
 
       def convert_footnote(el, opts)
         @data[:packages] << 'fancyvrb'
-        "\\footnote{#{inner(@root.options[:footnotes][el.options[:name]][:content], opts).rstrip}}"
+        "\\footnote{#{inner(el.value, opts).rstrip}}"
       end
 
       def convert_raw(el, opts)

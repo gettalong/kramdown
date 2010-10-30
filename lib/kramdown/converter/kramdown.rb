@@ -311,7 +311,7 @@ module Kramdown
       end
 
       def convert_footnote(el, opts)
-        @footnotes << [el.options[:name], @root.options[:footnotes][el.options[:name]]]
+        @footnotes << [el.options[:name], el.value]
         "[^#{el.options[:name]}]"
       end
 
@@ -382,7 +382,7 @@ module Kramdown
         res = ''
         @footnotes.each do |name, data|
           res << "[^#{name}]:\n"
-          res << inner(data[:content]).chomp.split(/\n/).map {|l| "    #{l}"}.join("\n") + "\n\n"
+          res << inner(data).chomp.split(/\n/).map {|l| "    #{l}"}.join("\n") + "\n\n"
         end
         res
       end

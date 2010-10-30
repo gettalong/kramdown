@@ -277,7 +277,7 @@ module Kramdown
       def convert_footnote(el, indent)
         number = @footnote_counter
         @footnote_counter += 1
-        @footnotes << [el.options[:name], @root.options[:footnotes][el.options[:name]]]
+        @footnotes << [el.options[:name], el.value]
         "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{number}</a></sup>"
       end
 
@@ -392,7 +392,7 @@ module Kramdown
         ol.attr['start'] = @footnote_start if @footnote_start != 1
         @footnotes.each do |name, data|
           li = Element.new(:li, nil, {'id' => "fn:#{name}"})
-          li.children = Marshal.load(Marshal.dump(data[:content].children))
+          li.children = Marshal.load(Marshal.dump(data.children))
           ol.children << li
 
           ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
