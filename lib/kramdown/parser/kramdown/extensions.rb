@@ -154,7 +154,7 @@ module Kramdown
       # location.
       def parse_block_extensions
         if @src.scan(ALD_START)
-          parse_attribute_list(@src[2], @root.options[:ald][@src[1]] ||= Utils::OrderedHash.new)
+          parse_attribute_list(@src[2], @alds[@src[1]] ||= Utils::OrderedHash.new)
           @tree.children << Element.new(:eob, :ald)
           true
         elsif @src.check(EXT_BLOCK_START)

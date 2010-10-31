@@ -79,9 +79,9 @@ module Kramdown
 
         reset_env
 
-        @root.options[:ald] = {}
         @root.options[:link_defs] = {}
         @root.options[:abbrev_defs] = {}
+        @alds = {}
         @footnotes = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
@@ -253,7 +253,7 @@ module Kramdown
       # +ial+ and all referenced ALDs.
       def update_attr_with_ial(attr, ial)
         ial[:refs].each do |ref|
-          update_attr_with_ial(attr, ref) if ref = @root.options[:ald][ref]
+          update_attr_with_ial(attr, ref) if ref = @alds[ref]
         end if ial[:refs]
         ial.each do |k,v|
           if k == IAL_CLASS_ATTR
