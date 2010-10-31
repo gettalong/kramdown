@@ -33,8 +33,8 @@ module Kramdown
       def parse_link_definition
         @src.pos += @src.matched_size
         link_id, link_url, link_title = @src[1].downcase, @src[2] || @src[3], @src[5]
-        warning("Duplicate link ID '#{link_id}' - overwriting") if @root.options[:link_defs][link_id]
-        @root.options[:link_defs][link_id] = [link_url, link_title]
+        warning("Duplicate link ID '#{link_id}' - overwriting") if @link_defs[link_id]
+        @link_defs[link_id] = [link_url, link_title]
         @tree.children << Element.new(:eob, :link_def)
         true
       end
@@ -92,8 +92,8 @@ module Kramdown
         # reference style link or no link url
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
           link_id = (@src[1] || alt_text.gsub(/(\s|\n)+/, ' ').gsub(LINK_ID_NON_CHARS, '')).downcase
-          if @root.options[:link_defs].has_key?(link_id)
-            add_link(el, @root.options[:link_defs][link_id].first, @root.options[:link_defs][link_id].last, alt_text)
+          if @link_defs.has_key?(link_id)
+            add_link(el, @link_defs[link_id].first, @link_defs[link_id].last, alt_text)
           else
             warning("No link definition for link ID '#{link_id}' found")
             @src.pos = reset_pos

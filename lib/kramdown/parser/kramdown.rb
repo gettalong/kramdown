@@ -79,9 +79,9 @@ module Kramdown
 
         reset_env
 
-        @root.options[:link_defs] = {}
         @root.options[:abbrev_defs] = {}
         @alds = {}
+        @link_defs = {}
         @footnotes = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :table, :atx_header,
