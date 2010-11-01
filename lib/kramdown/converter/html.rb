@@ -186,9 +186,9 @@ module Kramdown
           "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
-          output << ' '*indent if @stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw
+          output << ' '*indent if @stack.last.type != :html_element || @stack.last.options[:content_model] != :raw
           output << "<#{el.value}#{html_attributes(el.attr)}"
-          if !res.empty? && el.options[:parse_type] != :block
+          if !res.empty? && el.options[:content_model] != :block
             output << ">#{res}</#{el.value}>"
           elsif !res.empty?
             output << ">\n#{res.chomp}\n"  << ' '*indent << "</#{el.value}>"
@@ -197,13 +197,13 @@ module Kramdown
           else
             output << " />"
           end
-          output << "\n" if @stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw
+          output << "\n" if @stack.last.type != :html_element || @stack.last.options[:content_model] != :raw
           output
         end
       end
 
       def convert_xml_comment(el, indent)
-        if el.options[:category] == :block && (@stack.last.type != :html_element || @stack.last.options[:parse_type] != :raw)
+        if el.options[:category] == :block && (@stack.last.type != :html_element || @stack.last.options[:content_model] != :raw)
           ' '*indent << el.value << "\n"
         else
           el.value

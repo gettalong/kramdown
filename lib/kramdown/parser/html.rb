@@ -46,17 +46,17 @@ module Kramdown
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
 
-        HTML_PARSE_AS_BLOCK = %w{applet button blockquote body colgroup dd div dl fieldset form iframe li
-                               map noscript object ol table tbody thead tfoot tr td ul}
-        HTML_PARSE_AS_SPAN  = %w{a abbr acronym address b bdo big cite caption del dfn dt em
-                               h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc
-                               rp rt rtc ruby samp select small span strong sub sup th tt var}
-        HTML_PARSE_AS_RAW   = %w{script math option textarea pre code}
+        HTML_CONTENT_MODEL_BLOCK = %w{applet button blockquote body colgroup dd div dl fieldset
+             form iframe li map noscript object ol table tbody thead tfoot tr td ul}
+        HTML_CONTENT_MODEL_SPAN  = %w{a abbr acronym address b bdo big cite caption del dfn dt em
+             h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc
+             rp rt rtc ruby samp select small span strong sub sup th tt var}
+        HTML_CONTENT_MODEL_RAW   = %w{script math option textarea pre code}
 
-        HTML_PARSE_AS = Hash.new {|h,k| h[k] = :raw}
-        HTML_PARSE_AS_BLOCK.each {|i| HTML_PARSE_AS[i] = :block}
-        HTML_PARSE_AS_SPAN.each {|i| HTML_PARSE_AS[i] = :span}
-        HTML_PARSE_AS_RAW.each {|i| HTML_PARSE_AS[i] = :raw}
+        HTML_CONTENT_MODEL = Hash.new {|h,k| h[k] = :raw}
+        HTML_CONTENT_MODEL_BLOCK.each {|i| HTML_CONTENT_MODEL[i] = :block}
+        HTML_CONTENT_MODEL_SPAN.each {|i| HTML_CONTENT_MODEL[i] = :span}
+        HTML_CONTENT_MODEL_RAW.each {|i| HTML_CONTENT_MODEL[i] = :raw}
 
         # Some HTML elements like script belong to both categories (i.e. are valid in block and
         # span HTML) and don't appear therefore!
@@ -205,7 +205,7 @@ module Kramdown
                       else parent.type.to_s
                       end
                     end
-            el.options.replace({:category => HTML_PARSE_AS_SPAN.include?(ptype) ? :span : :block})
+            el.options.replace({:category => (HTML_CONTENT_MODEL[ptype] == :span ? :span : :block)})
             return
           when :html_element
           when :root
@@ -272,7 +272,7 @@ module Kramdown
 
         def process_html_element(el, do_conversion = true, preserve_text = false)
           el.options.replace(:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
-                             :parse_type => HTML_PARSE_AS[el.value])
+                             :content_model => HTML_CONTENT_MODEL[el.value])
           process_children(el, do_conversion, preserve_text)
         end
 

@@ -28,34 +28,34 @@ module Kramdown
 
       include Kramdown::Parser::Html::Parser
 
-      # Mapping of markdown attribute value to parse type. I.e. :raw when "0", :default when "1"
-      # (use default parsing mode for HTML element), :span when "span", :block when block and
+      # Mapping of markdown attribute value to content model. I.e. :raw when "0", :default when "1"
+      # (use default content model for the HTML element), :span when "span", :block when block and
       # for everything else +nil+ is returned.
-      HTML_PARSE_TYPE = {"0" => :raw, "1" => :default, "span" => :span, "block" => :block}
+      HTML_MARKDOWN_ATTR_MAP = {"0" => :raw, "1" => :default, "span" => :span, "block" => :block}
 
       TRAILING_WHITESPACE = /[ \t]*\n/
 
       def handle_kramdown_html_tag(el, closed)
         el.options[:ial] = @block_ial if @block_ial
 
-        parse_type = if @tree.type != :html_element || @tree.options[:parse_type] != :raw
-                       (@options[:parse_block_html] ? HTML_PARSE_AS[el.value] : :raw)
-                     else
-                       :raw
-                     end
-        if val = HTML_PARSE_TYPE[el.attr.delete('markdown')]
-          parse_type = (val == :default ? HTML_PARSE_AS[el.value] : val)
+        content_model = if @tree.type != :html_element || @tree.options[:content_model] != :raw
+                          (@options[:parse_block_html] ? HTML_CONTENT_MODEL[el.value] : :raw)
+                        else
+                          :raw
+                        end
+        if val = HTML_MARKDOWN_ATTR_MAP[el.attr.delete('markdown')]
+          content_model = (val == :default ? HTML_CONTENT_MODEL[el.value] : val)
         end
 
-        @src.scan(TRAILING_WHITESPACE) if parse_type == :block
-        el.options[:parse_type] = parse_type
+        @src.scan(TRAILING_WHITESPACE) if content_model == :block
+        el.options[:content_model] = content_model
 
         if !closed
-          if parse_type == :block
+          if content_model == :block
             if !parse_blocks(el)
               warning("Found no end tag for '#{el.value}' - auto-closing it")
             end
-          elsif parse_type == :span
+          elsif content_model == :span
             curpos = @src.pos
             if result = @src.scan_until(/(?=<\/#{el.value}\s*>)/m)
               add_text(extract_string(curpos...@src.pos, @src), el)
@@ -68,7 +68,7 @@ module Kramdown
           else
             parse_raw_html(el, &method(:handle_kramdown_html_tag))
           end
-          @src.scan(TRAILING_WHITESPACE) unless (@tree.type == :html_element && @tree.options[:parse_type] == :raw)
+          @src.scan(TRAILING_WHITESPACE) unless (@tree.type == :html_element && @tree.options[:content_model] == :raw)
         end
       end
 
@@ -130,20 +130,20 @@ module Kramdown
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
-          do_parsing = (HTML_PARSE_AS_RAW.include?(@src[1]) || @tree.options[:parse_type] == :raw ? false : @options[:parse_span_html])
-          if val = HTML_PARSE_TYPE[attrs.delete('markdown')]
+          do_parsing = (HTML_CONTENT_MODEL[@src[1]] == :raw || @tree.options[:content_model] == :raw ? false : @options[:parse_span_html])
+          if val = HTML_MARKDOWN_ATTR_MAP[attrs.delete('markdown')]
             if val == :block
               warning("Cannot use block-level parsing in span-level HTML tag - using default mode")
             elsif val == :span
               do_parsing = true
             elsif val == :default
-              do_parsing = !HTML_PARSE_AS_RAW.include?(@src[1])
+              do_parsing = HTML_CONTENT_MODEL[@src[1]] != :raw
             elsif val == :raw
               do_parsing = false
             end
           end
 
-          el = Element.new(:html_element, @src[1], attrs, :category => :span, :parse_type => (do_parsing ? :span : :raw))
+          el = Element.new(:html_element, @src[1], attrs, :category => :span, :content_model => (do_parsing ? :span : :raw))
           @tree.children << el
           stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
           if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
