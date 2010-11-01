@@ -30,8 +30,8 @@ kramdown comes with a small benchmark to test how fast it is in regard to four o
 implementations: Maruku, BlueFeather, BlueCloth and RDiscount. The first two are written using only
 Ruby, the latter two use the C discount library for the actual hard work (which makes them really
 fast but they do not provide additional syntax elements). As one can see below, kramdown is
-currently (June 2010) ~4x faster than Maruku, ~9x faster than BlueFeather but ~30x slower than
-BlueCloth and rdiscount:
+currently (November 2010) ~3-4x faster than Maruku, ~4-5x faster than BlueFeather but ~30x slower
+than BlueCloth and rdiscount:
 
 <pre><code>
 {execute_cmd: {command: "ruby -Ilib -rubygems benchmark/benchmark.rb", process_output: false, escape_html: true}}
@@ -41,11 +41,12 @@ BlueCloth and rdiscount:
 And here are some graphs which show the execution times of the various kramdown releases on
 different Ruby interpreters:
 
-![ruby 1.8.6]({relocatable: img/graph-ruby-1.8.6.png})
-![ruby 1.8.7]({relocatable: img/graph-ruby-1.8.7.png})
-![ruby 1.9.1p243]({relocatable: img/graph-ruby-1.9.1p243.png})
-![ruby 1.9.2dev]({relocatable: img/graph-ruby-1.9.2dev.png})
-![jruby 1.4.0]({relocatable: img/graph-jruby-1.4.0.png})
+![ruby 1.8.5p231]({relocatable: img/graph-ruby-1.8.5-231.png})
+![ruby 1.8.6p399]({relocatable: img/graph-ruby-1.8.6-399.png})
+![ruby 1.8.7p249]({relocatable: img/graph-ruby-1.8.7-249.png})
+![ruby 1.8.7p302]({relocatable: img/graph-ruby-1.8.7-302.png})
+![ruby 1.9.2p0]({relocatable: img/graph-ruby-1.9.2p0-0.png})
+![jruby 1.5.3]({relocatable: img/graph-jruby-1.5.3-249.png})
 
 [Markdown Test Suite]: http://daringfireball.net/projects/downloads/MarkdownTest_1.0.zip
 [MDTest]: http://www.michelf.com/docs/projets/mdtest-1.0.zip
