@@ -52,13 +52,14 @@ module Kramdown
   #   doc = Kramdown::Document.new('This *is* some kramdown text')
   #   puts doc.to_html
   #
-  # The #to_html method is a shortcut for using the Converter::Html class.
+  # The #to_html method is a shortcut for using the Converter::Html class. See #method_missing for
+  # more information.
   #
   # The second argument to the ::new method is an options hash for customizing the behaviour of the
-  # used parser and the converter. See Document::new for more information!
+  # used parser and the converter. See ::new for more information!
   class Document
 
-    # The root element of the element tree. It is immediately available after the #new method has
+    # The root Element of the element tree. It is immediately available after the ::new method has
     # been called.
     attr_accessor :root
 
@@ -117,9 +118,25 @@ module Kramdown
   # kramdown only uses this one class for representing all available elements in an element tree
   # (paragraphs, headers, emphasis, ...). The type of element can be set via the #type accessor.
   #
-  # == \Element Descriptions
+  # Following is a description of all supported element types.
   #
-  # Following is a list of all supported element types.
+  # == Structural Elements
+  #
+  # === :root
+  #
+  # [Category] None
+  # [Usage context] As the root element of a document
+  # [Content model] Block-level elements
+  #
+  # Represents the root of a kramdown document.
+  #
+  # The root element contains the following option keys:
+  #
+  # <tt>:encoding</tt>:: When running on Ruby 1.9 this key has to be set to the encoding used for
+  #                      the text parts of the kramdown document.
+  #
+  # <tt>:abbrev_defs</tt>:: This key may be used to store the mapping of abbreviation to
+  #                         abbreviation definition.
   #
   #
   # === :blank
@@ -233,6 +250,15 @@ module Kramdown
   # Represents the definition part of a term-definition group in a definition list.
   #
   #
+  # === :hr
+  #
+  # [Category] Block-level element
+  # [Usage context] Where block-level elements are expected
+  # [Content model] None
+  #
+  # Represents a horizontal line.
+  #
+  #
   # === :table
   #
   # [Category] Block-level element
@@ -294,31 +320,245 @@ module Kramdown
   # Represents a table cell.
   #
   #
-  #
-  #
-  #
-  # === :a
-  # === :text
-  # === :hr
-  # === :html_element
-  # === :xml_comment
-  # === :xml_pi
-  # === :html_doctype
-  # === :comment
-  # === :br
-  # === :a
-  # === :img
-  # === :codespan
-  # === :footnote
-  # === :raw
-  # === :em
-  # === :convert_strong
-  # === :entity
-  # === :typographic_sym
-  # === :smart_quote
   # === :math
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements are expected
+  # [Content model] None
+  #
+  # Represents mathematical text that is written in LaTeX.
+  #
+  # The +value+ field has to contain the actual mathematical text.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the context where the element is used.
+  #
+  #
+  # == Text Markup Elements
+  #
+  # === :text
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents text.
+  #
+  # The +value+ field has to contain the text itself.
+  #
+  #
+  # === :br
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a hard line break.
+  #
+  #
+  # === :a
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] Span-level elements
+  #
+  # Represents a link to an URL.
+  #
+  # The attribute +href+ has to be set to the URL to which the link points. The attribute +title+
+  # optionally contains the title of the link.
+  #
+  #
+  # === :img
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents an image.
+  #
+  # The attribute +src+ has to be set to the URL of the image. The attribute +alt+ has to contain a
+  # text description of the image. The attribute +title+ optionally contains the title of the image.
+  #
+  #
+  # === :codespan
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents verbatim text.
+  #
+  # The +value+ field has to contain the content of the code span.
+  #
+  #
+  # === :footnote
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a footnote marker.
+  #
+  # The +value+ field has to contain an element whose children are the content of the footnote. The
+  # option <tt>:name</tt> has to contain a valid and unique footnote name. A valid footnote name
+  # consists of a word character or a digit and then optionally followed by other word characters,
+  # digits or dashes.
+  #
+  #
+  # === :em
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] Span-level elements
+  #
+  # Represents emphasis of its contents.
+  #
+  #
+  # === :strong
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] Span-level elements
+  #
+  # Represents strong importance for its contents.
+  #
+  #
+  # === :entity
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents an HTML entity.
+  #
+  # The +value+ field has to contain an instance of Kramdown::Utils::Entities::Entity. The option
+  # <tt>:original</tt> can be used to store the original representation of the entity.
+  #
+  #
+  # === :typographic_sym
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a typographic symbol.
+  #
+  # The +value+ field needs to contain a Symbol representing the specific typographic symbol from
+  # the following list:
+  #
+  # <tt>:mdash</tt>:: An mdash character (---)
+  # <tt>:ndash</tt>:: An ndash character (--)
+  # <tt>:hellip</tt>:: An ellipsis (...)
+  # <tt>:laquo</tt>:: A left guillemet (<<)
+  # <tt>:raquo</tt>:: A right guillemet (>>)
+  # <tt>:laquo_space</tt>:: A left guillemet with a space (<< )
+  # <tt>:raquo_space</tt>:: A right guillemet with a space ( >>)
+  #
+  #
+  # === :smart_quote
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a quotation character.
+  #
+  # The +value+ field needs to contain a Symbol representing the specific quotation character:
+  #
+  # <tt>:lsquo</tt>:: Left single quote
+  # <tt>:rsquo</tt>:: Right single quote
+  # <tt>:ldquo</tt>:: Left double quote
+  # <tt>:rdquo</tt>:: Right double quote
+  #
+  #
   # === :abbreviation
-  # === :root
+  #
+  # [Category] Span-level element
+  # [Usage context] Where span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a text part that is an abbreviation.
+  #
+  # The +value+ field has to contain the text part that is the abbreviation. The definition of the
+  # abbreviation is stored in the <tt>:root</tt> element of the document.
+  #
+  #
+  # == Other Elements
+  #
+  # === :html_element
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements or raw HTML elements are expected
+  # [Content model] Depends on the element
+  #
+  # Represents an HTML element.
+  #
+  # The +value+ field has to contain the name of the HTML element the element is representing.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the whether the element is a block-level or a span-level element. The option
+  # <tt>:content_model</tt> has to be set to the content model for the element (either
+  # <tt>:block</tt> if it contains block-level elements, <tt>:span</tt> if it contains span-level
+  # elements or <tt>:raw</tt> if it contains raw content).
+  #
+  #
+  # === :xml_comment
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements are expected or in raw HTML elements
+  # [Content model] None
+  #
+  # Represents an XML/HTML comment.
+  #
+  # The +value+ field has to contain the whole XML/HTML comment including the delimiters.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the context where the element is used.
+  #
+  #
+  # === :xml_pi
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements are expected or in raw HTML elements
+  # [Content model] None
+  #
+  # Represents an XML/HTML processing instruction.
+  #
+  # The +value+ field has to contain the whole XML/HTML processing instruction including the
+  # delimiters.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the context where the element is used.
+  #
+  #
+  # === :comment
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a comment.
+  #
+  # The +value+ field has to contain the comment.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the context where the element is used.
+  #
+  #
+  # === :raw
+  #
+  # [Category] Block/span-level element
+  # [Usage context] Where block/span-level elements are expected
+  # [Content model] None
+  #
+  # Represents a raw string that should not be modified. For example, the element could contain some
+  # HTML code that should be output as-is without modification and escaping.
+  #
+  # The +value+ field has to contain the actual raw text.
+  #
+  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
+  # depending on the context where the element is used. The option <tt>:type</tt> can be set to an
+  # array of strings to define for which converters the raw string is valid.
   class Element
 
     # A symbol representing the element type. For example, <tt>:p</tt> or <tt>:blockquote</tt>.
