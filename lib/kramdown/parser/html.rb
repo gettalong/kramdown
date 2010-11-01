@@ -193,7 +193,7 @@ module Kramdown
         # Convert the element +el+ and its children.
         def process(el, do_conversion = true, preserve_text = false, parent = nil)
           case el.type
-          when :xml_comment, :xml_pi, :html_doctype
+          when :xml_comment, :xml_pi
             ptype = if parent.nil?
                       'div'
                     else
@@ -487,7 +487,7 @@ module Kramdown
           if result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/)
             @tree.children << Element.new(:xml_pi, result.strip, nil, :category => :block)
           elsif result = @src.scan(/\s*#{HTML_DOCTYPE_RE}/)
-            @tree.children << Element.new(:html_doctype, result.strip)
+            # ignore the doctype
           elsif result = @src.scan(/\s*#{HTML_COMMENT_RE}/)
             @tree.children << Element.new(:xml_comment, result.strip, nil, :category => :block)
           else

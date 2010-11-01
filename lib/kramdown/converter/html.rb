@@ -210,7 +210,6 @@ module Kramdown
         end
       end
       alias :convert_xml_pi :convert_xml_comment
-      alias :convert_html_doctype :convert_xml_comment
 
       def convert_table(el, indent)
         if el.options[:alignment].all? {|a| a == :default}

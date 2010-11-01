@@ -170,10 +170,9 @@ module Kramdown
       end
 
       def convert_xml_pi(el, opts)
-        warning("Can't convert XML PI/HTML document type")
+        warning("Can't convert XML PI")
         ''
       end
-      alias :convert_html_doctype :convert_xml_pi
 
       TABLE_ALIGNMENT_CHAR = {:default => 'l', :left => 'l', :center => 'c', :right => 'r'} # :nodoc:
 

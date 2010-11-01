@@ -353,10 +353,8 @@ module Kramdown
       "<kd:#{@type}#{@value.nil? ? '' : ' ' + @value.inspect} #{@attr.inspect}#{options.empty? ? '' : ' ' + @options.inspect}#{@children.empty? ? '' : ' ' + @children.inspect}>"
     end
 
-
     CATEGORY = {} # :nodoc:
-    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :dl, :table,
-     :hr, :html_doctype].each {|b| CATEGORY[b] = :block}
+    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :dl, :table, :hr].each {|b| CATEGORY[b] = :block}
     [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
      :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span}
 

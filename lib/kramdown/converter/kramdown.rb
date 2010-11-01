@@ -218,10 +218,6 @@ module Kramdown
       end
       alias :convert_xml_pi :convert_xml_comment
 
-      def convert_html_doctype(el, opts)
-        "{::nomarkdown}\n#{el.value}\n{:/nomarkdown}\n"
-      end
-
       def convert_table(el, opts)
         opts[:alignment] = el.options[:alignment]
         inner(el, opts)
