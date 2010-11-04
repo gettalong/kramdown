@@ -503,6 +503,9 @@ module Kramdown
         253 => ['\\\'y'],
         254 => ['\thorn', 'wasysym'],
         255 => ['\"y'],
+        8201 => ['\thinspace'],
+        8194 => ['\hskip .5em\relax'],
+        8195 => ['\quad'],
       } # :nodoc:
       ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k] = v.unshift(v.shift + '{}')}
 

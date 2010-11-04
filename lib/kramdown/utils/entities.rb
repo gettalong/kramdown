@@ -310,6 +310,10 @@ module Kramdown
                       [156, 339],
                       [158, 382],
                       [159, 376],
+
+                      [8194, 'ensp'],
+                      [8195, 'emsp'],
+                      [8201, 'thinsp'],
                      ]
 
       # Contains the mapping of code point (or name) to the actual Entity object.
