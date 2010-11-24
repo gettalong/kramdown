@@ -260,7 +260,12 @@ module Kramdown
                         elsif %w{mdash ndash hellip laquo raquo}.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
-                          Element.new(:entity, entity(val), nil, :original => src.matched)
+                          begin
+                            Element.new(:entity, entity(val), nil, :original => src.matched)
+                          rescue ::Kramdown::Error
+                            src.pos -= src.matched_size - 1
+                            Element.new(:entity, ::Kramdown::Utils::Entities.entity('amp'))
+                          end
                         end
             else
               result << Element.new(:text, src.rest)

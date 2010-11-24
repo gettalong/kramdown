@@ -13,7 +13,9 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 0 bug fix:
+* 1 bug fix:
+
+  - Fixed error when parsing unknown named entities (reported by David Doolin)
 
 * 0 deprecation note:
 
