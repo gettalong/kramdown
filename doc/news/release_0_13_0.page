@@ -13,13 +13,15 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 4 bug fixes:
+* 5 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
   - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
   - Block HTML line was incorrectly recognized as table line (reported by Piotr Szotkowski)
   - Fixed bug RF#28809: Empty `<a>` tags are were output as self-closed tags (reported by Tim
     Cuthbertson)
+  - Fixed bug RF#28785: Name of default template in documentation for `template` option was false
+    (reported by Matthew Bennink)
 
 * 0 deprecation note:
 

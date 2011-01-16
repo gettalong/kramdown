@@ -141,7 +141,7 @@ file still cannot be found, the templates name is interpreted as a
 template name that is provided by kramdown (without the converter
 extension).
 
-kramdown provides a default template named 'default' for each converter.
+kramdown provides a default template named 'document' for each converter.
 
 Default: ''
 Used by: all converters
