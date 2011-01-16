@@ -279,17 +279,6 @@ Default: :as_char
 Used by: HTML converter, kramdown converter
 EOF
 
-    define(:toc_depth, Integer, -1, <<EOF)
-DEPRECATED: Defines the maximum level of headers which will be used to generate the table of
-contents. For instance, with a value of 2, toc entries will be generated for h1
-and h2 headers but not for h3, h4, etc. A value of 0 uses all header levels.
-
-Use option toc_levels instead!
-
-Default: -1
-Used by: HTML/Latex converter
-EOF
-
     define(:toc_levels, Object, (1..6).to_a, <<EOF) do |val|
 Defines the levels that are used for the table of contents
 

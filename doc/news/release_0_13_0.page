@@ -23,7 +23,10 @@ modified_at: 2010-11-01 09:50:00 +02:00
   - Fixed bug RF#28785: Name of default template in documentation for `template` option was false
     (reported by Matthew Bennink)
 
-* 0 deprecation note:
+* 1 deprecation note:
+
+  - Removed deprecated option `toc_depth` -- use the option `toc_levels` instead.
+
 
 
 

@@ -132,12 +132,7 @@ module Kramdown
       # Return +true+ if the header element +el+ should be used for the table of contents (as
       # specified by the +toc_levels+ option).
       def in_toc?(el)
-        if @options[:toc_depth] >= 0
-          warn('Option toc_depth is deprecated, use the new option toc_levels instead')
-          @options[:toc_depth] == 0 || el.options[:level] <= @options[:toc_depth]
-        else
-          @options[:toc_levels].include?(el.options[:level])
-        end
+        @options[:toc_levels].include?(el.options[:level])
       end
 
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
