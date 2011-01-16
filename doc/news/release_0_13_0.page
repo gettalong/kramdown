@@ -13,10 +13,11 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 2 bug fixes:
+* 3 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
   - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
+  - Block HTML line was incorrectly recognized as table line (reported by Piotr Szotkowski)
 
 * 0 deprecation note:
 
