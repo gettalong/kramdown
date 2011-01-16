@@ -13,9 +13,10 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 1 bug fix:
+* 2 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
+  - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
 
 * 0 deprecation note:
 
