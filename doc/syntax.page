@@ -1144,6 +1144,16 @@ The link definition has the following structure:
 > allowed for consistency with the inline title.
 {: .markdown-difference}
 
+If you have some text that looks like a link definition but should really be a link and some text,
+you can escape the colon after the link identifier:
+
+    The next paragraph contains a link and some text.
+
+    [Room 100]\: There you should find everything you need!
+
+    [Room 100]: link_to_room_100.html
+
+
 ### Images
 
 Images can be specified via a syntax that is similar to the one used by links. The difference is
