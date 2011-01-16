@@ -13,7 +13,7 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 5 bug fixes:
+* 6 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
   - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
@@ -22,6 +22,8 @@ modified_at: 2010-11-01 09:50:00 +02:00
     Cuthbertson)
   - Fixed bug RF#28785: Name of default template in documentation for `template` option was false
     (reported by Matthew Bennink)
+  - Fixed bug RF#28769: span extension in list item wrongly triggered list item IAL parser (reported
+    by Yann Esposito)
 
 * 1 deprecation note:
 
