@@ -13,7 +13,7 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 minor changes:
 
-* 7 bug fixes:
+* 8 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
   - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
@@ -26,6 +26,7 @@ modified_at: 2010-11-01 09:50:00 +02:00
     by Yann Esposito)
   - The table row parser has been fixed so that it does not use pipes which appear in `<code>` tags
     as cell separators anymore (like it is done with the native code span syntax)
+  - Fixed bug where converting `<em>` and `<strong>` tags to native elements was wrongly done
 
 * 1 deprecation note:
 

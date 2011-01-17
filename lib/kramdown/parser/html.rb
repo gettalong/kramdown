@@ -344,14 +344,19 @@ module Kramdown
           end
         end
 
-        def convert_b(el)
-          set_basics(el, :strong)
-          process_children(el)
+        EMPHASIS_TYPE_MAP = {'em' => :em, 'i' => :em, 'strong' => :strong, 'b' => :strong}
+        def convert_em(el)
+          text = ''
+          extract_text(el, text)
+          if text =~ /\A\s/ || text =~ /\s\z/
+            process_html_element(el, false)
+          else
+            set_basics(el, EMPHASIS_TYPE_MAP[el.value])
+            process_children(el)
+          end
         end
-
-        def convert_i(el)
-          set_basics(el, :em)
-          process_children(el)
+        %w{b strong i}.each do |i|
+          alias_method("convert_#{i}".to_sym, :convert_em)
         end
 
         def convert_h1(el)
