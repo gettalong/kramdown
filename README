@@ -25,6 +25,9 @@ kramdown has a basic *Cloth API, so using kramdown is as easy as
 
 For detailed information have a look at the API documentation of the Kramdown::Document class.
 
+The full API documentation is available at http://kramdown.rubyforge.org/rdoc/, other sites with an
+API documentation for kramdown probably don't provide the complete documentation!
+
 
 == Development
 

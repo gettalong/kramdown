@@ -18,6 +18,30 @@ begin
   gem 'rdoc' if RUBY_VERSION >= '1.9'
   require 'rdoc/task'
   require 'rdoc/rdoc'
+
+  class RDoc::RDoc
+
+    alias :old_parse_files :parse_files
+
+    def parse_files(options)
+      file_info = old_parse_files(options)
+      require 'kramdown/options'
+
+      # Add options documentation to Kramdown::Options module
+      opt_module = RDoc::TopLevel.all_classes_and_modules.find {|m| m.full_name == 'Kramdown::Options'}
+      opt_defs = Kramdown::Options.definitions.sort.collect do |n, definition|
+        desc = definition.desc.split(/\n/).map {|l| "    #{l}"}
+        desc[-2] = []
+        desc = desc.join("\n")
+        "[<tt>#{n}</tt> (type: #{definition.type}, default: #{definition.default.inspect})]\n#{desc}\n\n"
+      end
+      opt_module.comment << "\n== Available Options\n\n" << opt_defs.join("\n\n")
+
+      file_info
+    end
+
+  end
+
 rescue LoadError
 end
 
