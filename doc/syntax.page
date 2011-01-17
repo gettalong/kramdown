@@ -688,12 +688,12 @@ There are four different line types that can be used in a table:
 
   A table row is any line that contains at least one pipe character and is not identified as any
   other type of table line! The table row is divided into individual table cells by pipe characters.
-  An optional trailing pipe character is ignored.
+  An optional trailing pipe character is ignored. Note that literal pipe characters need to be
+  escaped *except* if they occur in code spans or HTML `<code>` elements!
 
   Header rows, footer rows and normal rows are all done using these table rows. Table cells can only
   contain a single line of text, no multi-line text is supported. The text of a table cell is parsed
-  as span-level elements. Note that literal pipe characters need to be escaped except if they occur
-  in code spans!
+  as span-level elements.
 
   Here are some example table rows:
 

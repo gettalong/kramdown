@@ -72,30 +72,35 @@ module Kramdown
           elsif @src.scan(TABLE_ROW_LINE)
             trow = Element.new(:tr)
 
-            # parse possible code spans on the line
+            # parse possible code spans on the line and correctly split the line into cells
             env = save_env
-            reset_env(:src => StringScanner.new(@src[1] + ' '))
-            root = Element.new(:root)
-            parse_spans(root, nil, [:codespan])
-            restore_env(env)
-
-            # correctly split the line into cells
             cells = []
-            root.children.each do |c|
-              if c.type == :raw_text
-                # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
-                f, *l = c.value.split(/\\\|/).map {|t| t.split(/\|/)}.inject([]) do |memo, t|
-                  memo.last << "|" << t.shift if memo.size > 0
-                  memo.concat(t)
-                end
-                (cells.empty? ? cells : cells.last) << f
-                cells.concat(l)
+            (@src[1] + ' ').split(/(<code.*?>.*?<\/code>)/).each_with_index do |str, i|
+              if i % 2 == 1
+                (cells.empty? ? cells : cells.last) << str
               else
-                delim = (c.value.scan(/`+/).max || '') + '`'
-                tmp = "#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
-                (cells.empty? ? cells : cells.last) << tmp
+                reset_env(:src => StringScanner.new(str))
+                root = Element.new(:root)
+                parse_spans(root, nil, [:codespan])
+
+                root.children.each do |c|
+                  if c.type == :raw_text
+                    # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
+                    f, *l = c.value.split(/\\\|/).map {|t| t.split(/\|/)}.inject([]) do |memo, t|
+                      memo.last << "|" << t.shift if memo.size > 0
+                      memo.concat(t)
+                    end
+                    (cells.empty? ? cells : cells.last) << f
+                    cells.concat(l)
+                  else
+                    delim = (c.value.scan(/`+/).max || '') + '`'
+                    tmp = "#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
+                    (cells.empty? ? cells : cells.last) << tmp
+                  end
+                end
               end
             end
+            restore_env(env)
 
             cells.shift if leading_pipe && cells.first.strip.empty?
             cells.pop if cells.last.strip.empty?

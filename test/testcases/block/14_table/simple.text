@@ -15,6 +15,11 @@ Escaped pipe characters
 | cell1          | cell2 \|
 | cell1 `|` con | cell2
 
+Table with code elements
+
+| This is a <code>span | with</code> a pipe.
+| Some <em>span | </em> here | a <code>span | with</code> a | pipe.
+
 {:.cls}
 | table | with | ial
 
