@@ -84,7 +84,7 @@ module Kramdown
         if el.children.size == 1 && el.children.first.type == :img && !(img = convert_img(el.children.first, opts)).empty?
           convert_standalone_image(el, opts, img)
         else
-          "#{inner(el, opts)}\n\n"
+          "#{latex_link_target(el)}#{inner(el, opts)}\n\n"
         end
       end
 
@@ -92,20 +92,23 @@ module Kramdown
       # <tt>:img</tt> element.
       def convert_standalone_image(el, opts, img)
         attrs = attribute_list(el)
-        "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.attr['alt'])}}\n\\end{figure}#{attrs}\n"
+        "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.attr['alt'])}}\n#{latex_link_target(el, true)}\n\\end{figure}#{attrs}\n"
       end
 
       def convert_codeblock(el, opts)
         show_whitespace = el.attr['class'].to_s =~ /\bshow-whitespaces\b/
         lang = el.attr['lang']
         if show_whitespace || lang
-          result = "\\lstset{showspaces=%s,showtabs=%s}\n" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
-          result << "\\lstset{language=#{lang}}\n" if lang
-          result << "\\lstset{basicstyle=\\ttfamily\\footnotesize}\\lstset{columns=fixed,frame=tlbr}\n"
+          options = []
+          options << "showspaces=%s,showtabs=%s" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
+          options << "language=#{lang}" if lang
+          options << "basicstyle=\\ttfamily\\footnotesize,columns=fixed,frame=tlbr"
+          id = el.attr['id']
+          options << "label=#{id}" if id
           attrs = attribute_list(el)
-          result << "\\begin{lstlisting}#{attrs}\n#{el.value}\n\\end{lstlisting}#{attrs}\n"
+          "#{latex_link_target(el)}\\begin{lstlisting}[#{options.join(',')}]\n#{el.value}\n\\end{lstlisting}#{attrs}\n"
         else
-          "\\begin{verbatim}#{el.value}\\end{verbatim}\n"
+          "#{latex_link_target(el)}\\begin{verbatim}#{el.value}\\end{verbatim}\n"
         end
       end
 
@@ -117,7 +120,7 @@ module Kramdown
         type = @options[:latex_headers][el.options[:level] - 1]
         if ((id = el.attr['id']) ||
             (@options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) && in_toc?(el)
-          "\\hypertarget{#{id}}{}\\#{type}{#{inner(el, opts)}}\\label{#{id}}\n\n"
+          "\\#{type}{#{inner(el, opts)}}\\hypertarget{#{id}}{}\\label{#{id}}\n\n"
         else
           "\\#{type}*{#{inner(el, opts)}}\n\n"
         end
@@ -125,7 +128,7 @@ module Kramdown
 
       def convert_hr(el, opts)
         attrs = attribute_list(el)
-        "\\begin{center}#{attrs}\n\\rule{3in}{0.4pt}\n\\end{center}#{attrs}\n"
+        "#{latex_link_target(el)}\\begin{center}#{attrs}\n\\rule{3in}{0.4pt}\n\\end{center}#{attrs}\n"
       end
 
       def convert_ul(el, opts)
@@ -143,7 +146,7 @@ module Kramdown
       end
 
       def convert_li(el, opts)
-        "\\item #{inner(el, opts).sub(/\n+\Z/, '')}\n"
+        "\\item #{latex_link_target(el, true)}#{inner(el, opts).sub(/\n+\Z/, '')}\n"
       end
 
       def convert_dt(el, opts)
@@ -151,7 +154,7 @@ module Kramdown
       end
 
       def convert_dd(el, opts)
-        "#{inner(el, opts)}\n\n"
+        "#{latex_link_target(el)}#{inner(el, opts)}\n\n"
       end
 
       def convert_html_element(el, opts)
@@ -179,7 +182,7 @@ module Kramdown
       def convert_table(el, opts)
         align = el.options[:alignment].map {|a| TABLE_ALIGNMENT_CHAR[a]}.join('|')
         attrs = attribute_list(el)
-        "\\begin{tabular}{|#{align}|}#{attrs}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{tabular}#{attrs}\n\n"
+        "#{latex_link_target(el)}\\begin{tabular}{|#{align}|}#{attrs}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{tabular}#{attrs}\n\n"
       end
 
       def convert_thead(el, opts)
@@ -227,7 +230,7 @@ module Kramdown
           ''
         elsif !el.options.attr['src'].empty?
           @data[:packages] << 'graphicx'
-          "\\includegraphics{#{el.attr['src']}}"
+          "#{latex_link_target(el)}\\includegraphics{#{el.attr['src']}}"
         else
           warning("Cannot include image with empty path")
           ''
@@ -235,7 +238,7 @@ module Kramdown
       end
 
       def convert_codespan(el, opts)
-        "{\\tt #{escape(el.value)}}"
+        "{\\tt #{latex_link_target(el)}#{escape(el.value)}}"
       end
 
       def convert_footnote(el, opts)
@@ -252,11 +255,11 @@ module Kramdown
       end
 
       def convert_em(el, opts)
-        "\\emph{#{inner(el, opts)}}"
+        "\\emph{#{latex_link_target(el)}#{inner(el, opts)}}"
       end
 
       def convert_strong(el, opts)
-        "\\textbf{#{inner(el, opts)}}"
+        "\\textbf{#{latex_link_target(el)}#{inner(el, opts)}}"
       end
 
       # Inspired by Maruku: entity conversion table based on the one from htmltolatex
@@ -559,7 +562,18 @@ module Kramdown
       # environments.
       def latex_environment(type, el, text)
         attrs = attribute_list(el)
-        "\\begin{#{type}}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
+        "\\begin{#{type}}#{latex_link_target(el)}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
+      end
+
+      # Return a string containing a valid <tt>\hypertarget</tt> command if the element has an ID
+      # defined, or +nil+ otherwise. If the parameter +add_label+ is +true+, a <tt>\label</tt>
+      # command will also be used additionally to the <tt>\hypertarget</tt> command.
+      def latex_link_target(el, add_label = false)
+        if (id = el.attr['id'])
+          "\\hypertarget{#{id}}{}" << (add_label ? "\\label{#{id}}" : '')
+        else
+          nil
+        end
       end
 
       # Return a LaTeX comment containing all attributes as <tt>key="value"</tt> pairs.

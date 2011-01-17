@@ -34,12 +34,12 @@ feature is actually used:
 
 ## Hyper Targets and Links
 
-Headers which have an ID set (either manually or, if the option `auto_ids` is set to `true`, an
-automatically generated one -- for details on how the ID is generated see the [corresponding
+All elements which have an ID set (if the option `auto_ids` is set to `true`, an ID is automatically
+generated for header elements -- for details on how the ID is generated see the [corresponding
 section](html.html#auto-ids) of the HTML converter documentation) are available as hyper targets
-within the LaTeX document. And in-document links (those starting with `#`) are transformed into an
-hyper link. This means that when a PDF is generated from the LaTeX document, in-document links will
-work correctly.
+within the LaTeX document. All links (the in-document links starting with `#` and absolute links)
+are transformed automatically into hyper links. This means that when a PDF is generated from the
+LaTeX document, in-document as well as general links will work correctly.
 
 
 ## Code Blocks

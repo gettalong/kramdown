@@ -11,7 +11,10 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 major change:
 
-* 0 minor changes:
+* 1 minor change:
+
+  - The LaTeX converter now inserts `\hypertarget` commands for all elements that have an ID set.
+    The normal link syntax can be used to link to such targets (requested by David Doolin)
 
 * 8 bug fixes:
 
