@@ -466,6 +466,25 @@ module Kramdown
           end
           check_cells.call(el)
 
+          nr_cells = 0
+          check_nr_cells = lambda do |t|
+            if t.value == 'tr'
+              count = t.children.count {|cc| cc.value == 'th' || cc.value == 'td'}
+              if count != nr_cells
+                if nr_cells == 0
+                  nr_cells = count
+                else
+                  nr_cells = -1
+                  break
+                end
+              end
+            else
+              t.children.each {|cc| check_nr_cells.call(cc)}
+            end
+          end
+          check_nr_cells.call(el)
+          return false if nr_cells == -1
+
           check_rows = lambda do |t, type|
             t.children.all? {|r| (r.value == 'tr' || r.type == :text) && r.children.all? {|c| c.value == type || c.type == :text}}
           end
