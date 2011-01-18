@@ -390,8 +390,8 @@ module Kramdown
         34 => ['"'],
         39 => ['\''],
         169 => ['\copyright'],
-        60 => ['\textless{}'],
-        62 => ['\textgreater{}'],
+        60 => ['\textless'],
+        62 => ['\textgreater'],
         338 => ['\OE'],
         339 => ['\oe'],
         352 => ['\v{S}'],
@@ -510,17 +510,21 @@ module Kramdown
         8194 => ['\hskip .5em\relax'],
         8195 => ['\quad'],
       } # :nodoc:
-      ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k] = v.unshift(v.shift + '{}')}
+      ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k][0].insert(-1, '{}')}
 
-      def convert_entity(el, opts)
-        text, package = ENTITY_CONV_TABLE[el.value.code_point]
+      def entity_to_latex(entity)
+        text, package = ENTITY_CONV_TABLE[entity.code_point]
         if text
           @data[:packages] << package if package
           text
         else
-          warning("Couldn't find entity in substitution table!")
+          warning("Couldn't find entity with code #{entity.code_point} in substitution table!")
           ''
         end
+      end
+
+      def convert_entity(el, opts)
+        entity_to_latex(el.value)
       end
 
       TYPOGRAPHIC_SYMS = {
