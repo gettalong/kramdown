@@ -16,7 +16,7 @@ modified_at: 2010-11-01 09:50:00 +02:00
   - The LaTeX converter now inserts `\hypertarget` commands for all elements that have an ID set.
     The normal link syntax can be used to link to such targets (requested by David Doolin)
 
-* 8 bug fixes:
+* 9 bug fixes:
 
   - Fixed error when parsing unknown named entities (reported by David Doolin)
   - Added entity definitions for entities `&ensp;`, `&emsp;` and `&thinsp;` (patch by Damien Pollet)
@@ -30,6 +30,8 @@ modified_at: 2010-11-01 09:50:00 +02:00
   - The table row parser has been fixed so that it does not use pipes which appear in `<code>` tags
     as cell separators anymore (like it is done with the native code span syntax)
   - Fixed bug where converting `<em>` and `<strong>` tags to native elements was wrongly done
+  - Fixed calculation of cell alignment values when converting HTML tables to native ones, `<col/>`
+    tags are now correctly used
 
 * 1 deprecation note:
 

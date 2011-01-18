@@ -415,15 +415,25 @@ module Kramdown
           set_basics(el, :table)
           el.options[:alignment] = []
 
+          nr_cols = 0
           calc_alignment = lambda do |c|
-            if c.type == :tr && el.options[:alignment].empty?
-              el.options[:alignment] = [:default] * c.children.length
+            align = c.attr['align']
+            if c.type == :html_element && c.value == 'col' && (align.nil? || %w{left right center}.include?(align))
+              el.options[:alignment] << (align.nil? ? :default : align.to_sym)
+            elsif c.type == :tr
+              nr_cols = c.children.length
               break
             else
               c.children.each {|cc| calc_alignment.call(cc)}
             end
           end
           calc_alignment.call(el)
+          if el.options[:alignment].length > nr_cols
+            el.options[:alignment][nr_cols..-1] = []
+          else
+            el.options[:alignment] += [:default] * (nr_cols - el.options[:alignment].length)
+          end
+          el.children.delete_if {|c| c.type == :html_element}
 
           change_th_type = lambda do |c|
             if c.type == :th
@@ -461,7 +471,7 @@ module Kramdown
           end
           check_rows.call(el, 'td') ||
             (el.children.all? do |t|
-               t.type == :text || (t.value == 'thead' && check_rows.call(t, 'th')) ||
+               t.type == :text || t.value == 'col' || (t.value == 'thead' && check_rows.call(t, 'th')) ||
                  ((t.value == 'tfoot' || t.value == 'tbody') && check_rows.call(t, 'td'))
              end && el.children.any? {|t| t.value == 'tbody'})
         end
