@@ -536,10 +536,9 @@ module Kramdown
         TYPOGRAPHIC_SYMS[el.value]
       end
 
-      SMART_QUOTE_SYMS = {:lsquo => '`', :rsquo => '\'', :ldquo => '``', :rdquo => '\'\''} # :nodoc:
       def convert_smart_quote(el, opts)
-        res = SMART_QUOTE_SYMS[el.value]
-        res << "{}" if (nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote
+        res = entity_to_latex(smart_quote_entity(el)).chomp('{}')
+        res << "{}" if ((nel = opts[:parent].children[opts[:index]+1]) && nel.type == :smart_quote) || res =~ /\w$/
         res
       end
 

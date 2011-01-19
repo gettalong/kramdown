@@ -120,6 +120,31 @@ module Kramdown
     end
 
     # ----------------------------
+    # :section: Option Validators
+    #
+    # This sections contains all pre-defined option validators.
+    # ----------------------------
+
+    # Ensures that the option value +val+ for the option called +name+ is a valid array. The
+    # parameter +val+ can be
+    #
+    # - a comma separated string which is split into an array of values
+    # - or an array.
+    #
+    # Additionally, the array is checked for the correct size.
+    def self.simple_array_validator(val, name, size)
+      if String === val
+        val = val.split(/,/)
+      elsif !(Array === val)
+        raise Kramdown::Error, "Invalid type #{val.class} for option #{name}"
+      end
+      if val.size != size
+        raise Kramdown::Error, "Option #{name} needs exactly #{size} values"
+      end
+      val
+    end
+
+    # ----------------------------
     # :section: Option Definitions
     #
     # This sections contains all option definitions that are used by the included
@@ -324,14 +349,22 @@ separating them with commas.
 Default: section,subsection,subsubsection,paragraph,subparagraph,subsubparagraph
 Used by: Latex converter
 EOF
-      if String === val
-        val = val.split(/,/)
-      elsif !(Array === val)
-        raise Kramdown::Error, "Invalid type #{val.class} for option latex_headers"
-      end
-      if val.size != 6
-        raise Kramdown::Error, "Option latex_headers needs exactly six LaTeX commands"
-      end
+      simple_array_validator(val, :latex_headers, 6)
+    end
+
+    define(:smart_quotes, Object, %w{lsquo rsquo ldquo rdquo}, <<EOF) do |val|
+Defines the HTML entity names or code points for smart quote output
+
+The entities identified by entity name or code point that should be
+used for, in order, a left single quote, a right single quote, a left
+double and a right double quote are specified by separating them with
+commas.
+
+Default: lsquo,rsquo,ldquo,rdquo
+Used by: HTML/Latex converter
+EOF
+      val = simple_array_validator(val, :smart_quotes, 4)
+      val.map! {|v| Integer(v) rescue v}
       val
     end
 

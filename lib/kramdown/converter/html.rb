@@ -311,7 +311,7 @@ module Kramdown
       end
 
       def convert_smart_quote(el, indent)
-        entity_to_str(::Kramdown::Utils::Entities.entity(el.value.to_s))
+        entity_to_str(smart_quote_entity(el))
       end
 
       def convert_math(el, indent)

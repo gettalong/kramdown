@@ -154,6 +154,14 @@ module Kramdown
         @options[:auto_id_prefix] + gen_id
       end
 
+      SMART_QUOTE_INDICES = {:lsquo => 0, :rsquo => 1, :ldquo => 2, :rdquo => 3} # :nodoc:
+
+      # Return the entity that represents the given smart_quote element.
+      def smart_quote_entity(el)
+        res = @options[:smart_quotes][SMART_QUOTE_INDICES[el.value]]
+        ::Kramdown::Utils::Entities.entity(res)
+      end
+
     end
 
   end
