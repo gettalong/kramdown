@@ -24,15 +24,17 @@ module Kramdown
   module Parser
     class Kramdown
 
-      PUNCTUATION_CHARS = "_.:,;!?-"
-      LINK_ID_CHARS = /[a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
-      LINK_ID_NON_CHARS = /[^a-zA-Z0-9 #{PUNCTUATION_CHARS}]/
-      LINK_DEFINITION_START = /^#{OPT_SPACE}\[(#{LINK_ID_CHARS}+)\]:[ \t]*(?:<(.*?)>|([^'"\n]*?\S[^'"\n]*?))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
+      # Normalize the link identifier.
+      def normalize_link_id(id)
+        id.gsub(/(\s|\n)+/, ' ').downcase
+      end
+
+      LINK_DEFINITION_START = /^#{OPT_SPACE}\[([^\n\]]+)\]:[ \t]*(?:<(.*?)>|([^'"\n]*?\S[^'"\n]*?))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
 
       # Parse the link definition at the current location.
       def parse_link_definition
         @src.pos += @src.matched_size
-        link_id, link_url, link_title = @src[1].downcase, @src[2] || @src[3], @src[5]
+        link_id, link_url, link_title = normalize_link_id(@src[1]), @src[2] || @src[3], @src[5]
         warning("Duplicate link ID '#{link_id}' - overwriting") if @link_defs[link_id]
         @link_defs[link_id] = [link_url, link_title]
         @tree.children << Element.new(:eob, :link_def)
@@ -57,7 +59,7 @@ module Kramdown
 
       LINK_BRACKET_STOP_RE = /(\])|!?\[/
       LINK_PAREN_STOP_RE = /(\()|(\))|\s(?=['"])/
-      LINK_INLINE_ID_RE = /\s*?\[(#{LINK_ID_CHARS}+)?\]/
+      LINK_INLINE_ID_RE = /\s*?\[([^\]]+)?\]/
       LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/
       LINK_START = /!?\[(?=[^^])/
 
@@ -91,7 +93,7 @@ module Kramdown
 
         # reference style link or no link url
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
-          link_id = (@src[1] || alt_text.gsub(/(\s|\n)+/, ' ').gsub(LINK_ID_NON_CHARS, '')).downcase
+          link_id = normalize_link_id(@src[1] || alt_text)
           if @link_defs.has_key?(link_id)
             add_link(el, @link_defs[link_id].first, @link_defs[link_id].last, alt_text)
           else

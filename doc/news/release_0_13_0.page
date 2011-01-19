@@ -11,12 +11,14 @@ modified_at: 2010-11-01 09:50:00 +02:00
 
 * 0 major change:
 
-* 2 minor changs:
+* 3 minor changs:
 
   - The LaTeX converter now inserts `\hypertarget` commands for all elements that have an ID set.
     The normal link syntax can be used to link to such targets (requested by David Doolin)
   - New option `smart_quotes` for specifying how smart quotes should be output (requested by Michael
     Franzl)
+  - Any character except a closing bracket is now valid as link identifier (this makes this part of
+    the kramdown syntax compatible to Markdown syntax)
 
 * 10 bug fixes:
 

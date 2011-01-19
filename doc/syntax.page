@@ -1108,10 +1108,10 @@ Notes:
 
 To create a reference style link, you need to surround the link text with square brackets (as with
 inline links), followed by optional spaces/tabs/line breaks and then optionally followed with
-another set of square brackets with the link identifier in them. A link identifier may only contain
-numbers, letters, spaces (line breaks and tabs are converted to spaces, multiple spaces are
-compressed to one) and punctuation characters (i.e. `_.:,;!?-`) and is not case sensitive. For
-example:
+another set of square brackets with the link identifier in them. A link identifier may not contain a
+closing bracket and, when specified in a link definition, newline characters; it is also not case
+sensitive, line breaks and tabs are converted to spaces and multiple spaces are compressed into one.
+For example:
 
     This is a [reference style link][linkid] to a page. And [this]
     [linkid] is also a link. As is [this][] and [THIS].

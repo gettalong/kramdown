@@ -28,7 +28,6 @@ a [Link with_BIG] letters
 
 bad [no URL] d [isurl]
 
-[no % url]: invalid.html
 [no url] invalid.html
 [no url]:
 
@@ -45,3 +44,7 @@ test [urldef]
 some [with spaces]
 
 [with spaces]: with spaces.html "title"
+
+this [is a 'special' occasion for /all/ of us]
+
+[is a 'special' occasion for /all/ of us]: occasion.html

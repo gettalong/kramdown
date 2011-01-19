@@ -20,8 +20,7 @@ the text</a></p>
 
 <p>bad [no URL] d <a href="someurl.html">isurl</a></p>
 
-<p>[no % url]: invalid.html
-[no url] invalid.html
+<p>[no url] invalid.html
 [no url]:</p>
 
 <p>“title”</p>
@@ -32,4 +31,6 @@ test [urldef]</p>
 <p>[urldef]: some.url ‘title”</p>
 
 <p>some <a href="with spaces.html" title="title">with spaces</a></p>
+
+<p>this <a href="occasion.html">is a ‘special’ occasion for /all/ of us</a></p>
 
