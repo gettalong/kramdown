@@ -469,7 +469,7 @@ module Kramdown
           nr_cells = 0
           check_nr_cells = lambda do |t|
             if t.value == 'tr'
-              count = t.children.count {|cc| cc.value == 'th' || cc.value == 'td'}
+              count = t.children.select {|cc| cc.value == 'th' || cc.value == 'td'}.length
               if count != nr_cells
                 if nr_cells == 0
                   nr_cells = count
