@@ -5,8 +5,9 @@ source ~/.bashrc
 RUBY_VERSIONS=`rvm list strings | sort`
 KD_VERSIONS="`git tag | sort -V` master"
 OTHERS=false
+MASTER_AS=
 
-while getopts "r:k:o" optname; do
+while getopts "r:k:o:m:" optname; do
     case "$optname" in
         "r")
             RUBY_VERSIONS="$OPTARG"
@@ -16,6 +17,9 @@ while getopts "r:k:o" optname; do
             ;;
         "o")
             OTHERS=true
+	    ;;
+	"m")
+	    MASTER_AS="$OPTARG"
             ;;
         "?")
             echo "Unknown option $OPTARG"
@@ -48,7 +52,12 @@ for RUBY_VERSION in $RUBY_VERSIONS; do
     for KD_VERSION in $KD_VERSIONS; do
         echo "Using kramdown version $KD_VERSION"
         git co $KD_VERSION 2>/dev/null
-        ruby -I${TMPDIR}/kramdown/lib ../generate_data.rb -k ${KD_VERSION} >/dev/null
+        if [ -z $MASTER_AS -o $KD_VERSION != master ]; then
+            VNUM=${KD_VERSION}
+        else
+            VNUM=$MASTER_AS
+        fi
+        ruby -I${TMPDIR}/kramdown/lib ../generate_data.rb -k ${VNUM} >/dev/null
     done
 
     if [ $OTHERS = "true" ]; then
