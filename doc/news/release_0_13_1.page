@@ -1,11 +1,11 @@
 ---
-title: kramdown 0.13.0 released
+title: kramdown 0.13.1 released
 no_output: true
 sort_info: r0013
 created_at: 2011-01-22 08:02:00 +02:00
 modified_at: 2011-01-22 08:02:00 +02:00
 ---
-## kramdown 0.13.0 released
+## kramdown 0.13.1 released
 
 The focus of this release was bringing kramdown one step closer to the 1.0 release. The API hasn't
 changed so this is a drop-in replacement for the previous version of kramdown.
