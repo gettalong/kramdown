@@ -5,6 +5,12 @@ sort_info: 5
 ---
 # Download & Installation
 
+## Dependencies
+
+Since kramdown is written in Ruby, you just need the [Ruby interpreter](http://www.ruby-lang.org),
+version 1.8.5, 1.8.6, 1.8.7 or 1.9.2. There are no other dependencies.
+
+
 ## Compatibility Notes
 
 kramdown should work on any platform which supports Ruby. It has been successfully tested on the
@@ -42,14 +48,13 @@ as running:
 
 ### Windows
 
-You need to install Ruby first. This can easily be done by using the One-Click-Installer - just
-download the *latest* installation binary from the [files section][1] of the One-Click-Installer
-homepage and run it. After that open a command shell (select `Start -> Run...`, then enter `cmd` and
-click on `Ok`) and type in the following:
+You need to install Ruby first. This can easily be done by using the [RubyInstaller] - just download
+the installation binary and run it. After that open a command shell (select `Start -> Run...`, then
+enter `cmd` and click on `Ok`) and type in the following:
 
     gem install kramdown
 
-[1]: http://rubyforge.org/frs/?group_id=167
+[RubyInstaller]: http://rubyinstaller.org
 
 
 ## Generic Installation Instructions
@@ -81,9 +86,3 @@ repository always contains a clean state of the current development version of k
 out kramdown use the following command:
 
      git clone git://github.com/gettalong/kramdown.git
-
-
-## Dependencies
-
-Since kramdown is written in Ruby, you just need the [Ruby interpreter](http://www.ruby-lang.org)
-versions 1.8.5, 1.8.6, 1.8.7 or 1.9.2. There are no other dependencies.

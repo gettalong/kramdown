@@ -8,8 +8,8 @@ sort_info: 1
 If you want to get started with kramdown, have a look at the [installation page](installation.html)
 to see how you can install it on your system. Then look through the
 [documentation](documentation.html) for finding information about how to actually use kramdown and
-its parsers/converters. The [syntax](syntax.html) provides a detailed description of the superset of
-Markdown which kramdown supports.
+its parsers/converters. The [syntax page](syntax.html) provides a detailed description of the
+superset of Markdown which kramdown supports.
 
 {tikz:: path: overview.png
 img_attr: {style: 'background:transparent'}

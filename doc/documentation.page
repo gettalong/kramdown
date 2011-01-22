@@ -53,9 +53,8 @@ The kramdown package provides two ways for using it:
 * **As an application**
 
   Together with the library files a binary called `kramdown` is shipped which can be used to convert
-  text in any supported format (currently only kramdown syntax) to any supported output format (e.g.
-  HTML or LaTeX). It either reads from the files specified as the command line arguments or from the
-  standard input. For example:
+  text in any supported input format to any supported output format. It either reads from the files
+  specified as the command line arguments or from the standard input. For example:
 
       kramdown path/to/kramdown/doc/syntax.page
 
