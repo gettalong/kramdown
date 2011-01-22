@@ -2,14 +2,23 @@
 title: kramdown 0.13.0 released
 no_output: true
 sort_info: r0013
-created_at: 2010-11-01 09:50:00 +02:00
-modified_at: 2010-11-01 09:50:00 +02:00
+created_at: 2011-01-22 08:02:00 +02:00
+modified_at: 2011-01-22 08:02:00 +02:00
 ---
 ## kramdown 0.13.0 released
 
-## Changes
+The focus of this release was bringing kramdown one step closer to the 1.0 release. The API hasn't
+changed so this is a drop-in replacement for the previous version of kramdown.
 
-* 0 major change:
+If you think that
+
+* kramdown is still missing an important syntax found in another Markdown implementation,
+* the API doesn't feel right,
+* or anything else is missing or should be changed for the 1.0 release,
+
+please tell us so by writing to <mailto:kramdown-users@rubyforge.org>!
+
+## Changes
 
 * 3 minor changs:
 
@@ -42,7 +51,3 @@ modified_at: 2010-11-01 09:50:00 +02:00
 * 1 deprecation note:
 
   - Removed deprecated option `toc_depth` -- use the option `toc_levels` instead.
-
-
-
-
