@@ -34,12 +34,19 @@ module Kramdown
       LAZY_END_HTML_START = /<(?>(?!(?:#{LAZY_END_HTML_SPAN_ELEMENTS.join('|')})\b)#{REXML::Parsers::BaseParser::UNAME_STR})\s*(?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\1)*\s*\/?>/m
       LAZY_END_HTML_STOP = /<\/(?!(?:#{LAZY_END_HTML_SPAN_ELEMENTS.join('|')})\b)#{REXML::Parsers::BaseParser::UNAME_STR}\s*>/m
 
+      LAZY_END = /#{BLANK_LINE}|#{IAL_BLOCK_START}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z/
+
       PARAGRAPH_START = /^#{OPT_SPACE}[^ \t].*?\n/
-      PARAGRAPH_MATCH = /(?:^.*\n)+?(?=#{BLANK_LINE}|#{IAL_BLOCK_START}|#{EOB_MARKER}|#{DEFINITION_LIST_START}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/
+      PARAGRAPH_MATCH = /^.*?\n/
+      PARAGRAPH_END = /#{LAZY_END}|#{DEFINITION_LIST_START}/
 
       # Parse the paragraph at the current location.
       def parse_paragraph
-        result = @src.scan(self.class::PARAGRAPH_MATCH).chomp!
+        result = @src.scan(PARAGRAPH_MATCH)
+        while !@src.match?(self.class::PARAGRAPH_END)
+          result << @src.scan(PARAGRAPH_MATCH)
+        end
+        result.chomp!
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << result
         else

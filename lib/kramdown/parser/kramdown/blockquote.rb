@@ -29,13 +29,18 @@ module Kramdown
     class Kramdown
 
       BLOCKQUOTE_START = /^#{OPT_SPACE}> ?/
-      BLOCKQUOTE_MATCH = /(^.*\n)+?(?=#{BLANK_LINE}|#{IAL_BLOCK_START}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/
 
       # Parse the blockquote at the current location.
       def parse_blockquote
+        result = @src.scan(PARAGRAPH_MATCH)
+        while !@src.match?(self.class::LAZY_END)
+          result << @src.scan(PARAGRAPH_MATCH)
+        end
+        result.gsub!(BLOCKQUOTE_START, '')
+
         el = new_block_el(:blockquote)
         @tree.children << el
-        parse_blocks(el, @src.scan(self.class::BLOCKQUOTE_MATCH).gsub!(BLOCKQUOTE_START, ''))
+        parse_blocks(el, result)
         true
       end
       define_parser(:blockquote, BLOCKQUOTE_START)

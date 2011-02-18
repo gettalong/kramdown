@@ -51,9 +51,9 @@ module Kramdown
       # :stopdoc:
 
       BLOCK_BOUNDARY = /#{BLANK_LINE}|#{EOB_MARKER}|\Z/
-      BLOCKQUOTE_MATCH = /(^.*\n)+?(?=#{BLANK_LINE}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z)/
+      LAZY_END = /#{BLANK_LINE}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z/
       CODEBLOCK_MATCH = /(?:#{BLANK_LINE}?(?:#{INDENT}[ \t]*\S.*\n)+)*/
-      PARAGRAPH_MATCH = BLOCKQUOTE_MATCH
+      PARAGRAPH_END = LAZY_END
 
       IAL_RAND_CHARS = (('a'..'z').to_a + ('0'..'9').to_a)
       IAL_RAND_STRING = (1..20).collect {|a| IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)]}.join

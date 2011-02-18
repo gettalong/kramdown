@@ -9,3 +9,7 @@ modified_at: 2011-01-22 08:02:00 +02:00
 
 ## Changes
 
+* 1 bug fix:
+
+  - Fixed bug RF#28917: Regexp buffer overflow when parsing long paragraphs or blockquotes under
+    Ruby 1.8 (reported by Michael Fischer)
