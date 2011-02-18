@@ -4,13 +4,13 @@ require 'fileutils'
 
 require 'kramdown'
 
-options = {:others => false}
+options = {:others => false, :average => 1}
 OptionParser.new do |opts|
+  opts.on("-a AVG", "--average AVG", Integer, "Average times over the specified number of runs") {|v| options[:average] = v }
   opts.on("-o", "--[no-]others", "Generate data for other parsers") {|v| options[:others] = v}
   opts.on("-g", "--[no-]graph", "Generate graph") {|v| options[:graph] = v}
   opts.on("-k VERSION", "--kramdown VERSION", String, "Add benchmark data for kramdown version VERSION") {|v| options[:kramdown] = v}
 end.parse!
-
 
 THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\()/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}") + '-' + RUBY_PATCHLEVEL.to_s
 
@@ -70,16 +70,21 @@ if options[:kramdown]
            ["#      ", *MULTIPLIER.map {|m| "%3d" % m}]
          end
   data.first << "#{options[:kramdown]}".rjust(10)
-  MULTIPLIER.each_with_index do |m, i|
-    $stderr.puts "Generating benchmark data for kramdown version #{options[:kramdown]}, multiplier #{m}"
-    mddata = BMDATA*m
-    begin
-      data[i+1] << "%14.5f" % Benchmark::bmbm {|x| x.report { Kramdown::Document.new(mddata).to_html } }.first.real
-    rescue
-      $stderr.puts $!.message
-      data[i+1] << "%14.5f" % 0
+
+  times = []
+  options[:average].times do
+    MULTIPLIER.each_with_index do |m, i|
+      $stderr.puts "Generating benchmark data for kramdown version #{options[:kramdown]}, multiplier #{m}"
+      mddata = BMDATA*m
+      begin
+        (times[i] ||= []) << Benchmark::bmbm {|x| x.report { Kramdown::Document.new(mddata).to_html } }.first.real
+      rescue
+        $stderr.puts $!.message
+        (times[i] ||= []) << 0
+      end
     end
   end
+  times.each_with_index {|t,i| data[i+1] << "%14.5f" % (t.inject(0) {|sum,v| sum+v}/3.0)}
   File.open(kramdown, 'w+') do |f|
     data.each {|l| f.puts l}
   end

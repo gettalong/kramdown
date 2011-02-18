@@ -5,9 +5,10 @@ source ~/.bashrc
 RUBY_VERSIONS=`rvm list strings | sort`
 KD_VERSIONS="`git tag | sort -V` master"
 OTHERS=false
-MASTER_AS=
+AVERAGE=1
+MASTER_AS=master
 
-while getopts "r:k:o:m:" optname; do
+while getopts "r:k:o:m:a:" optname; do
     case "$optname" in
         "r")
             RUBY_VERSIONS="$OPTARG"
@@ -21,6 +22,9 @@ while getopts "r:k:o:m:" optname; do
 	"m")
 	    MASTER_AS="$OPTARG"
             ;;
+	"a")
+	    AVERAGE="$OPTARG"
+	    ;;
         "?")
             echo "Unknown option $OPTARG"
             exit 1
@@ -57,7 +61,7 @@ for RUBY_VERSION in $RUBY_VERSIONS; do
         else
             VNUM=$MASTER_AS
         fi
-        ruby -I${TMPDIR}/kramdown/lib ../generate_data.rb -k ${VNUM} >/dev/null
+        ruby -I${TMPDIR}/kramdown/lib ../generate_data.rb -k ${VNUM} -a ${AVERAGE} >/dev/null
     done
 
     if [ $OTHERS = "true" ]; then
