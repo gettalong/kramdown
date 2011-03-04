@@ -75,7 +75,7 @@ module Kramdown
             # parse possible code spans on the line and correctly split the line into cells
             env = save_env
             cells = []
-            (@src[1] + ' ').split(/(<code.*?>.*?<\/code>)/).each_with_index do |str, i|
+            @src[1].split(/(<code.*?>.*?<\/code>)/).each_with_index do |str, i|
               if i % 2 == 1
                 (cells.empty? ? cells : cells.last) << str
               else
@@ -86,8 +86,8 @@ module Kramdown
                 root.children.each do |c|
                   if c.type == :raw_text
                     # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
-                    f, *l = c.value.split(/\\\|/).map {|t| t.split(/\|/)}.inject([]) do |memo, t|
-                      memo.last << "|" << t.shift if memo.size > 0
+                    f, *l = c.value.split(/\\\|/, -1).map {|t| t.split(/\|/, -1)}.inject([]) do |memo, t|
+                      memo.last << "|#{t.shift}" if memo.size > 0
                       memo.concat(t)
                     end
                     (cells.empty? ? cells : cells.last) << f

@@ -10,3 +10,7 @@ modified_at: 2011-02-21 18:01:00 +02:00
 
 ## Changes
 
+* 2 bug fixes:
+
+  - Table line `` |a|`b` `` was parsed as `` |a`b` `` (patch by Masahiro Kitajima)
+  - Table line `` |`a` `` lead to error condition (patch by Masahiro Kitajima)

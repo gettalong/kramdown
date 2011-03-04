@@ -20,6 +20,12 @@ Table with code elements
 | This is a <code>span | with</code> a pipe.
 | Some <em>span | </em> here | a <code>span | with</code> a | pipe.
 
+Special cases regarding codespan syntax
+
+|a|`b`
+
+|`a`
+
 {:.cls}
 | table | with | ial
 
