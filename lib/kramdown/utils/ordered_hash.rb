@@ -68,6 +68,18 @@ module Kramdown
           self
         end
 
+        def dup #:nodoc:
+          new_object = super
+          new_object.instance_variable_set(:@data, @data.dup)
+          new_object.instance_variable_set(:@order, @order.dup)
+          new_object
+        end
+
+        def ==(other) #:nodoc:
+          return false unless other.kind_of?(self.class)
+          @data == other.instance_variable_get(:@data) && @order == other.instance_variable_get(:@order)
+        end
+
         def inspect #:nodoc:
           "{" + map {|k,v| "#{k.inspect}=>#{v.inspect}"}.join(" ") + "}"
         end
