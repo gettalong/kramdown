@@ -30,13 +30,13 @@ module Kramdown
     #
     # This converter uses ideas from other Markdown-to-LaTeX converters like Pandoc and Maruku.
     #
-    # You can customize this converter by sub-classing it and overriding the <tt>convert_NAME</tt>
-    # methods. Each such method takes the following parameters:
+    # You can customize this converter by sub-classing it and overriding the +convert_NAME+ methods.
+    # Each such method takes the following parameters:
     #
     # [+el+] The element of type +NAME+ to be converted.
     #
     # [+opts+] A hash containing processing options that are passed down from parent elements. The
-    #          key <tt>:parent</tt> is always set and contains the parent element as value.
+    #          key :parent is always set and contains the parent element as value.
     #
     # The return value of such a method has to be a string containing the element +el+ formatted
     # correctly as LaTeX markup.
@@ -50,8 +50,8 @@ module Kramdown
         @data[:packages] = Set.new
       end
 
-      # Dispatch the conversion of the element +el+ to a <tt>convert_TYPE</tt> method using the
-      # +type+ of the element.
+      # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
+      # the element.
       def convert(el, opts = {})
         send("convert_#{el.type}", el, opts)
       end
@@ -88,8 +88,8 @@ module Kramdown
         end
       end
 
-      # Helper method used by +convert_p+ to convert a paragraph that only contains a single
-      # <tt>:img</tt> element.
+      # Helper method used by +convert_p+ to convert a paragraph that only contains a single :img
+      # element.
       def convert_standalone_image(el, opts, img)
         attrs = attribute_list(el)
         "\\begin{figure}#{attrs}\n\\begin{center}\n#{img}\n\\end{center}\n\\caption{#{escape(el.children.first.attr['alt'])}}\n#{latex_link_target(el, true)}\n\\end{figure}#{attrs}\n"
@@ -560,17 +560,16 @@ module Kramdown
       end
 
       # Wrap the +text+ inside a LaTeX environment of type +type+. The element +el+ is passed on to
-      # the method #attribute_list -- the resulting string is appended to both the <tt>\\begin</tt>
-      # and the <tt>\\end</tt> lines of the LaTeX environment for easier post-processing of LaTeX
-      # environments.
+      # the method #attribute_list -- the resulting string is appended to both the \\begin and the
+      # \\end lines of the LaTeX environment for easier post-processing of LaTeX environments.
       def latex_environment(type, el, text)
         attrs = attribute_list(el)
         "\\begin{#{type}}#{latex_link_target(el)}#{attrs}\n#{text.rstrip}\n\\end{#{type}}#{attrs}\n"
       end
 
-      # Return a string containing a valid <tt>\hypertarget</tt> command if the element has an ID
-      # defined, or +nil+ otherwise. If the parameter +add_label+ is +true+, a <tt>\label</tt>
-      # command will also be used additionally to the <tt>\hypertarget</tt> command.
+      # Return a string containing a valid \hypertarget command if the element has an ID defined, or
+      # +nil+ otherwise. If the parameter +add_label+ is +true+, a \label command will also be used
+      # additionally to the \hypertarget command.
       def latex_link_target(el, add_label = false)
         if (id = el.attr['id'])
           "\\hypertarget{#{id}}{}" << (add_label ? "\\label{#{id}}" : '')
@@ -579,7 +578,7 @@ module Kramdown
         end
       end
 
-      # Return a LaTeX comment containing all attributes as <tt>key="value"</tt> pairs.
+      # Return a LaTeX comment containing all attributes as 'key="value"' pairs.
       def attribute_list(el)
         attrs = el.attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{v.to_s}\""}.compact.sort.join('')
         attrs = "   % #{attrs}" if !attrs.empty?

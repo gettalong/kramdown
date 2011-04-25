@@ -40,8 +40,8 @@ module Kramdown
     #
     # Implementing a new converter is rather easy: just derive a new class from this class and put
     # it in the Kramdown::Converter module (the latter is only needed if auto-detection should work
-    # properly). Then you need to implement the <tt>convert(el)</tt> method which has to contain
-    # the conversion code for converting an element and has to return the conversion result.
+    # properly). Then you need to implement the #convert method which has to contain the conversion
+    # code for converting an element and has to return the conversion result.
     #
     # The actual transformation of the document tree can be done in any way. However, writing one
     # method per element type is a straight forward way to do it - this is how the Html and Latex
@@ -81,10 +81,10 @@ module Kramdown
       #
       # 1. Look in the current working directory for the template.
       #
-      # 2. Append <tt>.convertername</tt> (e.g. +.html+) to the template name and look for the
-      #    resulting file in the current working directory.
+      # 2. Append +.convertername+ (e.g. +.html+) to the template name and look for the resulting
+      #    file in the current working directory.
       #
-      # 3. Append <tt>.convertername</tt> to the template name and look for it in the kramdown data
+      # 3. Append +.convertername+ to the template name and look for it in the kramdown data
       #    directory.
       def self.convert(tree, options = {})
         converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))

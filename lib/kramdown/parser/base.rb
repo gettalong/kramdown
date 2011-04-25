@@ -37,8 +37,8 @@ module Kramdown
     #
     # Implementing a new parser is rather easy: just derive a new class from this class and put it
     # in the Kramdown::Parser module -- the latter is needed so that the auto-detection of the new
-    # parser works correctly. Then you need to implement the <tt>#parse</tt> method which has to
-    # contain the parsing code.
+    # parser works correctly. Then you need to implement the +#parse+ method which has to contain
+    # the parsing code.
     #
     # Have a look at the Base::parse, Base::new and Base#parse methods for additional information!
     class Base
@@ -57,8 +57,8 @@ module Kramdown
 
       # Initialize the parser object with the +source+ string and the parsing +options+.
       #
-      # The <tt>@root</tt> element, the <tt>@warnings</tt> array and <tt>@text_type</tt> (specifies
-      # the default type for newly created text nodes) are automatically initialized.
+      # The @root element, the @warnings array and @text_type (specifies the default type for newly
+      # created text nodes) are automatically initialized.
       def initialize(source, options)
         @source = source
         @options = Kramdown::Options.merge(options)
@@ -71,7 +71,7 @@ module Kramdown
       # Parse the +source+ string into an element tree, possibly using the parsing +options+, and
       # return the root element of the element tree and an array with warning messages.
       #
-      # Initializes a new instance of the calling class and then calls the #parse method that must
+      # Initializes a new instance of the calling class and then calls the +#parse+ method that must
       # be implemented by each subclass.
       def self.parse(source, options = {})
         parser = new(source, options)
@@ -81,8 +81,8 @@ module Kramdown
 
       # Parse the source string into an element tree.
       #
-      # The parsing code should parse the source provided in <tt>@source</tt> and build an element
-      # tree the root of which should be <tt>@root</tt>.
+      # The parsing code should parse the source provided in @source and build an element tree the
+      # root of which should be @root.
       #
       # This is the only method that has to be implemented by sub-classes!
       def parse
@@ -96,7 +96,7 @@ module Kramdown
       end
 
       # Modify the string +source+ to be usable by the parser (unifies line ending characters to
-      # <tt>\n</tt> and makes sure +source+ ends with a new line character).
+      # +\n+ and makes sure +source+ ends with a new line character).
       def adapt_source(source)
         source.gsub(/\r\n?/, "\n").chomp + "\n"
       end

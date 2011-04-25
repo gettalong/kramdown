@@ -44,7 +44,7 @@ module Kramdown
 
 
       # This helper methods adds the approriate attributes to the element +el+ of type +a+ or +img+
-      # and the element itself to the <tt>@tree</tt>.
+      # and the element itself to the @tree.
       def add_link(el, href, title, alt_text = nil)
         if el.type == :a
           el.attr['href'] = href

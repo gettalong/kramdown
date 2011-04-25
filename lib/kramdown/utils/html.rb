@@ -26,9 +26,9 @@ module Kramdown
 
     # Provides convenience methods for HTML related tasks.
     #
-    # *Note* that this module has to be mixed into a class that has a <tt>@root</tt> (containing an
-    # element of type :root) and an <tt>@options</tt> (containing an options hash) instance variable
-    # so that some of the methods can work correctly.
+    # *Note* that this module has to be mixed into a class that has a @root (containing an element
+    # of type :root) and an @options (containing an options hash) instance variable so that some of
+    # the methods can work correctly.
     module Html
 
       # Convert the entity +e+ to a string. The optional parameter +original+ may contain the
@@ -71,10 +71,9 @@ module Kramdown
       # :startdoc:
 
       # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
-      # is escaped: <tt>:all</tt> - all special HTML characters as well as entities, <tt>:text</tt>
-      # \- all special HTML characters except the quotation mark but no entities and
-      # <tt>:attribute</tt> - all special HTML characters including the quotation mark but no
-      # entities.
+      # is escaped: :all - all special HTML characters as well as entities, :text - all special HTML
+      # characters except the quotation mark but no entities and :attribute - all special HTML
+      # characters including the quotation mark but no entities.
       def escape_html(str, type = :all)
         str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
       end

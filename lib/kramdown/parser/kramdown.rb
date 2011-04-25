@@ -95,7 +95,7 @@ module Kramdown
       private_class_method(:new, :allocate)
 
 
-      # The source string provided on initialization is parsed into the <tt>@root</tt> element.
+      # The source string provided on initialization is parsed into the @root element.
       def parse
         configure_parser
         parse_blocks(@root, adapt_source(source))
@@ -153,8 +153,8 @@ module Kramdown
         status
       end
 
-      # Update the tree by parsing all <tt>:raw_text</tt> elements with the span-level parser
-      # (resets the environment) and by updating the attributes from the IALs.
+      # Update the tree by parsing all :+raw_text+ elements with the span-level parser (resets the
+      # environment) and by updating the attributes from the IALs.
       def update_tree(element)
         last_blank = nil
         element.children.map! do |child|
@@ -182,7 +182,7 @@ module Kramdown
         end.flatten!
       end
 
-      # Parse all span-level elements in the source string of <tt>@src</tt> into +el+.
+      # Parse all span-level elements in the source string of @src into +el+.
       #
       # If the parameter +stop_re+ (a regexp) is used, parsing is immediately stopped if the regexp
       # matches and if no block is given or if a block is given and it returns +true+.

@@ -74,10 +74,10 @@ module Kramdown
     # Create a new Kramdown document from the string +source+ and use the provided +options+. The
     # options that can be used are defined in the Options module.
     #
-    # The special options key <tt>:input</tt> can be used to select the parser that should parse the
+    # The special options key :input can be used to select the parser that should parse the
     # +source+. It has to be the name of a class in the Kramdown::Parser module. For example, to
-    # select the kramdown parser, one would set the <tt>:input</tt> key to +Kramdown+. If this key
-    # is not set, it defaults to +Kramdown+.
+    # select the kramdown parser, one would set the :input key to +Kramdown+. If this key is not
+    # set, it defaults to +Kramdown+.
     #
     # The +source+ is immediately parsed by the selected parser so that the root element is
     # immediately available and the output can be generated.
@@ -132,11 +132,11 @@ module Kramdown
   #
   # The root element contains the following option keys:
   #
-  # <tt>:encoding</tt>:: When running on Ruby 1.9 this key has to be set to the encoding used for
-  #                      the text parts of the kramdown document.
+  # :encoding:: When running on Ruby 1.9 this key has to be set to the encoding used for the text
+  #             parts of the kramdown document.
   #
-  # <tt>:abbrev_defs</tt>:: This key may be used to store the mapping of abbreviation to
-  #                         abbreviation definition.
+  # :abbrev_defs:: This key may be used to store the mapping of abbreviation to abbreviation
+  #                definition.
   #
   #
   # === :blank
@@ -159,8 +159,8 @@ module Kramdown
   #
   # Represents a paragraph.
   #
-  # If the option <tt>:transparent</tt> is +true+, this element just represents a block of text.
-  # I.e. this element just functions as a container for span-level elements.
+  # If the option :transparent is +true+, this element just represents a block of text. I.e. this
+  # element just functions as a container for span-level elements.
   #
   #
   # === :header
@@ -171,8 +171,8 @@ module Kramdown
   #
   # Represents a header.
   #
-  # The option <tt>:level</tt> specifies the header level and has to contain a number between 1 and
-  # \6. The option <tt>:raw_text</tt> has to contain the raw header text.
+  # The option :level specifies the header level and has to contain a number between 1 and \6. The
+  # option :raw_text has to contain the raw header text.
   #
   #
   # === :blockquote
@@ -269,9 +269,8 @@ module Kramdown
   # Represents a table. Each table row (i.e. :tr element) of the table has to contain the same
   # number of :td elements.
   #
-  # The option <tt>:alignment</tt> has to be an array containing the alignment values, exactly one
-  # for each column of the table. The possible alignment values are <tt>:left</tt>,
-  # <tt>:center</tt>, <tt>:right</tt> and <tt>:default</tt>.
+  # The option :alignment has to be an array containing the alignment values, exactly one for each
+  # column of the table. The possible alignment values are :left, :center, :right and :default.
   #
   #
   # === :thead
@@ -330,8 +329,8 @@ module Kramdown
   #
   # The +value+ field has to contain the actual mathematical text.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the context where the element is used.
+  # The option :category has to be set to either :span or :block depending on the context where the
+  # element is used.
   #
   #
   # == Text Markup Elements
@@ -400,9 +399,9 @@ module Kramdown
   # Represents a footnote marker.
   #
   # The +value+ field has to contain an element whose children are the content of the footnote. The
-  # option <tt>:name</tt> has to contain a valid and unique footnote name. A valid footnote name
-  # consists of a word character or a digit and then optionally followed by other word characters,
-  # digits or dashes.
+  # option :name has to contain a valid and unique footnote name. A valid footnote name consists of
+  # a word character or a digit and then optionally followed by other word characters, digits or
+  # dashes.
   #
   #
   # === :em
@@ -432,7 +431,7 @@ module Kramdown
   # Represents an HTML entity.
   #
   # The +value+ field has to contain an instance of Kramdown::Utils::Entities::Entity. The option
-  # <tt>:original</tt> can be used to store the original representation of the entity.
+  # :original can be used to store the original representation of the entity.
   #
   #
   # === :typographic_sym
@@ -446,13 +445,13 @@ module Kramdown
   # The +value+ field needs to contain a Symbol representing the specific typographic symbol from
   # the following list:
   #
-  # <tt>:mdash</tt>:: An mdash character (---)
-  # <tt>:ndash</tt>:: An ndash character (--)
-  # <tt>:hellip</tt>:: An ellipsis (...)
-  # <tt>:laquo</tt>:: A left guillemet (<<)
-  # <tt>:raquo</tt>:: A right guillemet (>>)
-  # <tt>:laquo_space</tt>:: A left guillemet with a space (<< )
-  # <tt>:raquo_space</tt>:: A right guillemet with a space ( >>)
+  # :mdash:: An mdash character (---)
+  # :ndash:: An ndash character (--)
+  # :hellip:: An ellipsis (...)
+  # :laquo:: A left guillemet (<<)
+  # :raquo:: A right guillemet (>>)
+  # :laquo_space:: A left guillemet with a space (<< )
+  # :raquo_space:: A right guillemet with a space ( >>)
   #
   #
   # === :smart_quote
@@ -465,10 +464,10 @@ module Kramdown
   #
   # The +value+ field needs to contain a Symbol representing the specific quotation character:
   #
-  # <tt>:lsquo</tt>:: Left single quote
-  # <tt>:rsquo</tt>:: Right single quote
-  # <tt>:ldquo</tt>:: Left double quote
-  # <tt>:rdquo</tt>:: Right double quote
+  # :lsquo:: Left single quote
+  # :rsquo:: Right single quote
+  # :ldquo:: Left double quote
+  # :rdquo:: Right double quote
   #
   #
   # === :abbreviation
@@ -480,7 +479,7 @@ module Kramdown
   # Represents a text part that is an abbreviation.
   #
   # The +value+ field has to contain the text part that is the abbreviation. The definition of the
-  # abbreviation is stored in the <tt>:root</tt> element of the document.
+  # abbreviation is stored in the :root element of the document.
   #
   #
   # == Other Elements
@@ -495,11 +494,10 @@ module Kramdown
   #
   # The +value+ field has to contain the name of the HTML element the element is representing.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the whether the element is a block-level or a span-level element. The option
-  # <tt>:content_model</tt> has to be set to the content model for the element (either
-  # <tt>:block</tt> if it contains block-level elements, <tt>:span</tt> if it contains span-level
-  # elements or <tt>:raw</tt> if it contains raw content).
+  # The option :category has to be set to either :span or :block depending on the whether the
+  # element is a block-level or a span-level element. The option :content_model has to be set to the
+  # content model for the element (either :block if it contains block-level elements, :span if it
+  # contains span-level elements or :raw if it contains raw content).
   #
   #
   # === :xml_comment
@@ -512,8 +510,8 @@ module Kramdown
   #
   # The +value+ field has to contain the whole XML/HTML comment including the delimiters.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the context where the element is used.
+  # The option :category has to be set to either :span or :block depending on the context where the
+  # element is used.
   #
   #
   # === :xml_pi
@@ -527,8 +525,8 @@ module Kramdown
   # The +value+ field has to contain the whole XML/HTML processing instruction including the
   # delimiters.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the context where the element is used.
+  # The option :category has to be set to either :span or :block depending on the context where the
+  # element is used.
   #
   #
   # === :comment
@@ -541,8 +539,8 @@ module Kramdown
   #
   # The +value+ field has to contain the comment.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the context where the element is used.
+  # The option :category has to be set to either :span or :block depending on the context where the
+  # element is used.
   #
   #
   # === :raw
@@ -556,12 +554,12 @@ module Kramdown
   #
   # The +value+ field has to contain the actual raw text.
   #
-  # The option <tt>:category</tt> has to be set to either <tt>:span</tt> or <tt>:block</tt>
-  # depending on the context where the element is used. The option <tt>:type</tt> can be set to an
-  # array of strings to define for which converters the raw string is valid.
+  # The option :category has to be set to either :span or :block depending on the context where the
+  # element is used. The option :type can be set to an array of strings to define for which
+  # converters the raw string is valid.
   class Element
 
-    # A symbol representing the element type. For example, <tt>:p</tt> or <tt>:blockquote</tt>.
+    # A symbol representing the element type. For example, :p or :blockquote.
     attr_accessor :type
 
     # The value of the element. The interpretation of this field depends on the type of the element.
@@ -598,11 +596,10 @@ module Kramdown
     [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
      :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span}
 
-    # Return the category of +el+ which can be <tt>:block</tt>, <tt>:span</tt> or +nil+.
+    # Return the category of +el+ which can be :block, :span or +nil+.
     #
     # Most elements have a fixed category, however, some elements can either appear in a block-level
-    # or a span-level context. These elements need to have the option <tt>:category</tt> correctly
-    # set.
+    # or a span-level context. These elements need to have the option :category correctly set.
     def self.category(el)
       CATEGORY[el.type] || el.options[:category]
     end

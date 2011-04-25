@@ -57,8 +57,8 @@ module Kramdown
         end
       end
 
-      # Parse the generic extension at the current point. The parameter +type+ can either be
-      # <tt>:block</tt> or <tt>:span</tt> depending whether we parse a block or span extension tag.
+      # Parse the generic extension at the current point. The parameter +type+ can either be :block
+      # or :span depending whether we parse a block or span extension tag.
       def parse_extension_start_tag(type)
         orig_pos = @src.pos
         @src.pos += @src.matched_size

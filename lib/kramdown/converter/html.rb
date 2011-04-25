@@ -28,8 +28,8 @@ module Kramdown
 
     # Converts a Kramdown::Document to HTML.
     #
-    # You can customize the HTML converter by sub-classing it and overriding the
-    # <tt>convert_NAME</tt> methods. Each such method takes the following parameters:
+    # You can customize the HTML converter by sub-classing it and overriding the +convert_NAME+
+    # methods. Each such method takes the following parameters:
     #
     # [+el+] The element of type +NAME+ to be converted.
     #
@@ -69,8 +69,8 @@ module Kramdown
       # The mapping of element type to conversion method.
       DISPATCHER = Hash.new {|h,k| h[k] = "convert_#{k}"}
 
-      # Dispatch the conversion of the element +el+ to a <tt>convert_TYPE</tt> method using the
-      # +type+ of the element.
+      # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
+      # the element.
       def convert(el, indent = -@indent)
         send(DISPATCHER[el.type], el, indent)
       end
@@ -78,8 +78,8 @@ module Kramdown
       # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
       # to be the amount of indentation used for the element +el+.
       #
-      # Pushes +el+ onto the <tt>@stack</tt> before converting the child elements and pops it from
-      # the stack afterwards.
+      # Pushes +el+ onto the @stack before converting the child elements and pops it from the stack
+      # afterwards.
       def inner(el, indent)
         result = ''
         indent += @indent
