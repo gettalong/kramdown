@@ -10,7 +10,7 @@ modified_at: 2011-02-21 18:01:00 +02:00
 
 ## Changes
 
-* 5 bug fixes:
+* 6 bug fixes:
 
   - Table line `` |a|`b` `` was parsed as `` |a`b` `` (patch by Masahiro Kitajima)
   - Table line `` |`a` `` lead to error condition (patch by Masahiro Kitajima)
@@ -19,3 +19,4 @@ modified_at: 2011-02-21 18:01:00 +02:00
   - Fixed places where the document tree was modified during conversion
   - Fixed bug in LaTeX image element converter that was introduced in a former release (reported by
     Michael Franzl)
+  - Fixed problem with block HTML tag being treated as header text

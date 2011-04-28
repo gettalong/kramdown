@@ -85,7 +85,7 @@ module Kramdown
         @footnotes = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
-                          :setext_header, :horizontal_rule, :list, :definition_list, :block_html,
+                          :horizontal_rule, :list, :definition_list, :block_html, :setext_header,
                           :table, :footnote_definition, :link_definition, :abbrev_definition,
                           :block_extensions, :block_math, :eob_marker, :paragraph]
         @span_parsers =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
