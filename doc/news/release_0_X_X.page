@@ -20,3 +20,8 @@ modified_at: 2011-02-21 18:01:00 +02:00
   - Fixed bug in LaTeX image element converter that was introduced in a former release (reported by
     Michael Franzl)
   - Fixed problem with block HTML tag being treated as header text
+
+* 1 documentation fix:
+
+  - Some HTML tags were not properly escaped on the quick reference page (reported by Yasin
+    Zähringer)

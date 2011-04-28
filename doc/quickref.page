@@ -20,8 +20,8 @@ kramdown has two main classes of elements: block and span-level elements. Block-
 used to create paragraphs, headers, lists and so on whereas span-level elements are used to markup
 text phrases as emphasized, as a link and so on.
 
-All examples below feature the kramdown source, the converted HTML source and the output as it
-appears in the browser. This looks like this:
+All examples below feature the kramdown source, the converted HTML source (shown when hovering over
+the kramdown source) and the output as it appears in the browser. This looks like this:
 
 <div class="kdexample">
 <pre class="kdexample-before"><code>kramdown example code</code></pre>
@@ -39,7 +39,8 @@ Live browser view of example code
 
 {kdlink: {oid: paragraphs, part: "paragraphs"}}
 
-Paragraphs are separated by one or more blank lines:
+Consecutive lines of text are considered to be one paragraph. As with other block level elements you
+have to add a blank line to separate it from the following block-level element:
 
 {kdexample::}
 The first paragraph.
@@ -61,6 +62,7 @@ which contains a hard line break.
 
 kramdown supports Setext style headers and atx style headers. A header must always be preceded by a
 blank line except at the beginning of the document:
+
 
 {kdexample::}
 First level header
@@ -104,6 +106,7 @@ elements inside a blockquote:
 
 {kdexample::}
 > A sample blockquote.
+>
 > >Nested blockquotes are
 > >also possible.
 >
@@ -111,6 +114,15 @@ elements inside a blockquote:
 > This is the outer quote again.
 {kdexample}
 
+You may also be lazy with the `>` markers as long as there is no blank line:
+
+{kdexample::}
+> This is a blockquote
+continued on this
+and this line.
+
+But this is a separate paragraph.
+{kdexample}
 
 ## Code Blocks
 
@@ -167,7 +179,14 @@ to the list item:
 1. This is a list item
 2. And another item
 2. And the third one
-   with additional. text
+   with additional text
+{kdexample}
+
+As with block quotes, you may be lazy when using the list item marker:
+
+{kdexample::}
+* A list item
+with additional text
 {kdexample}
 
 As the content consists of block-level elements you can do things like the following:
@@ -298,7 +317,9 @@ level or span-level text, depending on the tag:
 <div style="float: right">
 Something that stays right and is not wrapped in a para.
 </div>
-{options: parse_block_html="true"}
+
+{::options parse_block_html="true" /}
+
 <div>
 This is wrapped in a para.
 </div>
@@ -372,14 +393,14 @@ Here is an example that shows how to insert comments into text:
 
 {kdexample::}
 This is a paragraph
-{:comment}
+{::comment}
 This is a comment which is
 completely ignored.
 {:/comment}
 ... paragraph continues here.
 
 Extensions can also be used
-inline {:nomarkdown}**see**{:/}!
+inline {::nomarkdown}**see**{:/}!
 {kdexample}
 
 As one can see from the above example, the syntax for extensions is nearly identical to that of
@@ -390,7 +411,7 @@ the extension name. Also, if the extension does not have a body, there needs to 
 before the closing brace:
 
 {kdexample::}
-{:options auto_ids="false" /}
+{::options auto_ids="false" /}
 
 # Header without id
 {kdexample}

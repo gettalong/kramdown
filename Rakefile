@@ -344,10 +344,12 @@ if defined? Webgen
     include Webgen::Tag::Base
 
     def call(tag, body, context)
+      body.strip!
       result = ::Kramdown::Document.new(body, :auto_ids => false).to_html
-      before = "<pre class='kdexample-before'>#{body}<code>\n</code></pre>"
-      after = "<pre class='kdexample-after-source'>#{CGI::escapeHTML(result)}<code>\n</code></pre>"
+      before = "<pre class='kdexample-before'><code>#{CGI::escapeHTML(body)}\n</code></pre>"
+      after = "<pre class='kdexample-after-source'><code>#{CGI::escapeHTML(result)}\n</code></pre>"
       afterhtml = "<div class='kdexample-after-live'>#{result}</div>"
+
       "<div class='kdexample'>#{before}#{after}#{afterhtml}\n</div><div class='clear'></div>"
     end
 

@@ -435,13 +435,19 @@ body, table, code {
         pre.kdexample-before {
             width: 45%;
             float: left;
+            margin: 10px 10px 3px 10px;
+        }
+        pre.kdexample-before:hover + pre {
+            display: block;
         }
 
         pre.kdexample-after-source {
+            display: none;
             width: 45%;
             float: right;
             background-color: #ffffee;
             border: 2px solid #e6e8e9;
+            margin: 10px 10px 3px 10px;
             margin-left: 10px;
             margin-right: 10px;
             margin-bottom: 3px;
@@ -453,7 +459,7 @@ body, table, code {
             clear: right;
             background-color: #eeffee;
             border: 2px solid #e6e8e9;
-            margin: 0px 10px;
+            margin: 10px 10px 3px 10px;
             padding: 5px;
         }
 
