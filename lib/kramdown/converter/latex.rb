@@ -228,7 +228,7 @@ module Kramdown
         if el.attr['src'] =~ /^(https?|ftps?):\/\//
           warning("Cannot include non-local image")
           ''
-        elsif !el.options.attr['src'].empty?
+        elsif !el.attr['src'].empty?
           @data[:packages] << 'graphicx'
           "#{latex_link_target(el)}\\includegraphics{#{el.attr['src']}}"
         else
