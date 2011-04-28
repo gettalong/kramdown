@@ -159,4 +159,39 @@ class TestFiles < Test::Unit::TestCase
     end
   end
 
+
+
+  # Generate test methods for asserting that converters don't modify the document tree.
+  Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
+    basename = text_file.sub(/\.text$/, '')
+    opts_file = text_file.sub(/\.text$/, '.options')
+    options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+    (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base]).each do |conv_class|
+      define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
+        doc = Kramdown::Document.new(File.read(text_file), options)
+        options_before = Marshal.load(Marshal.dump(doc.options))
+        tree_before = Marshal.load(Marshal.dump(doc.root))
+        Kramdown::Converter.const_get(conv_class).convert(doc.root, doc.options)
+        assert_equal(options_before, doc.options)
+        assert_tree_not_changed(tree_before, doc.root)
+      end
+    end
+  end
+
+  def assert_tree_not_changed(old, new)
+    assert_equal(old.type, new.type, "type mismatch")
+    if old.value.kind_of?(Kramdown::Element)
+      assert_tree_not_changed(old.value, new.value)
+    else
+      assert_equal(old.value, new.value, "value mismatch")
+    end
+    assert_equal(old.attr, new.attr, "attr mismatch")
+    assert_equal(old.options, new.options, "options mismatch")
+    assert_equal(old.children.count, new.children.count, "children count mismatch")
+
+    old.children.each_with_index do |child, index|
+      assert_tree_not_changed(child, new.children[index])
+    end
+  end
+
 end

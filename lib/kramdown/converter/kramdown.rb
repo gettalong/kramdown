@@ -213,7 +213,7 @@ module Kramdown
         if el.options[:category] == :block && (@stack.last.type != :html_element || @stack.last.options[:content_model] != :raw)
           el.value + "\n"
         else
-          el.value
+          el.value.dup
         end
       end
       alias :convert_xml_pi :convert_xml_comment
