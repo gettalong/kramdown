@@ -180,9 +180,10 @@ module Kramdown
       TABLE_ALIGNMENT_CHAR = {:default => 'l', :left => 'l', :center => 'c', :right => 'r'} # :nodoc:
 
       def convert_table(el, opts)
+        @data[:packages] << 'longtable'
         align = el.options[:alignment].map {|a| TABLE_ALIGNMENT_CHAR[a]}.join('|')
         attrs = attribute_list(el)
-        "#{latex_link_target(el)}\\begin{tabular}{|#{align}|}#{attrs}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{tabular}#{attrs}\n\n"
+        "#{latex_link_target(el)}\\begin{longtable}{|#{align}|}#{attrs}\n\\hline\n#{inner(el, opts)}\\hline\n\\end{longtable}#{attrs}\n\n"
       end
 
       def convert_thead(el, opts)
