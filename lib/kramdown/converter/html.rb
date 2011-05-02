@@ -212,14 +212,7 @@ module Kramdown
       alias :convert_xml_pi :convert_xml_comment
 
       def convert_table(el, indent)
-        if el.options[:alignment].all? {|a| a == :default}
-          alignment = ''
-        else
-          alignment = el.options[:alignment].map do |a|
-            "#{' '*(indent + @indent)}" << (a == :default ? "<col />" : "<col align=\"#{a}\" />") << "\n"
-          end.join('')
-        end
-        "#{' '*indent}<table#{html_attributes(el.attr)}>\n#{alignment}#{inner(el, indent)}#{' '*indent}</table>\n"
+        "#{' '*indent}<table#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</table>\n"
       end
 
       def convert_thead(el, indent)
@@ -234,7 +227,13 @@ module Kramdown
       def convert_td(el, indent)
         res = inner(el, indent)
         type = (@stack[-2].type == :thead ? :th : :td)
-        "#{' '*indent}<#{type}#{html_attributes(el.attr)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
+        attr = el.attr
+        alignment = @stack[-3].options[:alignment][@stack.last.children.index(el)]
+        if alignment != :default
+          attr = el.attr.dup
+          attr['style'] = (attr.has_key?('style') ? "#{attr['style']}; ": '') << "text-align: #{alignment}"
+        end
+        "#{' '*indent}<#{type}#{html_attributes(attr)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
       end
 
       def convert_comment(el, indent)

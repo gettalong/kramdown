@@ -413,26 +413,23 @@ module Kramdown
           end
           process_children(el)
           set_basics(el, :table)
-          el.options[:alignment] = []
 
-          nr_cols = 0
           calc_alignment = lambda do |c|
-            align = c.attr['align']
-            if c.type == :html_element && c.value == 'col' && (align.nil? || %w{left right center}.include?(align))
-              el.options[:alignment] << (align.nil? ? :default : align.to_sym)
-            elsif c.type == :tr
-              nr_cols = c.children.length
-              break
+            if c.type == :tr
+              el.options[:alignment] = c.children.map do |td|
+                if td.attr['style']
+                  td.attr['style'].slice!(/(?:;\s*)?text-align:\s+(center|left|right)/)
+                  td.attr.delete('style') if td.attr['style'].strip.empty?
+                  $1.to_sym
+                else
+                  :default
+                end
+              end
             else
               c.children.each {|cc| calc_alignment.call(cc)}
             end
           end
           calc_alignment.call(el)
-          if el.options[:alignment].length > nr_cols
-            el.options[:alignment][nr_cols..-1] = []
-          else
-            el.options[:alignment] += [:default] * (nr_cols - el.options[:alignment].length)
-          end
           el.children.delete_if {|c| c.type == :html_element}
 
           change_th_type = lambda do |c|
@@ -485,12 +482,28 @@ module Kramdown
           check_nr_cells.call(el)
           return false if nr_cells == -1
 
+          alignment = nil
+          check_alignment = Proc.new do |t|
+            if t.value == 'tr'
+              cur_alignment = t.children.select {|cc| cc.value == 'th' || cc.value == 'td'}.map do |cell|
+                md = /text-align:\s+(center|left|right|justify|inherit)/.match(cell.attr['style'].to_s)
+                return false if md && (md[1] == 'justify' || md[1] == 'inherit')
+                md.nil? ? :default : md[1]
+              end
+              alignment = cur_alignment if alignment.nil?
+              return false if alignment != cur_alignment
+            else
+              t.children.each {|cc| check_alignment.call(cc)}
+            end
+          end
+          check_alignment.call(el)
+
           check_rows = lambda do |t, type|
             t.children.all? {|r| (r.value == 'tr' || r.type == :text) && r.children.all? {|c| c.value == type || c.type == :text}}
           end
           check_rows.call(el, 'td') ||
             (el.children.all? do |t|
-               t.type == :text || t.value == 'col' || (t.value == 'thead' && check_rows.call(t, 'th')) ||
+               t.type == :text || (t.value == 'thead' && check_rows.call(t, 'th')) ||
                  ((t.value == 'tfoot' || t.value == 'tbody') && check_rows.call(t, 'td'))
              end && el.children.any? {|t| t.value == 'tbody'})
         end
