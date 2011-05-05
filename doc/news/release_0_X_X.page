@@ -14,7 +14,7 @@ modified_at: 2011-02-21 18:01:00 +02:00
 
   - Added support for correctly parsing more HTML5 elements (requested by Bernt Carstenschulz)
 
-* 9 bug fixes:
+* 10 bug fixes:
 
   - Table line `` |a|`b` `` was parsed as `` |a`b` `` (patch by Masahiro Kitajima)
   - Table line `` |`a` `` lead to error condition (patch by Masahiro Kitajima)
@@ -28,6 +28,7 @@ modified_at: 2011-02-21 18:01:00 +02:00
     environment (reported by Michael Franzl)
   - The `style` attribute is now used for outputting table cell alignments in HTML
   - Fixed HTML-to-native conversion of unsupported HTML elements
+  - Fixed kramdown converter to correctly output table cells with attributes
 
 * 1 documentation fix:
 

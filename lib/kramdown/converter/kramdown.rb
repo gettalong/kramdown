@@ -43,7 +43,7 @@ module Kramdown
 
       def convert(el, opts = {:indent => 0})
         res = send("convert_#{el.type}", el, opts)
-        if el.type != :html_element && el.type != :li && el.type != :dd && (ial = ial_for_element(el))
+        if ![:html_element, :li, :dd, :td].include?(el.type) && (ial = ial_for_element(el))
           res << ial
           res << "\n\n" if Element.category(el) == :block
         elsif [:ul, :dl, :ol, :codeblock].include?(el.type) && opts[:next] &&
