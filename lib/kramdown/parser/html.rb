@@ -45,13 +45,15 @@ module Kramdown
         HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
-
-        HTML_CONTENT_MODEL_BLOCK = %w{applet button blockquote body colgroup dd div dl fieldset
-             form iframe li map noscript object ol table tbody thead tfoot tr td ul}
-        HTML_CONTENT_MODEL_SPAN  = %w{a abbr acronym address b bdo big cite caption del dfn dt em
+        HTML_CONTENT_MODEL_BLOCK = %w{address applet article aside button blockquote body
+             dd div dl fieldset figure figcaption footer form header hgroup iframe li map menu nav
+              noscript object section td}
+        HTML_CONTENT_MODEL_SPAN  = %w{a abbr acronym b bdo big button cite caption del dfn dt em
              h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc
-             rp rt rtc ruby samp select small span strong sub sup th tt var}
+             rp rt rtc ruby samp select small span strong sub sup summary th tt var}
         HTML_CONTENT_MODEL_RAW   = %w{script math option textarea pre code}
+        # The following elements are also parsed as raw since they need child elements that cannot
+        # be expressed using kramdown syntax: colgroup table tbody thead tfoot tr ul ol
 
         HTML_CONTENT_MODEL = Hash.new {|h,k| h[k] = :raw}
         HTML_CONTENT_MODEL_BLOCK.each {|i| HTML_CONTENT_MODEL[i] = :block}
@@ -64,7 +66,7 @@ module Kramdown
                               ins kbd label option q rb rbc rp rt rtc ruby samp select small span
                               strong sub sup textarea tt var}
         HTML_BLOCK_ELEMENTS = %w{address article aside applet body button blockquote caption col colgroup dd div dl dt fieldset
-                               figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend listing menu
+                               figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend menu
                                li map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
         HTML_ELEMENTS_WITHOUT_BODY = %w{area base br col command embed hr img input keygen link meta param source track wbr}
       end

@@ -10,6 +10,10 @@ modified_at: 2011-02-21 18:01:00 +02:00
 
 ## Changes
 
+* 1 minor change:
+
+  - Added support for correctly parsing more HTML5 elements (requested by Bernt Carstenschulz)
+
 * 8 bug fixes:
 
   - Table line `` |a|`b` `` was parsed as `` |a`b` `` (patch by Masahiro Kitajima)
