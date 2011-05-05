@@ -7,7 +7,7 @@ Output
 </tr>
 <tr>
   <td markdown="span">Some *data*</td>
-  <td>
+  <td markdown="1">
 # Some more
   </td>
 </tr>

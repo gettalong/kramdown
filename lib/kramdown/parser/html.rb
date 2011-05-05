@@ -217,28 +217,32 @@ module Kramdown
           else return
           end
 
-          type = el.value
-          remove_text_children(el) if REMOVE_TEXT_CHILDREN.include?(type)
-
           mname = "convert_#{el.value}"
           if do_conversion && self.class.method_defined?(mname)
             send(mname, el)
-          elsif do_conversion && SIMPLE_ELEMENTS.include?(type)
-            set_basics(el, type.intern)
-            process_children(el, do_conversion, preserve_text)
           else
-            process_html_element(el, do_conversion, preserve_text)
-          end
+            type = el.value
+            remove_text_children(el) if do_conversion && REMOVE_TEXT_CHILDREN.include?(type)
 
-          strip_whitespace(el) if STRIP_WHITESPACE.include?(type)
-          remove_whitespace_children(el) if REMOVE_WHITESPACE_CHILDREN.include?(type)
-          wrap_text_children(el) if WRAP_TEXT_CHILDREN.include?(type)
+            if do_conversion && SIMPLE_ELEMENTS.include?(type)
+              set_basics(el, type.intern)
+              process_children(el, do_conversion, preserve_text)
+            else
+              process_html_element(el, do_conversion, preserve_text)
+            end
+
+            if do_conversion
+              strip_whitespace(el) if STRIP_WHITESPACE.include?(type)
+              remove_whitespace_children(el) if REMOVE_WHITESPACE_CHILDREN.include?(type)
+              wrap_text_children(el) if WRAP_TEXT_CHILDREN.include?(type)
+            end
+          end
         end
 
         def process_children(el, do_conversion = true, preserve_text = false)
           el.children.map! do |c|
             if c.type == :text
-              process_text(c.value, preserve_text)
+              process_text(c.value, preserve_text || !do_conversion)
             else
               process(c, do_conversion, preserve_text, el)
               c
@@ -279,7 +283,7 @@ module Kramdown
 
         def process_html_element(el, do_conversion = true, preserve_text = false)
           el.options.replace(:category => HTML_SPAN_ELEMENTS.include?(el.value) ? :span : :block,
-                             :content_model => HTML_CONTENT_MODEL[el.value])
+                             :content_model => (do_conversion ? HTML_CONTENT_MODEL[el.value] : :raw))
           process_children(el, do_conversion, preserve_text)
         end
 
@@ -413,6 +417,7 @@ module Kramdown
             process_html_element(el, false)
             return
           end
+          remove_text_children(el)
           process_children(el)
           set_basics(el, :table)
 
