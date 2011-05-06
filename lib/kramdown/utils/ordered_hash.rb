@@ -51,6 +51,11 @@ module Kramdown
           @data[key]
         end
 
+        # Return +true+ if the hash contains the key.
+        def has_key?(key)
+          @data.has_key?(key)
+        end
+
         # Set the value for the +key+ to +val+.
         def []=(key, val)
           @order << key if !@data.has_key?(key)

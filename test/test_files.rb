@@ -187,7 +187,7 @@ class TestFiles < Test::Unit::TestCase
     end
     assert_equal(old.attr, new.attr, "attr mismatch")
     assert_equal(old.options, new.options, "options mismatch")
-    assert_equal(old.children.count, new.children.count, "children count mismatch")
+    assert_equal(old.children.length, new.children.length, "children count mismatch")
 
     old.children.each_with_index do |child, index|
       assert_tree_not_changed(child, new.children[index])
