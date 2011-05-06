@@ -1,12 +1,13 @@
 ---
-title: kramdown 0.X.X released
+title: kramdown 0.13.3 released
 no_output: true
-sort_info: r00XX
-created_at: 2011-02-21 18:01:00 +02:00
-modified_at: 2011-02-21 18:01:00 +02:00
+sort_info: r00133
+created_at: 2011-05-06 15:10:00 +02:00
+modified_at: 2011-05-06 15:10:00 +02:00
 ---
-## kramdown 0.X.X released
+## kramdown 0.13.3 released
 
+This is just a bug fix release and it is recommened to update to this version.
 
 ## Changes
 
@@ -26,7 +27,8 @@ modified_at: 2011-02-21 18:01:00 +02:00
   - Fixed problem with block HTML tag being treated as header text
   - Fixed problem with footnotes in LaTeX tables -- now using `longtable` instead of `tabular`
     environment (reported by Michael Franzl)
-  - The `style` attribute is now used for outputting table cell alignments in HTML
+  - The `style` attribute is now used for outputting table cell alignments in HTML instead of using
+    the deprecated `col` tags
   - Fixed HTML-to-native conversion of unsupported HTML elements
   - Fixed kramdown converter to correctly output table cells with attributes
 
