@@ -1,0 +1,16 @@
+---
+title: kramdown 0.X.X released
+no_output: true
+sort_info: r00133
+created_at: 2011-05-06 15:10:00 +02:00
+modified_at: 2011-05-06 15:10:00 +02:00
+---
+## kramdown 0.X.X released
+
+
+## Changes
+
+* 1 minor change:
+
+  - Added a converter that extracts the TOC of a document (requested by Brendan Hay). Note that this
+    is only useful if you use kramdown as a library!
