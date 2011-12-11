@@ -57,7 +57,7 @@ module Kramdown
             end
           elsif content_model == :span
             curpos = @src.pos
-            if result = @src.scan_until(/(?=<\/#{el.value}\s*>)/mi)
+            if @src.scan_until(/(?=<\/#{el.value}\s*>)/mi)
               add_text(extract_string(curpos...@src.pos, @src), el)
               @src.scan(HTML_TAG_CLOSE_RE)
             else
@@ -127,7 +127,6 @@ module Kramdown
             return
           end
 
-          reset_pos = @src.pos
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 

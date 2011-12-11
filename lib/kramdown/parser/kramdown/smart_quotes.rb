@@ -197,7 +197,7 @@ module Kramdown
 
       # Parse the smart quotes at current location.
       def parse_smart_quotes
-        regexp, substs = SQ_RULES.find {|reg, subst| @src.scan(reg)}
+        substs = SQ_RULES.find {|reg, subst| @src.scan(reg)}[1]
         substs.each do |subst|
           if subst.kind_of?(Integer)
             add_text(@src[subst])

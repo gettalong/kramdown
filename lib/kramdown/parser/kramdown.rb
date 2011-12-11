@@ -205,7 +205,7 @@ module Kramdown
         while !@src.eos? && !stop_re_found
           if result = @src.scan_until(used_re)
             add_text(result)
-            if stop_re && (stop_re_matched = @src.check(stop_re))
+            if stop_re && @src.check(stop_re)
               stop_re_found = (block_given? ? yield : true)
             end
             processed = parsers.any? do |name|

@@ -45,7 +45,7 @@ module Kramdown
 
         # Highlighting via coderay is available if this constant is +true+.
         HIGHLIGHTING_AVAILABLE = true
-      rescue LoadError => e
+      rescue LoadError
         HIGHLIGHTING_AVAILABLE = false  # :nodoc:
       end
 

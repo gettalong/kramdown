@@ -164,7 +164,6 @@ class TestFiles < Test::Unit::TestCase
 
   # Generate test methods for asserting that converters don't modify the document tree.
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
-    basename = text_file.sub(/\.text$/, '')
     opts_file = text_file.sub(/\.text$/, '.options')
     options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
     (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base]).each do |conv_class|

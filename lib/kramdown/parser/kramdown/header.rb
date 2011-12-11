@@ -52,7 +52,7 @@ module Kramdown
       def parse_atx_header
         return false if !after_block_boundary?
 
-        result = @src.scan(ATX_HEADER_MATCH)
+        @src.scan(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2], @src[3]
         text.strip!
         el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text)

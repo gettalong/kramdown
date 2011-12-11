@@ -109,7 +109,7 @@ module Kramdown
         # Handle the raw HTML tag at the current position.
         def handle_raw_html_tag(name)
           curpos = @src.pos
-          if result = @src.scan_until(/(?=<\/#{name}\s*>)/mi)
+          if @src.scan_until(/(?=<\/#{name}\s*>)/mi)
             add_text(extract_string(curpos...@src.pos, @src), @tree.children.last, :raw)
             @src.scan(HTML_TAG_CLOSE_RE)
           else
