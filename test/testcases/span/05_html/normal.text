@@ -1,4 +1,4 @@
-Empty <a name="anchor" id="anchor"></a>!
+Empty <a name="anchor" id="anchor"></A>!
 
 <a href="test">title</a> is a title.
 
@@ -12,8 +12,8 @@ This is <!-- a
 This is <span>tag
 now </span>.
 
-This is <span>tag
-</span> now.
+This is <sPAn>tag
+</SPAN> now.
 
 This is an empty <span></span> tag.
 
@@ -23,7 +23,7 @@ Auto-closing: <br>
 
 Expanding: <textarea></textarea>
 
-An invalid tag: <hr>
+An invalid tag: <hR>
 
 A <p>block tag</p>.
 

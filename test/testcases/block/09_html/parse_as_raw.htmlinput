@@ -1,13 +1,14 @@
 <p>baz { |qux| quux }</p>
 
-This is some para.
+<p>This is some para.
 <script type="javascript">
 This *text* must not be converted.
-  </SCRIPT>
+  </SCRIPT></p>
 
 <script>Not *parsed* here</script>
 
-<script>*not*</script><p>*parsed*
+<sCRIpt>*not*</script>
+<p><em>parsed</em>
 This too
 </p>
 
@@ -15,7 +16,7 @@ This too
 This too
 </p></script>
 
-<script>something<p>*not*</p></script>
+<sCRIpt>something<p>*not*</p></scrIPt>
 
 <script></script>
 
@@ -28,4 +29,4 @@ about it
 </p>
 </script>
 
-<http://example.com>
+<p><a href="http://example.com">http://example.com</a></p>

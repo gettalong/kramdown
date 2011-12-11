@@ -57,7 +57,7 @@ module Kramdown
             end
           elsif content_model == :span
             curpos = @src.pos
-            if result = @src.scan_until(/(?=<\/#{el.value}\s*>)/m)
+            if result = @src.scan_until(/(?=<\/#{el.value}\s*>)/mi)
               add_text(extract_string(curpos...@src.pos, @src), el)
               @src.scan(HTML_TAG_CLOSE_RE)
             else
@@ -86,13 +86,13 @@ module Kramdown
           @src.scan(TRAILING_WHITESPACE)
           true
         else
-          if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
+          if result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
             @src.pos += @src.matched_size
             handle_html_start_tag(&method(:handle_kramdown_html_tag))
             Kramdown::Parser::Html::ElementConverter.convert(@root, @tree.children.last) if @options[:html_to_native]
             true
-          elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1])
-            name = @src[1]
+          elsif result = @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
+            name = @src[1].downcase
 
             if @tree.type == :html_element && @tree.value == name
               @src.pos += @src.matched_size
@@ -120,8 +120,9 @@ module Kramdown
           warning("Found invalidly used HTML closing tag for '#{@src[1]}'")
           add_text(result)
         elsif result = @src.scan(HTML_TAG_RE)
-          if HTML_BLOCK_ELEMENTS.include?(@src[1])
-            warning("Found block HTML tag '#{@src[1]}' in span-level text")
+          tag_name = @src[1].downcase
+          if HTML_BLOCK_ELEMENTS.include?(tag_name)
+            warning("Found block HTML tag '#{tag_name}' in span-level text")
             add_text(result)
             return
           end
@@ -130,22 +131,22 @@ module Kramdown
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
 
-          do_parsing = (HTML_CONTENT_MODEL[@src[1]] == :raw || @tree.options[:content_model] == :raw ? false : @options[:parse_span_html])
+          do_parsing = (HTML_CONTENT_MODEL[tag_name] == :raw || @tree.options[:content_model] == :raw ? false : @options[:parse_span_html])
           if val = HTML_MARKDOWN_ATTR_MAP[attrs.delete('markdown')]
             if val == :block
               warning("Cannot use block-level parsing in span-level HTML tag - using default mode")
             elsif val == :span
               do_parsing = true
             elsif val == :default
-              do_parsing = HTML_CONTENT_MODEL[@src[1]] != :raw
+              do_parsing = HTML_CONTENT_MODEL[tag_name] != :raw
             elsif val == :raw
               do_parsing = false
             end
           end
 
-          el = Element.new(:html_element, @src[1], attrs, :category => :span, :content_model => (do_parsing ? :span : :raw))
+          el = Element.new(:html_element, tag_name, attrs, :category => :span, :content_model => (do_parsing ? :span : :raw))
           @tree.children << el
-          stop_re = /<\/#{Regexp.escape(@src[1])}\s*>/
+          stop_re = /<\/#{Regexp.escape(tag_name)}\s*>/i
           if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
             warning("The HTML tag '#{el.value}' cannot have any content - auto-closing it")
           elsif !@src[4]

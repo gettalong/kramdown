@@ -1,7 +1,7 @@
 <p>This *text
 should* be parsed
 as span
-</p>
+</P>
 
 <p>This produces `</p>` an unwanted result.</p>
 

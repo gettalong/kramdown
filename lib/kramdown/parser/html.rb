@@ -86,7 +86,7 @@ module Kramdown
         # (first parameter is the created element, the second parameter is +true+ if the HTML
         # element is already closed, ie. contains no body).
         def handle_html_start_tag # :yields: el, closed
-          name = @src[1]
+          name = @src[1].downcase
           closed = !@src[4].nil?
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val}
@@ -109,7 +109,7 @@ module Kramdown
         # Handle the HTML script tag at the current position.
         def handle_html_script_tag
           curpos = @src.pos
-          if result = @src.scan_until(/(?=<\/script\s*>)/m)
+          if result = @src.scan_until(/(?=<\/script\s*>)/mi)
             add_text(extract_string(curpos...@src.pos, @src), @tree.children.last, :raw)
             @src.scan(HTML_TAG_CLOSE_RE)
           else
@@ -145,10 +145,10 @@ module Kramdown
               elsif @src.scan(HTML_TAG_RE)
                 handle_html_start_tag(&block)
               elsif @src.scan(HTML_TAG_CLOSE_RE)
-                if @tree.value == @src[1]
+                if @tree.value == @src[1].downcase
                   done = true
                 else
-                  warning("Found invalidly used HTML closing tag for '#{@src[1]}' - ignoring it")
+                  warning("Found invalidly used HTML closing tag for '#{@src[1].downcase}' - ignoring it")
                 end
               else
                 add_text(@src.getch, @tree, :text)

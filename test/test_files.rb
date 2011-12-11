@@ -56,11 +56,12 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/09_html/simple.html', # bc of xml elements
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                          ]
-    Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.{html, htmlinput}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
+      out_file = (html_file =~ /\.htmlinput$/ ? html_file.sub(/input$/, '') : html_file)
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
         doc = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1)
-        assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
+        assert_equal(tidy_output(File.read(out_file)), tidy_output(doc.to_html))
       end
     end
   end
