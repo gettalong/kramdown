@@ -393,7 +393,7 @@ module Kramdown
           li.children = Marshal.load(Marshal.dump(data.children))
           ol.children << li
 
-          ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rev=\"footnote\">&#8617;</a>")
+          ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rel=\"reference\">&#8617;</a>")
           if li.children.last.type == :p
             para = li.children.last
           else
