@@ -29,3 +29,5 @@ about it
 </script>
 
 <http://example.com>
+
+<style> body > * { background-color: Red; } </style>
