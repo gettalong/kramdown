@@ -322,7 +322,7 @@ module Kramdown
 
         def remove_whitespace_children(el)
           i = -1
-          el.children.delete_if do |c|
+          el.children = el.children.reject do |c|
             i += 1
             c.type == :text && c.value.strip.empty? &&
               (i == 0 || i == el.children.length - 1 || (Element.category(el.children[i-1]) == :block &&
