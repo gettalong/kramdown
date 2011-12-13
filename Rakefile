@@ -3,7 +3,7 @@
 # load all optional developer libraries
 begin
   require 'rubygems'
-  require 'rake/gempackagetask'
+  require 'rubygems/package_task'
 rescue LoadError
 end
 
@@ -196,6 +196,7 @@ EOF
       s.require_path = 'lib'
       s.executables = ['kramdown']
       s.default_executable = 'kramdown'
+      s.add_development_dependency 'coderay', '~> 1.0.0'
 
       #### Documentation
 
@@ -211,7 +212,7 @@ EOF
       s.rubyforge_project = 'kramdown'
     end
 
-    Rake::GemPackageTask.new(spec) do |pkg|
+    Gem::PackageTask.new(spec) do |pkg|
       pkg.need_zip = true
       pkg.need_tar = true
     end
