@@ -40,8 +40,8 @@ module Kramdown
         HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/m
         HTML_COMMENT_RE = /<!--(.*?)-->/m
         HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
-        HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})\s*=\s*(["'])(.*?)\2/m
-        HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}\s*=\s*(["']).*?\3)*)\s*(\/)?>/m
+        HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(["'])(.*?)\2)?/m
+        HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}(?:\s*=\s*(["']).*?\3)?)*)\s*(\/)?>/m
         HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
@@ -89,7 +89,7 @@ module Kramdown
           name = @src[1].downcase
           closed = !@src[4].nil?
           attrs = Utils::OrderedHash.new
-          @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val}
+          @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val || ""}
 
           el = Element.new(:html_element, name, attrs, :category => :block)
           @tree.children << el

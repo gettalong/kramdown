@@ -128,7 +128,7 @@ module Kramdown
           end
 
           attrs = Utils::OrderedHash.new
-          @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = val.gsub(/\n+/, ' ')}
+          @src[2].scan(HTML_ATTRIBUTE_RE).each {|name,sep,val| attrs[name] = (val || '').gsub(/\n+/, ' ')}
 
           do_parsing = (HTML_CONTENT_MODEL[tag_name] == :raw || @tree.options[:content_model] == :raw ? false : @options[:parse_span_html])
           if val = HTML_MARKDOWN_ATTR_MAP[attrs.delete('markdown')]
