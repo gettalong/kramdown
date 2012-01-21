@@ -941,6 +941,8 @@ inside a raw HTML block.
 
 Also, if an invalid closing tag is found, it is ignored.
 
+Note that all HTML tag and attribute names are converted to lowercase!
+
 By default, kramdown parses all block HTML tags and all XML tags as raw HTML blocks. However, this
 can be configured with the `parse_block_html`. If this is set to `true`, then syntax parsing in HTML
 blocks is globally enabled. It is also possible to enable/disable syntax parsing on a tag per tag

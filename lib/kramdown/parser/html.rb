@@ -89,7 +89,7 @@ module Kramdown
           name = @src[1].downcase
           closed = !@src[4].nil?
           attrs = Utils::OrderedHash.new
-          @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr] = val || ""}
+          @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr.downcase] = val || ""}
 
           el = Element.new(:html_element, name, attrs, :category => :block)
           @tree.children << el
