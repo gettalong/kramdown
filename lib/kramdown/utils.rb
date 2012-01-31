@@ -32,6 +32,11 @@ module Kramdown
     autoload :Html, 'kramdown/utils/html'
     autoload :OrderedHash, 'kramdown/utils/ordered_hash'
 
+    # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
+    def self.camelize(name)
+      name.split('_').inject('') {|s,x| s << x[0..0].upcase + x[1..-1] }
+    end
+
   end
 
 end

@@ -98,7 +98,7 @@ module Kramdown
     #
     # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
     def method_missing(id, *attr, &block)
-      if id.to_s =~ /^to_(\w+)$/ && (name = method_to_class_name($1)) && Converter.const_defined?(name)
+      if id.to_s =~ /^to_(\w+)$/ && (name = Utils.camelize($1)) && Converter.const_defined?(name)
         output, warnings = Converter.const_get(name).convert(@root, @options)
         @warnings.concat(warnings)
         output
@@ -109,11 +109,6 @@ module Kramdown
 
     def inspect #:nodoc:
       "<KD:Document: options=#{@options.inspect} root=#{@root.inspect} warnings=#{@warnings.inspect}>"
-    end
-
-    private
-    def method_to_class_name(name)
-      name.split('_').inject(''){ |s,x| s << x[0..0].upcase + x[1..-1] }
     end
 
   end
