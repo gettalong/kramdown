@@ -26,16 +26,17 @@ module Kramdown
   module Parser
     class Kramdown
 
-      BLOCK_MATH_START = /^#{OPT_SPACE}(\\)?\$\$(.*?)\$\$\s*?\n/m
+      BLOCK_MATH_START = /^#{OPT_SPACE}(\\)?\$\$(.*?)\$\$(\s*?\n)?/m
 
       # Parse the math block at the current location.
       def parse_block_math
         if !after_block_boundary?
           return false
         elsif @src[1]
-          @src.scan(/^#{OPT_SPACE}\\/)
+          @src.scan(/^#{OPT_SPACE}\\/) if @src[3]
           return false
         end
+
         orig_pos = @src.pos
         @src.pos += @src.matched_size
         data = @src[2]

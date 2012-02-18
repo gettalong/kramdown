@@ -885,12 +885,23 @@ $$
 $$
 
 Using inline math is also easy: just surround your math content with two dollar signs, like with a
-math block.
+math block. If you don't want to start an inline math statement, just escape the dollar signs and
+they will be treated as simple dollar signs.
 
-If you don't want to start a math block or an inline math statement, just escape the dollar signs
-and they will be treated as simple dollar signs. If you want to start an inline math statement at
-the beginning of a paragraph, just escape the first dollar sign.
+If you have a paragraph that looks like a math block but should actually be a paragraph with just an
+inline math statement, you need to escape the first dollar sign:
 
+    The following is a math block:
+
+    $$ 5 + 5 $$
+
+    But next comes a paragraph with an inline math statement:
+
+    \$$ 5 + 5 $$
+
+If you don't even won't the inline math statement, escape the first two dollar signs:
+
+    \$\$ 5 + 5 $$
 
 ## HTML Blocks
 

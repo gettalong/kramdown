@@ -96,7 +96,13 @@ module Kramdown
         first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split(/\n/)
         first.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\."} if first
         second.gsub!(/^([=-]+\s*?)$/, "\\\1") if second
-        [first, second, *rest].compact.join("\n") + "\n"
+        res = [first, second, *rest].compact.join("\n") + "\n"
+        if el.children.length == 1 && el.children.first.type == :math
+          res = "\\#{res}"
+        elsif res.start_with?('\$$') && res.end_with?("\\$$\n")
+          res.sub!(/^\\\$\$/, '\$\$')
+        end
+        res
       end
 
 
@@ -351,7 +357,7 @@ module Kramdown
       end
 
       def convert_math(el, opts)
-        (@stack.last.type == :p && opts[:prev].nil? ? "\\" : '') + "$$#{el.value}$$" + (el.options[:category] == :block ? "\n" : '')
+        "$$#{el.value}$$" + (el.options[:category] == :block ? "\n" : '')
       end
 
       def convert_abbreviation(el, opts)
