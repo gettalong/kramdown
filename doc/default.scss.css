@@ -1,530 +1,184 @@
-$text-color: #354146;
-$link-color: #1666A3;
+@import url(design.css);
 
-* {
-    padding: 0;
-    margin: 0;
+aside.banner {
+    font-size: 18px;
+    line-height: 27px;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    color: #000;
-    text-align: left;
-    background: #fff;
-}
+aside a {
+    text-decoration: none;
 
-body, table, code {
-    font: normal 12px/1.5em Verdana, Tahoma, "Trebuchet MS", "DejuVu Sans", "Bitstream Vera Sans", sans-serif;
-}
-
-.with-margin {
-    margin: 0 auto;
-    min-width: 600px;
-    max-width: 1000px;
-}
-
-/* header */
-#fullheader {
-    background: #364147;
-    background-image: -moz-linear-gradient(top, rgba(54,65,71,1), rgba(81,92,96,1));
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(54,65,71,1)), to(rgba(81,92,96,1)));
-    position: relative;
-}
-
-#header {
-    @extend .with-margin;
-
-    position: relative;
-    padding: 0 0 0 30px;
-    height: 70px;
-
-    h1#logo {
-        a {
-            color: #ced1d2;
-            text-decoration: none;
-            display: block;
-            padding: 18px 0 17px;
-            font-weight: normal;
-        }
-
-        a:hover {
-            color: #fff;
-        }
-
-        span.slogan {
-            font-size: 60%; padding-left: 1.5em;
-        }
-    }
-}
-
-#donation {
-    position: absolute;
-    right: 10px;
-    bottom: 5px;
-}
-
-/* menu */
-#fullnav {
-    background: #3f4a50;
-    background-image: -moz-linear-gradient(top, rgba(63,74,80,1), rgba(88,99,103,1));
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(63,74,80,1)), to(rgba(88,99,103,1)));
-}
-
-#nav {
-    @extend .with-margin;
-
-    ul {
-        height: 40px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-
-        li {
-            display: block;
-            float: left;
-            margin: 0;
-            padding: 0;
-
-            a, span {
-                display: block;
-                float: left;
-                font-size: 90%;
-                color: white;
-                text-decoration: none;
-                text-align: center;
-                padding: 12px 20px 8px;
-                -webkit-transition: all 0.2s ease-in-out;
-                -moz-transition: all 0.2s ease-in-out;
-                -o-transition: all 0.2s ease-in-out;
-                transition: all 0.2s ease-in-out;
-            }
-
-            a:hover, span:hover {
-                color: #ced1d2;
-                text-decoration: underline;
-            }
-
-        }
-
-        li.webgen-menu-item-selected a, li.webgen-menu-item-selected span, li.webgen-menu-submenu-inhierarchy span {
-            color: #101517;
-            border: 1px solid #fff;
-            border-bottom:1px solid #e6e8e9;
-            background:#e6e8e9;
-            background-image: -moz-linear-gradient(top, #d6d8d9, #e6e8e9);
-            background-image: -webkit-gradient(linear, left top, left bottom, from(#d6d8d9), to(#e6e8e9));
-            text-decoration:none;
-        }
-
-    }
-}
-
-/* intro */
-#fullintro {
-    background: #e6e8e9;
-}
-
-#intro {
-    @extend .with-margin;
-
-    background: #e6e8e9;
-    height: auto;
-
-    #intro-in {
-        padding: 20px 5px;
-    }
-
-    p {
-        margin: 15px 0px 0px
-    }
-
-    a {
-        color: $link-color;
-        background-color: inherit;
+    &:hover {
         text-decoration: underline;
     }
-
-    a:hover, a:link {
-        color: #0B4775;
-    }
-
 }
 
-/* content */
-#container {
-    @extend .with-margin;
-
-    position: relative;
-    clear: both;
-    background-color: #fff;
-    background-image: -moz-linear-gradient(top, #eee, #fff 100, #fff);
-    background-image: -webkit-gradient(linear, 0 0, 0 200, from(#eee), to(#fff));
-
-    a {
-        color: $link-color;
-        background-color: inherit;
-        text-decoration: underline;
+#content {
+    blockquote.information {
+        border-left: 12px solid #080;
+        background-color: #bfb;
+        padding: 12px 12px 12px 0;
+        margin-left: -48px;
+        padding-left: 48px;
     }
 
-    a:hover, a:link {
-        color: #0B4775;
-    }
+    blockquote.markdown-difference {
+        border-left: 12px solid #dc0;
+        background-color: #ffa;
+        padding: 12px 12px 12px 0;
+        margin-left: -48px;
+        padding-left: 48px;
 
-    #sidebar {
-        float: right;
-        width: 30%;
-        min-width: 100px;
-        margin: 0 0 10px 10px;
-        color: black;
-        font-size: 92%;
-        background-color: #eee;
-
-        #sidebar-content {
-            padding: 5px 10px;
-            opacity: 1;
-        }
-
-        p {
-            margin: 0px;
-            padding: 5px 0px;
-        }
-
-        ul {
-            list-style: square;
-            margin: 5px 0px 5px 15px;
-            padding: 3px;
-
-            ul {
-                margin: 0px 0px 0px 5px;
-            }
-        }
-
-        a {
-            padding: 1px;
-            text-decoration: none;
-        }
-
-        h1 {
-            font: bold 150% Perpetua, Baskerville, "Big Caslon", "Palatino Linotype", Palatino, "URW Palladio L", "Nimbus Roman No9 L", serif;
-        }
-    }
-
-    #main {
-
-        margin-top: 20px;
-        padding: 0px 20px;
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: Perpetua, Baskerville, "Big Caslon", "Palatino Linotype", Palatino, "URW Palladio L", "Nimbus Roman No9 L", serif;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px #888;
-            line-height: 1.5em;
-        }
-        h1 { font-size: 230%; }
-        h2 { font-size: 190%; }
-        h3 { font-size: 160%; }
-        h4 { font-size: 130%; }
-
-        h1, h2, h3, h4 {
-            margin: 40px 0px 0px;
-        }
-
-        p, ul, ol, dl, table, pre, blockquote {
-            margin: 20px 0px 0px;
-        }
-
-        ul, ol {
-            margin-left: 10px;
-            padding: 0 15px;
-            color: #000;
-        }
-
-        ul ul, ul ol, ol ul, ol ol {
-            margin-top: 0px;
-        }
-
-        dt {
-            background-color: #eee;
-            padding: 2px;
-        }
-
-        dd {
-            margin: 5px 0px 10px 20px;
-            padding: 2px;
-
-            p, ul, ol, dl, table, pre, blockquote {
-                margin-top: 0px;
-            }
-
-        }
-
-        *:target::after {
-            content: " ☜";
-            font-size: 120%;
-        }
-
-        pre {
-            margin-left: 10px;
-            margin-right: 10px;
-            padding: 5px;
-            text-align: left;
-            overflow: visible;
-            font: 'Lucida Console', 'courier new', monospace;
-            color: white;
-            background: #eee;
-            border-top: 1px solid green;
-            border-bottom: 1px solid green;
-        }
-
-        pre > code {
-            color: black;
-            font-weight: normal;
-        }
-
-        pre[title]::before {
-            display:block;
-            padding: 5px;
-            margin: -5px -5px 5px -5px;
-            background: green;
-            color: white;
-            content:attr(title);
-            font: bold 100% 'Helvetica Neue', 'Trebuchet MS', Arial, Sans-serif;
-        }
-
-        code {
-            font-family: "Lucida Console", monospace;
-            font-weight: bold;
-            font-size: 100%;
-            color: black;
-        }
-
-        blockquote.warning, blockquote.information, blockquote.important {
-            position: relative;
-            padding: 5px 5px 5px 45px;
-            min-height: 40px;
-            border: 1px solid green;
-            border-radius: 10px;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            box-shadow: 0px 0px 5px #888;
-            -moz-box-shadow: 0px 0px 5px #888;
-            -webkit-box-shadow: 0px 0px 5px #888;
-
-            p, ul, ol, dl, table, pre, blockquote {
-                margin-top: 0px;
-            }
-        }
-
-        blockquote.warning::before, blockquote.information::before, blockquote.important::before {
-            display: block;
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            height: 30px;
-            width: 30px;
-            margin: 3px;
-            padding: 2px;
-            font: bold 30px "Georgia";
-            line-height: 30px;
-            text-align: center;
-            text-shadow: 1px 1px 2px #888;
-            background: white;
-            border-radius: 5px;
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
-        }
-
-        blockquote.warning::before {
-            content: '⚠';
-        }
-
-        blockquote.information::before {
-            content: '✔';
-        }
-
-        blockquote.important::before {
-            content: '!';
-        }
-
-        blockquote pre {
-            border: none;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-left: auto;
-            margin-right: auto;
-            width: 100%;
-
-            td, th {
-                padding: 3px 5px;
-            }
-
-            th {
-                background-color: green;
-                color: white;
-            }
-        }
-
-
-
-        /* added definitions ------------------------------------------------------------ */
-
-        .news-item {
-            border-top: 3px solid #ddd;
-            margin-top: 20px;
-
-            h2 {
-                margin-top: 20px;
-            }
-        }
-
-        .news-date {
-            margin-top: 30px;
-        }
-
-        pre {
-            margin: 15px 10px;
-            background-color: #e6e8e9;
-            color: #000;
-        }
-
-        pre.show-whitespaces .ws-space {
-            background-color: #f44;
-        }
-        pre.show-whitespaces .ws-space-l {
-            background-color: #f22;
-        }
-        pre.show-whitespaces .ws-space-r {
-            background-color: #f00;
-        }
-
-        pre.show-whitespaces .ws-tab {
-            background-color: #ff4;
-        }
-        pre.show-whitespaces .ws-tab-l {
-            background-color: #ff2;
-        }
-        pre.show-whitespaces .ws-tab-r {
-            background-color: #ff0;
-        }
-
-        pre.show-whitespaces.ws-lr .ws-tab {
-            background-color: inherit;
-        }
-        pre.show-whitespaces.ws-lr .ws-space {
-            background-color: inherit;
-            opacity: 0;
-        }
-
-        blockquote.markdown-difference {
-            margin: 15px 20px;
-            padding: 5px;
-            border: 2px solid #e6e8e9;
-            background-color: #ffffee
-        }
-
-        blockquote.markdown-difference:before {
+        &:before {
             content: "Difference to Standard Markdown";
             display: block;
             font-weight: bold;
-            margin-top: 5px
         }
+    }
 
-        pre.kdexample-before {
-            width: 45%;
-            float: left;
-            margin: 10px 10px 3px 10px;
-        }
-        pre.kdexample-before:hover + pre {
-            display: block;
-        }
+    blockquote pre {
+        border: none;
+    }
 
-        pre.kdexample-after-source {
-            display: none;
-            width: 45%;
-            float: right;
-            background-color: #ffffee;
-            border: 2px solid #e6e8e9;
-            margin: 10px 10px 3px 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-bottom: 3px;
-        }
+    table {
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
 
-        div.kdexample-after-live {
-            width: 45%;
-            float: right;
-            clear: right;
-            background-color: #eeffee;
-            border: 2px solid #e6e8e9;
-            margin: 10px 10px 3px 10px;
-            padding: 5px;
+        td, th {
+            padding: 3px 5px;
         }
-
-        div.kdsyntaxlink {
-            float: right;
-            padding: 5px;
-            border: 1px solid #e6e8e9;
-            margin-right: 10px;
-            margin-left: 10px;
+        th {
+            background-color: #080;
+            color: white;
         }
+    }
 
-        div.kdsyntaxlink a {
+    pre.show-whitespaces .ws-space {
+        background-color: #f44;
+    }
+    pre.show-whitespaces .ws-space-l {
+        background-color: #f22;
+    }
+    pre.show-whitespaces .ws-space-r {
+        background-color: #f00;
+    }
+    pre.show-whitespaces .ws-tab {
+        background-color: #ff4;
+    }
+    pre.show-whitespaces .ws-tab-l {
+        background-color: #ff2;
+    }
+    pre.show-whitespaces .ws-tab-r {
+        background-color: #ff0;
+    }
+    pre.show-whitespaces.ws-lr .ws-tab {
+        background-color: inherit;
+    }
+    pre.show-whitespaces.ws-lr .ws-space {
+        background-color: inherit;
+        opacity: 0;
+    }
+
+    pre.kdexample-before {
+        width: 45%;
+        float: left;
+        margin: 0;
+    }
+
+    pre.kdexample-before:hover + pre {
+        display: block;
+    }
+
+    pre.kdexample-after-source {
+        display: none;
+        width: 45%;
+        float: right;
+        background-color: #ffffee;
+        border: 2px solid #e6e8e9;
+        margin: 0 10px;
+        padding: 5px;
+    }
+
+    div.kdexample-after-live {
+        width: 45%;
+        float: right;
+        clear: none;
+        background-color: #eeffee;
+        border: 2px solid #e6e8e9;
+        margin: 0 10px 12px;
+        padding: 5px;
+    }
+
+    div.kdsyntaxlink {
+        float: right;
+        position: relative;
+        top: -17px;
+        padding: 5px;
+        border: 1px solid #e6e8e9;
+        margin-right: 10px;
+        margin-left: 10px;
+
+        a {
             text-decoration: none;
         }
-
-
     }
 }
 
-/* footer */
-#footer {
-    @extend .with-margin;
+.news-item {
+    border-top: 2px solid #ddd;
+    margin-top: 46px;
+}
 
+.news-date {
+    float: right;
+    margin-top: 2px;
+    font-size: small;
+    color: #888;
+}
+
+footer {
     clear: both;
-    margin-top: 20px;
-    padding: 5px 20px 30px;
     font-size: 92%;
     text-align: left;
-    color: #898989;
-    background-color: #eee;
-
-    h2, p {
-        padding-left: 0;
-    }
 
     a {
         color: #898989;
-    }
 
-    a:hover {
-        text-decoration: none;
-        color: #666;
-    }
-
-    ul {
-        margin: 0;
-        padding: 0;
+        &:hover {
+            text-decoration: none;
+            color: #666;
+        }
     }
 }
-
 
 /* common rules */
-img {
-    border: none;
-}
-
 acronym {
-  cursor: help;
-  border-bottom: 1px solid #777;
+    cursor: help;
+    border-bottom: 1px solid #777;
 }
 
-.float-left  { float: left; }
-.float-right { float: right; }
-.a-left, tr.a-left td {text-align:left;}
-.a-center, tr.a-center td {text-align:center;}
-.a-right, tr.a-right td {text-align:right;}
+.float-left {
+    float: left;
+}
 
-.clear { clear: both; }
+.float-right {
+    float: right;
+}
+
+.a-left, tr.a-left td {
+    text-align: left;
+}
+
+.a-center, tr.a-center td {
+    text-align: center;
+}
+
+.a-right, tr.a-right td {
+    text-align: right;
+}
+
+.clear {
+    clear: both;
+}
