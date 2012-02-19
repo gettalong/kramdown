@@ -48,7 +48,7 @@ different Ruby interpreters:
 ![ruby 1.8.7p249]({relocatable: img/graph-ruby-1.8.7-249.png})
 ![ruby 1.8.7p302]({relocatable: img/graph-ruby-1.8.7-302.png})
 ![ruby 1.9.2p136]({relocatable: img/graph-ruby-1.9.2p136-136.png})
-![ruby 1.9.3p0]({relocatable: img/graph-ruby-1.9.3p0-0.png})
+![ruby 1.9.3p125]({relocatable: img/graph-ruby-1.9.3p125-125.png})
 
 [Markdown Test Suite]: http://daringfireball.net/projects/downloads/MarkdownTest_1.0.zip
 [MDTest]: http://www.michelf.com/docs/projets/mdtest-1.0.zip
