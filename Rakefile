@@ -276,7 +276,7 @@ EOF
   COPYRIGHT=<<EOF
 #
 #--
-# Copyright (C) 2009-2010 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2012 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown.
 #
@@ -299,12 +299,12 @@ EOF
   desc "Insert/Update copyright notice"
   task :update_copyright do
     inserted = false
-    Dir["lib/**/*.rb"].each do |file|
+    Dir["lib/**/*.rb", "test/**/*.rb"].each do |file|
       if !File.read(file).start_with?(CODING_LINE + COPYRIGHT)
         inserted = true
         puts "Updating file #{file}"
         old = File.read(file)
-        if !(result = old.gsub!(/\A#{Regexp.escape(CODING_LINE)}#\n#--.*?\n#\+\+\n#\n/m, CODING_LINE + COPYRIGHT))
+        if !old.gsub!(/\A#{Regexp.escape(CODING_LINE)}#\n#--.*?\n#\+\+\n#\n/m, CODING_LINE + COPYRIGHT)
           old.gsub!(/\A(#{Regexp.escape(CODING_LINE)})?/, CODING_LINE + COPYRIGHT + "\n")
         end
         File.open(file, 'w+') {|f| f.puts(old)}
