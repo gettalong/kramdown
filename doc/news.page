@@ -1,6 +1,6 @@
 ---
 title: News
-in_menu: true
+in_menu: false
 sort_info: 30
 --- pipeline:tags,blocks,fragments
 

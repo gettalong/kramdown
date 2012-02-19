@@ -17,11 +17,13 @@ to verify that the implementation matches the kramdown specification.
 
 If you believe you have found a bug in the implementation, please follow these steps:
 
-* Check the syntax page and see if the behaviour is not intended.
+* Check the [syntax page](syntax.html) and see if the behaviour is not intended.
 
 * If the behaviour is not intended and it seems that kramdown should parse some text in another
-  fashion, please open a bug report and attach two files: one with the text and one with the HTML
+  fashion, please open a [bug report] and attach two files: one with the text and one with the HTML
   conversion you think is correct.
+
+[bug report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
 
 
 # Benchmark
@@ -30,7 +32,7 @@ kramdown comes with a small benchmark to test how fast it is in regard to four o
 implementations: Maruku, BlueFeather, BlueCloth and RDiscount. The first two are written using only
 Ruby, the latter two use the C discount library for the actual hard work (which makes them really
 fast but they do not provide additional syntax elements). As one can see below, kramdown is
-currently (November 2010) ~3-4x faster than Maruku, ~4-5x faster than BlueFeather but ~30x slower
+currently (February 2012) ~3-4x faster than Maruku, ~4-5x faster than BlueFeather but ~30x slower
 than BlueCloth and rdiscount:
 
 <pre><code>

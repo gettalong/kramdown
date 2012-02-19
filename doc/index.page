@@ -8,8 +8,9 @@ sort_info: 1
 If you want to get started with kramdown, have a look at the [installation page](installation.html)
 to see how you can install it on your system. Then look through the
 [documentation](documentation.html) for finding information about how to actually use kramdown and
-its parsers/converters. The [syntax page](syntax.html) provides a detailed description of the
-superset of Markdown which kramdown supports.
+its parsers/converters. The [quick reference](quickref.html) provides a overview of the syntax -- if
+you need a more detailed description of the superset of Markdown which kramdown supports the [syntax
+page](syntax.html) is the place to go!
 
 {tikz:: path: overview.png
 img_attr: {style: 'background:transparent'}
@@ -79,19 +80,13 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 
 --- name:intro
 
-## Welcome to the kramdown site
-
 **kramdown** (sic, not Kramdown or KramDown, just kramdown) is a *free* GPL-licensed
 [Ruby](http://www.ruby-lang.org) library for parsing and converting a superset of Markdown. It is
 completely written in Ruby, supports standard Markdown (with some minor modifications) and various
 extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
 
-It is probably the fastest pure-Ruby Markdown converter available (January 2011), being about 4x
+It is probably the fastest pure-Ruby Markdown converter available (February 2012), being about 4x
 faster than [Maruku] and about 5x faster than [BlueFeather].
-
-<p class="a-center">
-The latest version of kramdown is <b>0.13.4</b> and it was released on <b>2011-12-16</b>.
-</p>
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Maruku]: http://maruku.rubyforge.org
