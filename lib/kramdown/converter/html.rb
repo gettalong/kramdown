@@ -315,7 +315,8 @@ module Kramdown
 
       def convert_math(el, indent)
         block = (el.options[:category] == :block)
-        "<script type=\"math/tex#{block ? '; mode=display' : ''}\">#{el.value}</script>#{block ? "\n" : ''}"
+        value = (el.value =~ /<|&/ ? "<![CDATA[#{el.value}]]>" : el.value)
+        "<script type=\"math/tex#{block ? '; mode=display' : ''}\">#{value}</script>#{block ? "\n" : ''}"
       end
 
       def convert_abbreviation(el, indent)
