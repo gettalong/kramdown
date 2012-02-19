@@ -90,7 +90,7 @@ If you set the option `auto_ids` to `false` (for example, by using the `options`
 [Extensions](#extensions)), then the automatic header ID generation is turned off:
 
 {kdexample::}
-{:options auto_ids="false" /}
+{::options auto_ids="false" /}
 
 # A header without an ID
 {kdexample}
