@@ -94,6 +94,7 @@ if defined? Webgen
       config['contentprocessor.tags.map']['options'] = 'OptionsDisplay'
       config['contentprocessor.tags.map']['kdexample'] = 'KDExample'
       config['contentprocessor.tags.map']['kdlink'] = 'KDLink'
+      config['contentprocessor.kramdown.options'][:coderay_line_numbers] = nil
     end
   end
 end
