@@ -118,7 +118,7 @@ module Kramdown
       def convert_header(el, opts)
         res = ''
         res << "#{'#' * el.options[:level]} #{inner(el, opts)}"
-        res << "   {##{el.attr['id']}}" if el.attr['id']
+        res << "   {##{el.attr['id']}}" if el.attr['id'] && !el.attr['id'].strip.empty?
         res << "\n"
       end
 
@@ -404,12 +404,12 @@ module Kramdown
       def ial_for_element(el)
         res = el.attr.map do |k,v|
           next if [:img, :a].include?(el.type) && ['href', 'src', 'alt', 'title'].include?(k)
-          next if el.type == :header && k == 'id'
+          next if el.type == :header && k == 'id' && !v.strip.empty?
           if v.nil?
             ''
           elsif k == 'class' && !v.empty?
             " " + v.split(/\s+/).map {|w| ".#{w}"}.join(" ")
-          elsif k == 'id'
+          elsif k == 'id' && !v.strip.empty?
             " ##{v}"
           else
             " #{k}=\"#{v.to_s}\""
