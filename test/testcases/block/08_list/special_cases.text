@@ -33,3 +33,8 @@ A normal list:
 * compact
 
 * but here
+
+List item without content:
+
+* 
+* a

@@ -134,7 +134,7 @@ module Kramdown
 
       def convert_li(el, opts)
         sym, width = if @stack.last.type == :ul
-                       ['* ', el.children.first.type == :codeblock ? 4 : 2]
+                       ['* ', el.children.first && el.children.first.type == :codeblock ? 4 : 2]
                      else
                        ["#{opts[:index] + 1}.".ljust(4), 4]
                      end
@@ -147,13 +147,13 @@ module Kramdown
         newlines = text.scan(/\n*\Z/).first
         first, *last = text.split(/\n/)
         last = last.map {|l| " "*width + l}.join("\n")
-        text = first + (last.empty? ? "" : "\n") + last + newlines
-        if el.children.first.type == :p && !el.children.first.options[:transparent]
+        text = (first.nil? ? "\n" : first + (last.empty? ? "" : "\n") + last + newlines)
+        if el.children.first && el.children.first.type == :p && !el.children.first.options[:transparent]
           res = "#{sym}#{text}"
           res << "^\n" if el.children.size == 1 && @stack.last.children.last == el &&
             (@stack.last.children.any? {|c| c.children.first.type != :p} || @stack.last.children.size == 1)
           res
-        elsif el.children.first.type == :codeblock
+        elsif el.children.first && el.children.first.type == :codeblock
           "#{sym}\n    #{text}"
         else
           "#{sym}#{text}"

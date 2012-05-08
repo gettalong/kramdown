@@ -123,7 +123,7 @@ module Kramdown
               (it.children.length < 2 || it.children[1].type != :blank ||
                (it == list.children.last && it.children.length == 2 && !eob_found)) &&
               (list.children.last != it || list.children.size == 1 ||
-               list.children[0..-2].any? {|cit| cit.children.first.type != :p || cit.children.first.options[:transparent]})
+               list.children[0..-2].any? {|cit| !cit.children.first || cit.children.first.type != :p || cit.children.first.options[:transparent]})
             it.children.first.children.first.value << "\n" if it.children.size > 1 && it.children[1].type != :blank
             it.children.first.options[:transparent] = true
           end
