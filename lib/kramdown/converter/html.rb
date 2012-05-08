@@ -315,7 +315,7 @@ module Kramdown
 
       def convert_math(el, indent)
         block = (el.options[:category] == :block)
-        value = (el.value =~ /<|&/ ? "<![CDATA[#{el.value}]]>" : el.value)
+        value = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
         "<script type=\"math/tex#{block ? '; mode=display' : ''}\">#{value}</script>#{block ? "\n" : ''}"
       end
 
