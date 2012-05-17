@@ -276,7 +276,7 @@ module Kramdown
         number = @footnote_counter
         @footnote_counter += 1
         @footnotes << [el.options[:name], el.value]
-        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" rel=\"footnote\">#{number}</a></sup>"
+        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" data-fn=\"footnote\">#{number}</a></sup>"
       end
 
       def convert_raw(el, indent)
@@ -394,7 +394,7 @@ module Kramdown
           li.children = Marshal.load(Marshal.dump(data.children))
           ol.children << li
 
-          ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" rel=\"reference\">&#8617;</a>")
+          ref = Element.new(:raw, "<a href=\"#fnref:#{name}\" data-fn=\"reference\">&#8617;</a>")
           if li.children.last.type == :p
             para = li.children.last
           else
