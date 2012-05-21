@@ -3,7 +3,7 @@
 <p>The latest version of kramdown is <b>0.13.6</b> and it was released
 on <b>2012-05-09</b>.</p>
 
-<p>More <a href="news.html">news</a>…</p>
+<p>More <a href="{relocatable: news.html}">news</a>…</p>
 
 <h2>Support kramdown</h2>
 
