@@ -291,6 +291,17 @@ Default: style
 Used by: HTML converter
 EOF
 
+    define(:coderay_default_lang, Symbol, nil, <<EOF)
+Sets the default language for highlighting.
+
+If no language is set for a code block, the default language is used
+instead. The value has to be one of the languages supported by coderay
+or nil if no default language should be used.
+
+Default: nil
+Used by: HTML converter
+EOF
+
     define(:entity_output, Symbol, :as_char, <<EOF)
 Defines how entities are output
 

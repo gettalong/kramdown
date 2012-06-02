@@ -108,12 +108,13 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent)
-        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
+        if (el.attr['lang'] || @options[:coderay_default_lang]) && HIGHLIGHTING_AVAILABLE
           attr = el.attr.dup
           opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
             :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
             :bold_every => @options[:coderay_bold_every], :css => @options[:coderay_css]}
-          result = CodeRay.scan(el.value, attr.delete('lang').to_sym).html(opts).chomp << "\n"
+          lang = (attr.delete('lang') || @options[:coderay_default_lang]).to_sym
+          result = CodeRay.scan(el.value, lang).html(opts).chomp << "\n"
           "#{' '*indent}<div#{html_attributes(attr)}>#{result}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
