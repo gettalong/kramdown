@@ -348,7 +348,7 @@ module Kramdown
           li = Element.new(:li, nil, nil, {:level => level})
           li.children << Element.new(:p, nil, nil, {:transparent => true})
           a = Element.new(:a, nil, {'href' => "##{id}"})
-          a.children.concat(children)
+          a.children.concat(remove_footnotes(Marshal.load(Marshal.dump(children))))
           li.children.last.children << a
           li.children << Element.new(type)
 
@@ -373,6 +373,14 @@ module Kramdown
           item.children.pop unless item.children.last.children.size > 0
         end
         sections
+      end
+
+      # Remove all footnotes from the given elements.
+      def remove_footnotes(elements)
+        elements.delete_if do |c|
+          remove_footnotes(c.children)
+          c.type == :footnote
+        end
       end
 
       # Obfuscate the +text+ by using HTML entities.
