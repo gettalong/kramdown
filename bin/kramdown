@@ -25,7 +25,7 @@ require 'optparse'
 require 'kramdown'
 
 options = {}
-format = 'html'
+format = ['html']
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
   opts.summary_indent = ' '*4
@@ -35,7 +35,7 @@ OptionParser.new do |opts|
   opts.separator ""
 
   opts.on("-i", "--input ARG", "Specify the input format: kramdown (default) or html") {|v| options[:input] = v}
-  opts.on("-o", "--output ARG", "Specify the output format: html (default), kramdown or latex") {|v| format = v}
+  opts.on("-o", "--output ARG", Array, "Specify one or more output formats separated by commas: html (default), kramdown, latex or remove_html_tags") {|v| format = v}
 
   opts.on("-v", "--version", "Show the version of kramdown") do
     puts Kramdown::VERSION
@@ -70,7 +70,9 @@ end.parse!
 
 begin
   doc = Kramdown::Document.new(ARGF.read, options)
-  puts doc.send("to_#{format}")
+  result = ''
+  format.each {|f| result = doc.send("to_#{f}")}
+  puts result
   doc.warnings.each {|warn| $stderr.puts "Warning: #{warn}"}
 rescue Kramdown::Error => e
   $stderr.puts "Error: #{e.message}"
