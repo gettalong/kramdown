@@ -381,6 +381,26 @@ EOF
       val
     end
 
+    define(:remove_block_html_tags, Boolean, true, <<EOF)
+Remove block HTML tags
+
+If this option is `true`, the RemoveHtmlTags converter removes
+block HTML tags.
+
+Default: true
+Used by: RemoveHtmlTags converter
+EOF
+
+    define(:remove_span_html_tags, Boolean, false, <<EOF)
+Remove span HTML tags
+
+If this option is `true`, the RemoveHtmlTags converter removes
+span HTML tags.
+
+Default: false
+Used by: RemoveHtmlTags converter
+EOF
+
   end
 
 end

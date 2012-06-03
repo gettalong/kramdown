@@ -166,7 +166,7 @@ class TestFiles < Test::Unit::TestCase
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     opts_file = text_file.sub(/\.text$/, '.options')
     options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
-    (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base]).each do |conv_class|
+    (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base, :RemoveHtmlTags]).each do |conv_class|
       define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
         doc = Kramdown::Document.new(File.read(text_file), options)
         options_before = Marshal.load(Marshal.dump(doc.options))

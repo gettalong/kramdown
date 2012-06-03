@@ -35,6 +35,7 @@ module Kramdown
     autoload :Latex, 'kramdown/converter/latex'
     autoload :Kramdown, 'kramdown/converter/kramdown'
     autoload :Toc, 'kramdown/converter/toc'
+    autoload :RemoveHtmlTags, 'kramdown/converter/remove_html_tags'
 
   end
 
