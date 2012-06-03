@@ -3,7 +3,7 @@ title: HTML Converter
 ---
 # HTML Converter
 
-This converter converts a kramdown element tree into a HTML fragment and supports all available
+This converter converts a kramdown element tree into an HTML fragment and supports all available
 element types. Below is a list of additional features of the HTML converter as well as some
 additional information.
 
