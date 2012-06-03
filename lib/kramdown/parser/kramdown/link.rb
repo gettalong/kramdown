@@ -60,7 +60,7 @@ module Kramdown
       LINK_BRACKET_STOP_RE = /(\])|!?\[/
       LINK_PAREN_STOP_RE = /(\()|(\))|\s(?=['"])/
       LINK_INLINE_ID_RE = /\s*?\[([^\]]+)?\]/
-      LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/
+      LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/m
       LINK_START = /!?\[(?=[^^])/
 
       # Parse the link at the current scanner position. This method is used to parse normal links as
