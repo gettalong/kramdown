@@ -429,6 +429,7 @@ module Kramdown
         174 => ['\textregistered'],
         170 => ['\textordfeminine'],
         172 => ['$\neg$'],
+        173 => ['\-'],
         176 => ['$\degree$', 'mathabx'],
         177 => ['$\pm$'],
         180 => ['\''],

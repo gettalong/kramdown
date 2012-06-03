@@ -200,6 +200,7 @@ module Kramdown
                       [174, 'reg'],
                       [170, 'ordf'],
                       [172, 'not'],
+                      [173, 'shy'],
                       [176, 'deg'],
                       [177, 'plusmn'],
                       [180, 'acute'],
