@@ -110,7 +110,9 @@ module Kramdown
                elsif @options[name].type == Float
                  Float(data) rescue raise Kramdown::Error, "Invalid float value for option '#{name}': '#{data}'"
                elsif @options[name].type == Symbol
-                 (data.strip.empty? ? nil : data.to_sym)
+                 data.strip!
+                 data = data[1..-1] if data[0] == ?:
+                 (data.empty? || data == 'nil' ? nil : data.to_sym)
                elsif @options[name].type == Boolean
                  data.downcase.strip != 'false' && !data.empty?
                end
@@ -253,7 +255,7 @@ EOF
     define(:coderay_line_numbers, Symbol, :inline, <<EOF)
 Defines how and if line numbers should be shown
 
-The possible values are :table, :inline, :list or nil. If this option is
+The possible values are :table, :inline or nil. If this option is
 nil, no line numbers are shown.
 
 Default: :inline
