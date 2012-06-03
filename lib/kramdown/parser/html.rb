@@ -37,7 +37,7 @@ module Kramdown
 
         #:stopdoc:
         # The following regexps are based on the ones used by REXML, with some slight modifications.
-        HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/m
+        HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/im
         HTML_COMMENT_RE = /<!--(.*?)-->/m
         HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
         HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(["'])(.*?)\2)?/m
