@@ -322,7 +322,7 @@ module Kramdown
 
       def convert_abbreviation(el, indent)
         title = @root.options[:abbrev_defs][el.value]
-        "<abbr#{!title.empty? ? " title=\"#{title}\"" : ''}>#{el.value}</abbr>"
+        "<abbr#{!title.empty? ? html_attributes(:title => title) : ''}>#{el.value}</abbr>"
       end
 
       def convert_root(el, indent)
