@@ -401,6 +401,16 @@ Default: false
 Used by: RemoveHtmlTags converter
 EOF
 
+    define(:header_offset, Integer, 0, <<EOF)
+Sets the offset for <h1> <h2>... headers
+
+If this option is c then writing markdown code that translates
+to <Hn> would translate to <H(n+c)>
+
+Default: 0
+Used by: HTML converter
+EOF
+
   end
 
 end
