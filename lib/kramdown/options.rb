@@ -359,7 +359,7 @@ Defines the LaTeX commands for different header levels
 The commands for the header levels one to six can be specified by
 separating them with commas.
 
-Default: section,subsection,subsubsection,paragraph,subparagraph,subsubparagraph
+Default: section,subsection,subsubsection,paragraph,subparagraph,subparagraph
 Used by: Latex converter
 EOF
       simple_array_validator(val, :latex_headers, 6)
