@@ -42,7 +42,8 @@ module Kramdown
       def replace_abbreviations(el, regexps = nil)
         return if @root.options[:abbrev_defs].empty?
         if !regexps
-          regexps = [Regexp.union(*@root.options[:abbrev_defs].keys.map {|k| /#{Regexp.escape(k)}/})]
+          sorted_abbrevs = @root.options[:abbrev_defs].keys.sort {|a,b| b.length <=> a.length}
+          regexps = [Regexp.union(*sorted_abbrevs.map {|k| /#{Regexp.escape(k)}/})]
           regexps << /(?=(?:\W|^)#{regexps.first}(?!\w))/ # regexp should only match on word boundaries
         end
         el.children.map! do |child|
