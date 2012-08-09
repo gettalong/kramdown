@@ -144,8 +144,8 @@ module Kramdown
           attr['id'] = generate_id(el.options[:raw_text])
         end
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
-        output_level = Integer(el.options[:level])+@options[:header_offset].to_i
-        "#{' '*indent}<h#{output_level}#{html_attributes(attr)}>#{inner(el, indent)}</h#{output_level}>\n"
+        level = output_header_level(el.options[:level])
+        "#{' '*indent}<h#{level}#{html_attributes(attr)}>#{inner(el, indent)}</h#{level}>\n"
       end
 
       def convert_hr(el, indent)

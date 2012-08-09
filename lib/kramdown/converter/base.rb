@@ -135,6 +135,13 @@ module Kramdown
         @options[:toc_levels].include?(el.options[:level])
       end
 
+      # Return the output header level given a level.
+      #
+      # Uses the +header_offset+ option for adjusting the header level.
+      def output_header_level(level)
+        [[level + @options[:header_offset], 6].min, 1].max
+      end
+
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
       #
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated

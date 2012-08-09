@@ -402,13 +402,14 @@ Used by: RemoveHtmlTags converter
 EOF
 
     define(:header_offset, Integer, 0, <<EOF)
-Sets the offset for <h1> <h2>... headers
+Sets the output offset for headers
 
-If this option is c then writing markdown code that translates
-to <Hn> would translate to <H(n+c)>
+If this option is c (may also be negative) then a header with level n
+will be output as a header with level c+n. If c+n is lower than 1,
+level 1 will be used. If c+n is greater than 6, level 6 will be used.
 
 Default: 0
-Used by: HTML converter
+Used by: HTML converter, Kramdown converter, Latex converter
 EOF
 
   end

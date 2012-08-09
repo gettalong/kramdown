@@ -117,7 +117,7 @@ module Kramdown
       end
 
       def convert_header(el, opts)
-        type = @options[:latex_headers][el.options[:level] - 1]
+        type = @options[:latex_headers][output_header_level(el.options[:level]) - 1]
         if ((id = el.attr['id']) ||
             (@options[:auto_ids] && (id = generate_id(el.options[:raw_text])))) && in_toc?(el)
           "\\#{type}{#{inner(el, opts)}}\\hypertarget{#{id}}{}\\label{#{id}}\n\n"
