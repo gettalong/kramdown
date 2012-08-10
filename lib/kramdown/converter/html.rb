@@ -254,8 +254,9 @@ module Kramdown
         res = inner(el, indent)
         attr = el.attr.dup
         if attr['href'] =~ /^mailto:/
-          attr['href'] = obfuscate('mailto') << ":" << obfuscate(attr['href'].sub(/^mailto:/, ''))
-          res = obfuscate(res)
+          mail_addr = attr['href'].sub(/^mailto:/, '')
+          attr['href'] = obfuscate('mailto') << ":" << obfuscate(mail_addr)
+          res = obfuscate(res) if res == mail_addr
         end
         "<a#{html_attributes(attr)}>#{res}</a>"
       end
