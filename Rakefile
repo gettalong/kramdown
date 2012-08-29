@@ -116,6 +116,7 @@ end
 tt = Rake::TestTask.new do |test|
   test.warning = true
   test.libs << 'test'
+  test.test_files = FileList['test/test_*.rb']
 end
 
 # Release tasks and development tasks ############################################
