@@ -32,11 +32,7 @@ module Kramdown
         ACHARS = '[[:alnum:]]'
       end
       AUTOLINK_START_STR = "<((mailto|https?|ftps?):.+?|[-.#{ACHARS}]+@[-#{ACHARS}]+(?:\.[-#{ACHARS}]+)*\.[a-z]+)>"
-      if RUBY_VERSION < '1.9.0'
-        AUTOLINK_START = /#{AUTOLINK_START_STR}/u
-      else
-        AUTOLINK_START = /#{AUTOLINK_START_STR}/
-      end
+      AUTOLINK_START = /#{AUTOLINK_START_STR}/u
 
       # Parse the autolink at the current location.
       def parse_autolink
