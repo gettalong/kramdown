@@ -383,8 +383,9 @@ module Kramdown
               if c.type == :text
                 mem << c.value
               elsif c.type == :entity
-                if RUBY_VERSION >= '1.9'
-                  mem << c.value.char.encode(@root.options[:encoding])
+                value_char = c.value.char
+                if value_char.respond_to?(:encode)
+                  mem << value_char.encode(@root.options[:encoding])
                 elsif [60, 62, 34, 38].include?(c.value.code_point)
                   mem << c.value.code_point.chr
                 end
