@@ -38,7 +38,7 @@ module Kramdown
       def entity_to_str(e, original = nil)
         entity_output = @options[:entity_output]
 
-        if RUBY_VERSION >= '1.9' && entity_output == :as_char &&
+        if e.char.respond_to?(:encoding) && entity_output == :as_char &&
             (c = e.char.encode(@root.options[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
           c
         elsif (entity_output == :as_input || entity_output == :as_char) && original
