@@ -43,10 +43,10 @@ module Kramdown
           c
         elsif (entity_output == :as_input || entity_output == :as_char) && original
           original
-        elsif entity_output == :numeric || e.name.nil?
-          "&##{e.code_point};"
-        else
+        elsif entity_output == :symbolic && !e.name.nil?
           "&#{e.name};"
+        else # default to :numeric
+          "&##{e.code_point};"
         end
       end
 
