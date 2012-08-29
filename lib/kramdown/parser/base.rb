@@ -62,7 +62,7 @@ module Kramdown
       def initialize(source, options)
         @source = source
         @options = Kramdown::Options.merge(options)
-        @root = Element.new(:root, nil, nil, :encoding => (RUBY_VERSION >= '1.9' ? source.encoding : nil))
+        @root = Element.new(:root, nil, nil, :encoding => (source.encoding rescue nil))
         @warnings = []
         @text_type = :text
       end
@@ -115,7 +115,7 @@ module Kramdown
       # method works correctly under Ruby 1.8 and Ruby 1.9.
       def extract_string(range, strscan)
         result = nil
-        if RUBY_VERSION >= '1.9'
+        if strscan.string.respond_to?(:encoding)
           begin
             enc = strscan.string.encoding
             strscan.string.force_encoding('ASCII-8BIT')
