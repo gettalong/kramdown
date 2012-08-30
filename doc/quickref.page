@@ -147,6 +147,16 @@ many tildes as the starting line.
 ~~~~~~~~~~~~
 {kdexample}
 
+The following is a code block with language specified:
+
+{kdexample::}
+~~~ ruby
+def what?
+  42
+end
+~~~
+{kdexample}
+
 
 ## Horizontal Rules
 

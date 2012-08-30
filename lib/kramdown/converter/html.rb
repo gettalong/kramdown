@@ -64,7 +64,6 @@ module Kramdown
         @toc_code = nil
         @indent = 2
         @stack = []
-        @enable_coderay = @options[:enable_coderay] && HIGHLIGHTING_AVAILABLE
       end
 
       # The mapping of element type to conversion method.
@@ -109,7 +108,7 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent)
-        if @enable_coderay && (el.attr['lang'] || @options[:coderay_default_lang])
+        if (el.attr['lang'] || @options[:coderay_default_lang]) && HIGHLIGHTING_AVAILABLE
           attr = el.attr.dup
           opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
             :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
@@ -271,7 +270,7 @@ module Kramdown
       end
 
       def convert_codespan(el, indent)
-        if @enable_coderay && (el.attr['lang'] || @options[:coderay_default_lang])
+        if el.attr['lang'] && HIGHLIGHTING_AVAILABLE
           attr = el.attr.dup
           result = CodeRay.scan(el.value, attr.delete('lang').to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
           "<code#{html_attributes(attr)}>#{result}</code>"

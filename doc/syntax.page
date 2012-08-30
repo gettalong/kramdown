@@ -399,6 +399,25 @@ example:
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
 
+You can specify the language of the code block at the end of the starting line:
+
+    ~~~ ruby
+    def what?
+      42
+    end
+    ~~~
+
+It will be parsed to `<pre class="ruby"><code>...</code></pre>`. This information can help for 
+further processing, e.g.: syntax highlight using javascript.
+
+A GitHub flavored style is supported, e.g.:
+
+    ``` ruby
+    def what?
+      42
+    end
+    ```
+
 
 ## Lists
 

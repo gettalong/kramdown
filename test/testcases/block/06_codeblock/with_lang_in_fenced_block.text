@@ -24,3 +24,10 @@ def what?
 end
 ~~~
 {:lang="not-ruby"}
+
+~~~ ruby
+def what?
+  42
+end
+~~~
+{: .not-ruby}
