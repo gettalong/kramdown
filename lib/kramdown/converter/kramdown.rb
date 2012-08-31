@@ -201,8 +201,9 @@ module Kramdown
           "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
         else
           output = ''
-          output << "<#{el.value}#{html_attributes(el.attr)}"
-          output << " markdown=\"1\"" if markdown_attr
+          attr = el.attr.dup
+          attr['markdown'] = '1' if markdown_attr
+          output << "<#{el.value}#{html_attributes(attr)}"
           if !res.empty? && el.options[:content_model] != :block
             output << ">#{res}</#{el.value}>"
           elsif !res.empty?
