@@ -294,7 +294,7 @@ Used by: HTML converter
 EOF
 
     define(:coderay_default_lang, Symbol, nil, <<EOF)
-Sets the default language for highlighting.
+Sets the default language for highlighting code blocks
 
 If no language is set for a code block, the default language is used
 instead. The value has to be one of the languages supported by coderay
