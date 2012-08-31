@@ -103,8 +103,8 @@ if defined? RDoc::Task
   rd = RDoc::Task.new do |rdoc|
     rdoc.rdoc_dir = 'htmldoc/rdoc'
     rdoc.title = 'kramdown'
-    rdoc.main = 'README'
-    rdoc.rdoc_files.include('lib', 'README')
+    rdoc.main = 'lib/kramdown/document.rb'
+    rdoc.rdoc_files.include('lib')
   end
 end
 
@@ -138,7 +138,7 @@ EOF
   PKG_FILES = FileList.new([
                             'Rakefile',
                             'setup.rb',
-                            'COPYING', 'GPL', 'README', 'AUTHORS',
+                            'COPYING', 'GPL', 'README.md', 'AUTHORS',
                             'VERSION', 'ChangeLog', 'CONTRIBUTERS',
                             'bin/*',
                             'benchmark/*',
@@ -203,8 +203,7 @@ EOF
       #### Documentation
 
       s.has_rdoc = true
-      s.rdoc_options = ['--main', 'README']
-      s.extra_rdoc_files = 'README'
+      s.rdoc_options = ['--main', 'lib/kramdown/document.rb']
 
       #### Author and project details
 

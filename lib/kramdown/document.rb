@@ -19,6 +19,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++
 #
+# = kramdown
+#
+# kramdown is yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition and
+# supporting several common extensions.
+#
+# The kramdown library is mainly written to support the kramdown-to-HTML conversion chain. However,
+# due to its flexibility it supports other input and output formats as well. Here is a list of the
+# supported formats:
+#
+# * input formats: kramdown (a Markdown superset), Markdown, HTML
+# * output formats: HTML, kramdown, LaTeX (and therefore PDF)
+#
+# All the documentation on the available input and output formats is available at
+# http://kramdown.rubyforge.org.
+#
+# == Usage
+#
+# kramdown has a basic *Cloth API, so using kramdown is as easy as
+#
+#     require 'kramdown'
+#
+#     Kramdown::Document.new(text).to_html
+#
+# For detailed information have a look at the Kramdown::Document class.
+#
+# == License
+#
+# GPLv3 - see the COPYING file.
+
 
 require 'kramdown/compatibility'
 
