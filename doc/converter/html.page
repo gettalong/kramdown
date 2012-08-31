@@ -96,7 +96,8 @@ Here is an example on how Ruby code is highlighted:
     puts 1 + 1
 {: lang='ruby'}
 
-You can use set option `:enable_coderay` to `false` to disable this feature, leaving a clean source.
+You can set the option `enable_coderay` to `false` to completely disable this feature, leaving a
+clean source.
 
 
 ## Math Support

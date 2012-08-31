@@ -55,12 +55,17 @@ class TestFiles < Test::Unit::TestCase
     EXCLUDE_HTML_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
                           'test/testcases/block/09_html/simple.html', # bc of xml elements
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
+                          'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
+                          'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html, htmlinput}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
       out_file = (html_file =~ /\.htmlinput$/ ? html_file.sub(/input$/, '') : html_file)
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
-        doc = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1)
+        opts_file = html_file.sub(/\.html$/, '.options')
+        opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        doc = Kramdown::Document.new(File.read(html_file), options.merge(:input => 'html'))
         assert_equal(tidy_output(File.read(out_file)), tidy_output(doc.to_html))
       end
     end
@@ -150,12 +155,17 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
+                             'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
+                             'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
       define_method('test_' + html_file.tr('.', '_') + "_to_kramdown_to_html") do
         kd = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1).to_kramdown
-        doc = Kramdown::Document.new(kd, :auto_ids => false, :footnote_nr => 1)
+        opts_file = html_file.sub(/\.html$/, '.options')
+        opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        doc = Kramdown::Document.new(kd, options)
         assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
       end
     end

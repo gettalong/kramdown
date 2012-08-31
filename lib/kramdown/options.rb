@@ -244,9 +244,10 @@ Used by: HTML converter
 EOF
 
     define(:enable_coderay, Boolean, true, <<EOF)
-Determines whether to use Coderay
+Use coderay for syntax highlighting
 
-The possible values are true or false.
+If this option is `true`, coderay is used by the HTML converter for
+syntax highlighting the content of code spans and code blocks.
 
 Default: true
 Used by: HTML converter
