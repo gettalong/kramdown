@@ -243,6 +243,15 @@ Default: 1
 Used by: HTML converter
 EOF
 
+    define(:enable_coderay, Boolean, true, <<EOF)
+Determines whether to use Coderay
+
+The possible values are true or false.
+
+Default: true
+Used by: HTML converter
+EOF
+
     define(:coderay_wrap, Symbol, :div, <<EOF)
 Defines how the highlighted code should be wrapped
 
