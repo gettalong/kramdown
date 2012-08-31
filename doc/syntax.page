@@ -407,16 +407,7 @@ You can specify the language of the code block at the end of the starting line:
     end
     ~~~
 
-It will be parsed to `<pre class="ruby"><code>...</code></pre>`. This information can help for 
-further processing, e.g.: syntax highlight using javascript.
-
-A GitHub flavored style is supported, e.g.:
-
-    ``` ruby
-    def what?
-      42
-    end
-    ```
+This information can help for further processing, e.g.: syntax highlight.
 
 
 ## Lists
