@@ -43,7 +43,7 @@ module Kramdown
           c
         elsif (entity_output == :as_input || entity_output == :as_char) && original
           original
-        elsif entity_output == :symbolic && !e.name.nil?
+        elsif (entity_output == :symbolic || ESCAPE_MAP.has_key?(e.char)) && !e.name.nil?
           "&#{e.name};"
         else # default to :numeric
           "&##{e.code_point};"
