@@ -24,9 +24,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      if RUBY_VERSION == '1.8.5'
-        ACHARS = '\w\x80-\xFF'
-      elsif RUBY_VERSION < '1.9.0'
+      if RUBY_VERSION < '1.9.0'
         ACHARS = '\w'
       else
         ACHARS = '[[:alnum:]]'
