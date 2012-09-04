@@ -36,15 +36,17 @@ module Kramdown
       #
       # This method uses the option +entity_output+ to determine the output form for the entity.
       def entity_to_str(e, original = nil)
-        if RUBY_VERSION >= '1.9' && @options[:entity_output] == :as_char &&
+        entity_output = @options[:entity_output]
+
+        if e.char.respond_to?(:encoding) && entity_output == :as_char &&
             (c = e.char.encode(@root.options[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
           c
-        elsif (@options[:entity_output] == :as_input || @options[:entity_output] == :as_char) && original
+        elsif (entity_output == :as_input || entity_output == :as_char) && original
           original
-        elsif @options[:entity_output] == :numeric || e.name.nil?
-          "&##{e.code_point};"
-        else
+        elsif entity_output == :symbolic && !e.name.nil?
           "&#{e.name};"
+        else # default to :numeric
+          "&##{e.code_point};"
         end
       end
 
