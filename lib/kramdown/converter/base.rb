@@ -132,7 +132,7 @@ module Kramdown
       # Return +true+ if the header element +el+ should be used for the table of contents (as
       # specified by the +toc_levels+ option).
       def in_toc?(el)
-        @options[:toc_levels].include?(el.options[:level])
+        @options[:toc_levels].include?(el.options[:level]) and ((not el.attr['class'].split.include?('no_toc')) rescue true)
       end
 
       # Return the output header level given a level.
