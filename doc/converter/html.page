@@ -126,9 +126,15 @@ was applied to an unordered list or else as nested ordered lists. All attributes
 original list will also be applied to the generated TOC list and it will get an ID of `markdown-toc`
 if no ID was set.
 
+When the `auto_ids` option is set, all headers will appear in the table of contents as they all will
+have an ID. Assign the class name "no_toc" to a header to exclude it from the table of contents.
+
 Here is an example:
 
-    * Will be replaced with the ToC
+    # Contents
+    {:.no_toc}
+
+    * Will be replaced with the ToC, excluding the "Contents" header
     {:toc}
 
     # H1 header
