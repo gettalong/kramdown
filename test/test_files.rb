@@ -157,6 +157,7 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
+                             'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
