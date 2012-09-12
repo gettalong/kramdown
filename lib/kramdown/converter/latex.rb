@@ -97,7 +97,7 @@ module Kramdown
 
       def convert_codeblock(el, opts)
         show_whitespace = el.attr['class'].to_s =~ /\bshow-whitespaces\b/
-        lang = el.attr['lang']
+        lang = extract_code_language(el.attr)
         if show_whitespace || lang
           options = []
           options << "showspaces=%s,showtabs=%s" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])

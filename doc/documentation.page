@@ -22,7 +22,7 @@ from standard Markdown.
 
 ## Usage
 
-{:ruby: lang='ruby'}
+{:ruby: .language-ruby}
 
 The kramdown package provides two ways for using it:
 

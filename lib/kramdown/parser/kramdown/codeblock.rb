@@ -52,7 +52,7 @@ module Kramdown
           @src.pos += @src.matched_size
           el = new_block_el(:codeblock, @src[3])
           lang = @src[2].to_s.strip
-          el.attr['lang'] = lang unless lang.empty?
+          el.attr['class'] = "language-#{lang}" unless lang.empty?
           @tree.children << el
           true
         else

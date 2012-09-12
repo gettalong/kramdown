@@ -19,7 +19,7 @@ Also note that the internals have been restructured slightly. So if you do more 
 basic
 
     Kramdown::Document.new(SOURCE, OPTIONS).to_html
-{: lang="ruby"}
+{: .language-ruby}
 
 you may need to adapt your code.
 

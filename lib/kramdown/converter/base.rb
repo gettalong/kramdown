@@ -142,6 +142,23 @@ module Kramdown
         [[level + @options[:header_offset], 6].min, 1].max
       end
 
+      # Extract the code block/span language from the attributes.
+      def extract_code_language(attr)
+        if attr['class'] && attr['class'] =~ /\blanguage-\w+\b/
+          attr['class'].scan(/\blanguage-(\w+)\b/).first.first
+        end
+      end
+
+      # See #extract_code_language
+      #
+      # *Warning*: This version will modify the given attributes if a language is present.
+      def extract_code_language!(attr)
+        lang = extract_code_language(attr)
+        attr['class'] = attr['class'].sub(/\blanguage-\w+\b/, '').strip if lang
+        attr.delete('class') if lang && attr['class'].empty?
+        lang
+      end
+
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
       #
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated

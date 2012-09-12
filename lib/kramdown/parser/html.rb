@@ -406,6 +406,10 @@ module Kramdown
               set_basics(el, :codespan)
             else
               set_basics(el, :codeblock)
+              if el.children.size == 1 && el.children.first.value == 'code'
+                value = (el.children.first.attr['class'] || '').scan(/\blanguage-\w+\b/).first
+                el.attr['class'] = "#{value} #{el.attr['class']}".rstrip if value
+              end
             end
             el.value = result.first.value
             el.children.clear

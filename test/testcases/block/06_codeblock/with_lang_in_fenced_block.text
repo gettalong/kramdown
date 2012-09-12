@@ -16,18 +16,18 @@ def what?
   42
 end
 ~~~
-{:lang="ruby"}
+{: .language-ruby}
 
 ~~~ ruby
 def what?
   42
 end
 ~~~
-{:lang="python"}
+{: .language-python}
 
 ~~~ ruby
 def what?
   42
 end
 ~~~
-{: .python}
+{: class="language-python"}

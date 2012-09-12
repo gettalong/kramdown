@@ -109,12 +109,13 @@ module Kramdown
       end
 
       def convert_codeblock(el, indent)
-        if @coderay_enabled && (el.attr['lang'] || @options[:coderay_default_lang])
-          attr = el.attr.dup
+        attr = el.attr.dup
+        lang = extract_code_language!(attr)
+        if @coderay_enabled && (lang || @options[:coderay_default_lang])
           opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
             :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
             :bold_every => @options[:coderay_bold_every], :css => @options[:coderay_css]}
-          lang = (attr.delete('lang') || @options[:coderay_default_lang]).to_sym
+          lang = (lang || @options[:coderay_default_lang]).to_sym
           result = CodeRay.scan(el.value, lang).html(opts).chomp << "\n"
           "#{' '*indent}<div#{html_attributes(attr)}>#{result}#{' '*indent}</div>\n"
         else
@@ -131,7 +132,9 @@ module Kramdown
               end.join('')
             end
           end
-          "#{' '*indent}<pre#{html_attributes(el.attr)}><code>#{result}\n</code></pre>\n"
+          code_attr = {}
+          code_attr['class'] = "language-#{lang}" if lang
+          "#{' '*indent}<pre#{html_attributes(attr)}><code#{html_attributes(code_attr)}>#{result}\n</code></pre>\n"
         end
       end
 
@@ -267,10 +270,10 @@ module Kramdown
       end
 
       def convert_codespan(el, indent)
-        if @coderay_enabled && el.attr['lang']
-          attr = el.attr.dup
-          result = CodeRay.scan(el.value, attr.delete('lang').to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
-          "<code#{html_attributes(attr)}>#{result}</code>"
+        lang = extract_code_language(el.attr)
+        if @coderay_enabled && lang
+          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
+          "<code#{html_attributes(el.attr)}>#{result}</code>"
         else
           "<code#{html_attributes(el.attr)}>#{escape_html(el.value)}</code>"
         end

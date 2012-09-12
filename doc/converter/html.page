@@ -80,9 +80,9 @@ following CSS classes:
 
 ## Automatic Syntax Highlighting   {#syntax-highlighting}
 
-kramdown supports syntax highlighting of code blocks and code spans. Just add the key `lang` to a
-code block (using a [block IAL](../syntax.html#block-ials) or a [span
-IAL](../syntax.html#span-ials)) and it will be highlighted using the specified language.
+kramdown supports setting a code language for code blocks and code spans, see [Language of Code
+Blocks](../syntax.html#language-of-code-blocks). This language will be used for highlighting code
+blocks and spans.
 
 Syntax highlighting for text is done using the [CodeRay](http://coderay.rubychan.de) library which
 can be installed, for example, via Rubygems. Have a look at the CodeRay homepage to see all
@@ -94,7 +94,7 @@ Here is an example on how Ruby code is highlighted:
 
     Kramdown::Document.new('* something').to_html
     puts 1 + 1
-{: lang='ruby'}
+{: .language-ruby}
 
 You can set the option `enable_coderay` to `false` to completely disable this feature, leaving a
 clean source.
