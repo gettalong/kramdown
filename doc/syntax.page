@@ -1560,7 +1560,7 @@ class names
       {:id: .cls1 .cls2}
       {:id: class="cls1" .cls2}
       {:id: class="something" class="cls1" .cls2}
-      {:id: class="cls1 cls2}
+      {:id: class="cls1 cls2"}
 
 As can be seen from the example of the class names, attributes that are defined earlier are
 overwritten by ones with the same name defined later.
