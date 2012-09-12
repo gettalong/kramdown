@@ -399,6 +399,30 @@ example:
 This type of code block is especially useful for copy-pasted code since you don't need to indent the
 code.
 
+### Language of Code Blocks
+
+You can tell kramdown the language of a code block by using an [IAL](#inline-attribute-lists):
+
+    ~~~
+    def what?
+      42
+    end
+    ~~~
+    {: .language-ruby}
+
+The specially named class `language-ruby` tells kramdown that this code block is written in the Ruby
+language. Such information can be used, for example, by converters to do syntax highlighting on the
+code block.
+
+Fenced code blocks provide an easier way to specify the language, namely by appending the language
+of the code block to the end of the starting line:
+
+    ~~~ ruby
+    def what?
+      42
+    end
+    ~~~
+
 
 ## Lists
 
@@ -1229,8 +1253,8 @@ want to force the literal meaning of an asterisk or an underscore you can backsl
 
 ## Code Spans
 
-This is the span-level equivalent of the code block element. You can markup a text part as code span
-by surrounding it with backticks `` ` ``. For example:
+This is the span-level equivalent of the [code block](#code-blocks) element. You can markup a text
+part as code span by surrounding it with backticks `` ` ``. For example:
 
     Use `<html>` tags for this.
 
@@ -1251,6 +1275,11 @@ literal meaning of a backtick you can backslash-escape it:
 
     This is a ` literal backtick.
     As \`are\` these!
+
+As with [code blocks](#language-of-code-blocks) you can set the language of a code span by using an
+[IAL](#inline-attribute-lists):
+
+    This is a Ruby code fragment `x = Class.new`{:.language-ruby}
 
 
 ## HTML Spans

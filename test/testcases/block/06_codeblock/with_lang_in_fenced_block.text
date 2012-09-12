@@ -1,0 +1,33 @@
+~~~ ruby
+def what?
+  42
+end
+~~~
+
+~~~ ruby
+def what?
+  42
+end
+~~~
+{:.class1}
+
+~~~
+def what?
+  42
+end
+~~~
+{:lang="ruby"}
+
+~~~ ruby
+def what?
+  42
+end
+~~~
+{:lang="python"}
+
+~~~ ruby
+def what?
+  42
+end
+~~~
+{: .python}
