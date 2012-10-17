@@ -39,7 +39,7 @@ module Kramdown
       TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
       TABLE_FSEP_LINE = /^[+|: =]*?=[+|: =]*?[ \t]*\n/
       TABLE_ROW_LINE = /^(.*?)[ \t]*\n/
-      TABLE_PIPE_CHECK = /(?:\||#{NOT_ELEM_OPEN}*(?:#{ELEM}#{NOT_ELEM_OPEN_OR_NL}*)*\|)/
+      TABLE_PIPE_CHECK = /(?:\||#{NOT_ELEM_OPEN}*(?:#{ELEM}#{NOT_ELEM_OPEN_OR_NL}*)*(?<!\\)\|)/
       TABLE_LINE = /#{TABLE_PIPE_CHECK}.*?\n/
       TABLE_START = /^#{OPT_SPACE}(?=\S)#{TABLE_LINE}/
 
