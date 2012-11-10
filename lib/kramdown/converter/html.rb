@@ -62,6 +62,8 @@ module Kramdown
         @footnotes = []
         @toc = []
         @toc_code = nil
+        @toc_numbering = [1,1,1,1,1,1]
+        @toc_last_level = 0
         @indent = 2
         @stack = []
         @coderay_enabled = @options[:enable_coderay] && HIGHLIGHTING_AVAILABLE
@@ -147,9 +149,27 @@ module Kramdown
         if @options[:auto_ids] && !attr['id']
           attr['id'] = generate_id(el.options[:raw_text])
         end
-        @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
+        section_number = nil
+        if attr['id'] && in_toc?(el)
+          @toc << [el.options[:level], attr['id'], el.children]
+          # Is there a numbered TOC ?
+          if @toc_code && @toc_code.first == :ol
+            # Yes, generate the section number
+            current_level = el.options[:level]
+            if @toc_last_level < current_level
+              @toc_numbering[current_level] = 1
+            else
+              @toc_numbering[current_level] += 1
+            end
+            @toc_last_level = current_level
+            toc_element_section_number = Element.new(:html_element, 'span', nil, {:class => "section-number"})
+            toc_element_section_number.children << Element.new(:text, @options[:toc_section_number_formatter].call(@toc_numbering[@options[:toc_levels].first..current_level]))
+            section_number = convert(toc_element_section_number, indent)
+            el.children.first.options[:toc_element_section_number] = toc_element_section_number
+          end
+        end
         level = output_header_level(el.options[:level])
-        "#{' '*indent}<h#{level}#{html_attributes(attr)}>#{inner(el, indent)}</h#{level}>\n"
+        "#{' '*indent}<h#{level}#{html_attributes(attr)}>#{section_number}#{inner(el, indent)}</h#{level}>\n"
       end
 
       def convert_hr(el, indent)
@@ -348,7 +368,7 @@ module Kramdown
 
       # Generate and return an element tree for the table of contents.
       def generate_toc_tree(toc, type, attr)
-        sections = Element.new(type, nil, attr)
+        sections = Element.new(:ul, nil, attr)
         sections.attr['id'] ||= 'markdown-toc'
         stack = []
         toc.each do |level, id, children|
@@ -356,8 +376,9 @@ module Kramdown
           li.children << Element.new(:p, nil, nil, {:transparent => true})
           a = Element.new(:a, nil, {'href' => "##{id}"})
           a.children.concat(remove_footnotes(Marshal.load(Marshal.dump(children))))
+          li.children.last.children << children.first.options[:toc_element_section_number] if type == :ol
           li.children.last.children << a
-          li.children << Element.new(type)
+          li.children << Element.new(:ul)
 
           success = false
           while !success
