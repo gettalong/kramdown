@@ -370,6 +370,7 @@ module Kramdown
       def generate_toc_tree(toc, type, attr)
         sections = Element.new(:ul, nil, attr)
         sections.attr['id'] ||= 'markdown-toc'
+        sections.attr['class'] = "#{sections.attr['class']} with-section-numbers" if type == :ol
         stack = []
         toc.each do |level, id, children|
           li = Element.new(:li, nil, nil, {:level => level})
