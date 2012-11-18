@@ -184,7 +184,7 @@ module Kramdown
       end
 
       # A list of all HTML tags that need to have a body (even if the body is empty).
-      HTML_TAGS_WITH_BODY=['div', 'span', 'script', 'iframe', 'textarea', 'a'] # :nodoc:
+      HTML_TAGS_WITH_BODY=['div', 'span', 'script', 'iframe', 'textarea', 'a', 'i', 'b'] # :nodoc:
 
       def convert_html_element(el, indent)
         res = inner(el, indent)
