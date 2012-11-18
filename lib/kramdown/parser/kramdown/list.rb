@@ -164,6 +164,7 @@ module Kramdown
           el.children << Element.new(:raw_text, term)
           deflist.children << el
         end
+        deflist.options[:ial] = para.options[:ial]
 
         item = nil
         content_re, lazy_re, indent_re = nil
