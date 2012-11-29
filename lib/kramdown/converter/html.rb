@@ -21,6 +21,7 @@
 #
 
 require 'rexml/parsers/baseparser'
+require 'kramdown/parser/html'
 
 module Kramdown
 
@@ -50,7 +51,7 @@ module Kramdown
       end
 
       include ::Kramdown::Utils::Html
-
+      include ::Kramdown::Parser::Html::Constants
 
       # The amount of indentation used when nesting HTML tags.
       attr_accessor :indent
@@ -183,25 +184,24 @@ module Kramdown
         "#{' '*indent}<dt#{html_attributes(el.attr)}>#{inner(el, indent)}</dt>\n"
       end
 
-      # A list of all HTML tags that need to have a body (even if the body is empty).
-      HTML_TAGS_WITH_BODY=['div', 'span', 'script', 'iframe', 'textarea', 'a', 'i', 'b'] # :nodoc:
-
       def convert_html_element(el, indent)
         res = inner(el, indent)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el.attr)}" << (res.empty? && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value) ? " />" : ">#{res}</#{el.value}>")
         else
           output = ''
           output << ' '*indent if @stack.last.type != :html_element || @stack.last.options[:content_model] != :raw
           output << "<#{el.value}#{html_attributes(el.attr)}"
-          if !res.empty? && el.options[:content_model] != :block
+          if el.options[:is_closed] && el.options[:content_model] == :raw
+            output << " />"
+          elsif !res.empty? && el.options[:content_model] != :block
             output << ">#{res}</#{el.value}>"
           elsif !res.empty?
             output << ">\n#{res.chomp}\n"  << ' '*indent << "</#{el.value}>"
-          elsif HTML_TAGS_WITH_BODY.include?(el.value)
-            output << "></#{el.value}>"
-          else
+          elsif HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
             output << " />"
+          else
+            output << "></#{el.value}>"
           end
           output << "\n" if @stack.last.type != :html_element || @stack.last.options[:content_model] != :raw
           output

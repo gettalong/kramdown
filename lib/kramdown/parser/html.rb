@@ -83,9 +83,10 @@ module Kramdown
         # Process the HTML start tag that has already be scanned/checked via @src.
         #
         # Does the common processing steps and then yields to the caller for further processing
-        # (first parameter is the created element, the second parameter is +true+ if the HTML
-        # element is already closed, ie. contains no body).
-        def handle_html_start_tag # :yields: el, closed
+        # (first parameter is the created element; the second parameter is +true+ if the HTML
+        # element is already closed, ie. contains no body; the third parameter specifies whether the
+        # body - and the end tag - need to be handled in case closed=false).
+        def handle_html_start_tag # :yields: el, closed, handle_body
           name = @src[1].downcase
           closed = !@src[4].nil?
           attrs = Utils::OrderedHash.new
@@ -100,9 +101,9 @@ module Kramdown
           end
           if name == 'script' || name == 'style'
             handle_raw_html_tag(name)
-            yield(el, true)
+            yield(el, false, false)
           else
-            yield(el, closed)
+            yield(el, closed, true)
           end
         end
 
@@ -559,8 +560,8 @@ module Kramdown
           end
         end
 
-        tag_handler = lambda do |c, closed|
-          parse_raw_html(c, &tag_handler) if !closed
+        tag_handler = lambda do |c, closed, handle_body|
+          parse_raw_html(c, &tag_handler) if !closed && handle_body
         end
         parse_raw_html(@tree, &tag_handler)
 

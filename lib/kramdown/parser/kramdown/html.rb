@@ -35,7 +35,7 @@ module Kramdown
 
       TRAILING_WHITESPACE = /[ \t]*\n/
 
-      def handle_kramdown_html_tag(el, closed)
+      def handle_kramdown_html_tag(el, closed, handle_body)
         el.options[:ial] = @block_ial if @block_ial
 
         content_model = if @tree.type != :html_element || @tree.options[:content_model] != :raw
@@ -49,8 +49,9 @@ module Kramdown
 
         @src.scan(TRAILING_WHITESPACE) if content_model == :block
         el.options[:content_model] = content_model
+        el.options[:is_closed] = closed
 
-        if !closed
+        if !closed && handle_body
           if content_model == :block
             if !parse_blocks(el)
               warning("Found no end tag for '#{el.value}' - auto-closing it")
@@ -143,7 +144,8 @@ module Kramdown
             end
           end
 
-          el = Element.new(:html_element, tag_name, attrs, :category => :span, :content_model => (do_parsing ? :span : :raw))
+          el = Element.new(:html_element, tag_name, attrs, :category => :span,
+                           :content_model => (do_parsing ? :span : :raw), :is_closed => !!@src[4])
           @tree.children << el
           stop_re = /<\/#{Regexp.escape(tag_name)}\s*>/i
           if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
