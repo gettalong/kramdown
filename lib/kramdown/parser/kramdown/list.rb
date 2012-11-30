@@ -215,7 +215,8 @@ module Kramdown
           else
             last = nil
           end
-          if it.children.first.type == :p && !it.options.delete(:first_as_para)
+
+          if it.children.first && it.children.first.type == :p && !it.options.delete(:first_as_para)
             it.children.first.children.first.value << "\n" if it.children.size > 1
             it.children.first.options[:transparent] = true
           end

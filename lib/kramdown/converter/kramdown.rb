@@ -161,7 +161,7 @@ module Kramdown
       end
 
       def convert_dd(el, opts)
-        sym, width = ": ", (el.children.first.type == :codeblock ? 4 : 2)
+        sym, width = ": ", (el.children.first && el.children.first.type == :codeblock ? 4 : 2)
         if ial = ial_for_element(el)
           sym << ial << " "
         end
@@ -171,12 +171,13 @@ module Kramdown
         newlines = text.scan(/\n*\Z/).first
         first, *last = text.split(/\n/)
         last = last.map {|l| " "*width + l}.join("\n")
-        text = first + (last.empty? ? "" : "\n") + last + newlines
+        text = first.to_s + (last.empty? ? "" : "\n") + last + newlines
         text.chomp! if text =~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dd
-        text << "\n" if text !~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dt
-        if el.children.first.type == :p && !el.children.first.options[:transparent]
+        text << "\n" if (text !~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dt)
+        text << "\n" if el.children.empty?
+        if el.children.first && el.children.first.type == :p && !el.children.first.options[:transparent]
           "\n#{sym}#{text}"
-        elsif el.children.first.type == :codeblock
+        elsif el.children.first && el.children.first.type == :codeblock
           "#{sym}\n    #{text}"
         else
           "#{sym}#{text}"
