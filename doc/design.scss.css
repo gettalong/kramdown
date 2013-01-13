@@ -259,7 +259,7 @@ nav {
 }
 
 aside {
-    position: absolute;
+    float: right;
     right: 0;
     background-color: white;
     width: 252px;

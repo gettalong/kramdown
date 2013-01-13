@@ -39,6 +39,7 @@
       <div id="content">
         <webgen:block name="content" />
       </div>
+      <div style="clear:both"></div>
     </div>
 
     <footer>
