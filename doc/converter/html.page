@@ -85,8 +85,11 @@ Blocks](../syntax.html#language-of-code-blocks). This language will be used for 
 blocks and spans.
 
 Syntax highlighting for text is done using the [CodeRay](http://coderay.rubychan.de) library which
-can be installed, for example, via Rubygems. Have a look at the CodeRay homepage to see all
-supported languages.
+can be installed, for example, via Rubygems (the gem name is `coderay`). Have a look at the CodeRay
+homepage to see all supported languages.
+
+> Note that syntax highlighting won't work unless the CodeRay library is installed!
+{:.information}
 
 Here is an example on how Ruby code is highlighted:
 
