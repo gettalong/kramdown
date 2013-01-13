@@ -29,16 +29,51 @@ If you believe you have found a bug in the implementation, please follow these s
 # Benchmark
 
 kramdown comes with a small benchmark to test how fast it is in regard to four other Ruby Markdown
-implementations: Maruku, BlueFeather, BlueCloth and RDiscount. The first two are written using only
-Ruby, the latter two use the C discount library for the actual hard work (which makes them really
-fast but they do not provide additional syntax elements). As one can see below, kramdown is
-currently (February 2012) ~3-4x faster than Maruku, ~4-5x faster than BlueFeather but ~30x slower
-than BlueCloth and rdiscount:
+implementations: Maruku, BlueFeather, BlueCloth, RDiscount and Redcarpet. The first two are written
+using only Ruby, the latter three are written in C and need to be compiled.
+
+As one can see below, kramdown is currently (January 2013) ~3-4x faster than Maruku, ~4-5x faster
+than BlueFeather but ~30x slower than BlueCloth and RDiscount and ~100x slower than Redcarpet:
 
 <pre><code>
-{execute_cmd: {command: "ruby -Ilib -rubygems benchmark/benchmark.rb", process_output: false, escape_html: true}}
-</code>
-</pre>
+Running tests on 2013-01-13 under ruby 1.9.3p327 (2012-11-10 revision 37606) [x86_64-linux]
+
+Test using file mdsyntax.text and 20 runs
+Rehearsal ----------------------------------------------------
+kramdown 0.14.1    1.400000   0.010000   1.410000 (  1.428902)
+Maruku 0.6.0       4.520000   0.030000   4.550000 (  4.578439)
+BlueFeather 0.40   5.680000   0.020000   5.700000 (  5.707717)
+BlueCloth 2.2.0    0.060000   0.000000   0.060000 (  0.067857)
+RDiscount 1.6.8    0.030000   0.000000   0.030000 (  0.027722)
+redcarpet 2.2.2    0.010000   0.000000   0.010000 (  0.007642)
+------------------------------------------ total: 11.760000sec
+
+                       user     system      total        real
+kramdown 0.14.1    1.270000   0.000000   1.270000 (  1.273636)
+Maruku 0.6.0       4.400000   0.020000   4.420000 (  4.434123)
+BlueFeather 0.40   5.610000   0.000000   5.610000 (  5.631930)
+BlueCloth 2.2.0    0.070000   0.000000   0.070000 (  0.069900)
+RDiscount 1.6.8    0.040000   0.000000   0.040000 (  0.035793)
+redcarpet 2.2.2    0.010000   0.000000   0.010000 (  0.007520)
+
+Test using file mdbasics.text and 20 runs
+Rehearsal ----------------------------------------------------
+kramdown 0.14.1    0.230000   0.000000   0.230000 (  0.228075)
+Maruku 0.6.0       1.070000   0.000000   1.070000 (  1.079782)
+BlueFeather 0.40   1.440000   0.000000   1.440000 (  1.446999)
+BlueCloth 2.2.0    0.020000   0.000000   0.020000 (  0.019677)
+RDiscount 1.6.8    0.010000   0.000000   0.010000 (  0.008010)
+redcarpet 2.2.2    0.010000   0.000000   0.010000 (  0.002431)
+------------------------------------------- total: 2.780000sec
+
+                       user     system      total        real
+kramdown 0.14.1    0.230000   0.000000   0.230000 (  0.227214)
+Maruku 0.6.0       1.070000   0.000000   1.070000 (  1.070332)
+BlueFeather 0.40   1.430000   0.000000   1.430000 (  1.434958)
+BlueCloth 2.2.0    0.020000   0.000000   0.020000 (  0.021127)
+RDiscount 1.6.8    0.020000   0.000000   0.020000 (  0.009714)
+redcarpet 2.2.2    0.000000   0.000000   0.000000 (  0.002571)
+</code></pre>
 
 And here are some graphs which show the execution times of the various kramdown releases on
 different Ruby interpreters:

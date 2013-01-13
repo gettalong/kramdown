@@ -7,6 +7,7 @@ require 'maruku'
 require 'maruku/version'
 require 'rdiscount'
 require 'bluefeather'
+require 'redcarpet'
 
 module MaRuKu::Errors
   def tell_user(s)
@@ -30,5 +31,6 @@ FILES.each do |file|
     b.report("BlueFeather #{BlueFeather::VERSION}") { RUNS.times { BlueFeather.parse(data) } }
     b.report("BlueCloth #{BlueCloth::VERSION}") { RUNS.times { BlueCloth.new(data).to_html } }
     b.report("RDiscount #{RDiscount::VERSION}") { RUNS.times { RDiscount.new(data).to_html } }
+    b.report("redcarpet #{Redcarpet::VERSION}") { RUNS.times { Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(data) } }
   end
 end
