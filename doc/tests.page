@@ -1,8 +1,9 @@
 ---
 title: Tests and Benchmark
 ---
+# Tests and Benchmark
 
-# Tests
+## Tests
 
 There exist several test suites for testing the correctness of a Markdown implementation. The
 original [Markdown Test Suite] is the standard which one needs to test against. The [PHP Markdown
@@ -26,7 +27,7 @@ If you believe you have found a bug in the implementation, please follow these s
 [bug report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
 
 
-# Benchmark
+## Benchmark
 
 kramdown comes with a small benchmark to test how fast it is in regard to four other Ruby Markdown
 implementations: Maruku, BlueFeather, BlueCloth, RDiscount and Redcarpet. The first two are written

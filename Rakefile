@@ -8,9 +8,7 @@ rescue LoadError
 end
 
 begin
-  require 'webgen/webgentask'
   require 'webgen/page'
-  require 'webgen/website'
 rescue LoadError
 end
 
@@ -79,24 +77,13 @@ task :clobber do
   ruby "setup.rb clean"
 end
 
-
-if defined? Webgen
+if defined?(Webgen)
   desc "Generate the HTML documentation"
-  Webgen::WebgenTask.new('htmldoc') do |site|
-    site.clobber_outdir = true
-    site.config_block = lambda do |config|
-      config['sources'] = [['/', "Webgen::Source::FileSystem", 'doc']]
-      config['output'] = ['Webgen::Output::FileSystem', 'htmldoc']
-      config.default_processing_pipeline('Page' => 'erb,tags,kramdown,blocks,fragments')
-      config.optionsdisplay.items [], :mandatory => 'default'
-      config.kdlink.oid nil, :mandatory => true
-      config.kdlink.part nil, :mandatory => true
-      config['contentprocessor.tags.map']['options'] = 'OptionsDisplay'
-      config['contentprocessor.tags.map']['kdexample'] = 'KDExample'
-      config['contentprocessor.tags.map']['kdlink'] = 'KDLink'
-      config['contentprocessor.kramdown.options'][:coderay_line_numbers] = nil
-    end
+  task :htmldoc do
+    ruby "-Ilib -S webgen"
   end
+  CLOBBER << "htmldoc/"
+  CLOBBER << "webgen-tmp"
 end
 
 if defined? RDoc::Task
@@ -317,55 +304,3 @@ EOF
 end
 
 task :clobber => ['dev:clobber']
-
-# Helper methods and misc  ###################################################################
-
-if defined? Webgen
-
-  class OptionsDisplay
-
-    include Webgen::Tag::Base
-
-    def call(tag, body, context)
-      param('optionsdisplay.items').collect do |opt|
-        Kramdown::Options.definitions[opt]
-      end.collect do |term|
-        lines = term.desc.split(/\n/)
-        first = lines.shift
-        rest = lines[0..-2].collect {|l| "  " + l}.join("\n")
-        "`#{term.name}`\n: #{first}\n#{rest}\n\n"
-      end.join("\n")
-    end
-
-  end
-
-  require 'cgi'
-
-  class KDExample
-
-    include Webgen::Tag::Base
-
-    def call(tag, body, context)
-      body.strip!
-      result = ::Kramdown::Document.new(body, :auto_ids => false).to_html
-      before = "<pre class='kdexample-before'><code>#{CGI::escapeHTML(body)}\n</code></pre>"
-      after = "<pre class='kdexample-after-source'><code>#{CGI::escapeHTML(result)}\n</code></pre>"
-      afterhtml = "<div class='kdexample-after-live'>#{result}</div>"
-
-      "<div class='kdexample'>#{before}#{after}#{afterhtml}\n</div><div class='clear'></div>"
-    end
-
-  end
-
-  class KDLink
-
-    include Webgen::Tag::Base
-
-    def call(tag, body, context)
-      link = "<a href='syntax.html##{param('kdlink.oid')}'>&rarr; Syntax for #{param('kdlink.part')}</a>"
-      "<div class='kdsyntaxlink'>#{link}\n</div>"
-    end
-
-  end
-
-end

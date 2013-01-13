@@ -3,6 +3,8 @@ title: Documentation
 in_menu: true
 sort_info: 7
 ---
+# kramdown Documentation
+
 ## Overview
 
 kramdown is first and foremost a library for converting text written in a superset of Markdown to
@@ -19,6 +21,10 @@ formats. The following input and output formats are currently supported:
 
 The [kramdown syntax page](syntax.html) describes in detail what is supported and how it differs
 from standard Markdown.
+
+For all available options have a look at the [options documentation](options.html) or have a look at
+a parser/converter page to see which options they support!
+
 
 ## Usage
 

@@ -12,10 +12,11 @@ sort_info: 30
 
 --- name:newsdata pipeline:erb
 <%
-context.content_node.tree.node_access[:alcn].select do |na,no|
-  na =~ /\/news\/.+/ && no.is_file?
-end.collect {|na,no| no}.sort.reverse.each do |node|
-  context.options['contentprocessor.kramdown.options'] = {:auto_id_prefix => node.lcn.tr('.', '-')}
+opts = {:alcn => '/news/*.html', :sort => 'sort_info', :reverse => true, :flatten => true}
+context.website.ext.item_tracker.add(context.dest_node, :nodes, :node_finder_option_set,
+  {:opts => opts, :ref_alcn => context.node.alcn}, :content)
+context.website.ext.node_finder.find(opts, context.node).each do |node|
+ # context.options['contentprocessor.kramdown.options'] = {:auto_id_prefix => node.lcn.tr('.', '-')}
 %>
 
 <div class='news-item'>

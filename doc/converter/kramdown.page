@@ -3,6 +3,8 @@ title: kramdown Converter
 ---
 # kramdown Converter
 
+## Introduction
+
 This converter converts a kramdown element tree into a kramdown document and supports all available
 element types. This converter, together with the [HTML parser](../parser/html.html), can be used to
 convert HTML documents to kramdown documents.
@@ -15,5 +17,5 @@ multiple different indentations used in one list, ...).
 
 The kramdown converter supports the following options:
 
-{options: {items: [:entity_output, :template]}}
+{options: {items: [entity_output, template]}}
 

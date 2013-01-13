@@ -3,6 +3,8 @@ title: HTML Parser
 ---
 # HTML Parser
 
+## Introduction
+
 This parser assumes that the input document is an HTML document. It automatically converts HTML tags
 that have a native element representation to their native representation -- all other tags as well
 as processing instructions and HTML comments are parsed as is.

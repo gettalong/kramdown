@@ -3,6 +3,8 @@ title: LaTeX Converter
 ---
 # LaTeX Converter
 
+## Introduction
+
 This converter converts a kramdown element tree into LaTeX. It supports all available element types
 except the HTML specific ones. The LaTeX document can, for example, further be converted to a PDF
 file to produce a high quality, printable version.
@@ -97,7 +99,7 @@ lists; code blocks that use the `listings` environment; tables; and math blocks.
 
 The LaTeX converter supports the following options:
 
-{options: {items: [:auto_ids, :toc_levels, :latex_headers, :smart_quotes, :template]}}
+{options: {items: [auto_ids, toc_levels, latex_headers, smart_quotes, template]}}
 
 
 {include_file: doc/links.markdown}

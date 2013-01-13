@@ -5,7 +5,7 @@ sort_info: 9
 --- name:sidebar
 <h1>Contents</h1>
 
-{menu: {used_nodes: fragments, min_levels: 4, max_levels: 6}}
+{menu: {options: {descendants: true, levels: [2,6]}}}
 --- name:content
 # Quick Reference
 
@@ -23,14 +23,16 @@ text phrases as emphasized, as a link and so on.
 All examples below feature the kramdown source, the converted HTML source (shown when hovering over
 the kramdown source) and the output as it appears in the browser. This looks like this:
 
-<div class="kdexample">
-<pre class="kdexample-before"><code>kramdown example code</code></pre>
-<pre class="kdexample-after-source"><code>Example code converted to HTML</code></pre>
+<table class="kdexample">
+<tr>
+<td><pre class="kdexample-before"><code>kramdown example code</code></pre></td>
+<td><pre class="kdexample-after-source"><code>Example code converted to HTML</code></pre>
 <div class="kdexample-after-live" style="clear:none">
 Live browser view of example code
 </div>
-</div>
-<div class="clear"></div>
+</td>
+</tr>
+</table>
 
 
 # Block-level Elements - Main Structural Elements

@@ -5,7 +5,7 @@ sort_info: 10
 --- name:sidebar
 <h1>Contents</h1>
 
-{menu: {used_nodes: fragments, min_levels: 4, max_levels: 6}}
+{menu: {options: {descendants: true, levels: [2,6]}}}
 --- name:content
 
 # kramdown Syntax

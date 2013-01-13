@@ -12,12 +12,13 @@ its parsers/converters. The [quick reference](quickref.html) provides a overview
 you need a more detailed description of the superset of Markdown which kramdown supports the [syntax
 page](syntax.html) is the place to go!
 
-{tikz:: path: overview.png
+{tikz::
+path: overview.png
 img_attr: {style: 'background:transparent'}
-libraries: [mindmap, trees, arrows]
-transparent: true
-resolution: 300 100
-opts: |
+content_processor.tikz.libraries: [mindmap, trees, arrows]
+content_processor.tikz.transparent: true
+content_processor.tikz.resolution: 300 100
+content_processor.tikz.opts: |
   mindmap, concept color=black, text=white,
   root concept/.append style={font=\Large},
   level 1 concept/.append style={font=\Large, minimum size=2.6cm},

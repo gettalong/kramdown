@@ -81,33 +81,30 @@ aside a {
         opacity: 0;
     }
 
-    pre.kdexample-before {
-        width: 45%;
-        float: left;
-        margin: 0;
+    table.kdexample td {
+        vertical-align: top;
     }
 
-    pre.kdexample-before:hover + pre {
+    table.kdexample pre {
+        margin: 5px 0px;
+    }
+
+    .kdexample:hover .kdexample-after-source {
         display: block;
     }
 
-    pre.kdexample-after-source {
+    .kdexample-after-source {
         display: none;
-        width: 45%;
-        float: right;
         background-color: #ffffee;
         border: 2px solid #e6e8e9;
         margin: 0 10px;
         padding: 5px;
     }
 
-    div.kdexample-after-live {
-        width: 45%;
-        float: right;
-        clear: none;
+    .kdexample-after-live {
         background-color: #eeffee;
         border: 2px solid #e6e8e9;
-        margin: 0 10px 12px;
+        margin: 5px 0px 12px;
         padding: 5px;
     }
 

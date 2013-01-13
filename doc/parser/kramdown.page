@@ -3,6 +3,8 @@ title: kramdown Parser
 ---
 # kramdown Parser
 
+## Introduction
+
 This is the main parser of the kramdown library (as the name suggests). It parses text in kramdown
 syntax which is based on Markdown, a very easy to write, easy to read markup for writing HTML
 documents in plain text. Since the basic Markdown syntax has some shortcomings, implementations
@@ -26,7 +28,7 @@ option `html_to_native` to `true` to achieve this.
 
 The kramdown parser supports the following options:
 
-{options: {items: [:parse_block_html, :parse_span_html, :html_to_native]}}
+{options: {items: [parse_block_html, parse_span_html, html_to_native]}}
 
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
