@@ -48,7 +48,7 @@ module Kramdown
         if el.type == :header && in_toc?(el)
           attr = el.attr.dup
           attr['id'] = generate_id(el.options[:raw_text]) if @options[:auto_ids] && !attr['id']
-          add_to_toc(el, attr['id'], @toc) if attr['id']
+          add_to_toc(el, attr['id']) if attr['id']
         else
           el.children.each {|child| convert(child)}
         end
@@ -57,7 +57,7 @@ module Kramdown
 
       private
 
-      def add_to_toc(el, id, toc)
+      def add_to_toc(el, id)
         toc_element = Element.new(:toc, el, :id => id)
 
         success = false
