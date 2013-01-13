@@ -105,7 +105,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         else
-          "#{' '*indent}<p#{html_attributes(el.attr)}>#{inner(el, indent)}</p>\n"
+          format_as_block_html(el.type, el.attr, inner(el, indent), indent)
         end
       end
 
@@ -140,7 +140,7 @@ module Kramdown
       end
 
       def convert_blockquote(el, indent)
-        "#{' '*indent}<blockquote#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</blockquote>\n"
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
       end
 
       def convert_header(el, indent)
@@ -150,7 +150,7 @@ module Kramdown
         end
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
         level = output_header_level(el.options[:level])
-        "#{' '*indent}<h#{level}#{html_attributes(attr)}>#{inner(el, indent)}</h#{level}>\n"
+        format_as_block_html("h#{level}", attr, inner(el, indent), indent)
       end
 
       def convert_hr(el, indent)
@@ -162,7 +162,7 @@ module Kramdown
           @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
         else
-          "#{' '*indent}<#{el.type}#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
+          format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
         end
       end
       alias :convert_ol :convert_ul
@@ -181,7 +181,7 @@ module Kramdown
       alias :convert_dd :convert_li
 
       def convert_dt(el, indent)
-        "#{' '*indent}<dt#{html_attributes(el.attr)}>#{inner(el, indent)}</dt>\n"
+        format_as_block_html(el.type, el.attr, inner(el, indent), indent)
       end
 
       def convert_html_element(el, indent)
@@ -218,15 +218,12 @@ module Kramdown
       alias :convert_xml_pi :convert_xml_comment
 
       def convert_table(el, indent)
-        "#{' '*indent}<table#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</table>\n"
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
       end
-
-      def convert_thead(el, indent)
-        "#{' '*indent}<#{el.type}#{html_attributes(el.attr)}>\n#{inner(el, indent)}#{' '*indent}</#{el.type}>\n"
-      end
-      alias :convert_tbody :convert_thead
-      alias :convert_tfoot :convert_thead
-      alias :convert_tr  :convert_thead
+      alias :convert_thead :convert_table
+      alias :convert_tbody :convert_table
+      alias :convert_tfoot :convert_table
+      alias :convert_tr  :convert_table
 
       ENTITY_NBSP = ::Kramdown::Utils::Entities.entity('nbsp') # :nodoc:
 
@@ -239,7 +236,7 @@ module Kramdown
           attr = el.attr.dup
           attr['style'] = (attr.has_key?('style') ? "#{attr['style']}; ": '') << "text-align: #{alignment}"
         end
-        "#{' '*indent}<#{type}#{html_attributes(attr)}>#{res.empty? ? entity_to_str(ENTITY_NBSP) : res}</#{type}>\n"
+        format_as_block_html(type, attr, res.empty? ? entity_to_str(ENTITY_NBSP) : res, indent)
       end
 
       def convert_comment(el, indent)
@@ -262,7 +259,7 @@ module Kramdown
           attr['href'] = obfuscate('mailto') << ":" << obfuscate(mail_addr)
           res = obfuscate(res) if res == mail_addr
         end
-        "<a#{html_attributes(attr)}>#{res}</a>"
+        format_as_span_html(el.type, attr, res)
       end
 
       def convert_img(el, indent)
@@ -271,12 +268,12 @@ module Kramdown
 
       def convert_codespan(el, indent)
         lang = extract_code_language(el.attr)
-        if @coderay_enabled && lang
-          result = CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
-          "<code#{html_attributes(el.attr)}>#{result}</code>"
-        else
-          "<code#{html_attributes(el.attr)}>#{escape_html(el.value)}</code>"
-        end
+        result = if @coderay_enabled && lang
+                   CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
+                 else
+                   escape_html(el.value)
+                 end
+        format_as_span_html('code', el.attr, result)
       end
 
       def convert_footnote(el, indent)
@@ -295,7 +292,7 @@ module Kramdown
       end
 
       def convert_em(el, indent)
-        "<#{el.type}#{html_attributes(el.attr)}>#{inner(el, indent)}</#{el.type}>"
+        format_as_span_html(el.type, el.attr, inner(el, indent))
       end
       alias :convert_strong :convert_em
 
@@ -323,12 +320,17 @@ module Kramdown
       def convert_math(el, indent)
         block = (el.options[:category] == :block)
         value = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
-        "<script type=\"math/tex#{block ? '; mode=display' : ''}\">#{value}</script>#{block ? "\n" : ''}"
+        type = {:type => "math/tex#{block ? '; mode=display' : ''}"}
+        if block
+          format_as_block_html('script', type, value, indent)
+        else
+          format_as_span_html('script', type, value)
+        end
       end
 
       def convert_abbreviation(el, indent)
         title = @root.options[:abbrev_defs][el.value]
-        "<abbr#{!title.empty? ? html_attributes(:title => title) : ''}>#{el.value}</abbr>"
+        format_as_span_html("abbr", {:title => (title.empty? ? nil : title)}, el.value)
       end
 
       def convert_root(el, indent)
@@ -344,6 +346,22 @@ module Kramdown
           result.sub!(/#{@toc_code.last}/, text)
         end
         result
+      end
+
+      # Format the given element as span HTML.
+      def format_as_span_html(name, attr, body)
+        "<#{name}#{html_attributes(attr)}>#{body}</#{name}>"
+      end
+
+      # Format the given element as block HTML.
+      def format_as_block_html(name, attr, body, indent)
+        "#{' '*indent}<#{name}#{html_attributes(attr)}>#{body}</#{name}>\n"
+      end
+
+      # Format the given element as block HTML with a newline after the start tag and indentation
+      # before the end tag.
+      def format_as_indented_block_html(name, attr, body, indent)
+        "#{' '*indent}<#{name}#{html_attributes(attr)}>\n#{body}#{' '*indent}</#{name}>\n"
       end
 
       # Generate and return an element tree for the table of contents.
@@ -417,7 +435,7 @@ module Kramdown
           end
           para.children << ref
         end
-        (ol.children.empty? ? '' : "<div class=\"footnotes\">\n#{convert(ol, 2)}</div>\n")
+        (ol.children.empty? ? '' : format_as_indented_block_html('div', {:class => "footnotes"}, convert(ol, 2), 0))
       end
 
     end
