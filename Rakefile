@@ -26,7 +26,7 @@ begin
       require 'kramdown/options'
 
       # Add options documentation to Kramdown::Options module
-      opt_module = RDoc::TopLevel.all_classes_and_modules.find {|m| m.full_name == 'Kramdown::Options'}
+      opt_module = @store.all_classes_and_modules.find {|m| m.full_name == 'Kramdown::Options'}
       opt_defs = Kramdown::Options.definitions.sort.collect do |n, definition|
         desc = definition.desc.split(/\n/).map {|l| "    #{l}"}
         desc[-2] = []
@@ -241,7 +241,7 @@ EOF
       rf.configure
       rf.login
 
-      content = REL_PAGE.blocks['content'].content
+      content = REL_PAGE.blocks['content']
       content += "\n\n\nAbout kramdown\n\n#{SUMMARY}\n\n#{DESCRIPTION}"
       rf.post_news('kramdown', "kramdown #{Kramdown::VERSION} released", content)
       puts "done"
