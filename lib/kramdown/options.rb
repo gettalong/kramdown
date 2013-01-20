@@ -20,6 +20,8 @@
 #++
 #
 
+require 'yaml'
+
 module Kramdown
 
   # This module defines all options that are used by parsers and/or converters as well as providing
@@ -232,6 +234,36 @@ This is useful for converters that cannot deal with HTML elements.
 Default: false
 Used by: kramdown parser
 EOF
+
+    define(:link_defs, Object, {}, <<EOF) do |val|
+Pre-defines link definitions
+
+This option can be used to pre-define link definitions. The value needs
+to be a Hash where the keys are the link identifiers and the values are
+two element Arrays with the link URL and the link title.
+
+If the value is a String, it has to contain a valid YAML hash and the
+hash has to follow the above guidelines.
+
+Default: {}
+Used by: kramdown parser
+EOF
+      if String === val
+        begin
+          val = YAML.load(val)
+        rescue RuntimeError, ArgumentError, SyntaxError
+          raise Kramdown::Error, "Invalid YAML value for option link_defs"
+        end
+      end
+      raise Kramdown::Error, "Invalid type #{val.class} for option #{name}" if !(Hash === val)
+      val.each do |k,v|
+        if !(Array === v) || v.size > 2 || v.size < 1
+          raise Kramdown::Error, "Invalid structure for hash value of option #{name}"
+        end
+        v << nil if v.size == 1
+      end
+      val
+    end
 
     define(:footnote_nr, Integer, 1, <<EOF)
 The number of the first footnote

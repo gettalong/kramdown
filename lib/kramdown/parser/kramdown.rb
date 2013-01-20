@@ -82,6 +82,7 @@ module Kramdown
         @root.options[:abbrev_defs] = {}
         @alds = {}
         @link_defs = {}
+        @options[:link_defs].each {|k,v| @link_defs[normalize_link_id(k)] = v}
         @footnotes = {}
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
