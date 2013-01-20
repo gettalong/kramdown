@@ -422,6 +422,20 @@ Default: 0
 Used by: HTML converter, Kramdown converter, Latex converter
 EOF
 
+    define(:toc_section_number_formatter, Object, lambda {|numbers| numbers.join('.') + '. '}, <<EOF) do |val|
+Defines the way section numbers are formatted in the TOC
+
+The individual levels can be specified by separating them with commas
+(e.g. 1,2,3) or by using the range syntax (e.g. 1..3). Only the
+specified levels are used for the table of contents.
+
+Default: proc that joins section numbers with a dot. Example: "1.3. "
+Used by: HTML converter
+EOF
+      raise Kramdown::Error, "Object not callable for toc_section_number_formatter" unless val.respond_to? :call
+      val
+    end
+
   end
 
 end
