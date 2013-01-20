@@ -86,7 +86,7 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 completely written in Ruby, supports standard Markdown (with some minor modifications) and various
 extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
 
-It is probably the fastest pure-Ruby Markdown converter available (February 2012), being about 4x
+It is probably the fastest pure-Ruby Markdown converter available (January 2013), being about 4x
 faster than [Maruku] and about 5x faster than [BlueFeather].
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
