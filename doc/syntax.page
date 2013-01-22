@@ -802,7 +802,7 @@ Given the above components, a table is specified by
 Also note
 
 * that the first line of a table must not have more than three spaces of indentation before the
-  first none space character,
+  first non-space character,
 * that each line of a table needs to have at least one not escaped pipe character so that kramdown
   recognizes it as a line belonging to the table and
 * that tables have to start and end on [block boundaries](#block-boundaries)!
