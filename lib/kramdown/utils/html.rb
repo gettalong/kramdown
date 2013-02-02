@@ -39,7 +39,7 @@ module Kramdown
         entity_output = @options[:entity_output]
 
         if e.char.respond_to?(:encoding) && entity_output == :as_char &&
-            (c = e.char.encode(@root.options[:encoding]) rescue nil) && !ESCAPE_MAP.has_key?(c)
+            (c = e.char.encode(@root.options[:encoding]) rescue nil) && (c == '"' || !ESCAPE_MAP.has_key?(c))
           c
         elsif (entity_output == :as_input || entity_output == :as_char) && original
           original
@@ -73,9 +73,9 @@ module Kramdown
       # :startdoc:
 
       # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
-      # is escaped: :all - all special HTML characters as well as entities, :text - all special HTML
-      # characters except the quotation mark but no entities and :attribute - all special HTML
-      # characters including the quotation mark but no entities.
+      # is escaped: :all - all special HTML characters except the quotation mark as well as
+      # entities, :text - all special HTML characters except the quotation mark but no entities and
+      # :attribute - all special HTML characters including the quotation mark but no entities.
       def escape_html(str, type = :all)
         str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
       end
