@@ -52,8 +52,11 @@ module Kramdown
               result = []
               strscan = StringScanner.new(child.value)
               while temp = strscan.scan_until(regexps.last)
-                temp << strscan.scan(/\W|^/)
-                abbr = strscan.scan(regexps.first)
+                abbr = strscan.scan(regexps.first) # begin of line case of abbr with \W char as first one
+                if abbr.nil?
+                  temp << strscan.scan(/\W|^/)
+                  abbr = strscan.scan(regexps.first)
+                end
                 result << Element.new(:text, temp) << Element.new(:abbreviation, abbr)
               end
               result << Element.new(:text, strscan.rest)
