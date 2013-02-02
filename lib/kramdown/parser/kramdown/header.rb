@@ -26,7 +26,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      HEADER_ID=/(?:[ \t]\{#(\w[\w-]*)\})?/
+      HEADER_ID=/(?:[ \t]+\{#(\w[\w-]*)\})?/
       SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)#{HEADER_ID}[ \t]*?\n(-|=)+\s*?\n/
 
       # Parse the Setext header at the current location.
