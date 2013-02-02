@@ -58,11 +58,13 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                          ]
-    Dir[File.dirname(__FILE__) + '/testcases/**/*.{html, htmlinput}'].each do |html_file|
-      next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
-      out_file = (html_file =~ /\.htmlinput$/ ? html_file.sub(/input$/, '') : html_file)
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
+      next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
+      next if (RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')) ||
+        (RUBY_VERSION < '1.9' && html_file =~ /\.19$/)
+      out_file = (html_file =~ /\.htmlinput(\.19)?$/ ? html_file.sub(/input(\.19)?$/, '') : html_file)
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
-        opts_file = html_file.sub(/\.html$/, '.options')
+        opts_file = html_file.sub(/\.html(input)?(\.19)?$/, '.options')
         opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
         options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
         doc = Kramdown::Document.new(File.read(html_file), options.merge(:input => 'html'))
@@ -158,12 +160,15 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
+                             'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
                             ]
-    Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
-      next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
+    Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
+      next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
+      next if (RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')) ||
+        (RUBY_VERSION < '1.9' && html_file =~ /\.19$/)
       define_method('test_' + html_file.tr('.', '_') + "_to_kramdown_to_html") do
         kd = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1).to_kramdown
-        opts_file = html_file.sub(/\.html$/, '.options')
+        opts_file = html_file.sub(/\.html(\.19)?$/, '.options')
         opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
         options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
         doc = Kramdown::Document.new(kd, options)
