@@ -61,6 +61,7 @@ module Kramdown
     # suffices. A block needs to be specified when using type 'Object' and it has to cope with
     # a value given as string and as the opaque type.
     def self.define(name, type, default, desc, &block)
+      name = name.to_sym
       raise ArgumentError, "Option name #{name} is already used" if @options.has_key?(name)
       raise ArgumentError, "Invalid option type #{type} specified" if !ALLOWED_TYPES.include?(type)
       raise ArgumentError, "Invalid type for default value" if !(type === default) && !default.nil?
@@ -75,7 +76,7 @@ module Kramdown
 
     # Return +true+ if an option called +name+ is defined.
     def self.defined?(name)
-      @options.has_key?(name)
+      @options.has_key?(name.to_sym)
     end
 
     # Return a Hash with the default values for all options.
@@ -90,6 +91,7 @@ module Kramdown
     def self.merge(hash)
       temp = defaults
       hash.each do |k,v|
+        k = k.to_sym
         next unless @options.has_key?(k)
         temp[k] = parse(k, v)
       end
@@ -102,6 +104,7 @@ module Kramdown
     # If +data+ already has the correct type, it is just returned. Otherwise it is converted to a
     # String and then to the correct type.
     def self.parse(name, data)
+      name = name.to_sym
       raise ArgumentError, "No option named #{name} defined" if !@options.has_key?(name)
       if !(@options[name].type === data)
         data = data.to_s
