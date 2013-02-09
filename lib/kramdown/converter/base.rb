@@ -164,7 +164,16 @@ module Kramdown
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
       # ID.
       def generate_id(str)
-        gen_id = str.gsub(/^[^a-zA-Z]+/, '')
+        # Convert Vietnamese accents to non-accent version
+        # This will help the link readable
+        vntext_src =  "áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ"
+        vntext_dst =  "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiioooooooooooooooouuuuuuuuuuuuyyyyy"
+        vntext_src += "ÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ"
+        vntext_dst += vntext_dst.upcase
+
+        gen_id = str
+        gen_id.tr!(vntext_src, vntext_dst)
+        gen_id.gsub!(/^[^a-zA-Z]+/, '')
         gen_id.tr!('^a-zA-Z0-9 -', '')
         gen_id.tr!(' ', '-')
         gen_id.downcase!
