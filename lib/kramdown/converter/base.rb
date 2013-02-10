@@ -164,7 +164,7 @@ module Kramdown
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
       # ID.
       def generate_id(str)
-        # icy (2013-feb-10): mutable is just crazy! you can't use
+        # icy (2013-feb-10): mutable object is just crazy! you can't use
         # for example `gen_id = str` here because that will update
         # the original string `str` and that will make `kramdown` failed.
         gen_id = String.new(str)
