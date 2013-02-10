@@ -177,12 +177,17 @@ Used by: all converters
 EOF
 
     define(:vietnamese_ids, Boolean, true, <<EOF)
-Support Vietnamsese convertor ID generation
+Support Vietnamsese when generating header ID
 
 If this option is `true` (and when `auto_ids` is true) ID values in
 Vietnamese will be converted to a readable form (non-accent version
-of the origin text). This option should be used only if `auto_ids`
-is true.
+of the origin text).
+
+This option should be used only if `auto_ids` is true.
+
+Example: "Đây-là-ví-dụ" will generate new ID `day-la-vi-du` which is very
+readable by Vietnamese. When this option is `false`, its ID should be
+`y-l-v-d` which is unreadable (non-sense ID).
 
 Default: true
 Used by: HTML/Latex convertor
