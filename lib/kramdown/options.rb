@@ -176,6 +176,18 @@ Default: ''
 Used by: all converters
 EOF
 
+    define(:vietnamese_ids, Boolean, true, <<EOF)
+Support Vietnamsese convertor ID generation
+
+If this option is `true` (and when `auto_ids` is true) ID values in
+Vietnamese will be converted to a readable form (non-accent version
+of the origin text). This option should be used only if `auto_ids`
+is true.
+
+Default: true
+Used by: HTML/Latex convertor
+EOF
+
     define(:auto_ids, Boolean, true, <<EOF)
 Use automatic header ID generation
 

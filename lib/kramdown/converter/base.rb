@@ -164,15 +164,20 @@ module Kramdown
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
       # ID.
       def generate_id(str)
-        # Convert Vietnamese accents to non-accent version
-        # This will help the link readable
-        vntext_src =  "áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ"
-        vntext_dst =  "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiioooooooooooooooouuuuuuuuuuuuyyyyy"
-        vntext_src += "ÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ"
-        vntext_dst += vntext_dst.upcase
+        # icy (2013-feb-10): mutable is just crazy! you can't use
+        # for example `gen_id = str` here because that will update
+        # the original string `str` and that will make `kramdown` failed.
+        gen_id = String.new(str)
+        if @options[:vietnamese_ids]
+          # Convert Vietnamese accents to non-accent version
+          # This will help the link readable
+          vntext_src =  "áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ"
+          vntext_dst =  "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiioooooooooooooooouuuuuuuuuuuuyyyyy"
+          vntext_src += "ÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ"
+          vntext_dst += vntext_dst.upcase
 
-        gen_id = str
-        gen_id.tr!(vntext_src, vntext_dst)
+          gen_id.tr!(vntext_src, vntext_dst)
+        end
         gen_id.gsub!(/^[^a-zA-Z]+/, '')
         gen_id.tr!('^a-zA-Z0-9 -', '')
         gen_id.tr!(' ', '-')

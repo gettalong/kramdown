@@ -40,7 +40,7 @@ class TestFiles < Test::Unit::TestCase
       next if !Kramdown::Converter.const_defined?(output_format[0..0].upcase + output_format[1..-1])
       define_method('test_' + text_file.tr('.', '_') + "_to_#{output_format}") do
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1, :vietnamese_ids => false}
         doc = Kramdown::Document.new(File.read(text_file), options)
         assert_equal(File.read(output_file), doc.send("to_#{output_format}"))
       end
@@ -57,6 +57,7 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
+                          'test/testcases/block/04_header/with_auto_ids_vietnamese.html', # bc of auto_ids=true option
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html, htmlinput}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}$/}
@@ -64,7 +65,7 @@ class TestFiles < Test::Unit::TestCase
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
         opts_file = html_file.sub(/\.html$/, '.options')
         opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :vietnamese_ids => false, :footnote_nr => 1}
         doc = Kramdown::Document.new(File.read(html_file), options.merge(:input => 'html'))
         assert_equal(tidy_output(File.read(out_file)), tidy_output(doc.to_html))
       end
@@ -92,12 +93,14 @@ class TestFiles < Test::Unit::TestCase
     EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
                            'test/testcases/span/01_link/imagelinks.text', # bc of image links
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
+                           'test/testcases/block/04_header/with_auto_ids_vietnamese.text', # bc of requirement of vietnamese support in latex
                           ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
       define_method('test_' + text_file.tr('.', '_') + "_to_latex_compilation") do
         latex =  Kramdown::Document.new(File.read(text_file),
                                                           :auto_ids => false, :footnote_nr => 1,
+                                                          :vietnamese_ids => false,
                                                           :template => 'document').to_latex
         result = IO.popen("latex -output-directory='#{Dir.tmpdir}' 2>/dev/null", 'r+') do |io|
           io.write(latex)
@@ -125,6 +128,7 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/11_ial/simple.text',         # bc of change of ordering of attributes in header
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
+                          'test/testcases/block/04_header/with_auto_ids_vietnamese.text', # bc of auto_ids = true
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -133,7 +137,7 @@ class TestFiles < Test::Unit::TestCase
         html_file += '.19' if RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')
         opts_file = text_file.sub(/\.text$/, '.options')
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :vietnamese_ids => false, :footnote_nr => 1}
         kdtext = Kramdown::Document.new(File.read(text_file), options).to_kramdown
         html = Kramdown::Document.new(kdtext, options).to_html
         assert_equal(tidy_output(File.read(html_file)), tidy_output(html))
@@ -158,14 +162,15 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
+                             'test/testcases/block/04_header/with_auto_ids_vietnamese.html', # need utf8 in tidy, auto_ids = true
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/}
       define_method('test_' + html_file.tr('.', '_') + "_to_kramdown_to_html") do
-        kd = Kramdown::Document.new(File.read(html_file), :input => 'html', :auto_ids => false, :footnote_nr => 1).to_kramdown
+        kd = Kramdown::Document.new(File.read(html_file), :input => 'html', :vietnamse_ids => false, :auto_ids => false, :footnote_nr => 1).to_kramdown
         opts_file = html_file.sub(/\.html$/, '.options')
         opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :vietnamse_ids => false, :footnote_nr => 1}
         doc = Kramdown::Document.new(kd, options)
         assert_equal(tidy_output(File.read(html_file)), tidy_output(doc.to_html))
       end
@@ -177,7 +182,7 @@ class TestFiles < Test::Unit::TestCase
   # Generate test methods for asserting that converters don't modify the document tree.
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     opts_file = text_file.sub(/\.text$/, '.options')
-    options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+    options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :vietnamese_ids => false, :footnote_nr => 1}
     (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base, :RemoveHtmlTags]).each do |conv_class|
       define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
         doc = Kramdown::Document.new(File.read(text_file), options)
