@@ -47,4 +47,4 @@ probably want to install `rake` so that you can use the provided rake tasks. Asi
 
 ## License
 
-GPLv3 - see the **COPYING** file.
+MIT - see the **COPYING** file.

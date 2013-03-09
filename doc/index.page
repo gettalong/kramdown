@@ -81,7 +81,7 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 
 --- name:intro
 
-**kramdown** (sic, not Kramdown or KramDown, just kramdown) is a *free* GPL-licensed
+**kramdown** (sic, not Kramdown or KramDown, just kramdown) is a *free* MIT-licensed
 [Ruby](http://www.ruby-lang.org) library for parsing and converting a superset of Markdown. It is
 completely written in Ruby, supports standard Markdown (with some minor modifications) and various
 extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
