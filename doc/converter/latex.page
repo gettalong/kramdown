@@ -99,7 +99,7 @@ lists; code blocks that use the `listings` environment; tables; and math blocks.
 
 The LaTeX converter supports the following options:
 
-{options: {items: [auto_ids, toc_levels, latex_headers, smart_quotes, template]}}
+{options: {items: [auto_ids, transliterated_header_ids, toc_levels, latex_headers, smart_quotes, template]}}
 
 
 {include_file: doc/links.markdown}

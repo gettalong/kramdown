@@ -18,6 +18,7 @@ module Kramdown
     autoload :Entities, 'kramdown/utils/entities'
     autoload :Html, 'kramdown/utils/html'
     autoload :OrderedHash, 'kramdown/utils/ordered_hash'
+    autoload :Unidecoder, 'kramdown/utils/unidecoder'
 
     # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
     def self.camelize(name)

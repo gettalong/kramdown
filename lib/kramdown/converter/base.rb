@@ -8,6 +8,7 @@
 #
 
 require 'erb'
+require 'kramdown/utils'
 
 module Kramdown
 
@@ -152,6 +153,7 @@ module Kramdown
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
       # ID.
       def generate_id(str)
+        str = ::Kramdown::Utils::Unidecoder.decode(str) if @options[:transliterated_header_ids]
         gen_id = str.gsub(/^[^a-zA-Z]+/, '')
         gen_id.tr!('^a-zA-Z0-9 -', '')
         gen_id.tr!(' ', '-')

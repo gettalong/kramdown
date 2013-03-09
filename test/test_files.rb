@@ -16,8 +16,12 @@ Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
 class TestFiles < Test::Unit::TestCase
 
+  EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
+                     ].compact
+
   # Generate test methods for kramdown-to-xxx conversion
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
+    next if EXCLUDE_KD_FILES.any? {|f| text_file =~ /#{f}$/}
     basename = text_file.sub(/\.text$/, '')
     opts_file = text_file.sub(/\.text$/, '.options')
     (Dir[basename + ".*"] - [text_file, opts_file]).each do |output_file|
@@ -114,7 +118,8 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/block/11_ial/simple.text',         # bc of change of ordering of attributes in header
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
-                         ]
+                          ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
+                         ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
       define_method('test_' + text_file.tr('.', '_') + "_to_kramdown_to_html") do

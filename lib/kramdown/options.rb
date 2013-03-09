@@ -188,6 +188,18 @@ Default: ''
 Used by: HTML/Latex converter
 EOF
 
+    define(:transliterated_header_ids, Boolean, false, <<EOF)
+Transliterate the header text before generating the ID
+
+Only ASCII characters are used in headers IDs. This is not good for
+languages with many non-ASCII characters. By enabling this option
+the header text is transliterated to ASCII as good as possible so that
+the resulting header ID is more useful.
+
+Default: false
+Used by: HTML/Latex converter
+EOF
+
     define(:parse_block_html, Boolean, false, <<EOF)
 Process kramdown syntax in block HTML tags
 
