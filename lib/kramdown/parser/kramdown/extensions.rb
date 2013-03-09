@@ -29,7 +29,8 @@ module Kramdown
       # Parse the string +str+ and extract all attributes and add all found attributes to the hash
       # +opts+.
       def parse_attribute_list(str, opts)
-        str.scan(ALD_TYPE_ANY).each do |key, sep, val, id_attr, class_attr, ref|
+        attrs = str.scan(ALD_TYPE_ANY)
+        attrs.each do |key, sep, val, id_attr, class_attr, ref|
           if ref
             (opts[:refs] ||= []) << ref
           elsif class_attr
@@ -42,6 +43,7 @@ module Kramdown
             opts[key] = val
           end
         end
+        warning("No or invalid attributes found in IAL/ALD content: #{str}") if attrs.length == 0
       end
 
       # Update the +ial+ with the information from the inline attribute list +opts+.
