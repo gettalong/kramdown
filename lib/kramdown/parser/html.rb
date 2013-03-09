@@ -384,14 +384,13 @@ module Kramdown
               if c.type == :text
                 mem << c.value
               elsif c.type == :entity
-                value_char = c.value.char
-                if value_char.respond_to?(:encode)
-                  mem << value_char.encode(@root.options[:encoding])
-                elsif [60, 62, 34, 38].include?(c.value.code_point)
+                if [60, 62, 34, 38].include?(c.value.code_point)
                   mem << c.value.code_point.chr
+                else
+                  mem << c.value.char
                 end
               elsif c.type == :smart_quote || c.type == :typographic_sym
-                mem << entity(c.value.to_s).char.encode(@root.options[:encoding])
+                mem << entity(c.value.to_s).char
               else
                 raise "Bug - please report"
               end

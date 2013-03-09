@@ -90,6 +90,7 @@ module Kramdown
         converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))
         result = converter.convert(tree)
         result = apply_template(converter, result) if !converter.options[:template].empty?
+        result.encode!(tree.options[:encoding]) if result.respond_to?(:encode!)
         [result, converter.warnings]
       end
 
