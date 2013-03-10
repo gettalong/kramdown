@@ -125,8 +125,8 @@ EOF
   PKG_FILES = FileList.new([
                             'Rakefile',
                             'setup.rb',
-                            'COPYING', 'GPL', 'README.md', 'AUTHORS',
-                            'VERSION', 'ChangeLog', 'CONTRIBUTERS',
+                            'COPYING', 'README.md', 'AUTHORS',
+                            'VERSION', 'CONTRIBUTERS',
                             'bin/*',
                             'benchmark/*',
                             'lib/**/*.rb',
@@ -140,12 +140,6 @@ EOF
   file 'VERSION' do
     puts "Generating VERSION file"
     File.open('VERSION', 'w+') {|file| file.write(Kramdown::VERSION + "\n")}
-  end
-
-  CLOBBER << 'ChangeLog'
-  file 'ChangeLog' do
-    puts "Generating ChangeLog file"
-    `git log --name-only > ChangeLog`
   end
 
   CLOBBER << 'CONTRIBUTERS'
