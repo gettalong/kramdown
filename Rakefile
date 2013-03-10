@@ -172,6 +172,7 @@ EOF
       s.version = Kramdown::VERSION
       s.summary = SUMMARY
       s.description = DESCRIPTION
+      s.license = 'MIT'
 
       #### Dependencies, requirements and files
       s.files = PKG_FILES.to_a
