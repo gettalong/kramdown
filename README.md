@@ -1,5 +1,16 @@
 # kramdown
 
+## Readme first!
+
+kramdown was originally licensed under the GPL until the 1.0.0 release. However, due to the many
+requests it is now released under the MIT license and therefore can easily be used in commercial
+projects, too.
+
+However, if you use kramdown in a commerical setting, please consider **contributing back any
+changes** for the benefit of the community and/or **making a donation** (see the links in the
+sidebar on the [kramdown homepage](http://kramdown.rubyforge.org/)!
+
+
 ## Introduction
 
 kramdown is yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition and
