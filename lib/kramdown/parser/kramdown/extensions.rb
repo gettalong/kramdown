@@ -17,14 +17,18 @@ module Kramdown
       # +opts+.
       def parse_attribute_list(str, opts)
         attrs = str.scan(ALD_TYPE_ANY)
-        attrs.each do |key, sep, val, id_attr, class_attr, ref|
+        attrs.each do |key, sep, val, ref, id_and_or_class, _, _|
           if ref
             (opts[:refs] ||= []) << ref
-          elsif class_attr
-            opts[IAL_CLASS_ATTR] = (opts[IAL_CLASS_ATTR] || '') << " #{class_attr}"
-            opts[IAL_CLASS_ATTR].lstrip!
-          elsif id_attr
-            opts['id'] = id_attr
+          elsif id_and_or_class
+            id_and_or_class.scan(ALD_TYPE_ID_OR_CLASS).each do |id_attr, class_attr|
+              if class_attr
+                opts[IAL_CLASS_ATTR] = (opts[IAL_CLASS_ATTR] || '') << " #{class_attr}"
+                opts[IAL_CLASS_ATTR].lstrip!
+              else
+                opts['id'] = id_attr
+              end
+            end
           else
             val.gsub!(/\\(\}|#{sep})/, "\\1")
             opts[key] = val
@@ -125,8 +129,10 @@ module Kramdown
       ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])*?)\2/
       ALD_TYPE_CLASS_NAME = /\.(#{ALD_ID_NAME})/
       ALD_TYPE_ID_NAME = /#(\w[\w:-]*)/
+      ALD_TYPE_ID_OR_CLASS = /#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}/
+      ALD_TYPE_ID_OR_CLASS_MULTI = /((?:#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME})+)/
       ALD_TYPE_REF = /(#{ALD_ID_NAME})/
-      ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}|#{ALD_TYPE_REF})(?=\s|\Z)/
+      ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_REF}|#{ALD_TYPE_ID_OR_CLASS_MULTI})(?=\s|\Z)/
       ALD_START = /^#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}\s*?\n/
 
       EXT_STOP_STR = "\\{:/(%s)?\\}"
