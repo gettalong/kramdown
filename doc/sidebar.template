@@ -1,7 +1,7 @@
 <h2>News</h2>
 
-<p>The latest version of kramdown is <b>1.0.0</b> and it was released
-on <b>2013-03-10</b>.</p>
+<p>The latest version of kramdown is <span class="inline-important">1.0.1</span> and it was released
+on <span class="inline-important">2013-03-11</span></p>
 
 <p>More <a href="{relocatable: news.html}">news</a>…</p>
 

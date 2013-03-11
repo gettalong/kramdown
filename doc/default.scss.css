@@ -11,6 +11,7 @@ aside a {
     &:hover {
         text-decoration: underline;
     }
+
 }
 
 #content {
@@ -178,4 +179,10 @@ acronym {
 
 .clear {
     clear: both;
+}
+
+.inline-important {
+    font-weight: bold;
+    display: block;
+    text-align: center;
 }
