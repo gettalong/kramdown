@@ -85,9 +85,9 @@ module Kramdown
       # Modify the string +source+ to be usable by the parser (unifies line ending characters to
       # +\n+ and makes sure +source+ ends with a new line character).
       def adapt_source(source)
-        if source.respond_to?(:encode!)
+        if source.respond_to?(:encode)
           raise "The encoding of the source text is not valid!" if !source.valid_encoding?
-          source.encode!('UTF-8')
+          source = source.encode('UTF-8')
         end
         source.gsub(/\r\n?/, "\n").chomp + "\n"
       end
