@@ -196,6 +196,8 @@ languages with many non-ASCII characters. By enabling this option
 the header text is transliterated to ASCII as good as possible so that
 the resulting header ID is more useful.
 
+The stringex library needs to be installed for this feature to work!
+
 Default: false
 Used by: HTML/Latex converter
 EOF
