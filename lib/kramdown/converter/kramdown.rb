@@ -366,7 +366,7 @@ module Kramdown
         res << "\n\n" if @linkrefs.size > 0
         @linkrefs.each_with_index do |el, i|
           title = el.attr['title']
-          res << "[#{i+1}]: #{el.attr['href']} #{title ? '"' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
+          res << "[#{i+1}]: #{el.attr['href']}#{title ? ' "' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
         end
         res
       end
