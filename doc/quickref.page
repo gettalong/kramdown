@@ -573,6 +573,31 @@ example.
 {kdexample}
 
 
+## Superscripts and Subscripts
+
+{kdlink: {oid: superscripts-and-subscripts, part: "superscripts and subscripts"}}
+
+Superscripts can be represented by surrounding the text with carets:
+
+{kdexample::}
+E = mc^2^
+EMPTY^this needs further revision^.
+{kdexample}
+
+Subscripts can be represented by surrounding the text with tildes:
+
+{kdexample::}
+water: H~2~O
+{kdexample}
+
+To show the two symbols, if there are multiple in one paragraph, use backslash to escape:
+
+{kdexample::}
+This is symbol tilde \~. This is another \~. (the last escape is not necessary, 
+since only one left in this paragraph.)
+{kdexample}
+
+
 ## HTML Elements
 
 {kdlink: {oid: html-spans, part: "HTML spans"}}

@@ -133,6 +133,8 @@ Following is a list of all the characters (character sequences) that can be esca
     "         double quote
     '         single quote
     $         dollar sign
+    ^         caret
+    ~         tilde
 
 
 ## Block Boundaries
@@ -1430,6 +1432,26 @@ Here are some examples:
 
 > Abbreviation definitions are, despite being described here, non-content block-level elements.
 {: .information}
+
+
+## Superscripts and Subscripts
+
+> This syntax feature is not part of the original Markdown syntax.
+{: .markdown-difference}
+
+kramdown provides a syntax to represent superscripts and subscripts. Their corresponding HTML tags 
+are `<sup>` and `<sub>`. To show text as superscripts, enclose it with carets (`^`); subscripts 
+with tildes (`~`). For example:
+
+    E = mc^2^
+    water: H~2~O
+    EMPTY^this needs further revision^.
+
+Note that the paring of `^` or `~` works untill the end of paragraph. To show the two symbols, if 
+there are multiple of them in one paragraph, use backslash to escape:
+
+    This is symbol tilde \~. This is another \~. (the last escape is not necessary, since only one 
+    left in this paragraph.)
 
 
 ## Typographic Symbols

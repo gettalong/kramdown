@@ -1,0 +1,38 @@
+
+the famous equation: E = mc^2^
+
+water, H~2~O, is the source of life.
+
+2^10^ = 1024.
+
+elements: ^3^He, ^12^C, ^13^C
+
+dangerous: ^235^~92~U.
+
+more: 1^st^, Z~xy~, EMPTY^this needs further revision^.
+
+
+only one: ~abc.
+
+mixed with em: abc^this is a _number_!^
+
+not confused with footnotes: This is some text.[^1]
+
+[^1]: Some *crazy* footnote definition.
+
+
+the two kinds mixed: X^Y~c~^.
+
+in code: `a^2 = b^2 + c^2`
+
+in list:
+
+- item1
+- item2 ^need citation^
+
+to use ^ or ~:
+
+a\^2 = b\^2 + c^2
+
+\~end~
+
