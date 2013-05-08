@@ -404,7 +404,7 @@ module Kramdown
         402 => ['\textflorin', 'mathcomp'],
         381 => ['\v{Z}'],
         382 => ['\v{z}'],
-        160 => ['\nolinebreak'],
+        160 => ['~'],
         161 => ['\textexclamdown'],
         163 => ['\pounds'],
         164 => ['\currency', 'wasysym'],
