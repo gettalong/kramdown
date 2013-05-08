@@ -46,6 +46,9 @@ For detailed information have a look at the API documentation of the `Kramdown::
 The full API documentation is available at <http://kramdown.rubyforge.org/rdoc/>, other sites with an
 API documentation for kramdown probably don't provide the complete documentation!
 
+There are also some third-party libraries that extend the functionality of kramdown -- see the
+kramdown Wiki at <https://github.com/gettalong/kramdown/wiki>.
+
 
 ## Development
 
