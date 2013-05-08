@@ -102,6 +102,7 @@ module Kramdown
       @options = Options.merge(options).freeze
       parser = (options[:input] || 'kramdown').to_s
       parser = parser[0..0].upcase + parser[1..-1]
+      try_require('parser', parser)
       if Parser.const_defined?(parser)
         @root, @warnings = Parser.const_get(parser).parse(source, @options)
       else
@@ -114,7 +115,8 @@ module Kramdown
     #
     # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
     def method_missing(id, *attr, &block)
-      if id.to_s =~ /^to_(\w+)$/ && (name = Utils.camelize($1)) && Converter.const_defined?(name)
+      if id.to_s =~ /^to_(\w+)$/ && (name = Utils.camelize($1)) &&
+          try_require('converter', name) && Converter.const_defined?(name)
         output, warnings = Converter.const_get(name).convert(@root, @options)
         @warnings.concat(warnings)
         output
@@ -126,6 +128,15 @@ module Kramdown
     def inspect #:nodoc:
       "<KD:Document: options=#{@options.inspect} root=#{@root.inspect} warnings=#{@warnings.inspect}>"
     end
+
+    # Try requiring a parser or converter class and don't raise an error if the file is not found.
+    def try_require(type, name)
+      require("kramdown/#{type}/#{Utils.snake_case(name)}")
+      true
+    rescue LoadError
+      true
+    end
+    protected :try_require
 
   end
 
