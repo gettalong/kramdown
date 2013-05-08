@@ -25,6 +25,15 @@ module Kramdown
       name.split('_').inject('') {|s,x| s << x[0..0].upcase + x[1..-1] }
     end
 
+    # Treat +name+ as if it were camelized (e.g. CamelizedName) and snake-case it (e.g. camelized_name).
+    def self.snake_case(name)
+      name = name.dup
+      name.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
+      name.gsub!(/([a-z])([A-Z])/,'\1_\2')
+      name.downcase!
+      name
+    end
+
   end
 
 end
