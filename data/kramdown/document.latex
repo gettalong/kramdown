@@ -36,6 +36,11 @@ encmap = {
 \VerbatimFootnotes
 <% end %>
 
+<% if @converter.data[:packages].include?('acronym') %>
+<% @converter.root.options[:abbrev_defs].each_pair {|k,v| %>\acrodef{<%= k %>}{<%= v %>}
+<% } %>
+<% end %>
+
 \hypersetup{colorlinks=true,urlcolor=blue}
 
 \begin{document}
