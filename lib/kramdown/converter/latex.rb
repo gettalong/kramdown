@@ -545,7 +545,8 @@ module Kramdown
       end
 
       def convert_abbreviation(el, opts)
-        el.value
+        @data[:packages] += %w[acronym]
+        "\\ac{#{el.value}}"
       end
 
       # Wrap the +text+ inside a LaTeX environment of type +type+. The element +el+ is passed on to
