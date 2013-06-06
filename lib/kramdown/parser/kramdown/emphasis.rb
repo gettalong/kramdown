@@ -20,7 +20,7 @@ module Kramdown
         type = result[0..0]
         reset_pos = @src.pos
 
-        if (type == '_' && @src.pre_match =~ /[[:alpha:]]\z/ && @src.check(/[[:alpha:]]/)) || @src.check(/\s/) ||
+        if (type == '_' && @src.pre_match =~ /[[:alnum:]]\z/ && @src.check(/[[:alnum:]]/)) || @src.check(/\s/) ||
             @tree.type == element || @stack.any? {|el, _| el.type == element}
           add_text(result)
           return
@@ -32,7 +32,7 @@ module Kramdown
           found = parse_spans(el, stop_re) do
             (@src.pre_match[-1, 1] !~ /\s/) &&
               (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
-              (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alpha:]]/)) && el.children.size > 0
+              (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alnum:]]/)) && el.children.size > 0
           end
           [found, el, stop_re]
         end
