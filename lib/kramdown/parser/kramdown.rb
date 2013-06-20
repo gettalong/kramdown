@@ -89,7 +89,7 @@ module Kramdown
         parse_blocks(@root, adapt_source(source))
         update_tree(@root)
         replace_abbreviations(@root)
-        @footnotes.each {|name,data| update_tree(data[:marker].value) if data[:marker]}
+        @footnotes.each {|name,data| update_tree(data[:marker].last.value) if data[:marker]}
       end
 
       #######

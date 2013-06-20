@@ -38,17 +38,10 @@ module Kramdown
         @src.pos += @src.matched_size
         fn_def = @footnotes[@src[1]]
         if fn_def
-          valid = fn_def[:marker] && fn_def[:stack][0..-2].zip(fn_def[:stack][1..-1]).all? do |par, child|
-            par.children.include?(child)
-          end
-          if !fn_def[:marker] || !valid
-            fn_def[:marker] = Element.new(:footnote, fn_def[:content], nil, :name => @src[1])
-            fn_def[:stack] = [@stack.map {|s| s.first}, @tree, fn_def[:marker]].flatten.compact
-            @tree.children << fn_def[:marker]
-          else
-            warning("Footnote marker '#{@src[1]}' already appeared in document, ignoring newly found marker")
-            add_text(@src.matched)
-          end
+          fn_def[:marker] ||= []
+          fn_def[:marker].push(Element.new(:footnote, fn_def[:content], nil, :name => @src[1]))
+          fn_def[:stack] = [@stack.map {|s| s.first}, @tree, fn_def[:marker]].flatten.compact
+          @tree.children << fn_def[:marker].last
         else
           warning("Footnote definition for '#{@src[1]}' not found")
           add_text(@src.matched)
