@@ -265,15 +265,16 @@ module Kramdown
       end
 
       def convert_footnote(el, indent)
-        if @footnotes_by_name[el.options[:name]]
-          number = @footnotes_by_name[el.options[:name]][2]
+        if (footnote = @footnotes_by_name[el.options[:name]])
+          number = footnote[2]
+          repeat = "-#{footnote[3] += 1}"
         else
           number = @footnote_counter
           @footnote_counter += 1
-          @footnotes << [el.options[:name], el.value, number]
+          @footnotes << [el.options[:name], el.value, number, 0]
           @footnotes_by_name[el.options[:name]] = @footnotes.last
         end
-        "<sup id=\"fnref:#{el.options[:name]}\"><a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
+        "<sup id=\"fnref:#{el.options[:name]}#{repeat}\"><a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
       end
 
       def convert_raw(el, indent)
@@ -415,7 +416,7 @@ module Kramdown
       def footnote_content
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1
-        @footnotes.each do |name, data, number|
+        @footnotes.each do |name, data, number, repeat|
           li = Element.new(:li, nil, {'id' => "fn:#{name}"})
           li.children = Marshal.load(Marshal.dump(data.children))
           ol.children << li
