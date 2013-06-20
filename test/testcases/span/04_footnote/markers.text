@@ -16,7 +16,7 @@ This is some *ref.[^fn]
 
 A marker without a definition [^without].
 
-A marker [^empty] used twice[^fn].
+A marker [^empty] used twice[^fn] and thrice[^fn].
 
 [^now]:
 
