@@ -19,5 +19,5 @@ continued here
 
 A marker without a definition [\^{}without].
 
-A marker \footnote{} used twice[\^{}fn].
+A marker \footnote{} used twice\footnote{Some foot note text}.
 
