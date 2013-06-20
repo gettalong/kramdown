@@ -1354,13 +1354,12 @@ optionally followed by other word characters, digits or dashes. For example:
 
     This is some text.[^1]. Other text.[^footnote].
 
-The footnote name has to be unique in the whole kramdown document. Therefore you can't link to the
-same footnote definition twice. The actual naming of a footnote does not matter since the numbering
-of footnotes is controlled via the position of the footnote markers in the document (the first found
-footnote marker will get the number 1, the second footnote marker the number 2 and so on). If there
-is a footnote definition found for the identifier, a footnote will be created. Otherwise the
-footnote marker is not converted to a footnote link. Also note that all attributes set via a span
-IAL are ignored for a footnote marker!
+Footnote markers with the same name will link to the same footnote definition. The actual naming of
+a footnote does not matter since the numbering of footnotes is controlled via the position of the
+footnote markers in the document (the first found footnote marker will get the number 1, the second 
+new footnote marker the number 2 and so on). If there is a footnote definition found for the
+identifier, a footnote will be created. Otherwise the footnote marker is not converted to a footnote
+link. Also note that all attributes set via a span IAL are ignored for a footnote marker!
 
 A footnote definition is used to define the content of a footnote and has the following structure:
 
