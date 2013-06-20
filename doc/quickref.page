@@ -555,7 +555,8 @@ footnote[^2].
 {kdexample}
 
 As can be seen above the footnote name is only used for the anchors and the numbering is done
-automatically in document order.
+automatically in document order.  Repeated footnote markers will link to the same footnote
+definition.
 
 
 ## Abbreviations
