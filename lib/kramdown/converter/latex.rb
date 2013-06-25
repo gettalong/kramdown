@@ -145,10 +145,10 @@ module Kramdown
       end
 
       def convert_html_element(el, opts)
-        if el.value == 'i'
+        if el.value == 'i' || el.value == 'em'
           "\\emph{#{inner(el, opts)}}"
-        elsif el.value == 'b'
-          "\\emph{#{inner(el, opts)}}"
+        elsif el.value == 'b' || el.value == 'strong'
+          "\\textbf{#{inner(el, opts)}}"
         else
           warning("Can't convert HTML element")
           ''
