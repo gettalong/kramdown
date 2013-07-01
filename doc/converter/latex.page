@@ -32,6 +32,7 @@ feature is actually used:
 * `wasysym`, `amssymb`, `mathabx`, `textcomp`, `mathcomp`, `eurosym` (for special entity character
   support)
 * `fancyvrb` (see [Footnotes](#footnotes))
+* `acronym` (for acronym support)
 
 
 ## Hyper Targets and Links

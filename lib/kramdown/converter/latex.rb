@@ -546,7 +546,12 @@ module Kramdown
 
       def convert_abbreviation(el, opts)
         @data[:packages] += %w[acronym]
-        "\\ac{#{el.value}}"
+        "\\ac{#{normalize_abbreviation_key(el.value)}}"
+      end
+
+      # Normalize the abbreviation key so that it only contains allowed ASCII character
+      def normalize_abbreviation_key(key)
+        key.gsub(/\W/) {|m| m.unpack('H*').first}
       end
 
       # Wrap the +text+ inside a LaTeX environment of type +type+. The element +el+ is passed on to

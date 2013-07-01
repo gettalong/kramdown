@@ -37,8 +37,8 @@ encmap = {
 <% end %>
 
 <% if @converter.data[:packages].include?('acronym') %>
-<% @converter.root.options[:abbrev_defs].each_pair {|k,v| %>\acrodef{<%= k %>}{<%= v %>}
-<% } %>
+<%   @converter.root.options[:abbrev_defs].each_pair do |k,v| %>\acrodef{<%= @converter.normalize_abbreviation_key(k) %>}[<%= k %>]{<%= @converter.escape(v) %>}
+<%   end %>
 <% end %>
 
 \hypersetup{colorlinks=true,urlcolor=blue}
