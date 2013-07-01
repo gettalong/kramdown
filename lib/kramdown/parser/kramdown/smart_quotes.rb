@@ -122,6 +122,7 @@ module Kramdown
       SQ_CLOSE = %![^\ \\\\\t\r\n\\[{(-]!
 
       SQ_RULES = [
+                  [/("|')(?=[_*]{1,2}\S)/, [:lquote1]],
                   [/("|')(?=#{SQ_PUNCT}\B)/, [:rquote1]],
                   # Special case for double sets of quotes, e.g.:
                   #   <p>He said, "'Quoted' words in a larger quote."</p>

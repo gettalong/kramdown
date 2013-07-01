@@ -16,3 +16,15 @@ Mark's name. "...you"
 
 Nam liber tempor
 "...At vero eos et accusam"
+
+"_Single underscores_ should work."
+
+"*Single asterisks* should work."
+
+'__Double underscores__ should work.'
+
+'**Double asterisks** should work.'
+
+"_Hurrah!_"
+
+'__Absolutely__.'
