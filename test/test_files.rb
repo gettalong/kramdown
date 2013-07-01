@@ -90,14 +90,16 @@ class TestFiles < Test::Unit::TestCase
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
       define_method('test_' + text_file.tr('.', '_') + "_to_latex_compilation") do
         latex =  Kramdown::Document.new(File.read(text_file),
-                                                          :auto_ids => false, :footnote_nr => 1,
-                                                          :template => 'document').to_latex
-        result = IO.popen("latex -output-directory='#{Dir.tmpdir}' 2>/dev/null", 'r+') do |io|
-          io.write(latex)
-          io.close_write
-          io.read
+                                        :auto_ids => false, :footnote_nr => 1,
+                                        :template => 'document').to_latex
+        Dir.mktmpdir do |tmpdir|
+          result = IO.popen("latex -output-directory='#{tmpdir}' 2>/dev/null", 'r+') do |io|
+            io.write(latex)
+            io.close_write
+            io.read
+          end
+          assert($?.exitstatus == 0, result.scan(/^!(.*\n.*)/).join("\n"))
         end
-        assert($?.exitstatus == 0, result.scan(/^!(.*\n.*)/).join("\n"))
       end
     end
   end
