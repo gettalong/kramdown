@@ -26,7 +26,7 @@ This is just an incremental release bringing two new features and several bug fi
   - Fixed [GH#66]: HTML elements `<i>`, `<b>`, `<em>` and `<strong>` are now converted correctly by
     the LaTeX converter (patch by Henning Perl)
   - Fixed [GH#57]: Better smart quote handling when underscores are directly after or before
-    quotation marks
+    quotation marks (reported by Bill Tozier)
 
 [GH#60]: https://github.com/gettalong/kramdown/pull/60
 [GH#66]: https://github.com/gettalong/kramdown/pull/66
