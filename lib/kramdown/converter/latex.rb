@@ -206,9 +206,9 @@ module Kramdown
       def convert_a(el, opts)
         url = el.attr['href']
         if url =~ /^#/
-          "\\hyperlink{#{url[1..-1]}}{#{inner(el, opts)}}"
+          "\\hyperlink{#{escape(url[1..-1])}}{#{inner(el, opts)}}"
         else
-          "\\href{#{url}}{#{inner(el, opts)}}"
+          "\\href{#{escape(url)}}{#{inner(el, opts)}}"
         end
       end
 
