@@ -15,9 +15,13 @@ require 'tmpdir'
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
 class TestFiles < Test::Unit::TestCase
+  GFM_TEXT_FILES = [
+    'test/testcases/block/06_codeblock/backticks_syntax.text',
+    'test/testcases/block/06_codeblock/backticks_disable_highlighting.text'
+  ]
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                       'test/testcases/block/06_codeblock/backticks-syntax.text'
+                      *GFM_TEXT_FILES
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -49,7 +53,7 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
-                          'test/testcases/block/06_codeblock/backticks-syntax.html', # only in GFM
+                          *GFM_TEXT_FILES.map {|f| f.sub(/text$/, 'html')}
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -87,7 +91,7 @@ class TestFiles < Test::Unit::TestCase
     EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
                            'test/testcases/span/01_link/imagelinks.text', # bc of image links
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
-                           'test/testcases/block/06_codeblock/backticks-syntax.text' # only in GFM
+                           *GFM_TEXT_FILES
                           ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -124,7 +128,7 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                          'test/testcases/block/06_codeblock/backticks-syntax.text' # only in GFM
+                          *GFM_TEXT_FILES
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -159,7 +163,7 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
-                             'test/testcases/block/06_codeblock/backticks-syntax.html' # only in GFM
+                             *GFM_TEXT_FILES.map {|f| f.sub(/text$/, 'html')}
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
