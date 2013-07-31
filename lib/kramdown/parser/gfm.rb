@@ -8,7 +8,6 @@ module Kramdown
       end
 
       GFM_FENCED_CODEBLOCK_START = /^`{3,}/
-      #GFM_FENCED_CODEBLOCK_MATCH = /^(`{3,})\s*?(\w+)?\s*?\n(.*?)^\1`*\s*?\n/m
       GFM_FENCED_CODEBLOCK_MATCH = /^`{3,} *(\w+)?\s*?\n(.*?)^`{3,}\s*?\n/m
 
       # Parse the fenced codeblock at the current location.
