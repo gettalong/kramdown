@@ -25,6 +25,23 @@ module Kramdown
       end
       define_parser(:gfm_codeblock_fenced, GFM_FENCED_CODEBLOCK_START)
 
+      def parse_paragraph
+        result = @src.scan(PARAGRAPH_MATCH)
+        while !@src.match?(self.class::PARAGRAPH_END)
+          result << @src.scan(PARAGRAPH_MATCH)
+        end
+        result.chomp!
+        unless @tree.children.last && @tree.children.last.type == :p
+          @tree.children << new_block_el(:p)
+        end
+        lines = result.lstrip.each_line.map {|line| Element.new(@text_type, line) }
+        @tree.children.last.children << lines.first
+        lines.drop(1).each do |line|
+          @tree.children.last.children << Element.new(:br) << line
+        end
+        true
+      end
+
     end
   end
 end
