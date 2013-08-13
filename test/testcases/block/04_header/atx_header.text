@@ -36,6 +36,10 @@ paragraph
 
 ### Header    ##    {#id}
 
+### Header {#id-with-dashes}
+
+### Header {#id:with-colon}
+
 ### Header{#noid}
 
 ### Header ##{#noid}
