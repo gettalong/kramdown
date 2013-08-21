@@ -15,14 +15,8 @@ require 'tmpdir'
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
 class TestFiles < Test::Unit::TestCase
-  GFM_TEXT_FILES = [
-    'test/testcases/block/06_codeblock/backticks_syntax.text',
-    'test/testcases/block/06_codeblock/backticks_disable_highlighting.text',
-    'test/testcases/block/03_paragraph/two_para_hard_line_breaks.text'
-  ]
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                      *GFM_TEXT_FILES
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -54,7 +48,6 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
-                          *GFM_TEXT_FILES.map {|f| f.sub(/text$/, 'html')}
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -92,7 +85,6 @@ class TestFiles < Test::Unit::TestCase
     EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
                            'test/testcases/span/01_link/imagelinks.text', # bc of image links
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
-                           *GFM_TEXT_FILES
                           ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -129,7 +121,6 @@ class TestFiles < Test::Unit::TestCase
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                          *GFM_TEXT_FILES
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -164,7 +155,6 @@ class TestFiles < Test::Unit::TestCase
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
-                             *GFM_TEXT_FILES.map {|f| f.sub(/text$/, 'html')}
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -183,6 +173,7 @@ class TestFiles < Test::Unit::TestCase
 
   EXCLUDE_GFM_FILES = [
     'test/testcases/block/03_paragraph/no_newline_at_end.text',
+    'test/testcases/block/03_paragraph/indented.text',
     'test/testcases/block/03_paragraph/two_para.text',
     'test/testcases/block/04_header/atx_header.text',
     'test/testcases/block/04_header/setext_header.text',
@@ -237,16 +228,12 @@ class TestFiles < Test::Unit::TestCase
     'test/testcases/span/text_substitutions/typography.text'
   ]
 
-  # Generate test methods for kramdown-to-gfm conversion
-  Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
+  # Generate test methods for gfm-to-html conversion
+  Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|
     next if EXCLUDE_GFM_FILES.any? {|f| text_file =~ /#{f}$/}
     basename = text_file.sub(/\.text$/, '')
 
-    html_file = [
-      ".html.gfm",
-      (".html.19" if RUBY_VERSION >= '1.9'),
-      ".html"
-    ].compact.
+    html_file = [(".html.19" if RUBY_VERSION >= '1.9'), ".html"].compact.
       map {|ext| basename + ext }.
       detect {|file| File.exist?(file) }
 

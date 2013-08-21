@@ -31,14 +31,14 @@ module Kramdown
 
 
       FENCED_CODEBLOCK_START = /^~{3,}/
-      FENCED_CODEBLOCK_MATCH = /^(~{3,})\s*?(\w+)?\s*?\n(.*?)^\1~*\s*?\n/m
+      FENCED_CODEBLOCK_MATCH = /^((~){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
 
       # Parse the fenced codeblock at the current location.
       def parse_codeblock_fenced
-        if @src.check(FENCED_CODEBLOCK_MATCH)
+        if @src.check(self.class::FENCED_CODEBLOCK_MATCH)
           @src.pos += @src.matched_size
-          el = new_block_el(:codeblock, @src[3])
-          lang = @src[2].to_s.strip
+          el = new_block_el(:codeblock, @src[4])
+          lang = @src[3].to_s.strip
           el.attr['class'] = "language-#{lang}" unless lang.empty?
           @tree.children << el
           true

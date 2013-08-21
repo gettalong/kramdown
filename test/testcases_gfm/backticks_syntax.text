@@ -10,10 +10,6 @@ Four backticks
 Unbalanced bottom heavy
 ``````
 
-``````
-Unbalanced top heavy
-````
-
 ````ruby
 language no space
 ````

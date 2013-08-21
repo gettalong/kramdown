@@ -1,29 +1,21 @@
+# -*- coding: utf-8 -*-
+
+require 'kramdown/parser/kramdown'
+
 module Kramdown
   module Parser
     class GFM < Kramdown::Parser::Kramdown
 
       def initialize(source, options)
         super
-        @block_parsers.unshift(:gfm_codeblock_fenced)
+        i = @block_parsers.index(:codeblock_fenced)
+        @block_parsers.delete(:codeblock_fenced)
+        @block_parsers.insert(i, :codeblock_fenced_gfm)
       end
 
-      GFM_FENCED_CODEBLOCK_START = /^`{3,}/
-      GFM_FENCED_CODEBLOCK_MATCH = /^`{3,} *(\w+)?\s*?\n(.*?)^`{3,}\s*?\n/m
+      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
 
-      # Parse the fenced codeblock at the current location.
-      def parse_gfm_codeblock_fenced
-        if @src.check(GFM_FENCED_CODEBLOCK_MATCH)
-          @src.pos += @src.matched_size
-          el = new_block_el(:codeblock, @src[2])
-          lang = @src[1].to_s.strip
-          el.attr['class'] = "language-#{lang}" unless lang.empty?
-          @tree.children << el
-          true
-        else
-          false
-        end
-      end
-      define_parser(:gfm_codeblock_fenced, GFM_FENCED_CODEBLOCK_START)
+      define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
       def parse_paragraph
         result = @src.scan(PARAGRAPH_MATCH)
@@ -34,11 +26,12 @@ module Kramdown
         unless @tree.children.last && @tree.children.last.type == :p
           @tree.children << new_block_el(:p)
         end
-        lines = result.lstrip.each_line.map {|line| Element.new(@text_type, line) }
-        @tree.children.last.children << lines.first
-        lines.drop(1).each do |line|
-          @tree.children.last.children << Element.new(:br) << line
+        lines = result.lstrip.split(/\n/)
+        lines.each_with_index do |line, index|
+          @tree.children.last.children << Element.new(@text_type, line) << Element.new(:br) << Element.new(@text_type, "\n")
         end
+        @tree.children.last.children.pop # added one \n too many
+        @tree.children.last.children.pop # added one :br too many
         true
       end
 
