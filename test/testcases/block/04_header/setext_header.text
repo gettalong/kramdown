@@ -26,8 +26,11 @@ Not a Header
 header {#id}  
 ------------
 
-header        {#id}
+header        {#Id}
 ======
+
+header {#A-Za-z0-9_:}
+------
 
 header{#noid}
 -----
