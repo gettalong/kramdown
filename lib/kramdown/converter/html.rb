@@ -142,7 +142,7 @@ module Kramdown
       end
 
       def convert_hr(el, indent)
-        "#{' '*indent}<hr />\n"
+        "#{' '*indent}<hr#{html_attributes(el.attr)} />\n"
       end
 
       def convert_ul(el, indent)
