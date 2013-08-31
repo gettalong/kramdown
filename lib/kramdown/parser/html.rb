@@ -9,6 +9,7 @@
 
 require 'rexml/parsers/baseparser'
 require 'strscan'
+require 'kramdown/utils'
 
 module Kramdown
 
