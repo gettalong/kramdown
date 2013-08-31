@@ -15,20 +15,25 @@ module Kramdown
     # Provides the ability to tranliterate Unicode strings into plain ASCII ones.
     module Unidecoder
 
-      if RUBY_VERSION <= '1.8.6'
+      gem 'stringex' if defined?(Gem)
+      path = $:.find {|dir| File.directory?(File.join(File.expand_path(dir), "stringex", "unidecoder_data"))}
+
+      if RUBY_VERSION <= '1.8.6' || !path
         def self.decode(string)
           string
         end
       else
 
-        require 'stringex/unidecoder' # dummy require so that we can get at the data files
+        CODEPOINTS = Hash.new do |h, k|
+          h[k] = YAML.load_file(File.join(path, "stringex", "unidecoder_data", "#{k}.yml"))
+        end
 
         # Transliterate string from Unicode into ASCII.
         def self.decode(string)
           string.gsub(/[^\x00-\x7f]/u) do |codepoint|
             begin
               unpacked = codepoint.unpack("U")[0]
-              Stringex::Unidecoder::CODEPOINTS["x%02x" % (unpacked >> 8)][unpacked & 255]
+              CODEPOINTS["x%02x" % (unpacked >> 8)][unpacked & 255]
             rescue
               "?"
             end
