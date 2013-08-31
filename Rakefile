@@ -218,7 +218,7 @@ EOF
       rf.configure
       rf.login
 
-      rf.userconfig["release_notes"] = REL_PAGE.blocks['content'].content
+      rf.userconfig["release_notes"] = REL_PAGE.blocks['content']
       rf.userconfig["preformatted"] = false
 
       files = %w[.gem .tgz .zip].collect {|ext| "pkg/kramdown-#{Kramdown::VERSION}" + ext}
