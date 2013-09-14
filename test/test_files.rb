@@ -7,14 +7,14 @@
 #++
 #
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'kramdown'
 require 'yaml'
 require 'tmpdir'
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
-class TestFiles < Test::Unit::TestCase
+class TestFiles < Minitest::Test
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                      ].compact
