@@ -23,6 +23,7 @@ module Kramdown
     autoload :Kramdown, 'kramdown/converter/kramdown'
     autoload :Toc, 'kramdown/converter/toc'
     autoload :RemoveHtmlTags, 'kramdown/converter/remove_html_tags'
+    autoload :Pdf, 'kramdown/converter/pdf'
 
   end
 
