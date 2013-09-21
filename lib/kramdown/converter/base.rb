@@ -94,6 +94,9 @@ module Kramdown
       #
       # 3. Append +.convertername+ to the template name and look for it in the kramdown data
       #    directory.
+      #
+      # 4. Check if the template name starts with 'string://' and if so, strip this prefix away and
+      #    use the rest as template.
       def self.convert(tree, options = {})
         converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))
 
@@ -134,6 +137,8 @@ module Kramdown
           File.read(template + format_ext)
         elsif File.exist?(shipped)
           File.read(shipped)
+        elsif template.start_with?('string://')
+          template.sub(/\Astring:\/\//, '')
         else
           raise "The specified template file #{template} does not exist"
         end
