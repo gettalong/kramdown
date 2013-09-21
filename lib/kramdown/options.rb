@@ -79,8 +79,7 @@ module Kramdown
       temp = defaults
       hash.each do |k,v|
         k = k.to_sym
-        next unless @options.has_key?(k)
-        temp[k] = parse(k, v)
+        @options.has_key?(k) ? temp[k] = parse(k, v) : temp[k] = v
       end
       temp
     end
