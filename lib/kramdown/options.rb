@@ -179,7 +179,7 @@ Used by: HTML/Latex converter
 EOF
 
     define(:auto_id_prefix, String, '', <<EOF)
-Prefix used for automatically generated heaer IDs
+Prefix used for automatically generated header IDs
 
 This option can be used to set a prefix for the automatically generated
 header IDs so that there is no conflict when rendering multiple kramdown
