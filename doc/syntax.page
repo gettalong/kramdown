@@ -1544,9 +1544,10 @@ key-value pairs
 ID name
 
 : An ID name is defined by using a hash and then the identifier name which needs to start with an
-  ASCII character, optionally followed by other ASCII characters, digits, dashes or colons. This is
-  a short hand for the key-value pair `id="IDNAME"` since this is often used. The ID name specifies
-  the unique ID of a block or span-level element. For example, an ID name looks like `#myid`.
+  ASCII alphabetic character (A-Z or a-z), optionally followed by other ASCII characters, digits,
+  dashes or colons. This is a short hand for the key-value pair `id="IDNAME"` since this is often
+  used. The ID name specifies the unique ID of a block or span-level element. For example, an ID
+  name looks like `#myid`.
 
 class names
 
