@@ -9,6 +9,7 @@
 
 require 'prawn'
 require 'kramdown/utils/entities'
+require 'open-uri'
 
 module Kramdown
 
@@ -129,7 +130,52 @@ module Kramdown
       def render_header(el, opts)
         render_padded_and_formatted_text(el, opts)
       end
-      alias_method :render_p, :render_header
+
+      def render_p(el, opts)
+        if el.children.size == 1 && el.children.first.type == :img
+          render_standalone_image(el, opts)
+        else
+          render_padded_and_formatted_text(el, opts)
+        end
+      end
+
+      def render_standalone_image(el, opts)
+        img = el.children.first
+
+        if img.attr['src'].empty?
+          warning("Rendering an image without a source is not possible")
+          return nil
+        elsif img.attr['src'] !~ /\.jpe?g$|\.png$/
+          warning("Cannot render images other than JPEG or PNG, got #{img.attr['src']}")
+          return nil
+        end
+
+        img_dirs = (@options[:image_directories] || ['.']).dup
+        begin
+          img_path = File.join(img_dirs.shift, img.attr['src'])
+          image_obj, image_info = @pdf.build_image_object(open(img_path))
+        rescue
+          img_dirs.empty? ? raise : retry
+        end
+
+        options = {:position => :center}
+        if img.attr['height'] && img.attr['height'] =~ /px$/
+          options[:height] = img.attr['height'].to_i / (@options[:image_dpi] || 150.0) * 72
+        elsif img.attr['width'] && img.attr['width'] =~ /px$/
+          options[:width] = img.attr['width'].to_i / (@options[:image_dpi] || 150.0) * 72
+        else
+          options[:scale] =[(@pdf.bounds.width - mm2pt(20)) / image_info.width.to_f, 1].min
+        end
+
+        if img.attr['class'] =~ /\bright\b/
+          options[:position] = :right
+          @pdf.float { @pdf.embed_image(image_obj, image_info, options) }
+        else
+          with_block_padding(el, opts) do
+            @pdf.embed_image(image_obj, image_info, options)
+          end
+        end
+      end
 
       def render_blockquote(el, opts)
         @pdf.indent(mm2pt(10), mm2pt(10)) { inner(el, opts) }
@@ -307,6 +353,10 @@ module Kramdown
         text_hash(el.value, opts)
       end
 
+      def render_img(el, *args) #:nodoc:
+        warning("Rendering span images is not supported for PDF converter")
+        nil
+      end
 
 
       def render_xml_comment(el, opts) #:nodoc:
@@ -316,13 +366,12 @@ module Kramdown
       alias_method :render_comment, :render_xml_comment
       alias_method :render_blank, :render_xml_comment
 
-      def render_img(el, *args) #:nodoc:
+      def render_footnote(el, *args) #:nodoc:
         warning("Rendering #{el.type} not supported for PDF converter")
         nil
       end
-      alias_method :render_footnote, :render_img
-      alias_method :render_raw, :render_img
-      alias_method :render_html_element, :render_img
+      alias_method :render_raw, :render_footnote
+      alias_method :render_html_element, :render_footnote
 
 
       # ----------------------------
@@ -331,6 +380,67 @@ module Kramdown
       # These methods are used, for example, to up the needed Prawn::Document instance or to create
       # a PDF outline.
       # ----------------------------
+
+
+      # This module gets mixed into the Prawn::Document instance.
+      module PrawnDocumentExtension
+
+        # Extension for the formatted box class to recognize images and move text around them.
+        module CustomBox
+
+          def available_width
+            return super unless @document.respond_to?(:converter) && @document.converter
+
+            @document.image_floats.each do |pn, x, y, w, h|
+              next if @document.page_number != pn
+              if @at[1] + @baseline_y <= y - @document.bounds.absolute_bottom &&
+                  (@at[1] + @baseline_y + @arranger.max_line_height + @leading >= y - h - @document.bounds.absolute_bottom)
+                return @width - w
+              end
+            end
+
+            return super
+          end
+
+        end
+
+        Prawn::Text::Formatted::Box.extensions << CustomBox
+
+        # Access the converter instance from within Prawn
+        attr_accessor :converter
+
+        def image_floats
+          @image_floats ||= []
+        end
+
+        # Override image embedding method for adding image positions to #image_floats.
+        def embed_image(pdf_obj, info, options)
+          # find where the image will be placed and how big it will be
+          w,h = info.calc_image_dimensions(options)
+
+          if options[:at]
+            x,y = map_to_absolute(options[:at])
+          else
+            x,y = image_position(w,h,options)
+            move_text_position h
+          end
+
+          #--> This part is new
+          if options[:position] == :right
+            image_floats << [page_number, x - 15, y, w + 15, h + 15]
+          end
+
+          # add a reference to the image object to the current page
+          # resource list and give it a label
+          label = "I#{next_image_id}"
+          state.page.xobjects.merge!(label => pdf_obj)
+
+          # add the image to the current page
+          instruct = "\nq\n%.3f 0 0 %.3f %.3f %.3f cm\n/%s Do\nQ"
+          add_content instruct % [ w, h, x, y - h, label ]
+        end
+
+      end
 
 
       # Return a hash with options that are suitable for Prawn::Document.new.
@@ -353,7 +463,10 @@ module Kramdown
       #
       # Used in #render_root.
       def setup_document(root)
-        Prawn::Document.new(document_options(root))
+        doc = Prawn::Document.new(document_options(root))
+        doc.extend(PrawnDocumentExtension)
+        doc.converter = self
+        doc
       end
 
       #
