@@ -15,3 +15,9 @@ sites, for example StackOverflow.
 
 At the moment this parser is identical to the kramdown parser, except that it adds support for
 fenced code blocks using three or more backticks and enforces hard line breaks in paragraphs.
+
+## Options
+
+The GFM parser supports the following options:
+
+{options: {items: [hard_wrap]}}
