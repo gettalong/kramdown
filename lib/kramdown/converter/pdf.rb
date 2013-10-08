@@ -266,7 +266,7 @@ module Kramdown
       def codeblock_options(el, opts)
         {
           :font => 'Courier', :color => '880000',
-          :top_padding => opts[:size], :bottom_padding => opts[:size]
+          :bottom_padding => opts[:size]
         }
       end
 
@@ -277,7 +277,7 @@ module Kramdown
       end
 
       def table_options(el, opts)
-        {:top_padding => opts[:size], :bottom_padding => opts[:size]}
+        {:bottom_padding => opts[:size]}
       end
 
       def render_table(el, opts)
