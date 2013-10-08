@@ -315,7 +315,11 @@ module Kramdown
       end
 
       def em_options(el, opts)
-        {:styles => (opts[:styles] || []) << :italic}
+        if opts[:styles] && opts[:styles].include?(:italic)
+          {:styles => opts[:styles].reject {|i| i == :italic}}
+        else
+          {:styles => (opts[:styles] || []) << :italic}
+        end
       end
 
       def strong_options(el, opts)
