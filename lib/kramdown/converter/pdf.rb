@@ -87,9 +87,7 @@ module Kramdown
         @stack.push([el, opts])
         result = el.children.map do |inner_el|
           options = opts.dup
-          if respond_to?(DISPATCHER_OPTIONS[inner_el.type], true)
-            options.update(send(DISPATCHER_OPTIONS[inner_el.type], inner_el, options))
-          end
+          options.update(send(DISPATCHER_OPTIONS[inner_el.type], inner_el, options))
           convert(inner_el, options)
         end.flatten.compact
         @stack.pop
@@ -122,13 +120,13 @@ module Kramdown
         }
       end
 
+      def render_header(el, opts)
+        render_padded_and_formatted_text(el, opts)
+      end
+
       def p_options(el, opts)
         bpad = (el.options[:transparent] ? opts[:leading] : opts[:size])
         {:align => :justify, :bottom_padding => bpad}
-      end
-
-      def render_header(el, opts)
-        render_padded_and_formatted_text(el, opts)
       end
 
       def render_p(el, opts)
@@ -177,6 +175,10 @@ module Kramdown
         end
       end
 
+      def blockquote_options(el, opts)
+        {:styles => [:italic]}
+      end
+
       def render_blockquote(el, opts)
         @pdf.indent(mm2pt(10), mm2pt(10)) { inner(el, opts) }
       end
@@ -207,8 +209,16 @@ module Kramdown
         end
       end
 
+      def li_options(el, opts)
+        {}
+      end
+
       def render_li(el, opts)
         inner(el, opts)
+      end
+
+      def dl_options(el, opts)
+        {}
       end
 
       def render_dl(el, opts)
@@ -223,8 +233,16 @@ module Kramdown
         render_padded_and_formatted_text(el, opts)
       end
 
+      def dd_options(el, opts)
+        {}
+      end
+
       def render_dd(el, opts)
         @pdf.indent(mm2pt(10)) { inner(el, opts) }
+      end
+
+      def math_options(el, opts)
+        {}
       end
 
       def render_math(el, opts)
@@ -288,6 +306,10 @@ module Kramdown
 
 
 
+      def text_options(el, opts)
+        {}
+      end
+
       def render_text(el, opts)
         text_hash(el.value.to_s, opts)
       end
@@ -324,12 +346,24 @@ module Kramdown
         text_hash(el.value, opts)
       end
 
+      def br_options(el, opts)
+        {}
+      end
+
       def render_br(el, opts)
         text_hash("\n", opts, false)
       end
 
+      def smart_quote_options(el, opts)
+        {}
+      end
+
       def render_smart_quote(el, opts)
         text_hash(smart_quote_entity(el).char, opts)
+      end
+
+      def typographic_sym_options(el, opts)
+        {}
       end
 
       def render_typographic_sym(el, opts)
@@ -345,12 +379,24 @@ module Kramdown
         text_hash(str, opts)
       end
 
+      def entity_options(el, opts)
+        {}
+      end
+
       def render_entity(el, opts)
         text_hash(el.value.char, opts)
       end
 
+      def abbreviation_options(el, opts)
+        {}
+      end
+
       def render_abbreviation(el, opts)
         text_hash(el.value, opts)
+      end
+
+      def img_options(el, opts)
+        {}
       end
 
       def render_img(el, *args) #:nodoc:
@@ -358,6 +404,17 @@ module Kramdown
         nil
       end
 
+
+
+      def xml_comment_options(el, opts) #:nodoc:
+        {}
+      end
+      alias_method :xml_pi_options, :xml_comment_options
+      alias_method :comment_options, :xml_comment_options
+      alias_method :blank_options, :xml_comment_options
+      alias_method :footnote_options, :xml_comment_options
+      alias_method :raw_options, :xml_comment_options
+      alias_method :html_element_options, :xml_comment_options
 
       def render_xml_comment(el, opts) #:nodoc:
         # noop
