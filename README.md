@@ -30,6 +30,10 @@ supported formats:
 All the documentation on the available input and output formats is available in the **doc/**
 directory and online at <http://kramdown.rubyforge.org>.
 
+Starting from version 1.0.0 kramdown is using a versioning scheme with major, minor and patch parts
+in the version number where the major number changes on backwards-incompatible changes, the minor
+number on the introduction of new features and the patch number on everything else.
+
 
 ## Usage
 
