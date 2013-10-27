@@ -484,13 +484,13 @@ Default: 0
 Used by: HTML converter, Kramdown converter, Latex converter
 EOF
 
-    define(:hard_wrap, Boolean, false, <<EOF)
+    define(:hard_wrap, Boolean, true, <<EOF)
 Interprets line breaks literally.
 
 Insert HTML `<br>` tags inside on paragraphs where the origin Markdown
 document had newlines (by default, Markdown ignores these newlines).
 
-Default: false
+Default: true
 Used by: GFM parser
 EOF
 
