@@ -24,7 +24,7 @@ If you believe you have found a bug in the implementation, please follow these s
   fashion, please open a [bug report] and attach two files: one with the text and one with the HTML
   conversion you think is correct.
 
-[bug report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
+[bug report]: http://github.com/gettalong/kramdown/issues
 
 
 ## Benchmark

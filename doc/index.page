@@ -52,11 +52,10 @@ content_processor.tikz.opts: |
 
 ## Bugs, Forums, Mailing Lists
 
-If you have found a bug, you should [report it here][bug_report]. Also, there are [forums][forum]
-and [mailing lists][ml] available if you have any questions!
+If you have found a bug, you should [report it here][bug_report]. Also, there is a [mailing
+lists][ml] available if you have any questions!
 
-[bug_report]: http://rubyforge.org/tracker/?atid=28673&group_id=7403&func=browse
-[forum]: http://rubyforge.org/forum/?group_id=7403
+[bug_report]: http://github.com/gettalong/kramdown/issues
 [ml]: http://rubyforge.org/mail/?group_id=7403
 
 

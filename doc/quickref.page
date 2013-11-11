@@ -467,14 +467,14 @@ A simple link can be created by surrounding the text with square brackets and th
 parentheses:
 
 {kdexample::}
-A [link](http://kramdown.rubyforge.org)
+A [link](http://kramdown.gettalong.org)
 to the kramdown homepage.
 {kdexample}
 
 You can also add title information to the link:
 
 {kdexample::}
-A [link](http://kramdown.rubyforge.org "hp")
+A [link](http://kramdown.gettalong.org "hp")
 to the homepage.
 {kdexample}
 
@@ -486,7 +486,7 @@ the link URL:
 A [link][kramdown hp]
 to the homepage.
 
-[kramdown hp]: http://kramdown.rubyforge.org "hp"
+[kramdown hp]: http://kramdown.gettalong.org "hp"
 {kdexample}
 
 If the link text itself is the reference name, the second set of square brackets can be omitted:
@@ -494,7 +494,7 @@ If the link text itself is the reference name, the second set of square brackets
 {kdexample::}
 A link to the [kramdown hp].
 
-[kramdown hp]: http://kramdown.rubyforge.org "hp"
+[kramdown hp]: http://kramdown.gettalong.org "hp"
 {kdexample}
 
 Images can be created in a similar way: just use an exclamation mark before the square brackets. The

@@ -193,7 +193,7 @@ EOF
 
       s.author = 'Thomas Leitner'
       s.email = 't_leitner@gmx.at'
-      s.homepage = "http://kramdown.rubyforge.org"
+      s.homepage = "http://kramdown.gettalong.org"
       s.rubyforge_project = 'kramdown'
     end
 
@@ -247,7 +247,8 @@ EOF
 
   desc "Upload the website to Rubyforge"
   task :publish_website => ['doc'] do
-    sh "rsync -avc --delete --exclude 'MathJax' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
+    puts "Transfer manually!!!"
+    # sh "rsync -avc --delete --exclude 'MathJax' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
   end
 
 

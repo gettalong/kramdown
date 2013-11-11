@@ -19,7 +19,7 @@
 # * output formats: HTML, kramdown, LaTeX (and therefore PDF)
 #
 # All the documentation on the available input and output formats is available at
-# http://kramdown.rubyforge.org.
+# http://kramdown.gettalong.org.
 #
 # == Usage
 #

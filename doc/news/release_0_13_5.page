@@ -34,7 +34,7 @@ experience for mobile and small-screen devices.
 
   - Fixed invalid `options` statement in example on quick reference page (reported by Jörg Sommer)
 
-[kramdown homepage]: http://kramdown.rubyforge.org
+[kramdown homepage]: http://kramdown.gettalong.org
 [RF#29490]: http://rubyforge.org/tracker/index.php?func=detail&aid=29490&group_id=7403&atid=28673
 [RF#29520]: http://rubyforge.org/tracker/index.php?func=detail&aid=29520&group_id=7403&atid=28673
 [RF#29521]: http://rubyforge.org/tracker/index.php?func=detail&aid=29521&group_id=7403&atid=28673
