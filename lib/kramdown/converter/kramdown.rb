@@ -321,11 +321,13 @@ module Kramdown
       end
 
       def convert_em(el, opts)
-        "*#{inner(el, opts)}*" + (opts[:next] && [:em, :strong].include?(opts[:next].type) ? '{::}' : '')
+        "*#{inner(el, opts)}*" +
+          (opts[:next] && [:em, :strong].include?(opts[:next].type) && !ial_for_element(el) ? '{::}' : '')
       end
 
       def convert_strong(el, opts)
-        "**#{inner(el, opts)}**" + (opts[:next] && [:em, :strong].include?(opts[:next].type) ? '{::}' : '')
+        "**#{inner(el, opts)}**" +
+          (opts[:next] && [:em, :strong].include?(opts[:next].type) && !ial_for_element(el) ? '{::}' : '')
       end
 
       def convert_entity(el, opts)
