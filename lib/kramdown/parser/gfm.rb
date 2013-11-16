@@ -16,9 +16,7 @@ module Kramdown
 
       def parse
         super
-        if @options[:hard_wrap]
-          add_hard_line_breaks(@root)
-        end
+        add_hard_line_breaks(@root) if @options[:hard_wrap]
       end
 
       def add_hard_line_breaks(element)

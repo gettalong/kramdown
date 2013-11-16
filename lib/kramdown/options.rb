@@ -485,9 +485,9 @@ Used by: HTML converter, Kramdown converter, Latex converter
 EOF
 
     define(:hard_wrap, Boolean, true, <<EOF)
-Interprets line breaks literally.
+Interprets line breaks literally
 
-Insert HTML `<br>` tags inside on paragraphs where the origin Markdown
+Insert HTML `<br />` tags inside paragraphs where the original Markdown
 document had newlines (by default, Markdown ignores these newlines).
 
 Default: true
