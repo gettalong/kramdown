@@ -16,7 +16,7 @@ module Kramdown
       # Parse the string +str+ and extract all attributes and add all found attributes to the hash
       # +opts+.
       def parse_attribute_list(str, opts)
-        return if str.strip.empty?
+        return if str.strip.empty? || str.strip == ':'
         attrs = str.scan(ALD_TYPE_ANY)
         attrs.each do |key, sep, val, ref, id_and_or_class, _, _|
           if ref

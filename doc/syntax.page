@@ -1621,6 +1621,12 @@ Here are some examples for span IALs:
     This *is*{:.underline} some `code`{:#id}{:.class}.
     A [link](test.html){:rel='something'} and some **tools**{:.tools}.
 
+The special span IAL `{::}` contains no attributes but doesn't generate a warning either. It can be
+used to separate consecutive elements that would be falsely parsed if not separated. Here is an use
+case:
+
+    This *is italic*{::}*marked*{:.special} text
+
 
 ## Extensions
 
