@@ -155,12 +155,13 @@ valid HTML file. If no template is specified, the output will be just
 the converted text.
 
 When resolving the template file, the given template name is used first.
-If such a file is not found, the converter extension is appended. If the
-file still cannot be found, the templates name is interpreted as a
-template name that is provided by kramdown (without the converter
-extension). If the file is still not found, the template name is checked
-if it starts with 'string://' and if it does, this prefix is removed and
-the rest is used as template content.
+If such a file is not found, the converter extension (the same as the
+converter name) is appended. If the file still cannot be found, the
+templates name is interpreted as a template name that is provided by
+kramdown (without the converter extension). If the file is still not
+found, the template name is checked if it starts with 'string://' and if
+it does, this prefix is removed and the rest is used as template
+content.
 
 kramdown provides a default template named 'document' for each converter.
 

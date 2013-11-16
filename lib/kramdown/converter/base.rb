@@ -85,15 +85,15 @@ module Kramdown
       # and #apply_template_after?. If the template is evaluated before, an empty string is used for
       # the body; if evaluated after, the result is used as body. See ::apply_template.
       #
-      # The template resolution is done in the following way:
+      # The template resolution is done in the following way (for the converter ConverterName):
       #
       # 1. Look in the current working directory for the template.
       #
-      # 2. Append +.convertername+ (e.g. +.html+) to the template name and look for the resulting
-      #    file in the current working directory.
+      # 2. Append +.converter_name+ (e.g. +.html+) to the template name and look for the resulting
+      #    file in the current working directory (the form +.convertername+ is deprecated).
       #
-      # 3. Append +.convertername+ to the template name and look for it in the kramdown data
-      #    directory.
+      # 3. Append +.converter_name+ to the template name and look for it in the kramdown data
+      #    directory (the form +.convertername+ is deprecated).
       #
       # 4. Check if the template name starts with 'string://' and if so, strip this prefix away and
       #    use the rest as template.
@@ -128,8 +128,25 @@ module Kramdown
       end
 
       # Return the template specified by +template+.
-      def self.get_template(template) # :nodoc:
+      def self.get_template(template)
+        #DEPRECATED: use content of #get_template_new in 2.0
         format_ext = '.' + self.name.split(/::/).last.downcase
+        shipped = File.join(::Kramdown.data_dir, template + format_ext)
+        if File.exist?(template)
+          File.read(template)
+        elsif File.exist?(template + format_ext)
+          File.read(template + format_ext)
+        elsif File.exist?(shipped)
+          File.read(shipped)
+        elsif template.start_with?('string://')
+          template.sub(/\Astring:\/\//, '')
+        else
+          get_template_new(template)
+        end
+      end
+
+      def self.get_template_new(template) # :nodoc:
+        format_ext = '.' + ::Kramdown::Utils.snake_case(self.name.split(/::/).last)
         shipped = File.join(::Kramdown.data_dir, template + format_ext)
         if File.exist?(template)
           File.read(template)
