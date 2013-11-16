@@ -247,7 +247,7 @@ module Kramdown
 
       def render_math(el, opts)
         if el.options[:category] == :block
-          @pdf.formatted_text([{:text => el.value}], block_hash(el, opts))
+          @pdf.formatted_text([{:text => el.value}], block_hash(opts))
         else
           {:text => el.value}
         end
