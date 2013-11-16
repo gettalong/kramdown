@@ -179,6 +179,20 @@ Default: true
 Used by: HTML/Latex converter
 EOF
 
+    define(:auto_id_stripping, Boolean, false, <<EOF)
+Strip all formatting from header text for automatic ID generation
+
+If this option is `true`, only the text elements of a header are used
+for generating the ID later (in contrast to just using the raw header
+text line).
+
+This option will be removed in version 2.0 because this will be the
+default then.
+
+Default: false
+Used by: kramdown parser
+EOF
+
     define(:auto_id_prefix, String, '', <<EOF)
 Prefix used for automatically generated header IDs
 
