@@ -323,12 +323,21 @@ The tab width used in highlighted code
 Used by: HTML converter
 EOF
 
-    define(:coderay_bold_every, Integer, 10, <<EOF)
+    define(:coderay_bold_every, Object, 10, <<EOF) do |val|
 Defines how often a line number should be made bold
+
+Can either be an integer or false (to turn off bold line numbers
+completely).
 
 Default: 10
 Used by: HTML converter
 EOF
+      if val == false || val.to_s == 'false'
+        false
+      else
+        Integer(val.to_s) rescue raise Kramdown::Error, "Invalid value for option 'coderay_bold_every'"
+      end
+end
 
     define(:coderay_css, Symbol, :style, <<EOF)
 Defines how the highlighted code gets styled
