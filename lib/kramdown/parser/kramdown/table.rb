@@ -26,7 +26,7 @@ module Kramdown
         return false if !after_block_boundary?
 
         orig_pos = @src.pos
-        table = new_block_el(:table, nil, nil, :alignment => [])
+        table = new_block_el(:table, nil, nil, :alignment => [], :location => @src.current_line_number)
         leading_pipe = (@src.check(TABLE_LINE) =~ /^\s*\|/)
         @src.scan(TABLE_SEP_LINE)
 
@@ -66,7 +66,9 @@ module Kramdown
               if i % 2 == 1
                 (cells.empty? ? cells : cells.last) << str
               else
-                reset_env(:src => StringScanner.new(str))
+                l_src = StringScannerKramdown.new(str)
+                l_src.start_line_number = @src.current_line_number
+                reset_env(:src => l_src)
                 root = Element.new(:root)
                 parse_spans(root, nil, [:codespan])
 
@@ -110,7 +112,9 @@ module Kramdown
 
         # Parse all lines of the table with the code span parser
         env = save_env
-        reset_env(:src => StringScanner.new(extract_string(orig_pos...(@src.pos-1), @src)))
+        l_src = StringScannerKramdown.new(extract_string(orig_pos...(@src.pos-1), @src))
+        l_src.start_line_number = @src.current_line_number
+        reset_env(:src => l_src)
         root = Element.new(:root)
         parse_spans(root, nil, [:codespan])
         restore_env(env)

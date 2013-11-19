@@ -22,7 +22,7 @@ module Kramdown
       def parse_link_definition
         @src.pos += @src.matched_size
         link_id, link_url, link_title = normalize_link_id(@src[1]), @src[2] || @src[3], @src[5]
-        warning("Duplicate link ID '#{link_id}' - overwriting") if @link_defs[link_id]
+        warning("Duplicate link ID '#{link_id}' on line #{@src.current_line_number} - overwriting") if @link_defs[link_id]
         @link_defs[link_id] = [link_url, link_title]
         @tree.children << Element.new(:eob, :link_def)
         true
@@ -53,6 +53,7 @@ module Kramdown
       # Parse the link at the current scanner position. This method is used to parse normal links as
       # well as image links.
       def parse_link
+        start_line_number = @src.current_line_number
         result = @src.scan(LINK_START)
         reset_pos = @src.pos
 
@@ -63,7 +64,7 @@ module Kramdown
           add_text(result)
           return
         end
-        el = Element.new(link_type)
+        el = Element.new(link_type, nil, nil, :location => start_line_number)
 
         count = 1
         found = parse_spans(el, LINK_BRACKET_STOP_RE) do

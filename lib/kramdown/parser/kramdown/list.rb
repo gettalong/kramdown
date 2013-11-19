@@ -46,8 +46,9 @@ module Kramdown
 
       # Parse the ordered or unordered list at the current location.
       def parse_list
+        start_line_number = @src.current_line_number
         type, list_start_re = (@src.check(LIST_START_UL) ? [:ul, LIST_START_UL] : [:ol, LIST_START_OL])
-        list = new_block_el(type)
+        list = new_block_el(type, nil, nil, :location => start_line_number)
 
         item = nil
         content_re, lazy_re, indent_re = nil
@@ -55,13 +56,14 @@ module Kramdown
         nested_list_found = false
         last_is_blank = false
         while !@src.eos?
+          start_line_number = @src.current_line_number
           if last_is_blank && @src.check(HR_START)
             break
           elsif @src.scan(EOB_MARKER)
             eob_found = true
             break
           elsif @src.scan(list_start_re)
-            item = Element.new(:li)
+            item = Element.new(:li, nil, nil, :location => start_line_number)
             item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
 
@@ -96,7 +98,7 @@ module Kramdown
 
         last = nil
         list.children.each do |it|
-          temp = Element.new(:temp)
+          temp = Element.new(:temp, nil, nil, :location => it.options[:location])
           parse_blocks(temp, it.value)
           it.children = temp.children
           it.value = nil
@@ -146,8 +148,9 @@ module Kramdown
           para = @tree.children.pop
           first_as_para = true
         end
+        deflist.options[:location] = para.options[:location] # take location from preceding para which is the first definition term
         para.children.first.value.split(/\n/).each do |term|
-          el = Element.new(:dt)
+          el = Element.new(:dt, nil, nil, :location => @src.current_line_number)
           el.children << Element.new(:raw_text, term)
           deflist.children << el
         end
@@ -158,8 +161,9 @@ module Kramdown
         def_start_re = DEFINITION_LIST_START
         last_is_blank = false
         while !@src.eos?
+          start_line_number = @src.current_line_number
           if @src.scan(def_start_re)
-            item = Element.new(:dd)
+            item = Element.new(:dd, nil, nil, :location => start_line_number)
             item.options[:first_as_para] = first_as_para
             item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             deflist.children << item

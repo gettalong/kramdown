@@ -55,6 +55,7 @@ module Kramdown
       # or :span depending whether we parse a block or span extension tag.
       def parse_extension_start_tag(type)
         orig_pos = @src.pos
+        start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
 
         error_block = lambda do |msg|
@@ -66,7 +67,7 @@ module Kramdown
 
         if @src[4] || @src.matched == '{:/}'
           name = (@src[4] ? "for '#{@src[4]}' " : '')
-          return error_block.call("Invalid extension stop tag #{name}found - ignoring it")
+          return error_block.call("Invalid extension stop tag #{name} found on line #{start_line_number} - ignoring it")
         end
 
         ext = @src[1]
@@ -80,12 +81,12 @@ module Kramdown
             body = result.sub!(stop_re, '')
             body.chomp! if type == :block
           else
-            return error_block.call("No stop tag for extension '#{ext}' found - ignoring it")
+            return error_block.call("No stop tag for extension '#{ext}' found on line #{start_line_number} - ignoring it")
           end
         end
 
         if !handle_extension(ext, opts, body, type)
-          error_block.call("Invalid extension with name '#{ext}' specified - ignoring it")
+          error_block.call("Invalid extension with name '#{ext}' specified on line #{start_line_number} - ignoring it")
         else
           true
         end
