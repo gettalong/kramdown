@@ -15,6 +15,7 @@ module Kramdown
 
       # Parse the emphasis at the current location.
       def parse_emphasis
+        start_line_number = @src.current_line_number
         result = @src.scan(EMPHASIS_START)
         element = (result.length == 2 ? :strong : :em)
         type = result[0..0]
@@ -27,7 +28,7 @@ module Kramdown
         end
 
         sub_parse = lambda do |delim, elem|
-          el = Element.new(elem)
+          el = Element.new(elem, nil, nil, :location => start_line_number)
           stop_re = /#{Regexp.escape(delim)}/
           found = parse_spans(el, stop_re) do
             (@src.pre_match[-1, 1] !~ /\s/) &&

@@ -20,10 +20,11 @@ module Kramdown
       def parse_setext_header
         return false if !after_block_boundary?
 
+        start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
         text, id, level = @src[1], @src[2], @src[3]
         text.strip!
-        el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text)
+        el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text, :location => start_line_number)
         add_text(text, el)
         el.attr['id'] = id if id
         @tree.children << el
@@ -39,12 +40,13 @@ module Kramdown
       def parse_atx_header
         return false if !after_block_boundary?
 
+        start_line_number = @src.current_line_number
         @src.check(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2].to_s.strip, @src[3]
         return false if text.empty?
 
         @src.pos += @src.matched_size
-        el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text)
+        el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text, :location => start_line_number)
         add_text(text, el)
         el.attr['id'] = id if id
         @tree.children << el

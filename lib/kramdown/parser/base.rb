@@ -7,6 +7,8 @@
 #++
 #
 
+require 'kramdown/string_scanner_kramdown' # for location information
+
 module Kramdown
 
   module Parser
@@ -14,7 +16,7 @@ module Kramdown
     # == \Base class for parsers
     #
     # This class serves as base class for parsers. It provides common methods that can/should be
-    # used by all parsers, especially by those using StringScanner for parsing.
+    # used by all parsers, especially by those using StringScanner(Kramdown) for parsing.
     #
     # A parser object is used as a throw-away object, i.e. it is only used for storing the needed
     # state information during parsing. Therefore one can't instantiate a parser object directly but
@@ -49,7 +51,7 @@ module Kramdown
       def initialize(source, options)
         @source = source
         @options = Kramdown::Options.merge(options)
-        @root = Element.new(:root, nil, nil, :encoding => (source.encoding rescue nil))
+        @root = Element.new(:root, nil, nil, :encoding => (source.encoding rescue nil), :location => 1)
         @warnings = []
         @text_type = :text
       end

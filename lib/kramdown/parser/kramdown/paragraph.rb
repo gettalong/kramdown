@@ -29,6 +29,7 @@ module Kramdown
 
       # Parse the paragraph at the current location.
       def parse_paragraph
+        start_line_number = @src.current_line_number
         result = @src.scan(PARAGRAPH_MATCH)
         while !@src.match?(self.class::PARAGRAPH_END)
           result << @src.scan(PARAGRAPH_MATCH)
@@ -37,7 +38,7 @@ module Kramdown
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << result
         else
-          @tree.children << new_block_el(:p)
+          @tree.children << new_block_el(:p, nil, nil, :location => start_line_number)
           result.lstrip!
           @tree.children.last.children << Element.new(@text_type, result)
         end

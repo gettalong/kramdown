@@ -15,10 +15,11 @@ module Kramdown
 
       # Parse the link definition at the current location.
       def parse_abbrev_definition
+        start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
         abbrev_id, abbrev_text = @src[1], @src[2]
         abbrev_text.strip!
-        warning("Duplicate abbreviation ID '#{abbrev_id}' - overwriting") if @root.options[:abbrev_defs][abbrev_id]
+        warning("Duplicate abbreviation ID '#{abbrev_id}' on line #{start_line_number} - overwriting") if @root.options[:abbrev_defs][abbrev_id]
         @root.options[:abbrev_defs][abbrev_id] = abbrev_text
         @tree.children << Element.new(:eob, :abbrev_def)
         true
@@ -37,7 +38,7 @@ module Kramdown
           if child.type == :text
             if child.value =~ regexps.first
               result = []
-              strscan = StringScanner.new(child.value)
+              strscan = StringScannerKramdown.new(child.value)
               while temp = strscan.scan_until(regexps.last)
                 abbr = strscan.scan(regexps.first) # begin of line case of abbr with \W char as first one
                 if abbr.nil?

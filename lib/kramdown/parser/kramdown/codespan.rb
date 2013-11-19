@@ -15,6 +15,7 @@ module Kramdown
 
       # Parse the codespan at the current scanner location.
       def parse_codespan
+        start_line_number = @src.current_line_number
         result = @src.scan(CODESPAN_DELIMITER)
         simple = (result.length == 1)
         reset_pos = @src.pos
@@ -30,7 +31,7 @@ module Kramdown
             text = text[1..-1] if text[0..0] == ' '
             text = text[0..-2] if text[-1..-1] == ' '
           end
-          @tree.children << Element.new(:codespan, text)
+          @tree.children << Element.new(:codespan, text, nil, :location => start_line_number)
         else
           @src.pos = reset_pos
           add_text(result)
