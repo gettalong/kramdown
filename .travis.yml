@@ -3,7 +3,6 @@ rvm:
   - 1.8.7
   - 1.9.3
   - 2.0.0
-  - ruby-head
   - rbx-2.1.1
   - jruby-19mode
 
@@ -12,4 +11,4 @@ before_install:
   - gem install rake minitest coderay stringex
   - gem install prawn --pre
 
-script: ruby -rubygems -S rake test
+script: RUBYOPT=-rubygems rake test
