@@ -45,7 +45,8 @@ content_processor.tikz.opts: |
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=10pt,shorten <=15pt,color=green!50!black]
    (lib) edge(o-html)
    (lib) edge (o-kramdown)
-   (lib) edge (o-latex);
+   (lib) edge (o-latex)
+   (lib) edge (o-pdf);
 {tikz}
 {: style="text-align: center"}
 
