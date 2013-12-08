@@ -38,7 +38,7 @@ module Kramdown
           if child.type == :text
             if child.value =~ regexps.first
               result = []
-              strscan = StringScannerKramdown.new(child.value)
+              strscan = Kramdown::Utils::StringScanner.new(child.value)
               while temp = strscan.scan_until(regexps.last)
                 abbr = strscan.scan(regexps.first) # begin of line case of abbr with \W char as first one
                 if abbr.nil?

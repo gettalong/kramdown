@@ -118,16 +118,8 @@ module Kramdown
       # Parse all block-level elements in +text+ into the element +el+.
       def parse_blocks(el, text = nil)
         @stack.push([@tree, @src, @block_ial])
-        if text.nil?
-          l_src = @src
-        else
-          # When +text+ is given, we instantiate a nested StringScanner and
-          # set its start_line_number to the parent element's location to get
-          # accurate global line numbers.
-          l_src = StringScannerKramdown.new(text)
-          l_src.start_line_number = el.options[:location]
-        end
-        @tree, @src, @block_ial = el, l_src, nil
+        @tree, @block_ial = el, nil
+        @src = (text.nil? ? @src : ::Kramdown::Utils::StringScanner.new(text, el.options[:location]))
 
         status = catch(:stop_block_parsing) do
           while !@src.eos?
@@ -157,9 +149,8 @@ module Kramdown
         element.children.map! do |child|
           if child.type == :raw_text
             last_blank = nil
-            l_src = StringScannerKramdown.new(child.value)
-            l_src.start_line_number = element.options[:location]
-            reset_env(:src => l_src, :text_type => :text)
+            reset_env(:src => ::Kramdown::Utils::StringScanner.new(child.value, element.options[:location]),
+                      :text_type => :text)
             parse_spans(child)
             child.children
           elsif child.type == :eob

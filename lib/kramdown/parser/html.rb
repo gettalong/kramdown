@@ -243,7 +243,7 @@ module Kramdown
         # entities in entity elements.
         def process_text(raw, preserve = false)
           raw.gsub!(/\s+/, ' ') unless preserve
-          src = StringScannerKramdown.new(raw)
+          src = Kramdown::Utils::StringScanner.new(raw)
           result = []
           while !src.eos?
             if tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/)
@@ -533,7 +533,7 @@ module Kramdown
       # Parse the source string provided on initialization as HTML document.
       def parse
         @stack, @tree = [], @root
-        @src = StringScannerKramdown.new(adapt_source(source))
+        @src = Kramdown::Utils::StringScanner.new(adapt_source(source))
 
         while true
           if result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/)

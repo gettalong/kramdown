@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 require 'minitest/autorun'
-require 'kramdown/string_scanner_kramdown'
+require 'kramdown/utils/string_scanner'
 
-describe StringScannerKramdown do
+describe Kramdown::Utils::StringScanner do
 
   [
     ["...........X............", [/X/], 1],
@@ -13,11 +13,10 @@ describe StringScannerKramdown do
   ].each_with_index do |test_data, i|
     test_string, scan_regexes, expect = test_data
     it "computes the correct current_line_number for example ##{i+1}" do
-      str_sc = StringScannerKramdown.new(test_string)
+      str_sc = Kramdown::Utils::StringScanner.new(test_string)
       scan_regexes.each { |scan_re| str_sc.scan_until(scan_re) }
       str_sc.current_line_number.must_equal expect
     end
   end
-
 
 end

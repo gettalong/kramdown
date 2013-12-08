@@ -32,7 +32,7 @@ describe 'location' do
       {:.line-1}
 
       > block quote2
-      > {:.line-8}
+      {:.line-8}
     ),
     'codeblock' => %(\na para\n\n~~~~\ntest code 1\n~~~~\n{:.line-3}\n\n    test code 2\n{:.line-8}\n),
     'codespan' => %(a para\n\nanother para `<code>`{:.line-3} with code\n),

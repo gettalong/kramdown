@@ -7,7 +7,7 @@
 #++
 #
 
-require 'kramdown/string_scanner_kramdown' # for location information
+require 'kramdown/utils/string_scanner'
 
 module Kramdown
 

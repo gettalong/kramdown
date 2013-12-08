@@ -16,6 +16,9 @@ module Kramdown
   #
   # Following is a description of all supported element types.
   #
+  # Note that the option :location may contain the start line number of an element in the source
+  # document.
+  #
   # == Structural Elements
   #
   # === :root
@@ -460,8 +463,6 @@ module Kramdown
   # The option :type can be set to an array of strings to define for which converters the raw string
   # is valid.
   #
-  # The option :location may contain the start line number of this element in the
-  # source document.
   class Element
 
     # A symbol representing the element type. For example, :p or :blockquote.
