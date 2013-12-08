@@ -28,15 +28,15 @@ content_processor.tikz.opts: |
   child[concept color=orange, grow=140, ->] {node[concept] (i-kramdown) {kramdown}}
   child[concept color=orange, grow=180] {node[concept] (i-html) {HTML}}
   child[concept color=orange, grow=220] {node[concept] (i-markdown) {Markdown}}
-  child[concept color=green!50!black, grow=40] {node[concept] (o-html) {HTML}}
-  child[concept color=green!50!black, grow=0] {node[concept] (o-kramdown) {kramdown}}
-  child[concept color=green!50!black, grow=-40] {
+  child[concept color=green!50!black, grow=60] {node[concept] (o-html) {HTML}}
+  child[concept color=green!50!black, grow=20] {node[concept] (o-kramdown) {kramdown}}
+  child[concept color=green!50!black, grow=-20] {
     node[concept] (o-latex) {\LaTeX}
     child[grow=0] {
       node[concept] (o-latex-pdf) {PDF}
     }
   }
-  child[concept color=green!50!black, grow=-40] {node[concept] {\LaTeX}}
+  child[concept color=green!50!black, grow=-60] {node[concept] (o-pdf) {PDF}}
 ;
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=15pt,shorten <=10pt,color=orange]
    (i-kramdown) edge(lib)
