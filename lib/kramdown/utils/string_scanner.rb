@@ -18,7 +18,7 @@ module Kramdown
       # Note: The original second argument is no longer used so this should be safe.
       def initialize(string, start_line_number = 1)
         super(string)
-        @start_line_number = start_line_number
+        @start_line_number = start_line_number || 1
       end
 
       # To make this unicode (multibyte) aware, we have to use #charpos which was added in Ruby
