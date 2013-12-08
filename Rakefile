@@ -101,7 +101,7 @@ if defined?(Webgen) && defined?(RDoc::Task)
 end
 
 tt = Rake::TestTask.new do |test|
-  test.warning = true
+  test.warning = false
   test.libs << 'test'
   test.test_files = FileList['test/test_*.rb']
 end
