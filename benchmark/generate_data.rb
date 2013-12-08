@@ -103,7 +103,7 @@ set title "Execution Time Performance for #{theruby}"
 set xlabel "File Multiplier (i.e. n times mdbasic.text)"
 set ylabel "Execution Time in secondes"
 set key left top
-set grid "on"
+set grid
 set terminal png
 set output "#{graph_name}"
 EOF
