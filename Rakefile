@@ -198,7 +198,7 @@ EOF
     end
 
 
-    task :gemspec do
+    task :gemspec => [ 'CONTRIBUTERS', 'VERSION', 'man/man1/kramdown.1'] do 
       print "Generating Gemspec\n"
       contents = spec.to_ruby
       File.open("kramdown.gemspec", 'w+') {|f| f.puts(contents)}
@@ -294,5 +294,7 @@ EOF
   end
 
 end
+
+task :gemspec => ['dev:gemspec']
 
 task :clobber => ['dev:clobber']
