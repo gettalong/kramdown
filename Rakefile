@@ -197,6 +197,13 @@ EOF
       s.rubyforge_project = 'kramdown'
     end
 
+
+    task :gemspec do
+      print "Generating Gemspec\n"
+      contents = spec.to_ruby
+      File.open("kramdown.gemspec", 'w+') {|f| f.puts(contents)}
+    end 
+
     Gem::PackageTask.new(spec) do |pkg|
       pkg.need_zip = true
       pkg.need_tar = true
