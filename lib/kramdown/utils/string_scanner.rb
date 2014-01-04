@@ -19,6 +19,8 @@ module Kramdown
       def initialize(string, start_line_number = 1)
         super(string)
         @start_line_number = start_line_number || 1
+        @previous_pos = 0
+        @previous_line_number = @start_line_number
       end
 
       # To make this unicode (multibyte) aware, we have to use #charpos which was added in Ruby
@@ -43,7 +45,14 @@ module Kramdown
       # NOTE: Normally we'd have to add one to the count of newlines to get the correct line number.
       # However we add the one indirectly by using a one-based start_line_number.
       def current_line_number
-        string[0..best_pos].count("\n") + start_line_number
+        # Not using string[@previous_pos..best_pos].count('\n') because it is slower
+        strscan = ::StringScanner.new(string)
+        strscan.pos = @previous_pos
+        old_pos = pos + 1
+        @previous_line_number += 1 while strscan.skip_until(/\n/) && strscan.pos <= old_pos
+
+        @previous_pos = (eos? ? best_pos : best_pos + 1)
+        @previous_line_number
       end
 
     end
