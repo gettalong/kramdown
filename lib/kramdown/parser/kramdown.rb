@@ -68,9 +68,9 @@ module Kramdown
 
         @root.options[:abbrev_defs] = {}
         @alds = {}
-        @link_defs = {}
-        @options[:link_defs].each {|k,v| @link_defs[normalize_link_id(k)] = v}
         @footnotes = {}
+        @link_defs = {}
+        update_link_definitions(@options[:link_defs])
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
                           :horizontal_rule, :list, :definition_list, :block_html, :setext_header,
@@ -95,6 +95,11 @@ module Kramdown
       #######
       protected
       #######
+
+      # Update the link definitions with the data from +link_defs+.
+      def update_link_definitions(link_defs)
+        link_defs.each {|k,v| @link_defs[normalize_link_id(k)] = v}
+      end
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
