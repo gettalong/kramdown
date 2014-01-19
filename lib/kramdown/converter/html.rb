@@ -146,7 +146,7 @@ module Kramdown
       end
 
       def convert_ul(el, indent)
-        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil) && (el.type == :ul || el.type == :ol)
+        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
           @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
         else
@@ -154,7 +154,10 @@ module Kramdown
         end
       end
       alias :convert_ol :convert_ul
-      alias :convert_dl :convert_ul
+
+      def convert_dl(el, indent)
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+      end
 
       def convert_li(el, indent)
         output = ' '*indent << "<#{el.type}" << html_attributes(el.attr) << ">"

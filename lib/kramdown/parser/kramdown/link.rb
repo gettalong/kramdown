@@ -13,7 +13,7 @@ module Kramdown
 
       # Normalize the link identifier.
       def normalize_link_id(id)
-        id.gsub(/(\s|\n)+/, ' ').downcase
+        id.gsub(/[\s\n]+/, ' ').downcase
       end
 
       LINK_DEFINITION_START = /^#{OPT_SPACE}\[([^\n\]]+)\]:[ \t]*(?:<(.*?)>|([^'"\n]*?\S[^'"\n]*?))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/
