@@ -245,8 +245,8 @@ module Kramdown
       def convert_a(el, indent)
         res = inner(el, indent)
         attr = el.attr.dup
-        if attr['href'] =~ /^mailto:/
-          mail_addr = attr['href'].sub(/^mailto:/, '')
+        if attr['href'].start_with?('mailto:')
+          mail_addr = attr['href'][7..-1]
           attr['href'] = obfuscate('mailto') << ":" << obfuscate(mail_addr)
           res = obfuscate(res) if res == mail_addr
         end
