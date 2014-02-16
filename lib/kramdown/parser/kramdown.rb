@@ -96,7 +96,13 @@ module Kramdown
       protected
       #######
 
-      # Update the link definitions with the data from +link_defs+.
+      # :doc:
+      #
+      # Update the parser specific link definitions with the data from +link_defs+ (the value of the
+      # :link_defs option).
+      #
+      # The parameter +link_defs+ is a hash where the keys are possibly unnormalized link IDs and
+      # the values are two element arrays consisting of the link target and a title (can be +nil+).
       def update_link_definitions(link_defs)
         link_defs.each {|k,v| @link_defs[normalize_link_id(k)] = v}
       end
