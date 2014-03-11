@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -539,7 +539,6 @@ module Kramdown
 
       # Create the PDF outline from the header elements in the TOC.
       def create_outline(root)
-        patch_outline_object
         toc = ::Kramdown::Converter::Toc.convert(root).first
 
         text_of_header = lambda do |el|
@@ -565,24 +564,6 @@ module Kramdown
 
         toc.children.each do |item|
           add_section.call(item, nil)
-        end
-      end
-
-      # Patch the pdf_document.outline object to accept arbitrary destinations.
-      def patch_outline_object
-        def (@pdf.outline).create_outline_item(title, options)
-          outline_item = ::Prawn::OutlineItem.new(title, parent, options)
-
-          case options[:destination]
-          when Integer
-            page_index = options[:destination] - 1
-            outline_item.dest = [document.state.pages[page_index].dictionary, :Fit]
-          when Array
-            outline_item.dest = options[:destination]
-          end
-
-          outline_item.prev = prev if @prev
-          items[title] = document.ref!(outline_item)
         end
       end
 

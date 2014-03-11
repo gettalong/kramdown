@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -169,7 +169,7 @@ module Kramdown
       # Return +true+ if the header element +el+ should be used for the table of contents (as
       # specified by the +toc_levels+ option).
       def in_toc?(el)
-        @options[:toc_levels].include?(el.options[:level]) and ((not el.attr['class'].split.include?('no_toc')) rescue true)
+        @options[:toc_levels].include?(el.options[:level]) && (el.attr['class'] || '') !~ /\bno_toc\b/
       end
 
       # Return the output header level given a level.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -186,7 +186,7 @@ module Kramdown
       end
 
       def convert_tr(el, opts)
-        el.children.map {|c| send("convert_#{c.type}", c, opts)}.join(' & ') + "\\\\\n"
+        el.children.map {|c| send("convert_#{c.type}", c, opts)}.join(' & ') << "\\\\\n"
       end
 
       def convert_td(el, opts)
@@ -194,7 +194,7 @@ module Kramdown
       end
 
       def convert_comment(el, opts)
-        el.value.split(/\n/).map {|l| "% #{l}"}.join("\n") + "\n"
+        el.value.split(/\n/).map {|l| "% #{l}"}.join("\n") << "\n"
       end
 
       def convert_br(el, opts)
@@ -205,7 +205,7 @@ module Kramdown
 
       def convert_a(el, opts)
         url = el.attr['href']
-        if url =~ /^#/
+        if url.start_with?('#')
           "\\hyperlink{#{escape(url[1..-1])}}{#{inner(el, opts)}}"
         else
           "\\href{#{escape(url)}}{#{inner(el, opts)}}"

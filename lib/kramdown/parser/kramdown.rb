@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -68,9 +68,9 @@ module Kramdown
 
         @root.options[:abbrev_defs] = {}
         @alds = {}
-        @link_defs = {}
-        @options[:link_defs].each {|k,v| @link_defs[normalize_link_id(k)] = v}
         @footnotes = {}
+        @link_defs = {}
+        update_link_definitions(@options[:link_defs])
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
                           :horizontal_rule, :list, :definition_list, :block_html, :setext_header,
@@ -95,6 +95,17 @@ module Kramdown
       #######
       protected
       #######
+
+      # :doc:
+      #
+      # Update the parser specific link definitions with the data from +link_defs+ (the value of the
+      # :link_defs option).
+      #
+      # The parameter +link_defs+ is a hash where the keys are possibly unnormalized link IDs and
+      # the values are two element arrays consisting of the link target and a title (can be +nil+).
+      def update_link_definitions(link_defs)
+        link_defs.each {|k,v| @link_defs[normalize_link_id(k)] = v}
+      end
 
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser

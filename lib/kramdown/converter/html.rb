@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -146,7 +146,7 @@ module Kramdown
       end
 
       def convert_ul(el, indent)
-        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil) && (el.type == :ul || el.type == :ol)
+        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
           @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
         else
@@ -154,7 +154,10 @@ module Kramdown
         end
       end
       alias :convert_ol :convert_ul
-      alias :convert_dl :convert_ul
+
+      def convert_dl(el, indent)
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+      end
 
       def convert_li(el, indent)
         output = ' '*indent << "<#{el.type}" << html_attributes(el.attr) << ">"
@@ -242,8 +245,8 @@ module Kramdown
       def convert_a(el, indent)
         res = inner(el, indent)
         attr = el.attr.dup
-        if attr['href'] =~ /^mailto:/
-          mail_addr = attr['href'].sub(/^mailto:/, '')
+        if attr['href'].start_with?('mailto:')
+          mail_addr = attr['href'][7..-1]
           attr['href'] = obfuscate('mailto') << ":" << obfuscate(mail_addr)
           res = obfuscate(res) if res == mail_addr
         end

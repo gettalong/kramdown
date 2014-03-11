@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -23,7 +23,7 @@ module Kramdown
 
     # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
     def self.camelize(name)
-      name.split('_').inject('') {|s,x| s << x[0..0].upcase + x[1..-1] }
+      name.split('_').inject('') {|s,x| s << x[0..0].upcase << x[1..-1] }
     end
 
     # Treat +name+ as if it were camelized (e.g. CamelizedName) and snake-case it (e.g. camelized_name).

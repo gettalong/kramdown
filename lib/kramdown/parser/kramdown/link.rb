@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -13,7 +13,7 @@ module Kramdown
 
       # Normalize the link identifier.
       def normalize_link_id(id)
-        id.gsub(/(\s|\n)+/, ' ').downcase
+        id.gsub(/[\s\n]+/, ' ').downcase
       end
 
       LINK_DEFINITION_START = /^#{OPT_SPACE}\[([^\n\]]+)\]:[ \t]*(?:<(.*?)>|([^'"\n]*?\S[^'"\n]*?))[ \t]*?(?:\n?[ \t]*?(["'])(.+?)\4[ \t]*?)?\n/

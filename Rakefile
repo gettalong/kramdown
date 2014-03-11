@@ -44,11 +44,6 @@ rescue LoadError
 end
 
 begin
-  require 'rubyforge'
-rescue LoadError
-end
-
-begin
   require 'rcov/rcovtask'
 rescue LoadError
 end
@@ -183,6 +178,7 @@ EOF
       s.add_development_dependency 'minitest', '~> 5.0'
       s.add_development_dependency 'coderay', '~> 1.0.0'
       s.add_development_dependency 'stringex', '~> 1.5.1'
+      s.add_development_dependency 'prawn', '~> 0.13'
 
       #### Documentation
 
@@ -194,7 +190,6 @@ EOF
       s.author = 'Thomas Leitner'
       s.email = 't_leitner@gmx.at'
       s.homepage = "http://kramdown.gettalong.org"
-      s.rubyforge_project = 'kramdown'
     end
 
 
@@ -211,48 +206,20 @@ EOF
 
   end
 
-  if defined?(RubyForge) && defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
+  if defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
     desc 'Release Kramdown version ' + Kramdown::VERSION
-    task :release => [:clobber, :package, :publish_files, :publish_website, :post_news]
+    task :release => [:clobber, :package, :publish_files, :publish_website]
   end
 
-  if defined? RubyForge
-    desc "Upload the release to Rubyforge"
+  if defined?(Gem)
+    desc "Upload the release to Rubygems"
     task :publish_files => [:package] do
-      print 'Uploading files to Rubyforge...'
-      $stdout.flush
-
-      rf = RubyForge.new
-      rf.configure
-      rf.login
-
-      rf.userconfig["release_notes"] = REL_PAGE.blocks['content']
-      rf.userconfig["preformatted"] = false
-
-      files = %w[.gem .tgz .zip].collect {|ext| "pkg/kramdown-#{Kramdown::VERSION}" + ext}
-
-      rf.add_release('kramdown', 'kramdown', Kramdown::VERSION, *files)
-
       sh "gem push pkg/kramdown-#{Kramdown::VERSION}.gem"
       puts 'done'
     end
-
-    desc 'Post announcement to rubyforge.'
-    task :post_news do
-      print 'Posting announcement to Rubyforge ...'
-      $stdout.flush
-      rf = RubyForge.new
-      rf.configure
-      rf.login
-
-      content = REL_PAGE.blocks['content']
-      content += "\n\n\nAbout kramdown\n\n#{SUMMARY}\n\n#{DESCRIPTION}"
-      rf.post_news('kramdown', "kramdown #{Kramdown::VERSION} released", content)
-      puts "done"
-    end
   end
 
-  desc "Upload the website to Rubyforge"
+  desc "Upload the website"
   task :publish_website => ['doc'] do
     puts "Transfer manually!!!"
     # sh "rsync -avc --delete --exclude 'MathJax' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"

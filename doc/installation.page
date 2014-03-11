@@ -69,14 +69,15 @@ If you are using Rubygems, installing the latest version of kramdown is as simpl
 
 ### Manual Installation
 
-The latest version of kramdown can always be downloaded as `.tar.gz` or `.zip` from [its files
-section on Rubyforge](http://rubyforge.org/frs/?group_id=7403). After the download the package needs
-to be decompressed and then you can install kramdown using the included `setup.rb` installation
-method:
+The latest version of kramdown can always be downloaded as `.tar.gz` or `.zip` via the [Github
+releases page][ghreleases]. After the download the package needs to be decompressed and then you can
+install kramdown using the included `setup.rb` installation method:
 
     $ ruby setup.rb config
     $ ruby setup.rb setup
     $ ruby setup.rb install
+
+[ghreleases]: https://github.com/gettalong/kramdown/releases
 
 
 ### Using the repository version

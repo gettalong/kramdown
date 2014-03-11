@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #--
-# Copyright (C) 2009-2013 Thomas Leitner <t_leitner@gmx.at>
+# Copyright (C) 2009-2014 Thomas Leitner <t_leitner@gmx.at>
 #
 # This file is part of kramdown which is licensed under the MIT.
 #++
@@ -223,16 +223,16 @@ module Kramdown
       def convert_thead(el, opts)
         rows = inner(el, opts)
         if opts[:alignment].all? {|a| a == :default}
-          "#{rows}|" + "-"*10 + "\n"
+          "#{rows}|" << "-"*10 << "\n"
         else
-          "#{rows}| " + opts[:alignment].map do |a|
+          "#{rows}| " << opts[:alignment].map do |a|
             case a
             when :left then ":-"
             when :right then "-:"
             when :center then ":-:"
             when :default then "-"
             end
-          end.join(' ') + "\n"
+          end.join(' ') << "\n"
         end
       end
 
@@ -244,11 +244,11 @@ module Kramdown
       end
 
       def convert_tfoot(el, opts)
-        "|" + "="*10 + "\n#{inner(el, opts)}"
+        "|" << "="*10 << "\n#{inner(el, opts)}"
       end
 
       def convert_tr(el, opts)
-        "| " + el.children.map {|c| convert(c, opts)}.join(" | ") + " |\n"
+        "| " << el.children.map {|c| convert(c, opts)}.join(" | ") << " |\n"
       end
 
       def convert_td(el, opts)
@@ -406,7 +406,7 @@ module Kramdown
             " #{k}=\"#{v.to_s}\""
           end
         end.compact.join('')
-        res = "toc" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
+        res = "toc" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('toc') rescue nil)
         res.strip.empty? ? nil : "{:#{res}}"
       end
