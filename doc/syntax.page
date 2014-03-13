@@ -897,7 +897,7 @@ The following kramdown fragment
     \end{align*}
     $$
 
-renders as
+renders (using Javascript library [MathJax](http://www.mathjax.org/)) as
 
 $$
 \begin{align*}
