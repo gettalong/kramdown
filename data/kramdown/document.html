@@ -2,7 +2,7 @@
 <html>
   <head>
     <% if @converter.root.options[:encoding] %>
-    <meta http-equiv="Content-type" content="text/html;<%= @converter.root.options[:encoding] %>">
+    <meta http-equiv="Content-type" content="text/html;charset=<%= @converter.root.options[:encoding] %>">
     <% end %>
 <%
 extend ::Kramdown::Utils::Html
