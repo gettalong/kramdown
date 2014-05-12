@@ -35,6 +35,7 @@ module Kramdown
       def add_link(el, href, title, alt_text = nil)
         if el.type == :a
           el.attr['href'] = href
+          href.gsub(/^(http|\/\/)/) { el.attr['target'] = '_blank' }
         else
           el.attr['src'] = href
           el.attr['alt'] = alt_text
