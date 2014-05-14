@@ -4,6 +4,7 @@
 * Parsers
   * [kramdown](parser/kramdown.html)
   * [Markdown](parser/markdown.html)
+  * [GFM](parser/gfm.html)
   * [HTML](parser/html.html)
 * Converters
   * [HTML](converter/html.html)
