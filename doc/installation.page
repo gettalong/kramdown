@@ -32,9 +32,9 @@ Ubuntu version or any recent Debian based distribution).
 After running the following commands, kramdown is installed and ready to use:
 
     sudo aptitude install ruby rubygems
-    sudo gem1.8 install kramdown
+    sudo gem install kramdown
 
-> You will also need to add `export PATH=$PATH:/var/lib/gems/1.8/bin` to your `~/.bashrc` because
+> You will also need to add `export PATH=$PATH:/var/lib/gems/1.9/bin` to your `~/.bashrc` because
 > this is the binary path the executable files get installed to.
 
 
