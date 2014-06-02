@@ -38,6 +38,16 @@ module Kramdown
         end
       end
 
+      # Sets the byte position of the scan pointer.
+      #
+      # Note: This also resets some internal variables, so always use pos= when setting the position
+      # and don't use any other method for that!
+      def pos=(pos)
+        super
+        @previous_line_number = @start_line_number
+        @previous_pos = 0
+      end
+
       # Returns the line number for current charpos.
       #
       # NOTE: Requires that all line endings are normalized to '\n'

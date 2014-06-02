@@ -136,6 +136,10 @@ describe 'location' do
       another para ---{:.line-3}
 
       another para ...{:.line-5}
+    ),
+    'gh issue 129' => %(
+      `|`
+      {:.line-1}
     )
   }
   test_cases.each do |name, test_string|
