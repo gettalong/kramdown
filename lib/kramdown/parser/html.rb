@@ -37,9 +37,9 @@ module Kramdown
              dd div dl fieldset figure figcaption footer form header hgroup iframe li map menu nav
               noscript object section td}
         HTML_CONTENT_MODEL_SPAN  = %w{a abbr acronym b bdo big button cite caption del dfn dt em
-             h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p q rb rbc
-             rp rt rtc ruby samp select small span strong sub sup summary th tt var}
-        HTML_CONTENT_MODEL_RAW   = %w{script style math option textarea pre code}
+             h1 h2 h3 h4 h5 h6 i ins label legend optgroup p q rb rbc
+             rp rt rtc ruby select small span strong sub sup summary th tt}
+        HTML_CONTENT_MODEL_RAW   = %w{script style math option textarea pre code kbd samp var}
         # The following elements are also parsed as raw since they need child elements that cannot
         # be expressed using kramdown syntax: colgroup table tbody thead tfoot tr ul ol
 

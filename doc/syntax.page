@@ -1005,9 +1005,9 @@ basis using the `markdown` attribute:
 The following list shows which HTML tags are parsed in which mode by default when `markdown="1"` is
 applied or `parse_block_html` is `true`:
 
-Parse as raw HTML block
+Parse as raw HTML
 : 
-        script math option textarea
+        script style math option textarea pre code kbd samp var
 
     Also, all general XML tags are parsed as raw HTML blocks.
 
