@@ -420,7 +420,7 @@ module Kramdown
                 if td.attr['style']
                   td.attr['style'].slice!(/(?:;\s*)?text-align:\s+(center|left|right)/)
                   td.attr.delete('style') if td.attr['style'].strip.empty?
-                  $1.to_sym
+                  $1.try(:to_sym) || :default
                 else
                   :default
                 end
