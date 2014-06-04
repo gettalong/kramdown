@@ -408,6 +408,8 @@ module Kramdown
         end.compact.join('')
         res = "toc" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('toc') rescue nil)
+        res = "footnotes" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
+          (el.options[:ial][:refs].include?('footnotes') rescue nil)
         res.strip.empty? ? nil : "{:#{res}}"
       end
 

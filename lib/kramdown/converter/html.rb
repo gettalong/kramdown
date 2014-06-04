@@ -49,6 +49,7 @@ module Kramdown
         @footnote_counter = @footnote_start = @options[:footnote_nr]
         @footnotes = []
         @footnotes_by_name = {}
+        @footnote_location = nil
         @toc = []
         @toc_code = nil
         @indent = 2
@@ -149,6 +150,8 @@ module Kramdown
         if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
           @toc_code = [el.type, el.attr, (0..128).to_a.map{|a| rand(36).to_s(36)}.join]
           @toc_code.last
+        elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
+          @footnote_location = (0..128).to_a.map{|a| rand(36).to_s(36)}.join
         else
           format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
         end
@@ -334,7 +337,11 @@ module Kramdown
 
       def convert_root(el, indent)
         result = inner(el, indent)
-        result << footnote_content
+        if @footnote_location
+          result.sub!(/#{@footnote_location}/, footnote_content)
+        else
+          result << footnote_content
+        end
         if @toc_code
           toc_tree = generate_toc_tree(@toc, @toc_code[0], @toc_code[1] || {})
           text = if toc_tree.children.size > 0

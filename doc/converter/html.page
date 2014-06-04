@@ -112,6 +112,14 @@ kramdown uses the HTML element `em` to style light and the element `strong` to s
 emphasized text parts.
 
 
+## Footnotes
+
+If a document contains footnotes, they are automatically placed at the end of the document.
+
+By assigning the reference name "footnotes" to an ordered or unordered list, the list will be
+replaced with the footnotes, instead of placing the footnotes at the end of the document.
+
+
 ## Automatic "Table of Contents" Generation    {#toc}
 
 kramdown supports the automatic generation of the table of contents of all headers that have an ID
