@@ -9,9 +9,12 @@ module Kramdown
       def initialize(source, options)
         super
         @span_parsers.delete(:line_break)
-        i = @block_parsers.index(:codeblock_fenced)
-        @block_parsers.delete(:codeblock_fenced)
-        @block_parsers.insert(i, :codeblock_fenced_gfm)
+        {:codeblock_fenced => :codeblock_fenced_gfm,
+          :atx_header => :atx_header_gfm}.each do |current, replacement|
+          i = @block_parsers.index(current)
+          @block_parsers.delete(current)
+          @block_parsers.insert(i, replacement)
+        end
       end
 
       def parse
@@ -38,8 +41,10 @@ module Kramdown
         end.flatten!
       end
 
-      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
+      ATX_HEADER_START = /^\#{1,6}\s/
+      define_parser(:atx_header_gfm, ATX_HEADER_START, nil, 'parse_atx_header')
 
+      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
     end
