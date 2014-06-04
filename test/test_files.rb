@@ -116,6 +116,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/12_extension/options3.text', # bc of options option
                           'test/testcases/block/09_html/content_model/tables.text',  # bc of parse_block_html option
                           'test/testcases/block/09_html/html_to_native/header.text', # bc of auto_ids option that interferes
+                          'test/testcases/block/09_html/html_to_native/table_simple.text', # bc of tr style attr getting removed
                           'test/testcases/block/09_html/simple.text',        # bc of webgen:block elements
                           'test/testcases/block/11_ial/simple.text',         # bc of change of ordering of attributes in header
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
