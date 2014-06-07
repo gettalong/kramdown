@@ -103,6 +103,10 @@ describe 'location' do
       : {:.line-13} definition definition 1
       definition term 2
       : {:.line-15} definition definition 2
+
+      * {:.line-17} list item
+      ^
+      * {:.line-19} list item in a new list
     ),
     'math_block' => %(\na para\n\n$$5+5$$\n{:.line-3}\n),
     'math_inline' => %(\na para\n\nanother para with inline math $$5+5$${:.line-3}\n),
@@ -110,6 +114,10 @@ describe 'location' do
       * {:.line-1} list item
         * {:.line-2} list item
         * {:.line-3} list item
+      * {:.line-4} list item
+        * {:.line-5} list item
+          * {:.line-6} list item
+          * {:.line-7} list item
     ),
     'paragraph' => %(
       para1
