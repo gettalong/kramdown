@@ -106,6 +106,11 @@ describe 'location' do
     ),
     'math_block' => %(\na para\n\n$$5+5$$\n{:.line-3}\n),
     'math_inline' => %(\na para\n\nanother para with inline math $$5+5$${:.line-3}\n),
+    'nested-list' => %(
+      * {:.line-1} list item
+        * {:.line-2} list item
+        * {:.line-3} list item
+    ),
     'paragraph' => %(
       para1
       {:.line-1}

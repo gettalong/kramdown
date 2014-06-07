@@ -15,6 +15,7 @@ module Kramdown
 
       # Parse the EOB marker at the current location.
       def parse_eob_marker
+        @src.start_line_number -= 1
         @src.pos += @src.matched_size
         @tree.children << new_block_el(:eob)
         true

@@ -11,7 +11,7 @@ module Kramdown
 
       # The start line number. Used for nested StringScanners that scan a sub-string of the source
       # document. The kramdown parser uses this, e.g., for span level parsers.
-      attr_reader :start_line_number
+      attr_accessor :start_line_number
 
       # Takes the start line number as optional second argument.
       #
