@@ -74,9 +74,11 @@ describe 'location' do
       =======
       {:.line-10}
 
+      ^
+
       header5
       -------
-      {:.line-14}
+      {:.line-16}
     ),
     'horizontal_rule' => %(\na para\n\n----\n{:.line-3}\n),
     'html_entity' => "a para\n\nanother para with &amp;{:.line-3} html entity.\n",
@@ -140,7 +142,15 @@ describe 'location' do
     'gh issue 129' => %(
       `|`
       {:.line-1}
-    )
+    ),
+    'gh issue 131' => %(
+      * {:.line-1} test
+        line 2
+        * {:.line-3} second
+        * {:.line-4} third
+      * {:.line-5} * {:.line-5} one
+        * {:.line-6} two
+    ),
   }
   test_cases.each do |name, test_string|
     it "Handles #{ name }" do

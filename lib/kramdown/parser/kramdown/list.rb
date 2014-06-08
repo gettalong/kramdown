@@ -76,19 +76,20 @@ module Kramdown
                              /^( {0,#{[3, indentation - 1].min}}\d+\.)([\t| ].*?\n)/)
             nested_list_found = (item.value =~ LIST_START)
             last_is_blank = false
+            item.value = [item.value]
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
             result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
             result.sub!(indent_re, '')
             if !nested_list_found && result =~ LIST_START
-              item.value << "^\n"
+              item.value << ''
               nested_list_found = true
             end
-            item.value << result
+            item.value.last << result
             last_is_blank = false
           elsif result = @src.scan(BLANK_LINE)
             nested_list_found = true
             last_is_blank = true
-            item.value << result
+            item.value.last << result
           else
             break
           end
@@ -99,7 +100,16 @@ module Kramdown
         last = nil
         list.children.each do |it|
           temp = Element.new(:temp, nil, nil, :location => it.options[:location])
-          parse_blocks(temp, it.value)
+
+          old_src = @src
+          location = it.options[:location]
+          it.value.each do |val|
+            @src = ::Kramdown::Utils::StringScanner.new(val, location)
+            parse_blocks(temp)
+            location = @src.current_line_number
+          end
+          @src = old_src
+
           it.children = temp.children
           it.value = nil
           next if it.children.size == 0
