@@ -14,3 +14,5 @@ No id: ![imgo]
 
 [img]: other.png
 [imgo]: other.png "Title"
+
+With escaped pipe: ![an \| pipe](other.png)

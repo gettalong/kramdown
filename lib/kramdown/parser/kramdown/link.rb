@@ -7,6 +7,8 @@
 #++
 #
 
+require 'kramdown/parser/kramdown/escaped_chars'
+
 module Kramdown
   module Parser
     class Kramdown
@@ -76,7 +78,7 @@ module Kramdown
           add_text(result)
           return
         end
-        alt_text = extract_string(reset_pos...@src.pos, @src)
+        alt_text = extract_string(reset_pos...@src.pos, @src).gsub(ESCAPED_CHARS, '\1')
         @src.scan(LINK_BRACKET_STOP_RE)
 
         # reference style link or no link url
