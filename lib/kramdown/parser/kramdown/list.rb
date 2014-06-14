@@ -101,14 +101,14 @@ module Kramdown
         list.children.each do |it|
           temp = Element.new(:temp, nil, nil, :location => it.options[:location])
 
-          old_src = @src
+          env = save_env
           location = it.options[:location]
           it.value.each do |val|
             @src = ::Kramdown::Utils::StringScanner.new(val, location)
             parse_blocks(temp)
             location = @src.current_line_number
           end
-          @src = old_src
+          restore_env(env)
 
           it.children = temp.children
           it.value = nil
