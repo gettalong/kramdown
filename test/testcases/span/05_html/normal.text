@@ -32,3 +32,10 @@ An invalid </closing> tag.
 A <script>*not*</script> tag.
 
 An <span>unclosed *tag.*
+
+Some <code>element with | pipe symbol</code>
+
+Some <span><code>element with | pipe symbol</code></span>
+
+Some <code>element with | pipe
+symbol|</code>

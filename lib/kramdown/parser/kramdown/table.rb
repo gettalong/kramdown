@@ -114,10 +114,13 @@ module Kramdown
                                                      @src.current_line_number)
         reset_env(:src => l_src)
         root = Element.new(:root)
-        parse_spans(root, nil, [:codespan])
+        parse_spans(root, nil, [:codespan, :span_html])
         restore_env(env)
 
-        # Check if each line has at least one unescaped backslash that is not inside a code span
+        # Check if each line has at least one unescaped pipe that is not inside a code span/code
+        # HTML element
+        # Note: It doesn't matter that we parse *all* span HTML elements because the row splitting
+        # algorithm above only takes <code> elements into account!
         pipe_on_line = false
         while (c = root.children.shift)
           lines = c.value.split(/\n/)
