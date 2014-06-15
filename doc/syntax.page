@@ -920,6 +920,11 @@ Using inline math is also easy: just surround your math content with two dollar 
 math block. If you don't want to start an inline math statement, just escape the dollar signs and
 they will be treated as simple dollar signs.
 
+> **Note** that LaTeX code that uses the pipe symbol `|` in inline math statements may lead to a
+> line being recognized as a table line. This problem can be avoided by using the `\vert` command
+> instead of `|`!
+{:.information}
+
 If you have a paragraph that looks like a math block but should actually be a paragraph with just an
 inline math statement, you need to escape the first dollar sign:
 
