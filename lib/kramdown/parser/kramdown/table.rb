@@ -13,11 +13,20 @@ module Kramdown
   module Parser
     class Kramdown
 
+      DOUBLE_DOLLAR = /(?<!\\)\$\$/
+      MATH_ELEM = /#{DOUBLE_DOLLAR}.*?#{DOUBLE_DOLLAR}/
+      CODE_OPEN = /<code.*?>/
+      CODE_ELEM = /#{CODE_OPEN}.*?<\/code>/
+      ELEM = /#{CODE_ELEM}|#{MATH_ELEM}/
+      ELEM_OPEN = /#{CODE_OPEN}|#{DOUBLE_DOLLAR}/
+      NOT_ELEM_OPEN = /(?:(?!#{ELEM_OPEN}).)/
+      NOT_ELEM_OPEN_OR_NL = /(?:(?!#{ELEM_OPEN}|\n).)/
+
       TABLE_SEP_LINE = /^([+|: -]*?-[+|: -]*?)[ \t]*\n/
       TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
       TABLE_FSEP_LINE = /^[+|: =]*?=[+|: =]*?[ \t]*\n/
       TABLE_ROW_LINE = /^(.*?)[ \t]*\n/
-      TABLE_PIPE_CHECK = /(?:\||.*?[^\\\n]\|)/
+      TABLE_PIPE_CHECK = /(?:\||#{NOT_ELEM_OPEN}*(?:#{ELEM}#{NOT_ELEM_OPEN_OR_NL}*)*(?<!\\)\|)/
       TABLE_LINE = /#{TABLE_PIPE_CHECK}.*?\n/
       TABLE_START = /^#{OPT_SPACE}(?=\S)#{TABLE_LINE}/
 
@@ -62,7 +71,7 @@ module Kramdown
             # parse possible code spans on the line and correctly split the line into cells
             env = save_env
             cells = []
-            @src[1].split(/(<code.*?>.*?<\/code>)/).each_with_index do |str, i|
+            @src[1].split(/(#{ELEM})/).each_with_index do |str, i|
               if i % 2 == 1
                 (cells.empty? ? cells : cells.last) << str
               else
