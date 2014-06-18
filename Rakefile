@@ -193,11 +193,11 @@ EOF
     end
 
 
-    task :gemspec => [ 'CONTRIBUTERS', 'VERSION', 'man/man1/kramdown.1'] do 
+    task :gemspec => [ 'CONTRIBUTERS', 'VERSION', 'man/man1/kramdown.1'] do
       print "Generating Gemspec\n"
       contents = spec.to_ruby
       File.open("kramdown.gemspec", 'w+') {|f| f.puts(contents)}
-    end 
+    end
 
     Gem::PackageTask.new(spec) do |pkg|
       pkg.need_zip = true
