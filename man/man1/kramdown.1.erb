@@ -1,4 +1,4 @@
-.TH "KRAMDOWN" 1 "May 2012"
+.TH "KRAMDOWN" 1 "June 2014"
 .SH NAME
 kramdown \- a fast, pure-Ruby Markdown-superset converter
 .SH SYNOPSIS
@@ -9,7 +9,7 @@ kramdown \- a fast, pure-Ruby Markdown-superset converter
 kramdown is primarily used for parsing a superset of Markdown and converting it to different output
 formats. It supports standard Markdown (with some minor modifications) and various extensions like
 tables and definition lists. Due to its modular architecture it also allows other input formats than
-Markdown, for example, HTML.
+Markdown, for example, HTML or Github Flavored Markdown.
 
 If \fIFILE\fR is not specified, kramdown reads from the standard input. The result is written to the
 standard output.
@@ -20,10 +20,10 @@ converts its input.
 .SH OPTIONS
 .TP
 .B \-i, \-\-input ARG
-Specify the input format. Available input formats: kramdown (this is the default) or html.
+Specify the input format. Available input formats: kramdown (this is the default), markdown, GFM or html.
 .TP
 .B \-o, \-\-output ARG
-Specify one or more output formats separated by commas: html (default), kramdown, latex or
+Specify one or more output formats separated by commas: html (default), kramdown, latex, pdf or
 remove_html_tags.
 .TP
 .B \-v, \-\-version
