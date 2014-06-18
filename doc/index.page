@@ -25,9 +25,10 @@ content_processor.tikz.opts: |
   level 2 concept/.append style={font=\Large},
 }
 \node[concept, font=\Large] (lib) {kramdown's internal representation}
-  child[concept color=orange, grow=140, ->] {node[concept] (i-kramdown) {kramdown}}
-  child[concept color=orange, grow=180] {node[concept] (i-html) {HTML}}
-  child[concept color=orange, grow=220] {node[concept] (i-markdown) {Markdown}}
+  child[concept color=orange, grow=120, ->] {node[concept] (i-kramdown) {kramdown}}
+  child[concept color=orange, grow=160] {node[concept] (i-html) {HTML}}
+  child[concept color=orange, grow=200] {node[concept] (i-gfm) {GFM}}
+  child[concept color=orange, grow=240] {node[concept] (i-markdown) {Markdown}}
   child[concept color=green!50!black, grow=60] {node[concept] (o-html) {HTML}}
   child[concept color=green!50!black, grow=20] {node[concept] (o-kramdown) {kramdown}}
   child[concept color=green!50!black, grow=-20] {
@@ -41,7 +42,8 @@ content_processor.tikz.opts: |
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=15pt,shorten <=10pt,color=orange]
    (i-kramdown) edge(lib)
    (i-markdown) edge(lib)
-   (i-html) edge (lib);
+   (i-html) edge (lib)
+   (i-gfm) edge (lib);
 \draw [dash pattern=on 0pt off 2pt,line width=5pt,arrows=-angle 60,shorten >=10pt,shorten <=15pt,color=green!50!black]
    (lib) edge(o-html)
    (lib) edge (o-kramdown)
@@ -70,7 +72,7 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 ## Author
 
 * Thomas Leitner
-* e-Mail: <t_leitner@gmx.at>
+* e-Mail: <mailto:t_leitner@gmx.at>
 
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
