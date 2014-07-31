@@ -9,6 +9,6 @@ rvm:
 before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
   - gem install rake minitest coderay stringex
-  - (ruby --version | grep -qv 'ruby 1.8') && gem install prawn || true
+  - (ruby --version | grep -qv 'ruby 1.8') && gem install prawn prawn-table || true
 
 script: ruby -rubygems -Ilib:test test/test_*

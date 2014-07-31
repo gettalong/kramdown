@@ -8,6 +8,7 @@
 #
 
 require 'prawn'
+require 'prawn/table'
 require 'kramdown/utils/entities'
 require 'open-uri'
 
