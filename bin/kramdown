@@ -21,8 +21,8 @@ OptionParser.new do |opts|
   opts.separator "Command line options:"
   opts.separator ""
 
-  opts.on("-i", "--input ARG", "Specify the input format: kramdown (default) or html") {|v| options[:input] = v}
-  opts.on("-o", "--output ARG", Array, "Specify one or more output formats separated by commas: html (default), kramdown, latex or remove_html_tags") {|v| format = v}
+  opts.on("-i", "--input ARG", "Specify the input format: kramdown (default), html, GFM or markdown") {|v| options[:input] = v}
+  opts.on("-o", "--output ARG", Array, "Specify one or more output formats separated by commas: html (default), kramdown, latex, pdf or remove_html_tags") {|v| format = v}
 
   opts.on("-v", "--version", "Show the version of kramdown") do
     puts Kramdown::VERSION
