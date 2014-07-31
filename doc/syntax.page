@@ -936,7 +936,7 @@ inline math statement, you need to escape the first dollar sign:
 
     \$$ 5 + 5 $$
 
-If you don't even won't the inline math statement, escape the first two dollar signs:
+If you don't even want the inline math statement, escape the first two dollar signs:
 
     \$\$ 5 + 5 $$
 
