@@ -50,9 +50,10 @@ module Kramdown
 
         # Some HTML elements like script belong to both categories (i.e. are valid in block and
         # span HTML) and don't appear therefore!
+        # script, textarea
         HTML_SPAN_ELEMENTS = %w{a abbr acronym b big bdo br button cite code del dfn em i img input
                               ins kbd label option q rb rbc rp rt rtc ruby samp select small span
-                              strong sub sup textarea tt var}
+                              strong sub sup tt var}
         HTML_BLOCK_ELEMENTS = %w{address article aside applet body button blockquote caption col colgroup dd div dl dt fieldset
                                figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend menu
                                li map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
@@ -328,6 +329,10 @@ module Kramdown
         def extract_text(el, raw)
           raw << el.value.to_s if el.type == :text
           el.children.each {|c| extract_text(c, raw)}
+        end
+
+        def convert_textarea(el)
+          process_html_element(el, true, true)
         end
 
         def convert_a(el)
