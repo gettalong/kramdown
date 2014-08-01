@@ -53,7 +53,7 @@ module Kramdown
         # script, textarea
         HTML_SPAN_ELEMENTS = %w{a abbr acronym b big bdo br button cite code del dfn em i img input
                               ins kbd label option q rb rbc rp rt rtc ruby samp select small span
-                              strong sub sup tt var}
+                              strong sub sup tt u var}
         HTML_BLOCK_ELEMENTS = %w{address article aside applet body button blockquote caption col colgroup dd div dl dt fieldset
                                figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend menu
                                li map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
