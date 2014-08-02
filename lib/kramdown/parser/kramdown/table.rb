@@ -140,7 +140,7 @@ module Kramdown
         add_container.call(has_footer ? :tfoot : :tbody, false) if !rows.empty?
 
         if !table.children.any? {|el| el.type == :tbody}
-          warning("Found table without body - ignoring it")
+          warning("Found table without body on line #{table.options[:location]} - ignoring it")
           @src.pos = orig_pos
           return false
         end

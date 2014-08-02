@@ -24,7 +24,7 @@ module Kramdown
 
         el = Element.new(:footnote_def, nil, nil, :location => start_line_number)
         parse_blocks(el, @src[2].gsub(INDENT, ''))
-        warning("Duplicate footnote name '#{@src[1]}' - overwriting") if @footnotes[@src[1]]
+        warning("Duplicate footnote name '#{@src[1]}' on line #{start_line_number} - overwriting") if @footnotes[@src[1]]
         (@footnotes[@src[1]] = {})[:content] = el
         @tree.children << Element.new(:eob, :footnote_def, nil, :location => start_line_number)
         true

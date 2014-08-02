@@ -213,14 +213,15 @@ module Kramdown
       end
 
       def convert_img(el, opts)
+        line = el.options[:location]
         if el.attr['src'] =~ /^(https?|ftps?):\/\//
-          warning("Cannot include non-local image")
+          warning("Cannot include non-local image#{line ? " (line #{line})" : ''}")
           ''
         elsif !el.attr['src'].empty?
           @data[:packages] << 'graphicx'
           "#{latex_link_target(el)}\\includegraphics{#{el.attr['src']}}"
         else
-          warning("Cannot include image with empty path")
+          warning("Cannot include image with empty path#{line ? " (line #{line})" : ''}")
           ''
         end
       end
