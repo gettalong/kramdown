@@ -280,6 +280,13 @@ module Kramdown
           @footnote_counter += 1
           @footnotes << [el.options[:name], el.value, number, 0]
           @footnotes_by_name[el.options[:name]] = @footnotes.last
+
+          # parse the footnote content to find any embedded footnotes,
+          # but don't add the parsed content to the actual rendered HTML
+          ignore = ''
+          el.value.children.each do |inner_el|
+            ignore << send(DISPATCHER[inner_el.type], inner_el, indent)
+          end
         end
         "<sup id=\"fnref:#{el.options[:name]}#{repeat}\"><a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
       end
