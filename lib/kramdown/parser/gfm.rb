@@ -8,7 +8,7 @@ module Kramdown
 
       def initialize(source, options)
         super
-        @span_parsers.delete(:line_break)
+        @span_parsers.delete(:line_break) if @options[:hard_wrap]
         {:codeblock_fenced => :codeblock_fenced_gfm,
           :atx_header => :atx_header_gfm}.each do |current, replacement|
           i = @block_parsers.index(current)
