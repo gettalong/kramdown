@@ -34,7 +34,7 @@ module Kramdown
 
 
       ATX_HEADER_START = /^\#{1,6}/
-      ATX_HEADER_MATCH = /^(\#{1,6})(.+?)\s*?#*#{HEADER_ID}\s*?\n/
+      ATX_HEADER_MATCH = /^(\#{1,6})(.+?(?:\\#)?)\s*?#*#{HEADER_ID}\s*?\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header
