@@ -151,6 +151,16 @@ describe 'location' do
       * {:.line-5} * {:.line-5} one
         * {:.line-6} two
     ),
+    'gh issue 158' => %(
+      😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁
+      {:.line-1}
+
+      - {:.line-4} T
+      {:.line-4}
+
+      # T
+      {:.line-7}
+    ),
   }
   test_cases.each do |name, test_string|
     it "Handles #{ name }" do
