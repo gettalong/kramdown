@@ -105,6 +105,7 @@ module Kramdown
       def convert_header(el, opts)
         res = ''
         res << "#{'#' * output_header_level(el.options[:level])} #{inner(el, opts)}"
+        res[-1, 1] = "\\#" if res[-1] == ?#
         res << "   {##{el.attr['id']}}" if el.attr['id'] && !el.attr['id'].strip.empty?
         res << "\n"
       end
