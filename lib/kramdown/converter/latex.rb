@@ -32,8 +32,6 @@ module Kramdown
       # Initialize the LaTeX converter with the +root+ element and the conversion +options+.
       def initialize(root, options)
         super
-        #TODO: set the footnote counter at the beginning of the document
-        @options[:footnote_nr]
         @data[:packages] = Set.new
       end
 
