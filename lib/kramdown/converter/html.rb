@@ -430,10 +430,11 @@ module Kramdown
       def footnote_content
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1
-        @footnotes.each do |name, data, _, repeat|
+        i = 0
+        while i < @footnotes.length
+          name, data, _, repeat = *@footnotes[i]
           li = Element.new(:li, nil, {'id' => "fn:#{name}"})
           li.children = Marshal.load(Marshal.dump(data.children))
-          ol.children << li
 
           if li.children.last.type == :p
             para = li.children.last
@@ -447,6 +448,9 @@ module Kramdown
           (1..repeat).each do |index|
             para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "&#8617;<sup>#{index+1}</sup>"])
           end
+
+          ol.children << Element.new(:raw, convert(li, 4))
+          i += 1
         end
         (ol.children.empty? ? '' : format_as_indented_block_html('div', {:class => "footnotes"}, convert(ol, 2), 0))
       end
