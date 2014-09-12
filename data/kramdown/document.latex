@@ -41,7 +41,7 @@ encmap = {
 <%   end %>
 <% end %>
 
-\addtocounter{footnote}{<%= @converter.options[:footnote_nr] - 1 %>}
+\setcounter{footnote}{<%= @converter.options[:footnote_nr] - 1 %>}
 
 \hypersetup{colorlinks=true,urlcolor=blue}
 
