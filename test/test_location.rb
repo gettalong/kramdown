@@ -179,4 +179,12 @@ describe 'location' do
     doc.warnings.must_equal ["Duplicate abbreviation ID 'duplicate' on line 4 - overwriting"]
   end
 
+  it 'handles abbreviations' do
+    str = "This *is* ABC and\n**and** ABC second\nanother ABC\nas ABC as\nABC at the end.\n\n*[ABC]: ABC"
+    doc = Kramdown::Document.new(str)
+    doc.root.children.first.children.select {|e| e.type == :abbreviation}.each_with_index do |e, i|
+      assert_equal(i + 1, e.options[:location])
+    end
+  end
+
 end

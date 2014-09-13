@@ -38,16 +38,20 @@ module Kramdown
           if child.type == :text
             if child.value =~ regexps.first
               result = []
-              strscan = Kramdown::Utils::StringScanner.new(child.value)
+              strscan = Kramdown::Utils::StringScanner.new(child.value, child.options[:location])
+              text_lineno = strscan.current_line_number
               while temp = strscan.scan_until(regexps.last)
+                abbr_lineno = strscan.current_line_number
                 abbr = strscan.scan(regexps.first) # begin of line case of abbr with \W char as first one
                 if abbr.nil?
                   temp << strscan.scan(/\W|^/)
                   abbr = strscan.scan(regexps.first)
                 end
-                result << Element.new(:text, temp) << Element.new(:abbreviation, abbr)
+                result << Element.new(:text, temp, nil, :location => text_lineno)
+                result << Element.new(:abbreviation, abbr, nil, :location => abbr_lineno)
+                text_lineno = strscan.current_line_number
               end
-              result << Element.new(:text, strscan.rest)
+              result << Element.new(:text, strscan.rest, nil, :location => text_lineno)
             else
               child
             end
