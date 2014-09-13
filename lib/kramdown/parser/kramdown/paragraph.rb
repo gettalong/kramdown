@@ -40,7 +40,7 @@ module Kramdown
         else
           @tree.children << new_block_el(:p, nil, nil, :location => start_line_number)
           result.lstrip!
-          @tree.children.last.children << Element.new(@text_type, result)
+          add_text(result, @tree.children.last)
         end
         true
       end
