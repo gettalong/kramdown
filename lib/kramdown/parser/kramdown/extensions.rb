@@ -85,20 +85,20 @@ module Kramdown
           end
         end
 
-        if !handle_extension(ext, opts, body, type)
+        if !handle_extension(ext, opts, body, type, start_line_number)
           error_block.call("Invalid extension with name '#{ext}' specified on line #{start_line_number} - ignoring it")
         else
           true
         end
       end
 
-      def handle_extension(name, opts, body, type)
+      def handle_extension(name, opts, body, type, line_no = nil)
         case name
         when 'comment'
-          @tree.children << Element.new(:comment, body, nil, :category => type) if body.kind_of?(String)
+          @tree.children << Element.new(:comment, body, nil, :category => type, :location => line_no) if body.kind_of?(String)
           true
         when 'nomarkdown'
-          @tree.children << Element.new(:raw, body, nil, :category => type, :type => opts['type'].to_s.split(/\s+/)) if body.kind_of?(String)
+          @tree.children << Element.new(:raw, body, nil, :category => type, :location => line_no, :type => opts['type'].to_s.split(/\s+/)) if body.kind_of?(String)
           true
         when 'options'
           opts.select do |k,v|
