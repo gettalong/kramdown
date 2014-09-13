@@ -187,4 +187,12 @@ describe 'location' do
     end
   end
 
+  it 'handles line breaks' do
+    str = "First  \nsecond\\\\\nthird  \n"
+    doc = Kramdown::Document.new(str)
+    doc.root.children.first.children.select {|e| e.type == :br}.each_with_index do |e, i|
+      assert_equal(i + 1, e.options[:location])
+    end
+  end
+
 end
