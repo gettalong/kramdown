@@ -195,4 +195,12 @@ describe 'location' do
     end
   end
 
+  it 'handles smart quotes' do
+    str = "This is 'first'\nand 'second' and\n'third'"
+    doc = Kramdown::Document.new(str)
+    doc.root.children.first.children.select {|e| e.type == :smart_quote}.each_with_index do |e, i|
+      assert_equal(((i + 1) /2.0).ceil, e.options[:location])
+    end
+  end
+
 end
