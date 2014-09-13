@@ -97,10 +97,11 @@ module Kramdown
       # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
       # +type+ element or creates a new text element with the given +type+.
       def add_text(text, tree = @tree, type = @text_type)
-        if tree.children.last && tree.children.last.type == type
-          tree.children.last.value << text
+        last = tree.children.last
+        if last && last.type == type
+          last.value << text
         elsif !text.empty?
-          tree.children << Element.new(type, text)
+          tree.children << Element.new(type, text, nil, :location => (last && last.options[:location] || tree.options[:location]))
         end
       end
 
