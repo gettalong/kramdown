@@ -54,13 +54,13 @@ module Kramdown
       # Parse the generic extension at the current point. The parameter +type+ can either be :block
       # or :span depending whether we parse a block or span extension tag.
       def parse_extension_start_tag(type)
-        orig_pos = @src.pos
+        saved_pos = @src.save_pos
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
 
         error_block = lambda do |msg|
           warning(msg)
-          @src.pos = orig_pos
+          @src.revert_pos(saved_pos)
           add_text(@src.getch) if type == :span
           false
         end

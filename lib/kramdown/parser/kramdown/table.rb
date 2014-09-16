@@ -25,6 +25,7 @@ module Kramdown
       def parse_table
         return false if !after_block_boundary?
 
+        saved_pos = @src.save_pos
         orig_pos = @src.pos
         table = new_block_el(:table, nil, nil, :alignment => [], :location => @src.current_line_number)
         leading_pipe = (@src.check(TABLE_LINE) =~ /^\s*\|/)
@@ -104,7 +105,7 @@ module Kramdown
         end
 
         if !before_block_boundary?
-          @src.pos = orig_pos
+          @src.revert_pos(saved_pos)
           return false
         end
 
@@ -135,13 +136,13 @@ module Kramdown
             pipe_on_line = (lines.size > 1 ? false : pipe_on_line) || (lines.last =~ /^#{TABLE_PIPE_CHECK}/)
           end
         end
-        @src.pos = orig_pos and return false if !pipe_on_line
+        @src.revert_pos(saved_pos) and return false if !pipe_on_line
 
         add_container.call(has_footer ? :tfoot : :tbody, false) if !rows.empty?
 
         if !table.children.any? {|el| el.type == :tbody}
           warning("Found table without body on line #{table.options[:location]} - ignoring it")
-          @src.pos = orig_pos
+          @src.revert_pos(saved_pos)
           return false
         end
 

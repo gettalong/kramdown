@@ -28,9 +28,27 @@ module Kramdown
       # Note: This also resets some internal variables, so always use pos= when setting the position
       # and don't use any other method for that!
       def pos=(pos)
+        if self.pos > pos
+          @previous_line_number = @start_line_number
+          @previous_pos = 0
+        end
         super
-        @previous_line_number = @start_line_number
-        @previous_pos = 0
+      end
+
+      # Return information needed to revert the byte position of the string scanner in a performant
+      # way.
+      #
+      # The returned data can be fed to #revert_pos to revert the position to the saved one.
+      #
+      # Note: Just saving #pos won't be enough.
+      def save_pos
+        [pos, @previous_pos, @previous_line_number]
+      end
+
+      # Revert the position to one saved by #save_pos.
+      def revert_pos(data)
+        self.pos = data[0]
+        @previous_pos, @previous_line_number = data[1], data[2]
       end
 
       # Returns the line number for current charpos.

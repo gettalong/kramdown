@@ -16,10 +16,11 @@ module Kramdown
       # Parse the emphasis at the current location.
       def parse_emphasis
         start_line_number = @src.current_line_number
+        saved_pos = @src.save_pos
+
         result = @src.scan(EMPHASIS_START)
         element = (result.length == 2 ? :strong : :em)
         type = result[0..0]
-        reset_pos = @src.pos
 
         if (type == '_' && @src.pre_match =~ /[[:alnum:]]\z/ && @src.check(/[[:alnum:]]/)) || @src.check(/\s/) ||
             @tree.type == element || @stack.any? {|el, _| el.type == element}
@@ -40,14 +41,16 @@ module Kramdown
 
         found, el, stop_re = sub_parse.call(result, element)
         if !found && element == :strong && @tree.type != :em
-          @src.pos = reset_pos - 1
+          @src.revert_pos(saved_pos)
+          @src.pos += 1
           found, el, stop_re = sub_parse.call(type, :em)
         end
         if found
           @src.scan(stop_re)
           @tree.children << el
         else
-          @src.pos = reset_pos
+          @src.revert_pos(saved_pos)
+          @src.pos += result.length
           add_text(result)
         end
       end

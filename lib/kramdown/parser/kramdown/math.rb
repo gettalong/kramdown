@@ -25,14 +25,14 @@ module Kramdown
           return false
         end
 
-        orig_pos = @src.pos
+        saved_pos = @src.save_pos
         @src.pos += @src.matched_size
         data = @src[2]
         if before_block_boundary?
           @tree.children << new_block_el(:math, data, nil, :category => :block, :location => start_line_number)
           true
         else
-          @src.pos = orig_pos
+          @src.revert_pos(saved_pos)
           false
         end
       end

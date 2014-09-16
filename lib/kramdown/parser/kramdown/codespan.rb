@@ -18,7 +18,7 @@ module Kramdown
         start_line_number = @src.current_line_number
         result = @src.scan(CODESPAN_DELIMITER)
         simple = (result.length == 1)
-        reset_pos = @src.pos
+        saved_pos = @src.save_pos
 
         if simple && @src.pre_match =~ /\s\Z/ && @src.match?(/\s/)
           add_text(result)
@@ -33,7 +33,7 @@ module Kramdown
           end
           @tree.children << Element.new(:codespan, text, nil, :location => start_line_number)
         else
-          @src.pos = reset_pos
+          @src.revert_pos(saved_pos)
           add_text(result)
         end
       end

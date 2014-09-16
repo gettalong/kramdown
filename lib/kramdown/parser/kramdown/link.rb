@@ -57,7 +57,8 @@ module Kramdown
       def parse_link
         start_line_number = @src.current_line_number
         result = @src.scan(LINK_START)
-        reset_pos = @src.pos
+        cur_pos = @src.pos
+        saved_pos = @src.save_pos
 
         link_type = (result =~ /^!/ ? :img : :a)
 
@@ -74,11 +75,11 @@ module Kramdown
           count - el.children.select {|c| c.type == :img}.size == 0
         end
         if !found || (link_type == :a && el.children.empty?)
-          @src.pos = reset_pos
+          @src.revert_pos(saved_pos)
           add_text(result)
           return
         end
-        alt_text = extract_string(reset_pos...@src.pos, @src).gsub(ESCAPED_CHARS, '\1')
+        alt_text = extract_string(cur_pos...@src.pos, @src).gsub(ESCAPED_CHARS, '\1')
         @src.scan(LINK_BRACKET_STOP_RE)
 
         # reference style link or no link url
@@ -88,7 +89,7 @@ module Kramdown
             add_link(el, @link_defs[link_id].first, @link_defs[link_id].last, alt_text)
           else
             warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")
-            @src.pos = reset_pos
+            @src.revert_pos(saved_pos)
             add_text(result)
           end
           return
@@ -127,7 +128,7 @@ module Kramdown
         if @src.scan(LINK_INLINE_TITLE_RE)
           add_link(el, link_url, @src[2], alt_text)
         else
-          @src.pos = reset_pos
+          @src.revert_pos(saved_pos)
           add_text(result)
         end
       end
