@@ -37,6 +37,15 @@ module Kramdown
         HIGHLIGHTING_AVAILABLE = false  # :nodoc:
       end
 
+      begin
+        require 'ritex'
+
+        # TeX to MathML conversion via ritex is available if this constant is +true+.
+        MATHML_AVAILABLE = true
+      rescue LoadError
+        MATHML_AVAILABLE = false  # :nodoc:
+      end
+
       include ::Kramdown::Utils::Html
       include ::Kramdown::Parser::Html::Constants
 
@@ -55,6 +64,7 @@ module Kramdown
         @indent = 2
         @stack = []
         @coderay_enabled = @options[:enable_coderay] && HIGHLIGHTING_AVAILABLE
+        @ritex_enabled = @options[:enable_ritex] && MATHML_AVAILABLE
       end
 
       # The mapping of element type to conversion method.
@@ -320,13 +330,23 @@ module Kramdown
 
       def convert_math(el, indent)
         block = (el.options[:category] == :block)
-        value = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
-        value.gsub!(/<\/?script>?/, '')
-        type = {:type => "math/tex#{block ? '; mode=display' : ''}"}
-        if block
-          format_as_block_html('script', type, value, indent)
+        if @ritex_enabled
+          parser = Ritex::Parser.new
+          mathml = parser.parse(el.value, { :display => block })
+          if block
+            "#{' '*indent}#{mathml}\n"
+          else
+            mathml
+          end
         else
-          format_as_span_html('script', type, value)
+          value = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
+          value.gsub!(/<\/?script>?/, '')
+          type = {:type => "math/tex#{block ? '; mode=display' : ''}"}
+          if block
+            format_as_block_html('script', type, value, indent)
+          else
+            format_as_span_html('script', type, value)
+          end
         end
       end
 
