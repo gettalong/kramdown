@@ -498,8 +498,7 @@ module Kramdown
     end
 
     CATEGORY = {} # :nodoc:
-    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :li, :dl, :dt, :dd, :table, :td, :hr]
-      .each {|b| CATEGORY[b] = :block}
+    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :li, :dl, :dt, :dd, :table, :td, :hr].each {|b| CATEGORY[b] = :block}
     [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
      :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span}
 
