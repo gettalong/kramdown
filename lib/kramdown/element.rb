@@ -116,7 +116,7 @@ module Kramdown
   #
   # === :li
   #
-  # [Category] None
+  # [Category] Block-level element
   # [Usage context] Inside :ol and :ul elements
   # [Content model] Block-level elements
   #
@@ -137,7 +137,7 @@ module Kramdown
   #
   # === :dt
   #
-  # [Category] None
+  # [Category] Block-level element
   # [Usage context] Before :dt or :dd elements inside a :dl elment
   # [Content model] Span-level elements
   #
@@ -146,7 +146,7 @@ module Kramdown
   #
   # === :dd
   #
-  # [Category] None
+  # [Category] Block-level element
   # [Usage context] After :dt or :dd elements inside a :dl elment
   # [Content model] Block-level elements
   #
@@ -214,7 +214,7 @@ module Kramdown
   #
   # === :td
   #
-  # [Category] None
+  # [Category] Block-level element
   # [Usage context] Inside :tr elements
   # [Content model] As child of :thead/:tr span-level elements, as child of :tbody/:tr and
   #                 :tfoot/:tr block-level elements
@@ -498,7 +498,8 @@ module Kramdown
     end
 
     CATEGORY = {} # :nodoc:
-    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :dl, :table, :hr].each {|b| CATEGORY[b] = :block}
+    [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :li, :dl, :dt, :dd, :table, :td, :hr]
+      .each {|b| CATEGORY[b] = :block}
     [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
      :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span}
 

@@ -220,6 +220,7 @@ class TestFiles < Minitest::Test
     'test/testcases/span/05_html/across_lines.text',
     'test/testcases/span/05_html/markdown_attr.text',
     'test/testcases/span/05_html/normal.text',
+    'test/testcases/span/05_html/raw_span_elements.text',
     'test/testcases/span/autolinks/url_links.text',
     'test/testcases/span/extension/comment.text',
     'test/testcases/span/ial/simple.text',

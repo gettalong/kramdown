@@ -26,10 +26,13 @@ module Kramdown
         element.children.map! do |child|
           if child.type == :text && child.value =~ /\n/
             children = []
-            lines = child.value.split(/\n(?=.)/)
+            lines = child.value.split(/\n/, -1)
+            omit_trailing_br = (Kramdown::Element.category(element) == :block && element.children[-1] == child &&
+                                lines[-1].empty?)
             lines.each_with_index do |line, index|
               children << Element.new(:text, (index > 0 ? "\n#{line}" : line))
-              children << Element.new(:br) if index < lines.size - 1
+              children << Element.new(:br) if index < lines.size - 2 ||
+                (index == lines.size - 2 && !omit_trailing_br)
             end
             children
           elsif child.type == :html_element
