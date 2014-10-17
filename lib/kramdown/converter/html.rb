@@ -52,7 +52,7 @@ module Kramdown
         @footnote_location = nil
         @toc = []
         @toc_code = nil
-        @indent = 2
+        @indent = @options[:indent] || 2
         @stack = []
         @coderay_enabled = @options[:enable_coderay] && HIGHLIGHTING_AVAILABLE
       end
