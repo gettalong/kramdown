@@ -28,15 +28,6 @@ module Kramdown
     # HTML element.
     class Html < Base
 
-      begin
-        require 'coderay'
-
-        # Highlighting via coderay is available if this constant is +true+.
-        HIGHLIGHTING_AVAILABLE = true
-      rescue LoadError
-        HIGHLIGHTING_AVAILABLE = false  # :nodoc:
-      end
-
       include ::Kramdown::Utils::Html
       include ::Kramdown::Parser::Html::Constants
 
@@ -54,7 +45,6 @@ module Kramdown
         @toc_code = nil
         @indent = 2
         @stack = []
-        @coderay_enabled = @options[:enable_coderay] && HIGHLIGHTING_AVAILABLE
       end
 
       # The mapping of element type to conversion method.
@@ -101,13 +91,10 @@ module Kramdown
       def convert_codeblock(el, indent)
         attr = el.attr.dup
         lang = extract_code_language!(attr)
-        if @coderay_enabled && (lang || @options[:coderay_default_lang])
-          opts = {:wrap => @options[:coderay_wrap], :line_numbers => @options[:coderay_line_numbers],
-            :line_number_start => @options[:coderay_line_number_start], :tab_width => @options[:coderay_tab_width],
-            :bold_every => @options[:coderay_bold_every], :css => @options[:coderay_css]}
-          lang = (lang || @options[:coderay_default_lang]).to_sym
-          result = CodeRay.scan(el.value, lang).html(opts).chomp << "\n"
-          "#{' '*indent}<div#{html_attributes(attr)}>#{result}#{' '*indent}</div>\n"
+        highlighted_code = highlight_code(el.value, lang, :block)
+
+        if highlighted_code
+          "#{' '*indent}<div#{html_attributes(attr)}>#{highlighted_code}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
           result.chomp!
@@ -262,11 +249,8 @@ module Kramdown
 
       def convert_codespan(el, indent)
         lang = extract_code_language(el.attr)
-        result = if @coderay_enabled && lang
-                   CodeRay.scan(el.value, lang.to_sym).html(:wrap => :span, :css => @options[:coderay_css]).chomp
-                 else
-                   escape_html(el.value)
-                 end
+        result = highlight_code(el.value, lang, :span)
+        result = escape_html(el.value) unless result
         format_as_span_html('code', el.attr, result)
       end
 

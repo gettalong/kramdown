@@ -101,15 +101,24 @@ module Kramdown
                elsif @options[name].type == Float
                  Float(data) rescue raise Kramdown::Error, "Invalid float value for option '#{name}': '#{data}'"
                elsif @options[name].type == Symbol
-                 data.strip!
-                 data = data[1..-1] if data[0] == ?:
-                 (data.empty? || data == 'nil' ? nil : data.to_sym)
+                 str_to_sym(data)
                elsif @options[name].type == Boolean
                  data.downcase.strip != 'false' && !data.empty?
                end
       end
       data = @options[name].validator[data] if @options[name].validator
       data
+    end
+
+    # Converts the given String +data+ into a Symbol or +nil+ with the
+    # following provisions:
+    #
+    # - A leading colon is stripped from the string.
+    # - An empty value or a value equal to "nil" results in +nil+.
+    def self.str_to_sym(data)
+      data = data.strip
+      data = data[1..-1] if data[0] == ?:
+      (data.empty? || data == 'nil' ? nil : data.to_sym)
     end
 
     # ----------------------------
@@ -134,6 +143,23 @@ module Kramdown
       if val.size != size
         raise Kramdown::Error, "Option #{name} needs exactly #{size} values"
       end
+      val
+    end
+
+    # Ensures that the option value +val+ for the option called +name+ is a valid hash. The
+    # parameter +val+ can be
+    #
+    # - a hash in YAML format
+    # - or a Ruby Hash object.
+    def self.simple_hash_validator(val, name)
+      if String === val
+        begin
+          val = YAML.load(val)
+        rescue RuntimeError, ArgumentError, SyntaxError
+          raise Kramdown::Error, "Invalid YAML value for option #{name}"
+        end
+      end
+      raise Kramdown::Error, "Invalid type #{val.class} for option #{name}" if !(Hash === val)
       val
     end
 
@@ -269,14 +295,7 @@ hash has to follow the above guidelines.
 Default: {}
 Used by: kramdown parser
 EOF
-      if String === val
-        begin
-          val = YAML.load(val)
-        rescue RuntimeError, ArgumentError, SyntaxError
-          raise Kramdown::Error, "Invalid YAML value for option link_defs"
-        end
-      end
-      raise Kramdown::Error, "Invalid type #{val.class} for option #{name}" if !(Hash === val)
+      val = simple_hash_validator(val, :link_defs)
       val.each do |k,v|
         if !(Array === v) || v.size > 2 || v.size < 1
           raise Kramdown::Error, "Invalid structure for hash value of option #{name}"
@@ -493,6 +512,39 @@ document had newlines (by default, Markdown ignores these newlines).
 Default: true
 Used by: GFM parser
 EOF
+
+    define(:syntax_highlighter, Symbol, :coderay, <<EOF)
+Set the syntax highlighter
+
+Specifies the syntax highlighter that should be used for highlighting
+code blocks and spans. If this option is set to +nil+, no syntax
+highlighting is done.
+
+Options for the syntax highlighter can be set with the
+syntax_highlighter_opts configuration option.
+
+Default: coderay
+Used by: HTML converter
+EOF
+
+    define(:syntax_highlighter_opts, Object, {}, <<EOF) do |val|
+Set the syntax highlighter options
+
+Specifies options for the syntax highlighter set via the
+syntax_highlighter configuration option.
+
+The value needs to be a hash with key-value pairs that are understood by
+the used syntax highlighter.
+
+Default: {}
+Used by: HTML converter
+EOF
+      val = simple_hash_validator(val, :syntax_highlighter_opts)
+      val.keys.each do |k|
+        val[k.kind_of?(String) ? str_to_sym(k) : k] = val.delete(k)
+      end
+      val
+    end
 
   end
 

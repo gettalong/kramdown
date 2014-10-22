@@ -196,6 +196,20 @@ module Kramdown
         lang
       end
 
+      # Highlight the given +text+ in the language +lang+ with the syntax highlighter configured
+      # through the option 'syntax_highlighter'.
+      def highlight_code(text, lang, type)
+        return nil unless @options[:syntax_highlighter]
+
+        highlighter = ::Kramdown::Converter.syntax_highlighter(@options[:syntax_highlighter])
+        if highlighter
+          highlighter.call(self, text, lang, type)
+        else
+          warning("The configured syntax highlighter #{@options[:syntax_highlighter]} is not available.")
+          nil
+        end
+      end
+
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
       #
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated

@@ -11,6 +11,8 @@
   * [LaTeX](converter/latex.html)
   * [kramdown](converter/kramdown.html)
   * [RemoveHtmlTags](converter/remove_html_tags.html)
+* Syntax Highlighters
+  * [Coderay](syntax_highlighter/coderay.html)
 * [Configuration Options](options.html)
 * [Tests](tests.html)
 

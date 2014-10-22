@@ -7,6 +7,8 @@
 #++
 #
 
+require 'kramdown/utils'
+
 module Kramdown
 
   # This module contains all available converters, i.e. classes that take a root Element and convert
@@ -24,6 +26,20 @@ module Kramdown
     autoload :Toc, 'kramdown/converter/toc'
     autoload :RemoveHtmlTags, 'kramdown/converter/remove_html_tags'
     autoload :Pdf, 'kramdown/converter/pdf'
+
+    extend ::Kramdown::Utils::Configurable
+
+    configurable(:syntax_highlighter)
+
+    add_syntax_highlighter(:coderay) do |converter, text, lang, type|
+      require 'kramdown/converter/syntax_highlighter/coderay'
+      if ::Kramdown::Converter::SyntaxHighlighter::Coderay::AVAILABLE
+        add_syntax_highlighter(:coderay, ::Kramdown::Converter::SyntaxHighlighter::Coderay)
+      else
+        add_syntax_highlighter(:coderay) {|*args| nil}
+      end
+      syntax_highlighter(:coderay).call(converter, text, lang, type)
+    end
 
   end
 

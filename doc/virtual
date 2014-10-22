@@ -1,2 +1,8 @@
 rdoc/index.html:
   title: API Documentation
+
+/options.en.html#option-syntax-highlighter:
+  dest_path: options.html#option-syntax-highlighter
+
+/options.en.html#option-syntax-highlighter-opts:
+  dest_path: options.html#option-syntax-highlighter-opts
