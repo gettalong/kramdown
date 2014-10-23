@@ -94,6 +94,7 @@ module Kramdown
         highlighted_code = highlight_code(el.value, lang, :block)
 
         if highlighted_code
+          add_syntax_highlighter_to_class_attr(attr)
           "#{' '*indent}<div#{html_attributes(attr)}>#{highlighted_code}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
@@ -248,10 +249,16 @@ module Kramdown
       end
 
       def convert_codespan(el, indent)
-        lang = extract_code_language(el.attr)
+        attr = el.attr.dup
+        lang = extract_code_language(attr)
         result = highlight_code(el.value, lang, :span)
-        result = escape_html(el.value) unless result
-        format_as_span_html('code', el.attr, result)
+        if result
+          add_syntax_highlighter_to_class_attr(attr)
+        else
+          result = escape_html(el.value)
+        end
+
+        format_as_span_html('code', attr, result)
       end
 
       def convert_footnote(el, indent)
@@ -352,6 +359,11 @@ module Kramdown
       # before the end tag.
       def format_as_indented_block_html(name, attr, body, indent)
         "#{' '*indent}<#{name}#{html_attributes(attr)}>\n#{body}#{' '*indent}</#{name}>\n"
+      end
+
+      # Add the syntax highlighter name to the 'class' attribute of the given attribute hash.
+      def add_syntax_highlighter_to_class_attr(attr)
+        (attr['class'] = (attr['class'] || '') + " highlighter-#{@options[:syntax_highlighter]}").lstrip!
       end
 
       # Generate and return an element tree for the table of contents.

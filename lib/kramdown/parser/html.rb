@@ -403,6 +403,7 @@ module Kramdown
           else
             if el.value == 'code'
               set_basics(el, :codespan)
+              el.attr['class'].gsub!(/\s+\bhighlighter-\w+\b|\bhighlighter-\w+\b\s*/, '') if el.attr['class']
             else
               set_basics(el, :codeblock)
               if el.children.size == 1 && el.children.first.value == 'code'
