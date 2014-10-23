@@ -17,6 +17,9 @@ Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 class TestFiles < Minitest::Test
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
+                      ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                      ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -48,6 +51,9 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
+                          'test/testcases/block/06_codeblock/highlighting-rouge.html', # bc of double surrounding <div>
+                          ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
+
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -122,6 +128,9 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
+                          ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
+                          ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -150,12 +159,15 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/09_html/markdown_attr.html',   # bc of markdown attr
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
+                             'test/testcases/block/06_codeblock/highlighting-rouge.html', # bc of double surrounding <div>
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
+                             ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
+
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -173,62 +185,64 @@ class TestFiles < Minitest::Test
   end
 
   EXCLUDE_GFM_FILES = [
-    'test/testcases/block/03_paragraph/no_newline_at_end.text',
-    'test/testcases/block/03_paragraph/indented.text',
-    'test/testcases/block/03_paragraph/two_para.text',
-    'test/testcases/block/04_header/atx_header.text',
-    'test/testcases/block/04_header/setext_header.text',
-    'test/testcases/block/05_blockquote/indented.text',
-    'test/testcases/block/05_blockquote/lazy.text',
-    'test/testcases/block/05_blockquote/nested.text',
-    'test/testcases/block/05_blockquote/no_newline_at_end.text',
-    'test/testcases/block/06_codeblock/error.text',
-    'test/testcases/block/07_horizontal_rule/error.text',
-    'test/testcases/block/08_list/escaping.text',
-    'test/testcases/block/08_list/item_ial.text',
-    'test/testcases/block/08_list/lazy.text',
-    'test/testcases/block/08_list/list_and_others.text',
-    'test/testcases/block/08_list/other_first_element.text',
-    'test/testcases/block/08_list/simple_ul.text',
-    'test/testcases/block/08_list/special_cases.text',
-    'test/testcases/block/09_html/comment.text',
-    'test/testcases/block/09_html/html_to_native/code.text',
-    'test/testcases/block/09_html/html_to_native/emphasis.text',
-    'test/testcases/block/09_html/html_to_native/typography.text',
-    'test/testcases/block/09_html/parse_as_raw.text',
-    'test/testcases/block/09_html/simple.text',
-    'test/testcases/block/12_extension/comment.text',
-    'test/testcases/block/12_extension/ignored.text',
-    'test/testcases/block/12_extension/nomarkdown.text',
-    'test/testcases/block/13_definition_list/item_ial.text',
-    'test/testcases/block/13_definition_list/multiple_terms.text',
-    'test/testcases/block/13_definition_list/no_def_list.text',
-    'test/testcases/block/13_definition_list/simple.text',
-    'test/testcases/block/13_definition_list/with_blocks.text',
-    'test/testcases/block/14_table/errors.text',
-    'test/testcases/block/14_table/escaping.text',
-    'test/testcases/block/14_table/simple.text',
-    'test/testcases/block/15_math/normal.text',
-    'test/testcases/encoding.text',
-    'test/testcases/span/01_link/inline.text',
-    'test/testcases/span/01_link/link_defs.text',
-    'test/testcases/span/01_link/reference.text',
-    'test/testcases/span/02_emphasis/normal.text',
-    'test/testcases/span/03_codespan/normal.text',
-    'test/testcases/span/04_footnote/definitions.text',
-    'test/testcases/span/04_footnote/markers.text',
-    'test/testcases/span/05_html/across_lines.text',
-    'test/testcases/span/05_html/markdown_attr.text',
-    'test/testcases/span/05_html/normal.text',
-    'test/testcases/span/05_html/raw_span_elements.text',
-    'test/testcases/span/autolinks/url_links.text',
-    'test/testcases/span/extension/comment.text',
-    'test/testcases/span/ial/simple.text',
-    'test/testcases/span/line_breaks/normal.text',
-    'test/testcases/span/text_substitutions/entities_as_char.text',
-    'test/testcases/span/text_substitutions/entities.text',
-    'test/testcases/span/text_substitutions/typography.text'
-  ]
+                       'test/testcases/block/03_paragraph/no_newline_at_end.text',
+                       'test/testcases/block/03_paragraph/indented.text',
+                       'test/testcases/block/03_paragraph/two_para.text',
+                       'test/testcases/block/04_header/atx_header.text',
+                       'test/testcases/block/04_header/setext_header.text',
+                       'test/testcases/block/05_blockquote/indented.text',
+                       'test/testcases/block/05_blockquote/lazy.text',
+                       'test/testcases/block/05_blockquote/nested.text',
+                       'test/testcases/block/05_blockquote/no_newline_at_end.text',
+                       'test/testcases/block/06_codeblock/error.text',
+                       'test/testcases/block/07_horizontal_rule/error.text',
+                       'test/testcases/block/08_list/escaping.text',
+                       'test/testcases/block/08_list/item_ial.text',
+                       'test/testcases/block/08_list/lazy.text',
+                       'test/testcases/block/08_list/list_and_others.text',
+                       'test/testcases/block/08_list/other_first_element.text',
+                       'test/testcases/block/08_list/simple_ul.text',
+                       'test/testcases/block/08_list/special_cases.text',
+                       'test/testcases/block/09_html/comment.text',
+                       'test/testcases/block/09_html/html_to_native/code.text',
+                       'test/testcases/block/09_html/html_to_native/emphasis.text',
+                       'test/testcases/block/09_html/html_to_native/typography.text',
+                       'test/testcases/block/09_html/parse_as_raw.text',
+                       'test/testcases/block/09_html/simple.text',
+                       'test/testcases/block/12_extension/comment.text',
+                       'test/testcases/block/12_extension/ignored.text',
+                       'test/testcases/block/12_extension/nomarkdown.text',
+                       'test/testcases/block/13_definition_list/item_ial.text',
+                       'test/testcases/block/13_definition_list/multiple_terms.text',
+                       'test/testcases/block/13_definition_list/no_def_list.text',
+                       'test/testcases/block/13_definition_list/simple.text',
+                       'test/testcases/block/13_definition_list/with_blocks.text',
+                       'test/testcases/block/14_table/errors.text',
+                       'test/testcases/block/14_table/escaping.text',
+                       'test/testcases/block/14_table/simple.text',
+                       'test/testcases/block/15_math/normal.text',
+                       'test/testcases/encoding.text',
+                       'test/testcases/span/01_link/inline.text',
+                       'test/testcases/span/01_link/link_defs.text',
+                       'test/testcases/span/01_link/reference.text',
+                       'test/testcases/span/02_emphasis/normal.text',
+                       'test/testcases/span/03_codespan/normal.text',
+                       'test/testcases/span/04_footnote/definitions.text',
+                       'test/testcases/span/04_footnote/markers.text',
+                       'test/testcases/span/05_html/across_lines.text',
+                       'test/testcases/span/05_html/markdown_attr.text',
+                       'test/testcases/span/05_html/normal.text',
+                       'test/testcases/span/05_html/raw_span_elements.text',
+                       'test/testcases/span/autolinks/url_links.text',
+                       'test/testcases/span/extension/comment.text',
+                       'test/testcases/span/ial/simple.text',
+                       'test/testcases/span/line_breaks/normal.text',
+                       'test/testcases/span/text_substitutions/entities_as_char.text',
+                       'test/testcases/span/text_substitutions/entities.text',
+                       'test/testcases/span/text_substitutions/typography.text',
+                       ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
+                       ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                      ]
 
   # Generate test methods for gfm-to-html conversion
   Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|

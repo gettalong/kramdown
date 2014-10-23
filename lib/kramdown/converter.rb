@@ -31,14 +31,18 @@ module Kramdown
 
     configurable(:syntax_highlighter)
 
-    add_syntax_highlighter(:coderay) do |converter, text, lang, type|
-      require 'kramdown/converter/syntax_highlighter/coderay'
-      if ::Kramdown::Converter::SyntaxHighlighter::Coderay::AVAILABLE
-        add_syntax_highlighter(:coderay, ::Kramdown::Converter::SyntaxHighlighter::Coderay)
-      else
-        add_syntax_highlighter(:coderay) {|*args| nil}
+    ["Coderay", "Rouge"].each do |klass_name|
+      kn_down = klass_name.downcase.intern
+      add_syntax_highlighter(kn_down) do |converter, text, lang, type|
+        require "kramdown/converter/syntax_highlighter/#{kn_down}"
+        klass = ::Kramdown::Utils.deep_const_get("::Kramdown::Converter::SyntaxHighlighter::#{klass_name}")
+        if klass::AVAILABLE
+          add_syntax_highlighter(kn_down, klass)
+        else
+          add_syntax_highlighter(kn_down) {|*args| nil}
+        end
+        syntax_highlighter(kn_down).call(converter, text, lang, type)
       end
-      syntax_highlighter(:coderay).call(converter, text, lang, type)
     end
 
   end
