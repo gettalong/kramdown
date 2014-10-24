@@ -21,7 +21,7 @@ module Kramdown::Converter::SyntaxHighlighter
       AVAILABLE = false  # :nodoc:
     end
 
-    def self.call(converter, text, lang, type)
+    def self.call(converter, text, lang, type, _unused_opts)
       return nil unless converter.options[:enable_coderay]
 
       if type == :span && lang

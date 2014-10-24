@@ -21,7 +21,7 @@ module Kramdown::Converter::SyntaxHighlighter
       AVAILABLE = false  # :nodoc:
     end
 
-    def self.call(converter, text, lang, type)
+    def self.call(converter, text, lang, type, _unused_opts)
       opts = converter.options[:syntax_highlighter_opts].dup
       lexer = ::Rouge::Lexer.find_fancy(lang || opts[:default_lang], text)
       return nil unless lexer
