@@ -15,8 +15,9 @@ module Kramdown::Converter::MathEngine
   # separately. Only the math content is marked up correctly.
   module Mathjax
 
-    def self.call(converter, text, type, opts)
-      text = (text =~ /<|&/ ? "% <![CDATA[\n#{text} %]]>" : text)
+    def self.call(converter, el, opts)
+      type = el.options[:category]
+      text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
       text.gsub!(/<\/?script>?/, '')
 
       attr = {:type => "math/tex#{type == :block ? '; mode=display' : ''}"}

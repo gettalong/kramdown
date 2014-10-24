@@ -310,7 +310,7 @@ module Kramdown
       end
 
       def convert_math(el, indent)
-        if (result = format_math(el.value, el.options[:category], :indent => indent))
+        if (result = format_math(el, :indent => indent))
           result
         elsif el.options[:category] == :block
           format_as_block_html('pre', el.attr, "$$\n#{el.value}\n$$", indent)

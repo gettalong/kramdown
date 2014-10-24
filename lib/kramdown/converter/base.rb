@@ -210,13 +210,14 @@ module Kramdown
         end
       end
 
-      # Format the given +text+ with the math engine configured through the option 'math_engine'.
-      def format_math(text, type, opts = {})
+      # Format the given math element with the math engine configured through the option
+      # 'math_engine'.
+      def format_math(el, opts = {})
         return nil unless @options[:math_engine]
 
         engine = ::Kramdown::Converter.math_engine(@options[:math_engine])
         if engine
-          engine.call(self, text, type, opts)
+          engine.call(self, el, opts)
         else
           warning("The configured math engine #{@options[:math_engine]} is not available.")
           nil
