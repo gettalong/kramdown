@@ -1,0 +1,17 @@
+---
+title: MathJax
+---
+
+## Math Engine MathJax
+
+[MathJax] is a javascript library that uses the TeX algorithms and fonts to display math formulas on
+HTML pages. It allows for very fine-grained configuration, is widely used and works on all modern
+browsers.
+
+This engine marks up math formulas with HTML `<script type="math/tex">` tags that MathJax
+understands. The only other thing to do is to include the MathJax library itself on the HTML page.
+
+Note that kramdown does *not* ship with the MathJax library and that therefore the "default"
+template does *not* include a link to it!
+
+[MathJax]: http://www.mathjax.org

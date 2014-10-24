@@ -546,6 +546,39 @@ EOF
       val
     end
 
+    define(:math_engine, Symbol, :mathjax, <<EOF)
+Set the math engine
+
+Specifies the math engine that should be used for converting math
+blocks/spans. If this option is set to +nil+, no math engine is used and
+the math blocks/spans are output as is.
+
+Options for the selected math engine can be set with the
+math_engine_opts configuration option.
+
+Default: mathjax
+Used by: HTML converter
+EOF
+
+    define(:math_engine_opts, Object, {}, <<EOF) do |val|
+Set the math engine options
+
+Specifies options for the math engine set via the math_engine
+configuration option.
+
+The value needs to be a hash with key-value pairs that are understood by
+the used math engine.
+
+Default: {}
+Used by: HTML converter
+EOF
+      val = simple_hash_validator(val, :math_engine_opts)
+      val.keys.each do |k|
+        val[k.kind_of?(String) ? str_to_sym(k) : k] = val.delete(k)
+      end
+      val
+    end
+
   end
 
 end

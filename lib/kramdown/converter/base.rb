@@ -210,6 +210,19 @@ module Kramdown
         end
       end
 
+      # Format the given +text+ with the math engine configured through the option 'math_engine'.
+      def format_math(text, type, opts = {})
+        return nil unless @options[:math_engine]
+
+        engine = ::Kramdown::Converter.math_engine(@options[:math_engine])
+        if engine
+          engine.call(self, text, type, opts)
+        else
+          warning("The configured math engine #{@options[:math_engine]} is not available.")
+          nil
+        end
+      end
+
       # Generate an unique alpha-numeric ID from the the string +str+ for use as a header ID.
       #
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated

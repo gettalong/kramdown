@@ -13,6 +13,8 @@
   * [RemoveHtmlTags](converter/remove_html_tags.html)
 * Syntax Highlighters
   * [Coderay](syntax_highlighter/coderay.html)
+* Math Engines
+  * [MathJax](math_engine/mathjax.html)
 * [Configuration Options](options.html)
 * [Tests](tests.html)
 

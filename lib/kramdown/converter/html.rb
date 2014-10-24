@@ -310,14 +310,12 @@ module Kramdown
       end
 
       def convert_math(el, indent)
-        block = (el.options[:category] == :block)
-        value = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
-        value.gsub!(/<\/?script>?/, '')
-        type = {:type => "math/tex#{block ? '; mode=display' : ''}"}
-        if block
-          format_as_block_html('script', type, value, indent)
+        if (result = format_math(el.value, el.options[:category], :indent => indent))
+          result
+        elsif el.options[:category] == :block
+          format_as_block_html('pre', {}, "$$\n#{el.value}\n$$", indent)
         else
-          format_as_span_html('script', type, value)
+          format_as_span_html('span', {}, "$#{el.value}$")
         end
       end
 

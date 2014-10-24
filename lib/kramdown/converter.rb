@@ -45,6 +45,11 @@ module Kramdown
       end
     end
 
+    configurable(:math_engine)
+
+    require 'kramdown/converter/math_engine/mathjax'
+    add_math_engine(:mathjax, ::Kramdown::Converter::MathEngine::Mathjax)
+
   end
 
 end
