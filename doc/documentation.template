@@ -17,6 +17,7 @@
 * Math Engines
   * [MathJax](math_engine/mathjax.html)
   * [Ritex](math_engine/ritex.html)
+  * [itex2MML](math_engine/itex2mml.html)
 * [Configuration Options](options.html)
 * [Tests](tests.html)
 

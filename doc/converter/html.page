@@ -89,7 +89,8 @@ compatible, i.e. it supports all of Pygments CSS themes.
 kramdown supports the use of various math engines. The default math engine is
 [MathJax](../math_engine/mathjax.html).
 
-An alternative math engine is [Ritex](../math_engine/ritex.html) which outputs MathML.
+Alternative math engines are [Ritex](../math_engine/ritex.html) and
+[itex2MML](../math_engine/itex2mml.html) both of which output MathML.
 
 
 ## Emphasis

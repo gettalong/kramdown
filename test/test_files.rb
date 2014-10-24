@@ -55,6 +55,8 @@ class TestFiles < Minitest::Test
                           ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
                           'test/testcases/block/15_math/ritex.html', # bc of tidy
                           'test/testcases/span/math/ritex.html', # bc of tidy
+                          'test/testcases/block/15_math/itex2mml.html', # bc of tidy
+                          'test/testcases/span/math/itex2mml.html', # bc of tidy
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -133,7 +135,8 @@ class TestFiles < Minitest::Test
                           ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           'test/testcases/block/15_math/ritex.text', # bc of tidy
                           'test/testcases/span/math/ritex.text', # bc of tidy
-
+                          'test/testcases/block/15_math/itex2mml.text', # bc of tidy
+                          'test/testcases/span/math/itex2mml.text', # bc of tidy
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -172,6 +175,8 @@ class TestFiles < Minitest::Test
                              ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
                              'test/testcases/block/15_math/ritex.html', # bc of tidy
                              'test/testcases/span/math/ritex.html', # bc of tidy
+                             'test/testcases/block/15_math/itex2mml.html', # bc of tidy
+                             'test/testcases/span/math/itex2mml.html', # bc of tidy
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}

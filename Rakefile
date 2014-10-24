@@ -181,6 +181,7 @@ EOF
       s.add_development_dependency 'stringex', '~> 1.5.1'
       s.add_development_dependency 'prawn', '~> 0.13'
       s.add_development_dependency 'ritex', '~> 1.0'
+      s.add_development_dependency 'itextomml', '~> 1.5'
 
       #### Documentation
 
