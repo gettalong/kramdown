@@ -4,8 +4,8 @@ title: Rouge
 
 ## Syntax Highlighting With Rouge
 
-[Rouge](https://github.com/jneen/rouge) is a fast syntax highlighter that is compatible with
-stylesheets designed for Pygments.
+[Rouge](https://github.com/jneen/rouge) (MIT licensed) is a fast syntax highlighter that is
+compatible with stylesheets designed for Pygments.
 
 To use Rouge, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
 'rouge' and make sure that Rouge is available. The Rouge library can be installed, e.g., via

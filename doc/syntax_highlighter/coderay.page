@@ -4,8 +4,8 @@ title: Coderay
 
 ## Syntax Highlighting With Coderay
 
-[Coderay](http://coderay.rubychan.de) can be used as syntax highlighter for code blocks and code
-spans when converting to HTML.
+[Coderay](http://coderay.rubychan.de) (MIT licensed) can be used as syntax highlighter for code
+blocks and code spans when converting to HTML.
 
 To use Coderay, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
 'coderay' and make sure that Coderay is available. The Coderay library can be installed, e.g., via
