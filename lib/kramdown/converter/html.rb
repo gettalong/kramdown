@@ -313,9 +313,9 @@ module Kramdown
         if (result = format_math(el.value, el.options[:category], :indent => indent))
           result
         elsif el.options[:category] == :block
-          format_as_block_html('pre', {}, "$$\n#{el.value}\n$$", indent)
+          format_as_block_html('pre', el.attr, "$$\n#{el.value}\n$$", indent)
         else
-          format_as_span_html('span', {}, "$#{el.value}$")
+          format_as_span_html('span', el.attr, "$#{el.value}$")
         end
       end
 
