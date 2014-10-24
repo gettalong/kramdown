@@ -180,6 +180,7 @@ EOF
       s.add_development_dependency 'rouge', '~> 1.7'
       s.add_development_dependency 'stringex', '~> 1.5.1'
       s.add_development_dependency 'prawn', '~> 0.13'
+      s.add_development_dependency 'ritex', '~> 1.0'
 
       #### Documentation
 

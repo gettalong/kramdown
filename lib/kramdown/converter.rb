@@ -50,6 +50,20 @@ module Kramdown
     require 'kramdown/converter/math_engine/mathjax'
     add_math_engine(:mathjax, ::Kramdown::Converter::MathEngine::Mathjax)
 
+    ["Ritex"].each do |klass_name|
+      kn_down = klass_name.downcase.intern
+      add_math_engine(kn_down) do |converter, el, opts|
+        require "kramdown/converter/math_engine/#{kn_down}"
+        klass = ::Kramdown::Utils.deep_const_get("::Kramdown::Converter::MathEngine::#{klass_name}")
+        if klass::AVAILABLE
+          add_math_engine(kn_down, klass)
+        else
+          add_math_engine(kn_down) {|*args| nil}
+        end
+        math_engine(kn_down).call(converter, el, opts)
+      end
+    end
+
   end
 
 end

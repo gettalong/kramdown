@@ -6,3 +6,6 @@ rdoc/index.html:
 
 /options.en.html#option-syntax-highlighter-opts:
   dest_path: options.html#option-syntax-highlighter-opts
+
+/options.en.html#option-math-engine:
+  dest_path: options.html#option-math-engine

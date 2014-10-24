@@ -1,0 +1,12 @@
+---
+title: Ritex
+---
+
+## Math Engine Ritex
+
+Ritex converts TeX math formulas into MathML and can be used together with the [HTML
+converter](../converter/html.html).
+
+To use Ritex, set the option ['math_engine'](../options.html#option-math-engine) to
+'ritex' and make sure that Ritex is available. The Ritex library can be installed, e.g., via
+Rubygems by running `gem install ritex`.

@@ -16,6 +16,7 @@
   * [Rouge](syntax_highlighter/rouge.html)
 * Math Engines
   * [MathJax](math_engine/mathjax.html)
+  * [Ritex](math_engine/ritex.html)
 * [Configuration Options](options.html)
 * [Tests](tests.html)
 

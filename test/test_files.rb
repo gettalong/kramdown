@@ -53,7 +53,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                           'test/testcases/block/06_codeblock/highlighting-rouge.html', # bc of double surrounding <div>
                           ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
-
+                          'test/testcases/block/15_math/ritex.html', # bc of tidy
+                          'test/testcases/span/math/ritex.html', # bc of tidy
                          ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -130,6 +131,8 @@ class TestFiles < Minitest::Test
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                           ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
                           ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                          'test/testcases/block/15_math/ritex.text', # bc of tidy
+                          'test/testcases/span/math/ritex.text', # bc of tidy
 
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
@@ -167,7 +170,8 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
                              ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
-
+                             'test/testcases/block/15_math/ritex.html', # bc of tidy
+                             'test/testcases/span/math/ritex.html', # bc of tidy
                             ]
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
