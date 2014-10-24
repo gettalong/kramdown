@@ -7,15 +7,15 @@ title: Coderay
 [Coderay](http://coderay.rubychan.de) can be used as syntax highlighter for code blocks and code
 spans when converting to HTML.
 
-To use Coderay, set the [option 'syntax_highlighter'](../options.html#option-syntax-highlighter) to
+To use Coderay, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
 'coderay' and make sure that Coderay is available. The Coderay library can be installed, e.g., via
 Rubygems by running `gem install coderay`.
 
 > Note that the 'coderay_*' options are deprecated and should not be used anymore!
 {:.information}
 
-The [option 'syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts) supports the
-following special keys:
+The Coderay syntax highlighter supports the following keys of the option
+['syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts):
 
 span
 : A key-value map of options that are only used when syntax highlighting code spans.

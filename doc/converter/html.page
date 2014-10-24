@@ -80,6 +80,9 @@ The actual syntax highlighting is configurable via the [option
 'syntax_highlighter'](../options.html#option-syntax-highlighter). The default value is 'coderay'
 which implies that the [Coderay syntax highlighter](../syntax_highlighter/coderay.html) is used.
 
+Another syntax highlighter is [Rouge](../syntax_highlighter/rouge.html) which is Pygments
+compatible, i.e. it supports all of Pygments CSS themes.
+
 
 ## Math Support
 
