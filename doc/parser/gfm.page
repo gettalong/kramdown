@@ -14,7 +14,8 @@ sites, for example StackOverflow.
 ## Conformance
 
 At the moment this parser is identical to the kramdown parser, except that it adds support for
-fenced code blocks using three or more backticks and enforces hard line breaks in paragraphs.
+fenced code blocks using three or more backticks, strikethroughs using two or more tildes and enforces
+hard line breaks in paragraphs.
 
 ## Options
 
