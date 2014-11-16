@@ -63,7 +63,7 @@ module Kramdown
         line_number = @src.current_line_number
 
         if @src.scan(STRIKETHROUGH_DELIM)
-          el = Element.new(:html_element, 'del', {}, category: :span, line: line_number)
+          el = Element.new(:html_element, 'del', {}, :category => :span, :line => line_number)
           @tree.children << el
           parse_spans(el, STRIKETHROUGH_DELIM)
           @src.scan(STRIKETHROUGH_DELIM)
