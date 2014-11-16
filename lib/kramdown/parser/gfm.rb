@@ -56,8 +56,8 @@ module Kramdown
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
       STRIKETHROUGH_DELIM = /~{2,}/
-      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}[^~]+#{STRIKETHROUGH_DELIM}/
-      define_parser(:strikethrough_gfm, STRIKETHROUGH_MATCH, nil)
+      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}.+#{STRIKETHROUGH_DELIM}/m
+      define_parser(:strikethrough_gfm, STRIKETHROUGH_MATCH, '~~')
 
       def parse_strikethrough_gfm
         line_number = @src.current_line_number

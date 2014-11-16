@@ -4,11 +4,6 @@
 
 ~~This is yet another test~~~
 
-~~~ Ruby
-m = 'This is a fenced codeblock'
-# Another line in the fenced codeblock
-~~~
-
 ~~
 This
 is
@@ -22,3 +17,5 @@ This is an ~~_inline_ **strikethrough**~~ test
 This is a ~~broken strikethrough~; it's not closed correctly.
 
 This is an \~~escaped~~ strikethrough.
+
+This is a ~~strikethrough with a ~ in the middle~~
