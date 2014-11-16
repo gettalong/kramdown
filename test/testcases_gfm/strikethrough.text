@@ -14,8 +14,6 @@ test
 
 This is an ~~_inline_ **strikethrough**~~ test
 
-This is a ~~broken strikethrough~; it's not closed correctly.
-
 This is an \~~escaped~~ strikethrough.
 
 This is a ~~strikethrough with a ~ in the middle~~
