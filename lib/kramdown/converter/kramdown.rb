@@ -286,7 +286,7 @@ module Kramdown
       end
 
       def convert_img(el, opts)
-        alt_text = el.attr['alt'].gsub(ESCAPED_CHAR_RE) { $1 ? "\\#{$1}" : $2 }
+        alt_text = el.attr['alt'].nil? ? "" : el.attr['alt'].gsub(ESCAPED_CHAR_RE) { $1 ? "\\#{$1}" : $2 }
         if el.attr['src'].empty?
           "![#{alt_text}]()"
         else
