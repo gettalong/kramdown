@@ -418,7 +418,8 @@ specified levels are used for the table of contents.
 Default: 1..6
 Used by: HTML/Latex converter
 EOF
-      if String === val
+      case val
+      when String
         if val =~ /^(\d)\.\.(\d)$/
           val = Range.new($1.to_i, $2.to_i).to_a
         elsif val =~ /^\d(?:,\d)*$/
@@ -426,8 +427,10 @@ EOF
         else
           raise Kramdown::Error, "Invalid syntax for option toc_levels"
         end
-      elsif Array === val
+      when Array
         val = val.map {|s| s.to_i}.uniq
+      when Range
+        val = val.to_a.map {|s| s.to_i}
       else
         raise Kramdown::Error, "Invalid type #{val.class} for option toc_levels"
       end
