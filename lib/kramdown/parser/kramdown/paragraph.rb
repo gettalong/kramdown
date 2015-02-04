@@ -34,7 +34,7 @@ module Kramdown
         while !@src.match?(self.class::PARAGRAPH_END)
           result << @src.scan(PARAGRAPH_MATCH)
         end
-        result.chomp!
+        result.rstrip!
         if @tree.children.last && @tree.children.last.type == :p
           @tree.children.last.children.first.value << "\n" << result
         else

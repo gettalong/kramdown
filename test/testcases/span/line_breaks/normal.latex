@@ -1,5 +1,5 @@
 This is a line\newline
-with a line break.  
+with a line break.
 
 This is a line 
 without a line break.
@@ -8,5 +8,5 @@ This is a line \newline
 with a line\textbackslash{} \newline
 break.
 
-Line break on last line.  
+Line break on last line.
 
