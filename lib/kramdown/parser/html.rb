@@ -78,8 +78,7 @@ module Kramdown
         def handle_html_start_tag(line = nil) # :yields: el, closed, handle_body
           name = @src[1].downcase
           closed = !@src[4].nil?
-          attrs = Utils::OrderedHash.new
-          @src[2].scan(HTML_ATTRIBUTE_RE).each {|attr,sep,val| attrs[attr.downcase] = val || ""}
+          attrs = parse_html_attributes(@src[2], line)
 
           el = Element.new(:html_element, name, attrs, :category => :block)
           el.options[:location] = line if line
@@ -95,6 +94,21 @@ module Kramdown
           else
             yield(el, closed, true)
           end
+        end
+
+        # Parses the given string for HTML attributes and returns the resulting hash.
+        #
+        # If the optional +line+ parameter is supplied, it is used in warning messages.
+        def parse_html_attributes(str, line = nil)
+          attrs = Utils::OrderedHash.new
+          @src[2].scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
+            attr.downcase!
+            if attrs.key?(attr)
+              warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")
+            end
+            attrs[attr] = val || ""
+          end
+          attrs
         end
 
         # Handle the raw HTML tag at the current position.
