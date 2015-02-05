@@ -101,7 +101,7 @@ module Kramdown
         # If the optional +line+ parameter is supplied, it is used in warning messages.
         def parse_html_attributes(str, line = nil)
           attrs = Utils::OrderedHash.new
-          @src[2].scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
+          str.scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
             attr.downcase!
             if attrs.has_key?(attr)
               warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")
