@@ -57,12 +57,13 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/ritex.html', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.html', # bc of tidy
                           'test/testcases/span/math/itex2mml.html', # bc of tidy
-                         ]
+                         ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
       next if (RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')) ||
         (RUBY_VERSION < '1.9' && html_file =~ /\.19$/)
       out_file = (html_file =~ /\.htmlinput(\.19)?$/ ? html_file.sub(/input(\.19)?$/, '') : html_file)
+      next unless File.exist?(out_file)
       define_method('test_' + html_file.tr('.', '_') + "_to_html") do
         opts_file = html_file.sub(/\.html(input)?(\.19)?$/, '.options')
         opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
@@ -94,7 +95,7 @@ class TestFiles < Minitest::Test
     EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
                            'test/testcases/span/01_link/imagelinks.text', # bc of image links
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
-                          ]
+                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}
       define_method('test_' + text_file.tr('.', '_') + "_to_latex_compilation") do
@@ -140,9 +141,10 @@ class TestFiles < Minitest::Test
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
+      html_file = text_file.sub(/\.text$/, '.html')
+      html_file += '.19' if RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')
+      next unless File.exist?(html_file)
       define_method('test_' + text_file.tr('.', '_') + "_to_kramdown_to_html") do
-        html_file = text_file.sub(/\.text$/, '.html')
-        html_file += '.19' if RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')
         opts_file = text_file.sub(/\.text$/, '.options')
         opts_file = File.join(File.dirname(text_file), 'options') if !File.exist?(opts_file)
         options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
@@ -177,7 +179,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/math/ritex.html', # bc of tidy
                              'test/testcases/block/15_math/itex2mml.html', # bc of tidy
                              'test/testcases/span/math/itex2mml.html', # bc of tidy
-                            ]
+                            ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
       next if (RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')) ||
@@ -251,7 +253,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/span/text_substitutions/typography.text',
                        ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
                        ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                      ]
+                      ].compact
 
   # Generate test methods for gfm-to-html conversion
   Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|
@@ -261,6 +263,7 @@ class TestFiles < Minitest::Test
     html_file = [(".html.19" if RUBY_VERSION >= '1.9'), ".html"].compact.
       map {|ext| basename + ext }.
       detect {|file| File.exist?(file) }
+    next unless html_file
 
     define_method('test_gfm_' + text_file.tr('.', '_') + "_to_html") do
       opts_file = basename + '.options'
