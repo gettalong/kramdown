@@ -4,7 +4,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
-  - jruby-19mode
+  - 2.2.0
 
 before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
