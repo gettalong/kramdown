@@ -19,6 +19,14 @@ module Kramdown
       LIST_ITEM_IAL = /^\s*(?:\{:(?!(?:#{ALD_ID_NAME})?:|\/)(#{ALD_ANY_CHARS}+)\})\s*/
       LIST_ITEM_IAL_CHECK = /^#{LIST_ITEM_IAL}?\s*\n/
 
+      PARSE_FIRST_LIST_LINE_REGEXP_CACHE = Hash.new do |h, indentation|
+        indent_re = /^ {#{indentation}}/
+        content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*\S.*\n/
+        lazy_re = /(?!^ {0,#{[indentation, 3].min}}(?:#{IAL_BLOCK}|#{LAZY_END_HTML_STOP}|#{LAZY_END_HTML_START})).*\S.*\n/
+
+        h[indentation] = [content_re, lazy_re, indent_re]
+      end
+
       # Used for parsing the first line of a list item or a definition, i.e. the line with list item
       # marker or the definition marker.
       def parse_first_list_line(indentation, content)
@@ -29,14 +37,11 @@ module Kramdown
             temp = content.scan(/^ */).first.length + indentation
             content.sub!(/^( *)(\t+)/) {$1 << " "*(4 - (temp % 4) + ($2.length - 1)*4)}
           end
-          indentation += content.scan(/^ */).first.length
+          indentation += content[/^ */].length
         end
         content.sub!(/^\s*/, '')
 
-        indent_re = /^ {#{indentation}}/
-        content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*\S.*\n/
-        lazy_re = /(?!^ {0,#{[indentation, 3].min}}(?:#{IAL_BLOCK}|#{LAZY_END_HTML_STOP}|#{LAZY_END_HTML_START})).*\S.*\n/
-        [content, indentation, content_re, lazy_re, indent_re]
+        [content, indentation, *PARSE_FIRST_LIST_LINE_REGEXP_CACHE[indentation]]
       end
 
 
@@ -78,7 +83,7 @@ module Kramdown
             last_is_blank = false
             item.value = [item.value]
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
-            result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
+            result.sub!(/^(\t+)/) { " " * 4 * $1.length }
             result.sub!(indent_re, '')
             if !nested_list_found && result =~ LIST_START
               item.value << ''
