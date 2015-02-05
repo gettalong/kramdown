@@ -372,7 +372,7 @@ module Kramdown
         toc.each do |level, id, children|
           li = Element.new(:li, nil, nil, {:level => level})
           li.children << Element.new(:p, nil, nil, {:transparent => true})
-          a = Element.new(:a, nil, {'href' => "##{id}"})
+          a = Element.new(:a, nil, {'href' => "##{id}", 'id' => "#{sections.attr['id']}-#{id}"})
           a.children.concat(remove_footnotes(Marshal.load(Marshal.dump(children))))
           li.children.last.children << a
           li.children << Element.new(type)
