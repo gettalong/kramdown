@@ -427,10 +427,8 @@ EOF
         else
           raise Kramdown::Error, "Invalid syntax for option toc_levels"
         end
-      when Array
+      when Array, Range
         val = val.map {|s| s.to_i}.uniq
-      when Range
-        val = val.to_a.map {|s| s.to_i}
       else
         raise Kramdown::Error, "Invalid type #{val.class} for option toc_levels"
       end
