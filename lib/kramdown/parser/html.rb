@@ -103,7 +103,7 @@ module Kramdown
           attrs = Utils::OrderedHash.new
           @src[2].scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
             attr.downcase!
-            if attrs.key?(attr)
+            if attrs.has_key?(attr)
               warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")
             end
             attrs[attr] = val || ""
