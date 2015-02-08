@@ -41,10 +41,10 @@ class TestFiles < Minitest::Test
     end
   end
 
-  # Generate test methods for html-to-html conversion
+  # Generate test methods for html-to-{html,kramdown} conversion
   `tidy -v 2>&1`
   if $?.exitstatus != 0
-    warn("Skipping html-to-html tests because tidy executable is missing")
+    warn("Skipping html-to-{html,kramdown} tests because tidy executable is missing")
   else
     EXCLUDE_HTML_FILES = ['test/testcases/block/06_codeblock/whitespace.html', # bc of span inside pre
                           'test/testcases/block/09_html/simple.html', # bc of xml elements
@@ -58,18 +58,31 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/15_math/itex2mml.html', # bc of tidy
                           'test/testcases/span/math/itex2mml.html', # bc of tidy
                          ].compact
+    EXCLUDE_HTML_TEXT_FILES = ['test/testcases/block/09_html/parse_as_span.htmlinput',
+                               'test/testcases/block/09_html/parse_as_raw.htmlinput',
+                              ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19,htmlinput,htmlinput.19}'].each do |html_file|
       next if EXCLUDE_HTML_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
       next if (RUBY_VERSION >= '1.9' && File.exist?(html_file + '.19')) ||
         (RUBY_VERSION < '1.9' && html_file =~ /\.19$/)
-      out_file = (html_file =~ /\.htmlinput(\.19)?$/ ? html_file.sub(/input(\.19)?$/, '') : html_file)
-      next unless File.exist?(out_file)
-      define_method('test_' + html_file.tr('.', '_') + "_to_html") do
-        opts_file = html_file.sub(/\.html(input)?(\.19)?$/, '.options')
-        opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
-        options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
-        doc = Kramdown::Document.new(File.read(html_file), options.merge(:input => 'html'))
-        assert_equal(tidy_output(File.read(out_file)), tidy_output(doc.to_html))
+
+      out_files = []
+      out_files << [(html_file =~ /\.htmlinput(\.19)?$/ ? html_file.sub(/input(\.19)?$/, '') : html_file), :to_html]
+      if html_file =~ /\.htmlinput(\.19)?$/ && !EXCLUDE_HTML_TEXT_FILES.any? {|f| html_file =~ /#{f}/}
+        out_files << [html_file.sub(/htmlinput(\.19)?$/, 'text'), :to_kramdown]
+      end
+      out_files.select {|f, _| File.exist?(f)}.each do |out_file, out_method|
+        define_method('test_' + html_file.tr('.', '_') + "_to_#{File.extname(out_file)}") do
+          opts_file = html_file.sub(/\.html(input)?(\.19)?$/, '.options')
+          opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
+          options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+          doc = Kramdown::Document.new(File.read(html_file), options.merge(:input => 'html'))
+          if out_method == :to_html
+            assert_equal(tidy_output(File.read(out_file)), tidy_output(doc.send(out_method)))
+          else
+            assert_equal(File.read(out_file), doc.send(out_method))
+          end
+        end
       end
     end
   end
