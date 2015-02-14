@@ -107,6 +107,7 @@ class TestFiles < Minitest::Test
   else
     EXCLUDE_LATEX_FILES = ['test/testcases/span/01_link/image_in_a.text', # bc of image link
                            'test/testcases/span/01_link/imagelinks.text', # bc of image links
+                           'test/testcases/span/01_link/empty_title.text',
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
                           ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
