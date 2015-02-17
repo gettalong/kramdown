@@ -31,7 +31,7 @@ module Kramdown
 
     configurable(:syntax_highlighter)
 
-    ["Coderay", "Rouge"].each do |klass_name|
+    ["Coderay", "Rouge", "Pygments"].each do |klass_name|
       kn_down = klass_name.downcase.intern
       add_syntax_highlighter(kn_down) do |converter, text, lang, type, opts|
         require "kramdown/converter/syntax_highlighter/#{kn_down}"
