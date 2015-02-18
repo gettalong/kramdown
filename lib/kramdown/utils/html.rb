@@ -7,6 +7,8 @@
 #++
 #
 
+require 'rexml/parsers/baseparser'
+
 module Kramdown
 
   module Utils

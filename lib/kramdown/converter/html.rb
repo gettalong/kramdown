@@ -7,7 +7,6 @@
 #++
 #
 
-require 'rexml/parsers/baseparser'
 require 'kramdown/parser/html'
 
 module Kramdown

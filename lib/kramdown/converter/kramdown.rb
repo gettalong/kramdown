@@ -7,8 +7,6 @@
 #++
 #
 
-require 'rexml/parsers/baseparser'
-
 module Kramdown
 
   module Converter
