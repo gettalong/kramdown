@@ -88,7 +88,9 @@ module Kramdown
       # +\n+ and makes sure +source+ ends with a new line character).
       def adapt_source(source)
         if source.respond_to?(:encode)
-          raise "The encoding of the source text is not valid!" if !source.valid_encoding?
+          if !source.valid_encoding?
+            raise "The source text contains invalid characters for the used encoding #{source.encoding}"
+          end
           source = source.encode('UTF-8')
         end
         source.gsub(/\r\n?/, "\n").chomp + "\n"
