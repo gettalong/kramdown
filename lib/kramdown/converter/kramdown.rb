@@ -278,7 +278,7 @@ module Kramdown
                   end
           "[#{inner(el, opts)}][#{index}]"
         else
-          title = el.attr['title'].to_s.empty? ? '' : ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"'
+          title = parse_title(el.attr['title'])
           "[#{inner(el, opts)}](#{el.attr['href']}#{title})"
         end
       end
@@ -288,7 +288,7 @@ module Kramdown
         if el.attr['src'].empty?
           "![#{alt_text}]()"
         else
-          title = (el.attr['title'] ? ' "' + el.attr['title'].gsub(/"/, "&quot;") + '"' : '')
+          title = parse_title(el.attr['title'])
           link = if el.attr['src'].count("()") > 0
                    "<#{el.attr['src']}>"
                  else
@@ -367,8 +367,8 @@ module Kramdown
         res = ''
         res << "\n\n" if @linkrefs.size > 0
         @linkrefs.each_with_index do |el, i|
-          title = el.attr['title']
-          res << "[#{i+1}]: #{el.attr['href']}#{title ? ' "' + title.gsub(/"/, "&quot;") + '"' : ''}\n"
+          title = parse_title(el.attr['title'])
+          res << "[#{i+1}]: #{el.attr['href']}#{title}\n"
         end
         res
       end
@@ -411,6 +411,10 @@ module Kramdown
         res = "footnotes" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('footnotes') rescue nil)
         res.strip.empty? ? nil : "{:#{res}}"
+      end
+
+      def parse_title(attr)
+        attr.to_s.empty? ? '' : ' "' + attr.gsub(/"/, '&quot;') + '"'
       end
 
       # :startdoc:
