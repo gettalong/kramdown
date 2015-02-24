@@ -20,11 +20,26 @@ module Kramdown::Converter::MathEngine
       text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
       text.gsub!(/<\/?script>?/, '')
 
+      preview = preview_string(converter, el, opts)
+
       attr = {:type => "math/tex#{type == :block ? '; mode=display' : ''}"}
       if type == :block
-        converter.format_as_block_html('script', attr, text, opts[:indent])
+        preview << converter.format_as_block_html('script', attr, text, opts[:indent])
       else
-        converter.format_as_span_html('script', attr, text)
+        preview << converter.format_as_span_html('script', attr, text)
+      end
+    end
+
+    def self.preview_string(converter, el, opts)
+      preview = converter.options[:math_engine_opts][:preview]
+      return '' unless preview
+
+      preview = (preview == true ? converter.escape_html(el.value) : preview.to_s)
+
+      if el.options[:category] == :block
+        converter.format_as_block_html('div', {'class' => 'MathJax_Preview'}, preview, opts[:indent])
+      else
+        converter.format_as_span_html('span', {'class' => 'MathJax_Preview'}, preview)
       end
     end
 

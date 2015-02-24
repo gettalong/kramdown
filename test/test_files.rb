@@ -57,6 +57,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/ritex.html', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.html', # bc of tidy
                           'test/testcases/span/math/itex2mml.html', # bc of tidy
+                          'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
+                          'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                          ].compact
     EXCLUDE_HTML_TEXT_FILES = ['test/testcases/block/09_html/parse_as_span.htmlinput',
                                'test/testcases/block/09_html/parse_as_raw.htmlinput',
@@ -193,6 +195,8 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/math/ritex.html', # bc of tidy
                              'test/testcases/block/15_math/itex2mml.html', # bc of tidy
                              'test/testcases/span/math/itex2mml.html', # bc of tidy
+                             'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
+                             'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                             ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}

@@ -14,4 +14,14 @@ understands. The only other thing to do is to include the MathJax library itself
 Note that kramdown does *not* ship with the MathJax library and that therefore the "default"
 template does *not* include a link to it!
 
+
+The MathJax engine supports the following keys of the option
+['math_engine_opts'](../options.html#option-math-engine-opts):
+
+preview
+: Specifies whether a preview should be shown. It defaults to `false` but if set to `true`, a
+  preview with the LaTeX code itself is shown. If it is set to any value other than `false` or
+  `true`, that value is shown as the preview.
+
+
 [MathJax]: http://www.mathjax.org
