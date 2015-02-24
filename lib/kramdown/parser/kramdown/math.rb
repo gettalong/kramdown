@@ -27,7 +27,7 @@ module Kramdown
 
         saved_pos = @src.save_pos
         @src.pos += @src.matched_size
-        data = @src[2]
+        data = @src[2].strip
         if before_block_boundary?
           @tree.children << new_block_el(:math, data, nil, :category => :block, :location => start_line_number)
           true
@@ -45,7 +45,7 @@ module Kramdown
       def parse_inline_math
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
-        @tree.children << Element.new(:math, @src[1], nil, :category => :span, :location => start_line_number)
+        @tree.children << Element.new(:math, @src[1].strip, nil, :category => :span, :location => start_line_number)
       end
       define_parser(:inline_math, INLINE_MATH_START, '\$')
 
