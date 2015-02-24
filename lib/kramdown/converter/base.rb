@@ -9,6 +9,7 @@
 
 require 'erb'
 require 'kramdown/utils'
+require 'kramdown/document'
 
 module Kramdown
 

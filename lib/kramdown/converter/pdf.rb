@@ -9,7 +9,8 @@
 
 require 'prawn'
 require 'prawn/table'
-require 'kramdown/utils/entities'
+require 'kramdown/converter'
+require 'kramdown/utils'
 require 'open-uri'
 
 module Kramdown

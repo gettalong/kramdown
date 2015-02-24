@@ -9,6 +9,7 @@
 
 require 'strscan'
 require 'stringio'
+require 'kramdown/parser'
 
 #TODO: use [[:alpha:]] in all regexp to allow parsing of international values in 1.9.1
 #NOTE: use @src.pre_match only before other check/match?/... operations, otherwise the content is changed

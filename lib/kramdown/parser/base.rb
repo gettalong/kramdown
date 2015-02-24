@@ -7,7 +7,8 @@
 #++
 #
 
-require 'kramdown/utils/string_scanner'
+require 'kramdown/utils'
+require 'kramdown/parser'
 
 module Kramdown
 

@@ -7,6 +7,9 @@
 #++
 #
 
+require 'kramdown/converter'
+require 'kramdown/utils'
+
 module Kramdown
 
   module Converter

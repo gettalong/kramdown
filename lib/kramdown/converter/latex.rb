@@ -8,6 +8,7 @@
 #
 
 require 'set'
+require 'kramdown/converter'
 
 module Kramdown
 

@@ -7,7 +7,9 @@
 #++
 #
 
-require 'kramdown/parser/html'
+require 'kramdown/parser'
+require 'kramdown/converter'
+require 'kramdown/utils'
 
 module Kramdown
 

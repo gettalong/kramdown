@@ -7,7 +7,7 @@
 #++
 #
 
-require 'kramdown/parser/kramdown'
+require 'kramdown/parser'
 
 module Kramdown
 
