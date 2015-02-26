@@ -13,8 +13,12 @@ sites, for example StackOverflow.
 
 ## Conformance
 
-At the moment this parser is identical to the kramdown parser, except that it adds support for
-fenced code blocks using three or more backticks and enforces hard line breaks in paragraphs.
+At the moment this parser is based on the [kramdown parser](kramdown.html), with the following
+changes:
+
+* Support for fenced code blocks using three or more backticks has been added.
+* Hard line breaks in paragraphs are enforced by default (see option 'hard_wrap').
+* ATX headers need a whitespace character after the hash signs.
 
 ## Options
 
