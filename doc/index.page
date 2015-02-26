@@ -74,21 +74,35 @@ Markdown implementations because kramdown borrowed many ideas from existing pack
 * Thomas Leitner
 * e-Mail: <mailto:t_leitner@gmx.at>
 
-
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
-[Maruku]:             http://maruku.rubyforge.org
-[BlueCloth]: http://www.deveiate.org/projects/BlueCloth
+[Maruku]: http://maruku.rubyforge.org
+[BlueFeather]: http://ruby.morphball.net/bluefeather/index_en.html
 
+--- intro
+<div markdown="1" itemscope="" itemtype="http://schema.org/SoftwareApplication">
+<meta itemprop="applicationCategory" content="Markdown library, Markdown converter" />
+<meta itemprop="operatingSystem" content="Linux, Windows, Mac OS X" />
+<div itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+<meta itemprop="name" content="Thomas Leitner" />
+<meta itemprop="email" content="t_leitner@gmx.at" />
+</div>
 
---- name:intro
-
-**kramdown** (sic, not Kramdown or KramDown, just kramdown) is a *free* MIT-licensed
+**kramdown**{:itemprop="name"} (sic, not Kramdown or KramDown, just kramdown) is a *free*
+[MIT](https://github.com/gettalong/kramdown/blob/master/COPYING){:itemprop="license"}-licensed
 [Ruby](http://www.ruby-lang.org) library for parsing and converting a superset of Markdown. It is
 completely written in Ruby, supports standard Markdown (with some minor modifications) and various
 extensions that have been made popular by the [PHP Markdown Extra] package and [Maruku].
+{:itemprop="description"}
 
 It is probably the fastest pure-Ruby Markdown converter available (September 2014), being about 3x
 faster than [Maruku] and about 4.5x faster than [BlueFeather].
+
+Version **1.5.0**{:itemprop="softwareVersion"} released on
+**2014-10-25**{:itemprop="datePublished"}, [more news](news.html)
+{: style="text-align: center; font-size: 80%"}
+
+</div>
+
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Maruku]: http://maruku.rubyforge.org

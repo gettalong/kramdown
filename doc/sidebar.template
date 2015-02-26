@@ -1,10 +1,3 @@
-<h2>News</h2>
-
-<p>The latest version of kramdown is <span class="inline-important">1.5.0</span> and it was released
-on <span class="inline-important">2014-10-25</span></p>
-
-<p>More <a href="{relocatable: news.html}">news</a>…</p>
-
 <h2>Support kramdown</h2>
 
 <p>If you like kramdown and would like to support it, you are welcome to make a small

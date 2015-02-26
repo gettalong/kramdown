@@ -9,3 +9,6 @@ rdoc/index.html:
 
 /options.en.html#option-math-engine:
   dest_path: options.html#option-math-engine
+
+/options.en.html#option-math-engine-opts:
+  dest_path: options.html#option-math-engine-opts
