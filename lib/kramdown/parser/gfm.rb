@@ -14,6 +14,11 @@ module Kramdown
           i = @block_parsers.index(current)
           @block_parsers.delete(current)
           @block_parsers.insert(i, replacement)
+
+          i = @span_parsers.index(:escaped_chars)
+          @span_parsers[i] = :escaped_chars_gfm if i
+
+          @span_parsers << :strikethrough_gfm
         end
       end
 
@@ -28,11 +33,11 @@ module Kramdown
             children = []
             lines = child.value.split(/\n/, -1)
             omit_trailing_br = (Kramdown::Element.category(element) == :block && element.children[-1] == child &&
-                                lines[-1].empty?)
+                lines[-1].empty?)
             lines.each_with_index do |line, index|
               children << Element.new(:text, (index > 0 ? "\n#{line}" : line))
               children << Element.new(:br) if index < lines.size - 2 ||
-                (index == lines.size - 2 && !omit_trailing_br)
+                  (index == lines.size - 2 && !omit_trailing_br)
             end
             children
           elsif child.type == :html_element
@@ -50,6 +55,30 @@ module Kramdown
       FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
+      STRIKETHROUGH_DELIM = /~{2,}/
+      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}.+#{STRIKETHROUGH_DELIM}/m
+      define_parser(:strikethrough_gfm, STRIKETHROUGH_MATCH, '~~')
+
+      def parse_strikethrough_gfm
+        line_number = @src.current_line_number
+
+        if @src.scan(STRIKETHROUGH_DELIM)
+          el = Element.new(:html_element, 'del', {}, :category => :span, :line => line_number)
+          @tree.children << el
+          parse_spans(el, STRIKETHROUGH_DELIM)
+          @src.scan(STRIKETHROUGH_DELIM)
+        end
+      end
+
+      ESCAPED_CHARS_GFM = /\\([\\.*_+`<>()\[\]{}#!:\|"'\$=\-~])/
+
+      # Parse the backslash-escaped character at the current location.
+      def parse_escaped_chars_gfm
+        @src.pos += @src.matched_size
+        add_text(@src[1])
+      end
+
+      define_parser(:escaped_chars_gfm, ESCAPED_CHARS_GFM, '\\\\')
     end
   end
 end
