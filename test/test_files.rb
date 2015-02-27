@@ -293,12 +293,20 @@ class TestFiles < Minitest::Test
   end
 
 
+  EXCLUDE_PDF_MODIFY = ['test/testcases/span/text_substitutions/entities.text',
+                        'test/testcases/span/text_substitutions/entities_numeric.text',
+                        'test/testcases/span/text_substitutions/entities_as_char.text',
+                        'test/testcases/span/text_substitutions/entities_as_input.text',
+                        'test/testcases/span/text_substitutions/entities_symbolic.text',
+                        'test/testcases/block/04_header/with_auto_ids.text',
+                       ].compact
+
   # Generate test methods for asserting that converters don't modify the document tree.
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     opts_file = text_file.sub(/\.text$/, '.options')
     options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
     (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base, :RemoveHtmlTags, :MathEngine, :SyntaxHighlighter]).each do |conv_class|
-      next if conv_class == :Pdf && RUBY_VERSION < '1.9'
+      next if conv_class == :Pdf && (RUBY_VERSION < '2.0' || EXCLUDE_PDF_MODIFY.any? {|f| text_file =~ /#{f}$/})
       define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
         doc = Kramdown::Document.new(File.read(text_file), options)
         options_before = Marshal.load(Marshal.dump(doc.options))
