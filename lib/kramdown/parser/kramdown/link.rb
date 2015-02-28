@@ -25,8 +25,8 @@ module Kramdown
         @src.pos += @src.matched_size
         link_id, link_url, link_title = normalize_link_id(@src[1]), @src[2] || @src[3], @src[5]
         warning("Duplicate link ID '#{link_id}' on line #{@src.current_line_number} - overwriting") if @link_defs[link_id]
-        @link_defs[link_id] = [link_url, link_title]
         @tree.children << new_block_el(:eob, :link_def)
+        @link_defs[link_id] = [link_url, link_title, @tree.children.last]
         true
       end
       define_parser(:link_definition, LINK_DEFINITION_START)
@@ -34,7 +34,9 @@ module Kramdown
 
       # This helper methods adds the approriate attributes to the element +el+ of type +a+ or +img+
       # and the element itself to the @tree.
-      def add_link(el, href, title, alt_text = nil)
+      def add_link(el, href, title, alt_text = nil, ial = nil)
+        el.options[:ial] = ial
+        update_attr_with_ial(el.attr, ial) if ial
         if el.type == :a
           el.attr['href'] = href
         else
@@ -86,7 +88,8 @@ module Kramdown
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
           link_id = normalize_link_id(@src[1] || alt_text)
           if @link_defs.has_key?(link_id)
-            add_link(el, @link_defs[link_id].first, @link_defs[link_id].last, alt_text)
+            add_link(el, @link_defs[link_id][0], @link_defs[link_id][1], alt_text,
+                     @link_defs[link_id][2] && @link_defs[link_id][2].options[:ial])
           else
             warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")
             @src.revert_pos(saved_pos)

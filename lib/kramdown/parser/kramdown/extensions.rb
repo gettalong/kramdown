@@ -157,7 +157,8 @@ module Kramdown
         elsif @src.check(EXT_BLOCK_START)
           parse_extension_start_tag(:block)
         elsif @src.scan(IAL_BLOCK_START)
-          if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
+          if @tree.children.last && @tree.children.last.type != :blank &&
+              (@tree.children.last.type != :eob || [:link_def].include?(@tree.children.last.value))
             parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
             @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else

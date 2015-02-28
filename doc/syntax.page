@@ -1156,6 +1156,11 @@ Notes:
 
 * The link title may not contain its delimiters and may not be empty.
 
+* Additional link attributes can be added by using a [span IAL](#span-ials) after the inline link,
+  for example:
+
+      This is a [link](http://example.com){:hreflang="de"}
+
 ### Reference Links
 
 To create a reference style link, you need to surround the link text with square brackets (as with
@@ -1172,6 +1177,9 @@ If you don't specify a link identifier (i.e. only use empty square brackets) or 
 second pair of square brackets, the link text is converted to a valid link identifier by removing
 all invalid characters and inserting spaces for line breaks. If there is a link definition found for
 the link identifier, a link will be created. Otherwise the text is not converted to a link.
+
+As with inline links, additional link attributes can be added by using a [span IAL](#span-ials)
+after the reference link.
 
 ### Link Definitions
 
@@ -1205,6 +1213,11 @@ you can escape the colon after the link identifier:
 
     [Room 100]: link_to_room_100.html
 
+Although link definitions are non-content block-level elements, [block IALs](#block-ials) can be
+used on them to specify additional attributes for the links:
+
+    [linkid]: http://example.com
+    {:hreflang="de"}
 
 ### Images
 
@@ -1218,8 +1231,16 @@ example:
     ![too](../images/other.png 'Title text'). Or ![here].
     With empty alt text ![](see.jpg)
 
-The link definition for images is exactly the same as the link definition for normal links.
+The link definition for images is exactly the same as the link definition for normal links. Since
+additional attributes can be added via span and block IALs, it is possible, for example, to specify
+image width and height:
 
+    Here is an inline ![smiley](smiley.png){:height="36px" width="36px"}.
+
+    And here is a referenced ![smile]
+
+    [smile]: smile.png
+    {: height="36px" width="36px"}
 
 ## Emphasis
 
@@ -1587,7 +1608,7 @@ These elements are used to attach attributes to another element.
 > the [Maruku] package.
 {: .markdown-difference}
 
-This block-level element is used to attach attributes to a block-level element. A block inline
+This block-level element is used to attach attributes to another block-level element. A block inline
 attribute list (block IAL) has the same structure as an [ALD](#attribute-list-definitions) except
 that the colon/reference name/colon part is replaced by a colon. A block IAL (or two or more block
 IALs) has to be put directly before or after the block-level element to which the attributes should

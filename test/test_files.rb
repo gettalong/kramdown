@@ -154,6 +154,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/ritex.text', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.text', # bc of tidy
                           'test/testcases/span/math/itex2mml.text', # bc of tidy
+                          'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -197,6 +198,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/math/itex2mml.html', # bc of tidy
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
+                             'test/testcases/span/01_link/link_defs_with_ial.html', # bc of attribute ordering
                             ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
