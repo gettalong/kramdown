@@ -390,6 +390,7 @@ module Kramdown
         res = ''
         @root.options[:abbrev_defs].each do |name, text|
           res << "*[#{name}]: #{text}\n"
+          res << ial_for_element(Element.new(:unused, nil, @root.options[:abbrev_attr][name])).to_s << "\n\n"
         end
         res
       end

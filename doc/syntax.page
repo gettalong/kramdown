@@ -1443,15 +1443,20 @@ following structure:
 * then a colon and the full phrase of the abbreviation on one line (leading and trailing spaces are
   stripped from the full phrase).
 
-Later abbreviation definition for the same abbreviation override prior ones and it does not matter
+Later abbreviation definitions for the same abbreviation override prior ones and it does not matter
 where you put an abbreviation definition in a kramdown document. Empty definitions are also allowed.
+
+Although abbreviation definitions are non-content block-level elements, [block IALs](#block-ials)
+can be used on them to specify additional attributes.
 
 Here are some examples:
 
     This is some text not written in HTML but in another language!
 
     *[another language]: It's called Markdown
+
     *[HTML]: HyperTextMarkupLanguage
+    {:.mega-big}
 
 > Abbreviation definitions are, despite being described here, non-content block-level elements.
 {: .information}

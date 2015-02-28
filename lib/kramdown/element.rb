@@ -37,6 +37,9 @@ module Kramdown
   # :abbrev_defs:: This key may be used to store the mapping of abbreviation to abbreviation
   #                definition.
   #
+  # :abbrev_attr:: This key may be used to store the mapping of abbreviation to abbreviation
+  #                attributes.
+  #
   # :options:: This key may be used to store options that were set during parsing of the document.
   #
   #

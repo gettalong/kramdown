@@ -25,3 +25,10 @@ no abbrev here because there is someone and kulis some
 * test (X)HTML
 
 *[(X)HTML]: (eXtensible) HyperText Markup Language
+
+
+This is awesome.
+
+{:.testit}
+*[awesome]: Some text here
+{:.test}

@@ -67,7 +67,6 @@ module Kramdown
 
         reset_env
 
-        @root.options[:abbrev_defs] = {}
         @alds = {}
         @footnotes = {}
         @link_defs = {}
@@ -89,6 +88,7 @@ module Kramdown
         configure_parser
         parse_blocks(@root, adapt_source(source))
         update_tree(@root)
+        correct_abbreviations_attributes
         replace_abbreviations(@root)
         @footnotes.each {|name,data| update_tree(data[:content])}
       end

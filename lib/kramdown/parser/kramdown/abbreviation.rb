@@ -20,11 +20,19 @@ module Kramdown
         abbrev_id, abbrev_text = @src[1], @src[2]
         abbrev_text.strip!
         warning("Duplicate abbreviation ID '#{abbrev_id}' on line #{start_line_number} - overwriting") if @root.options[:abbrev_defs][abbrev_id]
-        @root.options[:abbrev_defs][abbrev_id] = abbrev_text
         @tree.children << new_block_el(:eob, :abbrev_def)
+        @root.options[:abbrev_defs][abbrev_id] = abbrev_text
+        @root.options[:abbrev_attr][abbrev_id] = @tree.children.last
         true
       end
       define_parser(:abbrev_definition, ABBREV_DEFINITION_START)
+
+      # Correct abbreviation attributes.
+      def correct_abbreviations_attributes
+        @root.options[:abbrev_attr].keys.each do |k|
+          @root.options[:abbrev_attr][k] = @root.options[:abbrev_attr][k].attr
+        end
+      end
 
       # Replace the abbreviation text with elements.
       def replace_abbreviations(el, regexps = nil)

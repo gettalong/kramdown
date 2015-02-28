@@ -322,7 +322,9 @@ module Kramdown
 
       def convert_abbreviation(el, indent)
         title = @root.options[:abbrev_defs][el.value]
-        format_as_span_html("abbr", {:title => (title.empty? ? nil : title)}, el.value)
+        attr = @root.options[:abbrev_attr][el.value].dup
+        attr['title'] = title unless title.empty?
+        format_as_span_html("abbr", attr, el.value)
       end
 
       def convert_root(el, indent)
