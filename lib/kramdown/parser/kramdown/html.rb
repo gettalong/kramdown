@@ -23,7 +23,10 @@ module Kramdown
       TRAILING_WHITESPACE = /[ \t]*\n/
 
       def handle_kramdown_html_tag(el, closed, handle_body)
-        el.options[:ial] = @block_ial if @block_ial
+        if @block_ial
+          el.options[:ial] = @block_ial
+          @block_ial = nil
+        end
 
         content_model = if @tree.type != :html_element || @tree.options[:content_model] != :raw
                           (@options[:parse_block_html] ? HTML_CONTENT_MODEL[el.value] : :raw)

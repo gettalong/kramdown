@@ -22,6 +22,10 @@ Some paragraph.
 {:.cls}
 Some paragraph here
 
+{:.cls1}
+{:.cls2}
+Some paragraph here
+
 Paragraph
 {:.cls}
 Paragraph

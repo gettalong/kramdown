@@ -161,7 +161,7 @@ module Kramdown
             parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
             @tree.children << Element.new(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else
-            parse_attribute_list(@src[1], @block_ial = Utils::OrderedHash.new)
+            parse_attribute_list(@src[1], @block_ial ||= Utils::OrderedHash.new)
           end
           true
         else

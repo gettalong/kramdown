@@ -135,7 +135,6 @@ module Kramdown
 
         status = catch(:stop_block_parsing) do
           while !@src.eos?
-            block_ial_set = @block_ial
             @block_parsers.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
@@ -146,7 +145,6 @@ module Kramdown
               warning('Warning: this should not occur - no block parser handled the line')
               add_text(@src.scan(/.*\n/))
             end
-            @block_ial = nil if block_ial_set
           end
         end
 
@@ -292,6 +290,7 @@ module Kramdown
       def new_block_el(*args)
         el = Element.new(*args)
         el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
+        @block_ial = nil if @block_ial
         el
       end
 
