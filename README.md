@@ -13,7 +13,7 @@ sidebar on the [kramdown homepage](http://kramdown.gettalong.org/)!
 
 ## Introduction
 
-kramdown is yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition and
+kramdown is a fast, pure Ruby Markdown superset converter, using a strict syntax definition and
 supporting several common extensions.
 
 The syntax definition for the kramdown syntax can be found in **doc/syntax.page** (or online at
@@ -21,11 +21,11 @@ The syntax definition for the kramdown syntax can be found in **doc/syntax.page*
 **doc/quickref.page** or online at <http://kramdown.gettalong.org/quickref.html>.
 
 The kramdown library is mainly written to support the kramdown-to-HTML conversion chain. However,
-due to its flexibility it supports other input and output formats as well. Here is a list of the
-supported formats:
+due to its flexibility (by creating an internal AST) it supports other input and output formats as
+well. Here is a list of the supported formats:
 
-* input formats: kramdown (a Markdown superset), Markdown, HTML
-* output formats: HTML, kramdown, LaTeX (and therefore PDF)
+* input formats: kramdown (a Markdown superset), Markdown, GFM, HTML
+* output formats: HTML, kramdown, LaTeX (and therefore PDF), PDF via Prawn
 
 All the documentation on the available input and output formats is available in the **doc/**
 directory and online at <http://kramdown.gettalong.org>.
@@ -37,7 +37,7 @@ number on the introduction of new features and the patch number on everything el
 
 ## Usage
 
-kramdown has a basic *Cloth API, so using kramdown is as easy as
+kramdown has a very simple API, so using kramdown is as easy as
 
 ```ruby
 require 'kramdown'

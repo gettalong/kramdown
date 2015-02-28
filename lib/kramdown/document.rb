@@ -8,22 +8,22 @@
 #
 # = kramdown
 #
-# kramdown is yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition and
+# kramdown is fast, pure Ruby Markdown superset converter, using a strict syntax definition and
 # supporting several common extensions.
 #
 # The kramdown library is mainly written to support the kramdown-to-HTML conversion chain. However,
 # due to its flexibility it supports other input and output formats as well. Here is a list of the
 # supported formats:
 #
-# * input formats: kramdown (a Markdown superset), Markdown, HTML
-# * output formats: HTML, kramdown, LaTeX (and therefore PDF)
+# * input formats: kramdown (a Markdown superset), Markdown, GFM, HTML
+# * output formats: HTML, kramdown, LaTeX (and therefore PDF), PDF via Prawn
 #
 # All the documentation on the available input and output formats is available at
 # http://kramdown.gettalong.org.
 #
 # == Usage
 #
-# kramdown has a basic *Cloth API, so using kramdown is as easy as
+# kramdown has a simple API, so using kramdown is as easy as
 #
 #     require 'kramdown'
 #
