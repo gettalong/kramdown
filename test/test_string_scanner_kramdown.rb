@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+#
+#--
+# Copyright (C) 2009-2015 Thomas Leitner <t_leitner@gmx.at>
+#
+# This file is part of kramdown which is licensed under the MIT.
+#++
+#
+
 
 require 'minitest/autorun'
 require 'kramdown/utils/string_scanner'
