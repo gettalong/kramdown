@@ -1423,6 +1423,8 @@ referenced footnote definitions will be placed at the end of the kramdown docume
 footnote definitions are ignored. If more than one footnote definitions have the same footnote name,
 all footnote definitions but the last are ignored.
 
+Although footnote definitions are non-content block-level elements, [block IALs](#block-ials) can be
+used on them to attach attributes. How these attributes are used depends on the converter.
 
 ## Abbreviations
 

@@ -1,6 +1,7 @@
 This is some *ref.[^fn]
 
 [^fn]: Some foot note text
+{: .class}
 
 > a blockquote [^3]
 
