@@ -164,6 +164,7 @@ module Kramdown
             parse_spans(child)
             child.children
           elsif child.type == :eob
+            update_attr_with_ial(child.attr, child.options[:ial]) if child.options[:ial]
             []
           elsif child.type == :blank
             if last_blank
@@ -289,8 +290,10 @@ module Kramdown
       # exists. This method should always be used for creating a block-level element!
       def new_block_el(*args)
         el = Element.new(*args)
-        el.options[:ial] = @block_ial if @block_ial && el.type != :blank && el.type != :eob
-        @block_ial = nil if @block_ial
+        if @block_ial
+          el.options[:ial] = @block_ial
+          @block_ial = nil
+        end
         el
       end
 

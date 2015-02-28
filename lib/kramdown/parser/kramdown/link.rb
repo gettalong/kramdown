@@ -26,7 +26,7 @@ module Kramdown
         link_id, link_url, link_title = normalize_link_id(@src[1]), @src[2] || @src[3], @src[5]
         warning("Duplicate link ID '#{link_id}' on line #{@src.current_line_number} - overwriting") if @link_defs[link_id]
         @link_defs[link_id] = [link_url, link_title]
-        @tree.children << Element.new(:eob, :link_def)
+        @tree.children << new_block_el(:eob, :link_def)
         true
       end
       define_parser(:link_definition, LINK_DEFINITION_START)

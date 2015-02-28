@@ -117,7 +117,7 @@ module Kramdown
           end.each do |k,v|
             warning("Unknown kramdown option '#{k}'")
           end
-          @tree.children << Element.new(:eob, :extension) if type == :block
+          @tree.children << new_block_el(:eob, :extension) if type == :block
           true
         else
           false
@@ -152,14 +152,14 @@ module Kramdown
       def parse_block_extensions
         if @src.scan(ALD_START)
           parse_attribute_list(@src[2], @alds[@src[1]] ||= Utils::OrderedHash.new)
-          @tree.children << Element.new(:eob, :ald)
+          @tree.children << new_block_el(:eob, :ald)
           true
         elsif @src.check(EXT_BLOCK_START)
           parse_extension_start_tag(:block)
         elsif @src.scan(IAL_BLOCK_START)
           if @tree.children.last && @tree.children.last.type != :blank && @tree.children.last.type != :eob
             parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
-            @tree.children << Element.new(:eob, :ial) unless @src.check(IAL_BLOCK_START)
+            @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else
             parse_attribute_list(@src[1], @block_ial ||= Utils::OrderedHash.new)
           end
