@@ -29,7 +29,7 @@ module Kramdown
         singleton_class = (class << self; self; end)
         singleton_class.send(:define_method, :configurables) do
           @_configurables ||= Hash.new {|h, k| h[k] = {}}
-        end
+        end unless respond_to?(:configurables)
         singleton_class.send(:define_method, name) do |data|
           configurables[name][data]
         end
