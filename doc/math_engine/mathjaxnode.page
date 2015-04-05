@@ -8,8 +8,10 @@ title: Mathjax-Node
 MathML and can be used together with the [HTML converter](../converter/html.html).
 
 To use Mathjax-Node, set the option ['math_engine'](../options.html#option-math-engine) to
-'mathjaxnode' and make sure that Mathjax-Node is available. The Mathjax-Node library can be
-installed, e.g., via npm by running `npm install -g MathJax-node`.
+'mathjaxnode' and make sure that both [Node.js](https://nodejs.org/) and Mathjax-Node is
+available. The Mathjax-Node library can be installed, e.g., via npm by running
+`npm install -g MathJax-node`. Instructions for installing Node.js can be found in the
+[joyent/node wiki](https://github.com/joyent/node/wiki/Installation).
 
 The Mathjax-Node engine supports the following keys of the option
 ['math_engine_opts'](../options.html#option-math-engine-opts):
