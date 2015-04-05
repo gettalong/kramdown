@@ -13,7 +13,7 @@ module Kramdown::Converter::MathEngine
   module MathjaxNode
 
     # MathjaxNode is available if this constant is +true+.
-    AVAILABLE = begin
+    AVAILABLE = RUBY_VERSION >= '1.9' && begin
       npm = %x{npm --global --depth=1 list MathJax-node}
 
       unless /MathJax-node@/ === npm.lines.drop(1).join("\n")
