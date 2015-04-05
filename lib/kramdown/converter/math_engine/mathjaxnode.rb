@@ -15,7 +15,7 @@ module Kramdown::Converter::MathEngine
     # MathjaxNode is available if this constant is +true+.
     AVAILABLE = begin
       npm = %x{npm --global --depth=1 list MathJax-node}
-      T2MPATH = File.join npm.lines.first.strip, "node_modules/MathJax-node/bin/tex2mml"
+      T2MPATH = File.join(npm.lines.first.strip, "node_modules/MathJax-node/bin/tex2mml")
       /MathJax-node@/ === npm.lines.drop(1).join("\n")
     rescue
       false
