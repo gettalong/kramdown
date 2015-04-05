@@ -24,7 +24,7 @@ module Kramdown::Converter::MathEngine
     def self.call(converter, el, opts)
       type = el.options[:category]
 
-      cmd = [ T2MPATH ]
+      cmd = [T2MPATH]
       cmd << "--inline" unless type == :block
       cmd << "--semantics" if converter.options[:math_engine_opts][:semantics] == true
       cmd << "--notexhints" if converter.options[:math_engine_opts][:texhints] == false
