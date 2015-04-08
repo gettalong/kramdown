@@ -31,8 +31,8 @@ module Kramdown
       define_parser(:codeblock, CODEBLOCK_START)
 
 
-      FENCED_CODEBLOCK_START = /^~{3,}/
-      FENCED_CODEBLOCK_MATCH = /^((~){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
+      FENCED_CODEBLOCK_START = /^[~`]{3,}/
+      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
 
       # Parse the fenced codeblock at the current location.
       def parse_codeblock_fenced
@@ -49,7 +49,6 @@ module Kramdown
         end
       end
       define_parser(:codeblock_fenced, FENCED_CODEBLOCK_START)
-
     end
   end
 end
