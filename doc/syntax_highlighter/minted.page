@@ -1,0 +1,23 @@
+---
+title: Minted
+---
+
+## Syntax Highlighting With Minted
+
+[Rouge](https://github.com/gpoore/minted) (LPPL/BSD licensed)
+is a LaTeX package that facilitates expressive syntax highlighting using the Pygments library. 
+
+To use Minted, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
+'minted'. 
+
+The Minted syntax highlighter supports the following keys of the option
+['syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts):
+
+default_lang
+: The default language that should be used when no language is set.
+
+line_numbers
+: Add line numbers
+
+wrap
+: Break long lines

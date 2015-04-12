@@ -84,7 +84,15 @@ module Kramdown
       def convert_codeblock(el, opts)
         show_whitespace = el.attr['class'].to_s =~ /\bshow-whitespaces\b/
         lang = extract_code_language(el.attr)
-        if show_whitespace || lang
+
+        if @options[:syntax_highlighter] == :minted
+          require "kramdown/converter/syntax_highlighter/minted"
+
+          @data[:packages] << 'minted'
+          highlighter = ::Kramdown::Converter::SyntaxHighlighter::Minted
+          highlighted_code = highlighter.call(self, el.value, lang, :block, {})
+          "#{latex_link_target(el)}#{highlighted_code}\n"
+        elsif show_whitespace || lang
           options = []
           options << "showspaces=%s,showtabs=%s" % (show_whitespace ? ['true', 'true'] : ['false', 'false'])
           options << "language=#{lang}" if lang

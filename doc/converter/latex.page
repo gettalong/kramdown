@@ -33,7 +33,7 @@ feature is actually used:
   support)
 * `fancyvrb` (see [Footnotes](#footnotes))
 * `acronym` (for acronym support)
-
+* `minted` (if the minted syntax highlighter is used)
 
 ## Hyper Targets and Links
 
