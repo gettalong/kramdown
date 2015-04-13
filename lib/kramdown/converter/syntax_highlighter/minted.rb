@@ -17,7 +17,6 @@ module Kramdown::Converter::SyntaxHighlighter
 
     def self.call(converter, text, lang, type, _opts)
       opts = converter.options[:syntax_highlighter_opts].dup
-      opts[:wrap] = false if type == :span
 
       # Fallback to default language
       lang ||= opts[:default_lang]
@@ -28,7 +27,14 @@ module Kramdown::Converter::SyntaxHighlighter
       frame = opts[:frame]
       options << "frame=#{frame}" if frame
 
-      "\\begin{minted}[#{options.join(',')}]{#{lang}}\n#{text}\n\\end{minted}"
+      case type
+      when :block
+        "\\begin{minted}[#{options.join(',')}]{#{lang}}\n#{text}\n\\end{minted}"
+      when :span 
+        "\\mintinline{#{lang}}{#{text}}"
+      else
+        nil
+      end
     end
   end
 end

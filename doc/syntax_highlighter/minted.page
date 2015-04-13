@@ -4,7 +4,7 @@ title: Minted
 
 ## Syntax Highlighting With Minted
 
-[Rouge](https://github.com/gpoore/minted) (LPPL/BSD licensed)
+[Minted](https://github.com/gpoore/minted) (LPPL/BSD licensed)
 is a LaTeX package that facilitates expressive syntax highlighting using the Pygments library. 
 
 To use Minted, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to

@@ -234,7 +234,17 @@ module Kramdown
       end
 
       def convert_codespan(el, opts)
-        "{\\tt #{latex_link_target(el)}#{escape(el.value)}}"
+        if @options[:syntax_highlighter] == :minted
+          require "kramdown/converter/syntax_highlighter/minted"
+
+          @data[:packages] << 'minted'
+          lang = extract_code_language(el.attr)
+          highlighter = ::Kramdown::Converter::SyntaxHighlighter::Minted
+          highlighted_code = highlighter.call(self, el.value, lang, :span, {})
+          "#{latex_link_target(el)}#{highlighted_code}"
+        else 
+          "{\\tt #{latex_link_target(el)}#{escape(el.value)}}"
+        end
       end
 
       def convert_footnote(el, opts)
