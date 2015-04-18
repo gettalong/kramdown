@@ -31,3 +31,9 @@ def what?
 end
 ~~~
 {: class="language-python"}
+
+~~~ ruby-trunk
+def what?
+  42
+end
+~~~
