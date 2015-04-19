@@ -55,7 +55,7 @@ module Kramdown
       ATX_HEADER_START = /^\#{1,6}\s/
       define_parser(:atx_header_gfm, ATX_HEADER_START, nil, 'parse_atx_header')
 
-      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w+)?\s*?\n(.*?)^\1\2*\s*?\n/m
+      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?(\w[\w-]*)?\s*?\n(.*?)^\1\2*\s*?\n/m
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
     end
