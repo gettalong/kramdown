@@ -169,6 +169,11 @@ describe 'location' do
       # T
       {:.line-7}
     ),
+    'gh issue 243 - HTML raw elements' => %(
+      <ul class="line-1">
+        <li class="line-2">Test</li>
+      </ul>
+    ),
   }
   test_cases.each do |name, test_string|
     it "Handles #{ name }" do
