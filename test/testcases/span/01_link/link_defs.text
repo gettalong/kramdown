@@ -9,6 +9,7 @@ This is a para.
 [otherid6]: some spaces.html 'title'
 [otherid7]: some spaces
             "title"
+[otherid8]:test.html#'test' 'title'
 
 [break]:	http://www.example.com/test/asdf.html
                 'Another title'
@@ -23,4 +24,4 @@ Points to [1] and [2] and [3] but not [4]
 
 [_.:,;!?-]: http://example.com
 
-Points to [_.:,;!?-]
+Points to [_.:,;!?-] and [otherid8]
