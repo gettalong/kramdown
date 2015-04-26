@@ -36,7 +36,7 @@ Show the help.
 <%
 require 'kramdown/document'
 
-Kramdown::Options.definitions.each do |n, definition|
+Kramdown::Options.definitions.sort.each do |n, definition|
   n = n.to_s.tr('_', '-')
   if definition.type == Kramdown::Options::Boolean %>
 .TP

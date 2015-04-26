@@ -37,7 +37,7 @@ OptionParser.new do |opts|
   opts.separator "kramdown options:"
   opts.separator ""
 
-  Kramdown::Options.definitions.each do |n, definition|
+  Kramdown::Options.definitions.sort.each do |n, definition|
     no = n.to_s.tr('_', '-')
     if definition.type == Kramdown::Options::Boolean
       opts.on("--[no-]#{no}") {|v| options[n] = Kramdown::Options.parse(n, v)}
