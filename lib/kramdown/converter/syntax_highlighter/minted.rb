@@ -12,11 +12,8 @@ module Kramdown::Converter::SyntaxHighlighter
   # Uses Minted to highlight code blocks and code spans.
   module Minted
 
-    # Highlighting via minted is always avaliable
-    AVAILABLE = true
-
     def self.call(converter, text, lang, type, _opts)
-      opts = converter.options[:syntax_highlighter_opts].dup
+      opts = converter.options[:syntax_highlighter_opts]
 
       # Fallback to default language
       lang ||= opts[:default_lang]
@@ -24,13 +21,11 @@ module Kramdown::Converter::SyntaxHighlighter
       options = []
       options << "breaklines" if opts[:wrap]
       options << "linenos" if opts[:line_numbers]
-      frame = opts[:frame]
-      options << "frame=#{frame}" if frame
+      options << "frame=#{opts[:frame]}" if opts[:frame]
 
-      case type
-      when :block
+      if lang && type == :block
         "\\begin{minted}[#{options.join(',')}]{#{lang}}\n#{text}\n\\end{minted}"
-      when :span 
+      elsif lang && type == :span
         "\\mintinline{#{lang}}{#{text}}"
       else
         nil

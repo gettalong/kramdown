@@ -4,11 +4,12 @@ title: Minted
 
 ## Syntax Highlighting With Minted
 
-[Minted](https://github.com/gpoore/minted) (LPPL/BSD licensed)
-is a LaTeX package that facilitates expressive syntax highlighting using the Pygments library. 
+[Minted](https://github.com/gpoore/minted) (LPPL/BSD licensed) is a LaTeX package that facilitates
+expressive syntax highlighting using the Pygments library. This highlighter can be used with the
+[LaTeX converter](../converter/latex.html).
 
 To use Minted, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
-'minted'. 
+'minted'. Also make sure that you have the 'minted' LaTeX package installed!
 
 The Minted syntax highlighter supports the following keys of the option
 ['syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts):
@@ -20,4 +21,4 @@ line_numbers
 : Add line numbers
 
 wrap
-: Break long lines
+: Break long lines (needs at least version 2.0 of the 'minted' LaTeX package)

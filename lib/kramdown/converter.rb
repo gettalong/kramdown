@@ -31,12 +31,12 @@ module Kramdown
 
     configurable(:syntax_highlighter)
 
-    ["Coderay", "Rouge"].each do |klass_name|
+    ['Minted', "Coderay", "Rouge"].each do |klass_name|
       kn_down = klass_name.downcase.intern
       add_syntax_highlighter(kn_down) do |converter, text, lang, type, opts|
         require "kramdown/converter/syntax_highlighter/#{kn_down}"
         klass = ::Kramdown::Utils.deep_const_get("::Kramdown::Converter::SyntaxHighlighter::#{klass_name}")
-        if klass::AVAILABLE
+        if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
           add_syntax_highlighter(kn_down, klass)
         else
           add_syntax_highlighter(kn_down) {|*args| nil}

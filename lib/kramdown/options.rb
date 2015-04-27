@@ -525,7 +525,7 @@ Options for the syntax highlighter can be set with the
 syntax_highlighter_opts configuration option.
 
 Default: coderay
-Used by: HTML converter
+Used by: HTML/Latex converter
 EOF
 
     define(:syntax_highlighter_opts, Object, {}, <<EOF) do |val|
@@ -538,7 +538,7 @@ The value needs to be a hash with key-value pairs that are understood by
 the used syntax highlighter.
 
 Default: {}
-Used by: HTML converter
+Used by: HTML/Latex converter
 EOF
       val = simple_hash_validator(val, :syntax_highlighter_opts)
       val.keys.each do |k|
