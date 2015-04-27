@@ -47,15 +47,12 @@ module Kramdown
 
     configurable(:math_engine)
 
-    require 'kramdown/converter/math_engine/mathjax'
-    add_math_engine(:mathjax, ::Kramdown::Converter::MathEngine::Mathjax)
-
-    ["MathjaxNode", "Ritex", "Itex2MML"].each do |klass_name|
+    ['Mathjax', "MathjaxNode", "Ritex", "Itex2MML"].each do |klass_name|
       kn_down = klass_name.downcase.intern
       add_math_engine(kn_down) do |converter, el, opts|
         require "kramdown/converter/math_engine/#{kn_down}"
         klass = ::Kramdown::Utils.deep_const_get("::Kramdown::Converter::MathEngine::#{klass_name}")
-        if klass::AVAILABLE
+        if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
           add_math_engine(kn_down, klass)
         else
           add_math_engine(kn_down) {|*args| nil}
