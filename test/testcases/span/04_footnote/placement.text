@@ -3,6 +3,6 @@
 
 Some para with a[^1] footnote.
 
-[^1]: Footnote text
+[^1]: Footnote \\\` text
 
 And another para.

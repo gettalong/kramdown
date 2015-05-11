@@ -330,7 +330,7 @@ module Kramdown
       def convert_root(el, indent)
         result = inner(el, indent)
         if @footnote_location
-          result.sub!(/#{@footnote_location}/, footnote_content)
+          result.sub!(/#{@footnote_location}/, footnote_content.gsub(/\\/, "\\\\\\\\"))
         else
           result << footnote_content
         end
@@ -341,7 +341,7 @@ module Kramdown
                  else
                    ''
                  end
-          result.sub!(/#{@toc_code.last}/, text)
+          result.sub!(/#{@toc_code.last}/, text.gsub(/\\/, "\\\\\\\\"))
         end
         result
       end
