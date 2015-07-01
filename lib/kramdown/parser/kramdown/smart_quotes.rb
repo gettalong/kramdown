@@ -123,7 +123,7 @@ module Kramdown
 
       SQ_RULES = [
                   [/("|')(?=[_*]{1,2}\S)/, [:lquote1]],
-                  [/("|')(?=#{SQ_PUNCT}\B)/, [:rquote1]],
+                  [/("|')(?=#{SQ_PUNCT}(?!\.\.)\B)/, [:rquote1]],
                   # Special case for double sets of quotes, e.g.:
                   #   <p>He said, "'Quoted' words in a larger quote."</p>
                   [/(\s?)"'(?=\w)/, [1, :ldquo, :lsquo]],
