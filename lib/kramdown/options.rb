@@ -580,6 +580,16 @@ EOF
       val
     end
 
+    define(:footnote_backlink, String, '&#8617;', <<EOF)
+Defines the text that should be used for the footnote backlinks
+
+The footnote backlink is just text, so any special HTML characters will
+be escaped.
+
+Default: '&8617;'
+Used by: HTML converter
+EOF
+
   end
 
 end

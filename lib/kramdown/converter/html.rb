@@ -430,6 +430,7 @@ module Kramdown
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1
         i = 0
+        backlink_text = escape_html(@options[:footnote_backlink], :text)
         while i < @footnotes.length
           name, data, _, repeat = *@footnotes[i]
           li = Element.new(:li, nil, {'id' => "fn:#{name}"})
@@ -443,9 +444,9 @@ module Kramdown
             insert_space = false
           end
 
-          para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? ' ' : '', name, "&#8617;"])
+          para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? ' ' : '', name, backlink_text])
           (1..repeat).each do |index|
-            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "&#8617;<sup>#{index+1}</sup>"])
+            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "#{backlink_text}<sup>#{index+1}</sup>"])
           end
 
           ol.children << Element.new(:raw, convert(li, 4))
