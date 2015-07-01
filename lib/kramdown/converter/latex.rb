@@ -237,7 +237,7 @@ module Kramdown
           @data[:packages] << 'minted'
           "#{latex_link_target(el)}#{highlighted_code}"
         else
-          "{\\tt #{latex_link_target(el)}#{escape(el.value)}}"
+          "\\texttt{#{latex_link_target(el)}#{escape(el.value)}}"
         end
       end
 
