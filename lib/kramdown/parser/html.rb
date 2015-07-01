@@ -86,7 +86,6 @@ module Kramdown
           @tree.children << el
 
           if !closed && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
-            warning("The HTML tag '#{el.value}' on line #{line} cannot have any content - auto-closing it")
             closed = true
           end
           if name == 'script' || name == 'style'

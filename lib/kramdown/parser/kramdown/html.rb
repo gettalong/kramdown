@@ -140,9 +140,7 @@ module Kramdown
                            :content_model => (do_parsing ? :span : :raw), :is_closed => !!@src[4])
           @tree.children << el
           stop_re = /<\/#{Regexp.escape(tag_name)}\s*>/i
-          if !@src[4] && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
-            warning("The HTML tag '#{el.value}' on line #{line} cannot have any content - auto-closing it")
-          elsif !@src[4]
+          if !@src[4] && !HTML_ELEMENTS_WITHOUT_BODY.include?(el.value)
             if parse_spans(el, stop_re, (do_parsing ? nil : [:span_html]))
               @src.scan(stop_re)
             else
