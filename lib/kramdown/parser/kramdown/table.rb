@@ -45,8 +45,10 @@ module Kramdown
 
         while !@src.eos?
           break if !@src.check(TABLE_LINE)
-          if @src.scan(TABLE_SEP_LINE) && !rows.empty?
-            if table.options[:alignment].empty? && !has_footer
+          if @src.scan(TABLE_SEP_LINE)
+            if rows.empty?
+              # nothing to do, ignoring multiple consecutive separator lines
+            elsif table.options[:alignment].empty? && !has_footer
               add_container.call(:thead, false)
               table.options[:alignment] = @src[1].scan(TABLE_HSEP_ALIGN).map do |left, right|
                 (left.empty? && right.empty? && :default) || (right.empty? && :left) || (left.empty? && :right) || :center
