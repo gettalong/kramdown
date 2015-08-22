@@ -36,7 +36,7 @@ module Kramdown
       end
 
       def get_tree(el)
-        hash = {type: el.type}
+        hash = {:type => el.type}
         hash[:attr] = el.attr unless el.attr.empty?
         hash[:value] = el.value unless el.value.nil?
         unless el.children.empty?
