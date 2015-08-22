@@ -18,11 +18,21 @@ module Kramdown
 
     # Converts a Kramdown::Document to JSON.
     #
-    class Json < Base
+    # I am calling the class "Jsonx" rather than "Json"
+    # to force the use of a "to_jsonx" method to convert
+    # documents to JSON. Using the more natural "Json"
+    # causes problems between our custom "to_json" and 
+    # Ruby's native "to_json"
+    class Jsonx < Base
+
+      def initialize(root, options)
+        super
+        @pretty_print = @options[:pretty_print] || false
+      end
 
       def convert(el)
         tree = get_tree(el)
-        tree.to_json
+        @pretty_print ? JSON.pretty_generate(tree) : JSON.generate(tree)
       end
 
       def get_tree(el)
