@@ -38,8 +38,10 @@ module Kramdown
             omit_trailing_br = (Kramdown::Element.category(element) == :block && element.children[-1] == child &&
                                 lines[-1].empty?)
             lines.each_with_index do |line, index|
-              children << Element.new(:text, (index > 0 ? "\n#{line}" : line))
-              children << Element.new(:br) if index < lines.size - 2 ||
+              new_element_options = { :location => child.options[:location] + index }
+
+              children << Element.new(:text, (index > 0 ? "\n#{line}" : line), nil, new_element_options)
+              children << Element.new(:br, nil, nil, new_element_options) if index < lines.size - 2 ||
                 (index == lines.size - 2 && !omit_trailing_br)
             end
             children
