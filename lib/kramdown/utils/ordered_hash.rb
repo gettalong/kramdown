@@ -43,6 +43,11 @@ module Kramdown
           @data.has_key?(key)
         end
 
+        # Return +true+ if the hash contains no keys.
+        def empty?
+          @data.empty?
+        end
+
         # Set the value for the +key+ to +val+.
         def []=(key, val)
           @order << key if !@data.has_key?(key)
