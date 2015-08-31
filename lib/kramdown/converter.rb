@@ -26,6 +26,7 @@ module Kramdown
     autoload :Toc, 'kramdown/converter/toc'
     autoload :RemoveHtmlTags, 'kramdown/converter/remove_html_tags'
     autoload :Pdf, 'kramdown/converter/pdf'
+    autoload :Ast, 'kramdown/converter/ast'
 
     extend ::Kramdown::Utils::Configurable
 
