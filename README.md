@@ -1,5 +1,7 @@
 # kramdown
 
+[![Join the chat at https://gitter.im/gettalong/kramdown](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gettalong/kramdown?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Readme first!
 
 kramdown was originally licensed under the GPL until the 1.0.0 release. However, due to the many
