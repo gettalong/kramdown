@@ -17,14 +17,14 @@ Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 class TestFiles < Minitest::Test
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                      ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                      ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                      ('test/testcases/span/03_codespan/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
+                      ('test/testcases/block/06_codeblock/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
 
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
-    next if EXCLUDE_KD_FILES.any? {|f| text_file =~ /#{f}$/}
+    next if EXCLUDE_KD_FILES.any? {|f| text_file =~ /#{f}/}
     basename = text_file.sub(/\.text$/, '')
     opts_file = text_file.sub(/\.text$/, '.options')
     (Dir[basename + ".*"] - [text_file, opts_file]).each do |output_file|
@@ -51,8 +51,9 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
-                          'test/testcases/block/06_codeblock/highlighting-rouge.html', # bc of double surrounding <div>
-                          ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
+                          'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
+                          ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
+                          ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
                           'test/testcases/block/15_math/ritex.html', # bc of tidy
                           'test/testcases/span/math/ritex.html', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.html', # bc of tidy
@@ -153,8 +154,9 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/extension/comment.text',      # bc of comment text modifications (can this be avoided?)
                           'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
-                          ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
-                          ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                          ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                          ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                          ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           'test/testcases/block/15_math/ritex.text', # bc of tidy
                           'test/testcases/span/math/ritex.text', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.text', # bc of tidy
@@ -193,14 +195,15 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/09_html/markdown_attr.html',   # bc of markdown attr
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
-                             'test/testcases/block/06_codeblock/highlighting-rouge.html', # bc of double surrounding <div>
+                             'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                              'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                              'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
-                             ('test/testcases/span/03_codespan/highlighting-rouge.html' if RUBY_VERSION < '2.0'),
+                             ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
+                             ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
                              'test/testcases/block/15_math/ritex.html', # bc of tidy
                              'test/testcases/span/math/ritex.html', # bc of tidy
                              'test/testcases/block/15_math/itex2mml.html', # bc of tidy
@@ -284,8 +287,10 @@ class TestFiles < Minitest::Test
                        'test/testcases/span/text_substitutions/entities_as_char.text',
                        'test/testcases/span/text_substitutions/entities.text',
                        'test/testcases/span/text_substitutions/typography.text',
-                       ('test/testcases/span/03_codespan/highlighting-rouge.text' if RUBY_VERSION < '2.0'),
-                       ('test/testcases/block/06_codeblock/highlighting-rouge.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                       ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'),
+                       ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'),
+                       ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                       ('test/testcases/block/06_codeblock/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
                       ].compact
 
   # Generate test methods for gfm-to-html conversion

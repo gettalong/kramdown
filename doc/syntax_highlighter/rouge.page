@@ -23,5 +23,17 @@ formatter
   Note that setting this key only makes sense using Ruby code because the value needs to be a class
   object!
 
-Besides the above kramdown-specific options, you can use any options that Rouge supports, like
-`line_numbers`.
+disable
+: If set to `true`, highlighting with Rouge will be disabled.
+
+  Should probably not be set globally but inside the 'span' or 'block' options.
+
+span
+: A key-value map of options that are only used when syntax highlighting code spans.
+
+block
+: A key-value map of options that are only used when syntax highlighting code blocks.
+
+Furthermore all Rouge options (e.g. 'line_numbers') can be set directly on the
+'syntax_highlighter_opts' option (where they apply to code spans *and* code blocks) and/or on the
+'span'/'block' keys.
