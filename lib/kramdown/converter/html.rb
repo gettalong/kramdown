@@ -444,9 +444,11 @@ module Kramdown
             insert_space = false
           end
 
-          para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? ' ' : '', name, backlink_text])
-          (1..repeat).each do |index|
-            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "#{backlink_text}<sup>#{index+1}</sup>"])
+          unless @options[:footnote_backlink].empty?
+            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? ' ' : '', name, backlink_text])
+            (1..repeat).each do |index|
+              para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "#{backlink_text}<sup>#{index+1}</sup>"])
+            end
           end
 
           ol.children << Element.new(:raw, convert(li, 4))

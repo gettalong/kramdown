@@ -586,6 +586,9 @@ Defines the text that should be used for the footnote backlinks
 The footnote backlink is just text, so any special HTML characters will
 be escaped.
 
+If the footnote backlint text is an empty string, no footnote backlinks
+will be generated.
+
 Default: '&8617;'
 Used by: HTML converter
 EOF
