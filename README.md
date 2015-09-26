@@ -34,6 +34,9 @@ Starting from version 1.0.0 kramdown is using a versioning scheme with major, mi
 in the version number where the major number changes on backwards-incompatible changes, the minor
 number on the introduction of new features and the patch number on everything else.
 
+For information about changes between versions, have a look at
+<http://kramdown.gettalong.org/news.html> or the commit history!
+
 
 ## Usage
 
