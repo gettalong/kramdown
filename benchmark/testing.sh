@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.bashrc
+source ~/.profile
 
 COMMAND="$@"
 if [[ -z "$COMMAND" ]]; then COMMAND="rake test"; fi
