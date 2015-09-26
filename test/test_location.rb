@@ -216,4 +216,14 @@ describe 'location' do
     end
   end
 
+  it 'handles hard wrapped paragraphs with the GFM parser' do
+    str = "A*b*C\nA*b*C\nA*b*C"
+    doc = Kramdown::Document.new(str, :input => 'GFM', :hard_wrap => true)
+    para = doc.root.children.first
+    1.upto(3) do |line|
+      0.upto(line == 3 ? 2 : 3) do |element|
+        assert_equal(line, para.children[4*(line - 1) + element].options[:location])
+      end
+    end
+  end
 end
