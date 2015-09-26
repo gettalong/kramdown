@@ -22,3 +22,6 @@ formatter
 
   Note that setting this key only makes sense using Ruby code because the value needs to be a class
   object!
+
+Besides the above kramdown-specific options, you can use any options that Rouge supports, like
+`line_numbers`.
