@@ -75,7 +75,7 @@ end
 if defined?(Webgen)
   desc "Generate the HTML documentation"
   task :htmldoc do
-    ruby "-Ilib -S webgen"
+    ruby "-S webgen"
   end
   CLOBBER << "htmldoc/"
   CLOBBER << "webgen-tmp"
