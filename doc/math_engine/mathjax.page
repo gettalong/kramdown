@@ -12,7 +12,9 @@ This engine marks up math formulas with HTML `<script type="math/tex">` tags tha
 understands. The only other thing to do is to include the MathJax library itself on the HTML page.
 
 Note that kramdown does *not* ship with the MathJax library and that therefore the "default"
-template does *not* include a link to it!
+template does *not* include a link to it! The
+[MathJax documentation](http://docs.mathjax.org/en/latest/start.html) describes how to add a link
+to MathJax to your page.
 
 
 The MathJax engine supports the following keys of the option
