@@ -9,6 +9,7 @@ node_js:
   - 0.10
 
 before_install:
+  - sudo apt-get update
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
   - gem install rake minitest coderay stringex rouge ritex itextomml
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
