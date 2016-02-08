@@ -64,8 +64,8 @@ module Kramdown
       FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?((\w[\w-]*)(?:\?\S*)?)?\s*?\n(.*?)^\1\2*\s*?\n/m
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
-      STRIKETHROUGH_DELIM = /~{2,}/
-      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}.+#{STRIKETHROUGH_DELIM}/m
+      STRIKETHROUGH_DELIM = /~~/
+      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}[^\s~](.*)[^\s~]#{STRIKETHROUGH_DELIM}/m
       define_parser(:strikethrough_gfm, STRIKETHROUGH_MATCH, '~~')
 
       def parse_strikethrough_gfm
