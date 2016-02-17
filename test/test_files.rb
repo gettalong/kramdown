@@ -64,6 +64,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/mathjaxnode.html', # bc of tidy
                           'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
+                          'test/testcases/span/05_html/mark_element.html', # bc of tidy
                          ].compact
     EXCLUDE_HTML_TEXT_FILES = ['test/testcases/block/09_html/parse_as_span.htmlinput',
                                'test/testcases/block/09_html/parse_as_raw.htmlinput',
@@ -166,6 +167,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/15_math/mathjaxnode_semantics.text', # bc of tidy
                           'test/testcases/span/math/mathjaxnode.text', # bc of tidy
                           'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
+                          'test/testcases/span/05_html/mark_element.text', # bc of tidy
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -215,6 +217,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                              'test/testcases/span/01_link/link_defs_with_ial.html', # bc of attribute ordering
+                             'test/testcases/span/05_html/mark_element.html', # bc of tidy
                             ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
