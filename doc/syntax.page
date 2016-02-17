@@ -1136,9 +1136,9 @@ As the wording suggests, inline links provide all information inline in the text
 style links only provide the link text in the text flow and everything else is defined
 elsewhere. This also allows you to reuse link definitions.
 
-An inline style link can be created by surrounding the link text which must contain at least one
-character with square brackets, followed immediately by the link URL (and an optional title in
-single or double quotes preceded by at least one space) in normal parentheses. For example:
+An inline style link can be created by surrounding the link text with square brackets, followed
+immediately by the link URL (and an optional title in single or double quotes preceded by at least
+one space) in normal parentheses. For example:
 
     This is [a link](http://rubyforge.org) to a page.
     A [link](../test "local URI") can also have a title.
@@ -1149,6 +1149,8 @@ Notes:
 * The link text is treated like normal span-level text and therefore is parsed and converted.
   However, if you use square brackets within the link text, you have to either properly nest them or
   to escape them. It is not possible to create nested links!
+
+  The link text may also be omitted, e.g. for creating link anchors.
 
 * The link URL has to contain properly nested parentheses if no title is specified, or the link URL
   must be contained in angle brackets (incorrectly nested parentheses are allowed).
@@ -1222,9 +1224,8 @@ used on them to specify additional attributes for the links:
 
 Images can be specified via a syntax that is similar to the one used by links. The difference is
 that you have to use an exclamation mark before the first square bracket and that the link text of a
-normal link, which may also be the empty string in case of image links, becomes the alternative text
-of the image link. As with normal links, image links can be written inline or reference style. For
-example:
+normal link becomes the alternative text of the image link. As with normal links, image links can be
+written inline or reference style. For example:
 
     Here comes a ![smiley](../images/smiley.png)! And here
     ![too](../images/other.png 'Title text'). Or ![here].

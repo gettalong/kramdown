@@ -77,7 +77,7 @@ module Kramdown
           count = count + (@src[1] ? -1 : 1)
           count - el.children.select {|c| c.type == :img}.size == 0
         end
-        if !found || (link_type == :a && el.children.empty?)
+        unless found
           @src.revert_pos(saved_pos)
           add_text(result)
           return
