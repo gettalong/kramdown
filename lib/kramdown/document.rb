@@ -100,13 +100,13 @@ module Kramdown
     # immediately available and the output can be generated.
     def initialize(source, options = {})
       @options = Options.merge(options).freeze
-      parser = (options[:input] || 'kramdown').to_s
+      parser = (@options[:input] || 'kramdown').to_s
       parser = parser[0..0].upcase + parser[1..-1]
       try_require('parser', parser)
       if Parser.const_defined?(parser)
         @root, @warnings = Parser.const_get(parser).parse(source, @options)
       else
-        raise Kramdown::Error.new("kramdown has no parser to handle the specified input format: #{options[:input]}")
+        raise Kramdown::Error.new("kramdown has no parser to handle the specified input format: #{@options[:input]}")
       end
     end
 
