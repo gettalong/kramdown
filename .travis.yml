@@ -13,6 +13,6 @@ before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
   - gem install rake minitest coderay stringex rouge ritex itextomml
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
-  - npm install MathJax-node
+  - npm install mathjax-node
 
 script: ruby -rubygems -Ilib:test test/test_*
