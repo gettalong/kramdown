@@ -9,7 +9,7 @@ can be used together with the [HTML converter](../converter/html.html).
 
 To use Mathjax-Node, set the option ['math_engine'](../options.html#option-math-engine) to
 'mathjaxnode' and make sure that both [Node.js](https://nodejs.org/) and Mathjax-Node are available.
-The Mathjax-Node library can be installed, e.g., via npm by running `npm install -g MathJax-node`.
+The Mathjax-Node library can be installed, e.g., via npm by running `npm install -g mathjax-node`.
 Instructions for installing Node.js can be found in the [joyent/node
 wiki](https://github.com/joyent/node/wiki/Installation).
 
@@ -25,4 +25,4 @@ texhints
   `false`, the TeX-specific classes, like `MJX-TeXAtom-ORD`, will not be added. These classes
   provide styling hints to the MathJax browser library.
 
-The MathJax-node library is released under the Apache License, Version 2.0.
+The mathjax-node library is released under the Apache License, Version 2.0.
