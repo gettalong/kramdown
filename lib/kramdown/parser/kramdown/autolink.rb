@@ -16,7 +16,7 @@ module Kramdown
       elsif RUBY_VERSION < '1.9.0'
         ACHARS = '\w'
       else
-        ACHARS = '[[:alnum:]]'
+        ACHARS = '[[:alnum:]]_'
       end
       AUTOLINK_START_STR = "<((mailto|https?|ftps?):.+?|[-.#{ACHARS}]+@[-#{ACHARS}]+(?:\.[-#{ACHARS}]+)*\.[a-z]+)>"
       AUTOLINK_START = /#{AUTOLINK_START_STR}/u

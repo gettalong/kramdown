@@ -1,6 +1,7 @@
 This should be a <http://www.example.com/> link.
 This should be a <mailto:john.doe@example.com> link.
 As should <john.doe@example.com> this.
+As should <john_doe@example.com> this.
 As should <CSS@example.com> this.
 Another ampersand <http://www.example.com/?doit&x=y> link.
 More entities  <http://www.example.com/?doit&amp;x=&quot;y&z=y>.
