@@ -5,14 +5,16 @@ rvm:
   - 2.0.0
   - 2.1.0
   - 2.2.0
-node_js:
-  - 0.10
+
+env:
+  - TRAVIS_NODE_VERSION="4.0"
 
 before_install:
   - sudo apt-get update
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
   - gem install rake minitest coderay stringex rouge ritex itextomml
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
-  - npm install MathJax-node
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+  - npm install mathjax-node cssstyle
 
 script: ruby -rubygems -Ilib:test test/test_*

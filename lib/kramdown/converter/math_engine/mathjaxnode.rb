@@ -9,19 +9,27 @@
 
 module Kramdown::Converter::MathEngine
 
-  # Uses the MathJax-node library for converting math formulas to MathML.
+  # Uses the mathjax-node library for converting math formulas to MathML.
   module MathjaxNode
 
     # MathjaxNode is available if this constant is +true+.
     AVAILABLE = RUBY_VERSION >= '1.9' && begin
-      npm = %x{npm --global --depth=1 list MathJax-node}
+      %x{node --version}[1..-2] >= '4.0'
+    rescue
+      begin
+        %x{nodejs --version}[1..-2] >= '4.0'
+      rescue
+        false
+      end
+    end && begin
+      npm = %x{npm --global --depth=1 list mathjax-node 2>&1}
 
-      unless /MathJax-node@/ === npm.lines.drop(1).join("\n")
-        npm = %x{npm --depth=1 list MathJax-node}
+      unless /mathjax-node@/ === npm.lines.drop(1).join("\n")
+        npm = %x{npm --depth=1 list mathjax-node 2>&1}
       end
 
-      T2MPATH = File.join(npm.lines.first.strip, "node_modules/MathJax-node/bin/tex2mml")
-      /MathJax-node@/ === npm.lines.drop(1).join("\n") && File.exist?(T2MPATH)
+      T2MPATH = File.join(npm.lines.first.strip, "node_modules/mathjax-node/bin/tex2mml")
+      /mathjax-node@/ === npm.lines.drop(1).join("\n") && File.exist?(T2MPATH)
     rescue
       false
     end
