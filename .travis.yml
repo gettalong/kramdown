@@ -15,6 +15,6 @@ before_install:
   - gem install rake minitest coderay stringex rouge ritex itextomml
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install mathjax-node
+  - npm install mathjax-node cssstyle
 
 script: ruby -rubygems -Ilib:test test/test_*
