@@ -32,6 +32,9 @@ module Kramdown::Converter::SyntaxHighlighter
       else
         nil
       end
+    rescue
+      converter.warning("There was an error using CodeRay: #{$!.message}")
+      nil
     end
 
     def self.options(converter, type)

@@ -157,7 +157,7 @@ class TestFiles < Minitest::Test
                           ('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                           ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                          ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                          'test/testcases/block/06_codeblock/rouge/simple.text',
                           'test/testcases/block/15_math/ritex.text', # bc of tidy
                           'test/testcases/span/math/ritex.text', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.text', # bc of tidy

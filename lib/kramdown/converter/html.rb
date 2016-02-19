@@ -92,6 +92,7 @@ module Kramdown
       def convert_codeblock(el, indent)
         attr = el.attr.dup
         lang = extract_code_language!(attr)
+        lang = el.options[:lang] if el.options.has_key?(:lang)
         highlighted_code = highlight_code(el.value, lang, :block)
 
         if highlighted_code
@@ -112,7 +113,7 @@ module Kramdown
             end
           end
           code_attr = {}
-          code_attr['class'] = "language-#{lang}" if lang
+          code_attr['class'] = "language-#{lang.sub(/\?.*$/, '')}" if lang
           "#{' '*indent}<pre#{html_attributes(attr)}><code#{html_attributes(code_attr)}>#{result}\n</code></pre>\n"
         end
       end

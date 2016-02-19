@@ -98,6 +98,10 @@ module Kramdown
   #
   # The +value+ field has to contain the content of the code block.
   #
+  # The option :lang specifies a highlighting language with possible HTML style options (e.g.
+  # php?start_inline=1) and should be used instead of a possibly also available language embedded in
+  # a class name of the form 'language-LANG'.
+  #
   #
   # === :ul
   #

@@ -2,3 +2,8 @@
 ^
     <a>href</a>
 {: .language-html}
+
+
+~~~ php?start_inline=1
+$foo = new Bar;
+~~~
