@@ -19,6 +19,7 @@ changes:
 * Support for fenced code blocks using three or more backticks has been added.
 * Hard line breaks in paragraphs are enforced by default (see option 'hard_wrap').
 * ATX headers need a whitespace character after the hash signs.
+* Strikethroughs can be created using two tildes surrounding a piece of text
 
 ## Options
 
