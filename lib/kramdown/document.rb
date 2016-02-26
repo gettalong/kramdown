@@ -29,7 +29,7 @@
 #
 #     Kramdown::Document.new(text).to_html
 #
-# For detailed information have a look at the Kramdown::Document class.
+# For detailed information have a look at the *\Kramdown::Document* class.
 #
 # == License
 #
