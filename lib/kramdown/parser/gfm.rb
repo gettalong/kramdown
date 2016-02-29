@@ -65,29 +65,28 @@ module Kramdown
       define_parser(:codeblock_fenced_gfm, /^[~`]{3,}/, nil, 'parse_codeblock_fenced')
 
       STRIKETHROUGH_DELIM = /~~/
-      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}[^\s~](.*)[^\s~]#{STRIKETHROUGH_DELIM}/m
+      STRIKETHROUGH_MATCH = /#{STRIKETHROUGH_DELIM}[^\s~](.*?)[^\s~]#{STRIKETHROUGH_DELIM}/m
       define_parser(:strikethrough_gfm, STRIKETHROUGH_MATCH, '~~')
 
       def parse_strikethrough_gfm
         line_number = @src.current_line_number
 
-        if @src.scan(STRIKETHROUGH_DELIM)
-          el = Element.new(:html_element, 'del', {}, :category => :span, :line => line_number)
-          @tree.children << el
-          parse_spans(el, STRIKETHROUGH_DELIM)
-          @src.scan(STRIKETHROUGH_DELIM)
-        end
+        @src.pos += @src.matched_size
+        el = Element.new(:html_element, 'del', {}, :category => :span, :line => line_number)
+        @tree.children << el
+
+        env = save_env
+        reset_env(:src => Kramdown::Utils::StringScanner.new(@src.matched[2..-3], line_number),
+                  :text_type => :text)
+        parse_spans(el)
+        restore_env(env)
+
+        el
       end
 
       ESCAPED_CHARS_GFM = /\\([\\.*_+`<>()\[\]{}#!:\|"'\$=\-~])/
+      define_parser(:escaped_chars_gfm, ESCAPED_CHARS_GFM, '\\\\', :parse_escaped_chars)
 
-      # Parse the backslash-escaped character at the current location.
-      def parse_escaped_chars_gfm
-        @src.pos += @src.matched_size
-        add_text(@src[1])
-      end
-
-      define_parser(:escaped_chars_gfm, ESCAPED_CHARS_GFM, '\\\\')
     end
   end
 end

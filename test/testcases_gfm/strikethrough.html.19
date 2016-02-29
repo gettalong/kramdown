@@ -20,7 +20,7 @@ test<br />
 
 <p>This is a <del>strikethrough with a ~ in the middle</del></p>
 
-<p>I <del>don&#8217;t even</del>~ have an extra tilde.</p>
+<p>I <del>don’t even</del>~ have an extra tilde.</p>
 
 <p>This should ~~not be struck.</p>
 

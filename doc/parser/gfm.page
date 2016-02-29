@@ -21,6 +21,18 @@ changes:
 * ATX headers need a whitespace character after the hash signs.
 * Strikethroughs can be created using two tildes surrounding a piece of text
 
+Please note that the GFM parser tries to mimic the parser used at Github which means that for some
+special cases broken behaviour is the expected behaviour.
+
+Here is an example:
+
+    This ~~is a complex strike through *test ~~with nesting~~ involved* here~~.
+
+In this case the correct GFM result is:
+
+    <p>This <del>is a complex strike through *test ~~with nesting</del> involved* here~~.</p>
+
+
 ## Options
 
 The GFM parser supports the following options:

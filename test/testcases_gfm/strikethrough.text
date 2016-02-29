@@ -23,3 +23,5 @@ This is a ~~strikethrough with a ~ in the middle~~
 I ~~don't even~~~ have an extra tilde.
 
 This should ~~not be struck.
+
+This ~~is a complex *strike* through *test ~~with nesting~~ involved* here~~.

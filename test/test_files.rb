@@ -299,7 +299,6 @@ class TestFiles < Minitest::Test
   # Generate test methods for gfm-to-html conversion
   Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|
     next if EXCLUDE_GFM_FILES.any? {|f| text_file =~ /#{f}$/}
-    next if RUBY_VERSION < '1.9'
     basename = text_file.sub(/\.text$/, '')
 
     html_file = [(".html.19" if RUBY_VERSION >= '1.9'), ".html"].compact.
