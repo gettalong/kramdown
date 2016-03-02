@@ -1584,10 +1584,12 @@ ID name
 
 class names
 
-: A class name is defined by using a dot and then the class name. This is (almost, but not quite) a
-  short hand for the key-value pair `class="class-name"`. Almost because it actually means that the
-  class name should be appended to the current value of the `class` attribute. The following ALDs
-  are all equivalent:
+: A class name is defined by using a dot and then the class name which may contain any character
+  except whitespace, the dot character and the hash character.
+
+  This is (almost, but not quite) a short hand for the key-value pair `class="class-name"`. Almost
+  because it actually means that the class name should be appended to the current value of the
+  `class` attribute. The following ALDs are all equivalent:
 
       {:id: .cls1 .cls2}
       {:id: class="cls1" .cls2}

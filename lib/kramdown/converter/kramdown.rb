@@ -402,7 +402,7 @@ module Kramdown
           next if el.type == :header && k == 'id' && !v.strip.empty?
           if v.nil?
             ''
-          elsif k == 'class' && !v.empty?
+          elsif k == 'class' && !v.empty? && !v.index(/[\.#]/)
             " " + v.split(/\s+/).map {|w| ".#{w}"}.join(" ")
           elsif k == 'id' && !v.strip.empty?
             " ##{v}"

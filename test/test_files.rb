@@ -118,6 +118,7 @@ class TestFiles < Minitest::Test
                            'test/testcases/span/01_link/empty_title.text',
                            'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
                            'test/testcases/block/06_codeblock/with_lang_in_fenced_block_name_with_dash.text',
+                           'test/testcases/block/06_codeblock/with_lang_in_fenced_block_any_char.text',
                           ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/}

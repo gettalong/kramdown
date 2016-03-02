@@ -182,8 +182,8 @@ module Kramdown
 
       # Extract the code block/span language from the attributes.
       def extract_code_language(attr)
-        if attr['class'] && attr['class'] =~ /\blanguage-\w[\w-]*\b/
-          attr['class'].scan(/\blanguage-(\w[\w-]*)\b/).first.first
+        if attr['class'] && attr['class'] =~ /\blanguage-\S+/
+          attr['class'].scan(/\blanguage-(\S+)/).first.first
         end
       end
 
@@ -192,7 +192,7 @@ module Kramdown
       # *Warning*: This version will modify the given attributes if a language is present.
       def extract_code_language!(attr)
         lang = extract_code_language(attr)
-        attr['class'] = attr['class'].sub(/\blanguage-\w[\w-]*\b/, '').strip if lang
+        attr['class'] = attr['class'].sub(/\blanguage-\S+/, '').strip if lang
         attr.delete('class') if lang && attr['class'].empty?
         lang
       end
