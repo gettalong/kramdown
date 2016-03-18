@@ -180,6 +180,7 @@ EOF
       s.add_development_dependency 'rouge', '~> 1.8'
       s.add_development_dependency 'stringex', '~> 1.5.1'
       s.add_development_dependency 'prawn', '~> 2.0'
+      s.add_development_dependency 'prawn-table', '~> 0.2.2'
       s.add_development_dependency 'ritex', '~> 1.0'
       s.add_development_dependency 'itextomml', '~> 1.5'
 
