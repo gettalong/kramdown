@@ -22,7 +22,8 @@ module Kramdown::Converter::SyntaxHighlighter
     end
 
     def self.call(converter, text, lang, type, _unused_opts)
-      opts = options(converter, type)
+      opts = options(converter, type).dup
+      opts[:css_class] = ((opts[:css_class] || '') + ' highlight language-' + lang.gsub(/\?.+/, '')).strip if lang 
       lexer = ::Rouge::Lexer.find_fancy(lang || opts[:default_lang], text)
       return nil if opts[:disable] || !lexer
 
