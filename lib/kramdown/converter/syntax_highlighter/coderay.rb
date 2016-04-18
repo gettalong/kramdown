@@ -21,14 +21,14 @@ module Kramdown::Converter::SyntaxHighlighter
       AVAILABLE = false  # :nodoc:
     end
 
-    def self.call(converter, text, lang, type, _unused_opts)
+    def self.call(converter, text, lang, type, call_opts)
       return nil unless converter.options[:enable_coderay]
 
       if type == :span && lang
         ::CodeRay.scan(text, lang.to_sym).html(options(converter, :span)).chomp
       elsif type == :block && (lang || options(converter, :default_lang))
-        lang = (lang || options(converter, :default_lang)).to_s.gsub(/-/, '_').to_sym
-        ::CodeRay.scan(text, lang).html(options(converter, :block)).chomp << "\n"
+        lang ||= call_opts[:default_lang] = options(converter, :default_lang)
+        ::CodeRay.scan(text, lang.to_s.gsub(/-/, '_').to_sym).html(options(converter, :block)).chomp << "\n"
       else
         nil
       end

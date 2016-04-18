@@ -46,6 +46,9 @@ module Kramdown
     #                  :block type text correctly wrapped (i.e. normally inside a pre-tag, but may
     #                  also be a table-tag or just a div-tag) but :span type text *without* a
     #                  code-tag!
+    #
+    #                  Also, a syntax highlighter should store the default highlighting language for
+    #                  the invocation in the +opts+ hash under the key :default_lang.
     module SyntaxHighlighter
     end
 
