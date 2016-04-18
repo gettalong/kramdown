@@ -92,11 +92,11 @@ module Kramdown
       def convert_codeblock(el, indent)
         attr = el.attr.dup
         lang = extract_code_language!(attr)
-        lang = el.options[:lang] if el.options.has_key?(:lang)
-        highlighted_code = highlight_code(el.value, lang, :block)
+        hl_opts = {}
+        highlighted_code = highlight_code(el.value, el.options[:lang] || lang, :block, hl_opts)
 
         if highlighted_code
-          add_syntax_highlighter_to_class_attr(attr)
+          add_syntax_highlighter_to_class_attr(attr, lang || hl_opts[:default_lang])
           "#{' '*indent}<div#{html_attributes(attr)}>#{highlighted_code}#{' '*indent}</div>\n"
         else
           result = escape_html(el.value)
@@ -113,7 +113,7 @@ module Kramdown
             end
           end
           code_attr = {}
-          code_attr['class'] = "language-#{lang.sub(/\?.*$/, '')}" if lang
+          code_attr['class'] = "language-#{lang}" if lang
           "#{' '*indent}<pre#{html_attributes(attr)}><code#{html_attributes(code_attr)}>#{result}\n</code></pre>\n"
         end
       end
@@ -253,9 +253,10 @@ module Kramdown
       def convert_codespan(el, indent)
         attr = el.attr.dup
         lang = extract_code_language(attr)
-        result = highlight_code(el.value, lang, :span)
+        hl_opts = {}
+        result = highlight_code(el.value, lang, :span, hl_opts)
         if result
-          add_syntax_highlighter_to_class_attr(attr)
+          add_syntax_highlighter_to_class_attr(attr, hl_opts[:default_lang])
         else
           result = escape_html(el.value)
         end
@@ -363,9 +364,11 @@ module Kramdown
         "#{' '*indent}<#{name}#{html_attributes(attr)}>\n#{body}#{' '*indent}</#{name}>\n"
       end
 
-      # Add the syntax highlighter name to the 'class' attribute of the given attribute hash.
-      def add_syntax_highlighter_to_class_attr(attr)
+      # Add the syntax highlighter name to the 'class' attribute of the given attribute hash. And
+      # overwrites or add a "language-LANG" part using the +lang+ parameter if +lang+ is not nil.
+      def add_syntax_highlighter_to_class_attr(attr, lang = nil)
         (attr['class'] = (attr['class'] || '') + " highlighter-#{@options[:syntax_highlighter]}").lstrip!
+        attr['class'].sub!(/\blanguage-\S+|(^)/) { "language-#{lang}#{$1 ? ' ' : ''}" } if lang
       end
 
       # Generate and return an element tree for the table of contents.
