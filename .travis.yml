@@ -12,7 +12,8 @@ env:
 before_install:
   - sudo apt-get update
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
-  - gem install rake minitest coderay stringex rouge ritex itextomml
+  - gem install rake --version 10.5.0
+  - gem install minitest coderay stringex rouge ritex itextomml
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - npm install mathjax-node cssstyle
