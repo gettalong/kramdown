@@ -22,7 +22,7 @@ module Kramdown
         element = (result.length == 2 ? :strong : :em)
         type = result[0..0]
 
-        if (type == '_' && @src.pre_match =~ /[^\s\[*_"']\z/) || @src.check(/\s/) ||
+        if (type == '_' && @src.pre_match =~ /[[:alpha:]-]\z/) || @src.check(/\s/) ||
             @tree.type == element || @stack.any? {|el, _| el.type == element}
           add_text(result)
           return
