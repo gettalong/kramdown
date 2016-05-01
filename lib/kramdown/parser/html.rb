@@ -59,6 +59,12 @@ module Kramdown
                                figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend menu
                                li map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
         HTML_ELEMENTS_WITHOUT_BODY = %w{area base br col command embed hr img input keygen link meta param source track wbr}
+
+        HTML_ELEMENT = Hash.new(false)
+        (HTML_SPAN_ELEMENTS + HTML_BLOCK_ELEMENTS + HTML_ELEMENTS_WITHOUT_BODY +
+         HTML_CONTENT_MODEL.keys).each do |a|
+          HTML_ELEMENT[a] = true
+        end
       end
 
 
@@ -77,9 +83,10 @@ module Kramdown
         # element is already closed, ie. contains no body; the third parameter specifies whether the
         # body - and the end tag - need to be handled in case closed=false).
         def handle_html_start_tag(line = nil) # :yields: el, closed, handle_body
-          name = @src[1].downcase
+          name = @src[1]
+          name.downcase! if HTML_ELEMENT[name.downcase]
           closed = !@src[4].nil?
-          attrs = parse_html_attributes(@src[2], line)
+          attrs = parse_html_attributes(@src[2], line, HTML_ELEMENT[name])
 
           el = Element.new(:html_element, name, attrs, :category => :block)
           el.options[:location] = line if line
@@ -99,10 +106,13 @@ module Kramdown
         # Parses the given string for HTML attributes and returns the resulting hash.
         #
         # If the optional +line+ parameter is supplied, it is used in warning messages.
-        def parse_html_attributes(str, line = nil)
+        #
+        # If the optional +in_html_tag+ parameter is set to +false+, attributes are not modified to
+        # contain only lowercase letters.
+        def parse_html_attributes(str, line = nil, in_html_tag = true)
           attrs = Utils::OrderedHash.new
           str.scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
-            attr.downcase!
+            attr.downcase! if in_html_tag
             if attrs.has_key?(attr)
               warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")
             end
@@ -155,10 +165,11 @@ module Kramdown
                   handle_html_start_tag(&block) # DEPRECATED: method needs to accept line number in 2.0
                 end
               elsif @src.scan(HTML_TAG_CLOSE_RE)
-                if @tree.value == @src[1].downcase
+                if @tree.value == (HTML_ELEMENT[@tree.value] ? @src[1].downcase : @src[1])
                   done = true
                 else
-                  warning("Found invalidly used HTML closing tag for '#{@src[1].downcase}' on line #{line} - ignoring it")
+                  add_text(@src.matched, @tree, :text)
+                  warning("Found invalidly used HTML closing tag for '#{@src[1]}' on line #{line} - ignoring it")
                 end
               else
                 add_text(@src.getch, @tree, :text)

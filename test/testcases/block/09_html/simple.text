@@ -40,13 +40,9 @@ hallo
 
 para6
 
-<div><div cLASs="clear"></div>
+<div><DiV cLASs="clear"></dIv>
 Another para.
 </div>
-
-<webgen:block name="test" />
-
-<some:url name:spac='hallo'>doit</some:url>
 
 <em>Test</em>
 

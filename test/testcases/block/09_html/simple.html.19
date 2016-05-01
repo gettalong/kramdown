@@ -49,10 +49,6 @@ weiter
   <p>Another para.</p>
 </div>
 
-<webgen:block name="test" />
-
-<some:url name:spac="hallo">doit</some:url>
-
 <p><em>Test</em></p>
 
 <p><em>Test</em></p>
