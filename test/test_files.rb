@@ -11,6 +11,7 @@ require 'minitest/autorun'
 require 'kramdown'
 require 'yaml'
 require 'tmpdir'
+require 'rouge'
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
@@ -346,6 +347,54 @@ class TestFiles < Minitest::Test
         assert_tree_not_changed(tree_before, doc.root)
       end
     end
+  end
+
+
+  class RougeHTMLFormatters < Rouge::Formatters::HTML
+    tag 'rouge_html_formatters'
+
+    def stream(tokens, &b)
+      yield %(<pre class='custom_class'><code>)
+      super
+      yield %(</code></pre>)
+    end
+  end
+
+  def test_rouge_with_custom_formatter
+    markdown = <<-EOF
+~~~ ruby
+puts "Hello"
+~~~
+
+~~~ shell
+echo $USERNAME
+~~~
+
+~~~ php?start_inline=1
+$foo = new Bar;
+~~~
+    EOF
+
+  rouge_result = "<div class=\"language-ruby highlighter-rouge\"><pre class='custom_class'><code><pre class=\"highlight\"><code><span class=\"nb\">puts</span> <span class=\"s2\">\"Hello\"</span>
+</code></pre>
+</code></pre></div>
+
+<div class=\"language-shell highlighter-rouge\"><pre class='custom_class'><code><pre class=\"highlight\"><code><span class=\"nb\">echo</span> <span class=\"nv\">$USERNAME</span>
+</code></pre>
+</code></pre></div>
+
+<div class=\"language-php highlighter-rouge\"><pre class='custom_class'><code><pre class=\"highlight\"><code><span class=\"nv\">$foo</span> <span class=\"o\">=</span> <span class=\"k\">new</span> <span class=\"nx\">Bar</span><span class=\"p\">;</span>
+</code></pre>
+</code></pre></div>
+"
+
+    html = Kramdown::Document.new(markdown, {
+      :syntax_highlighter => 'rouge',
+      :syntax_highlighter_opts => {
+        :formatter => RougeHTMLFormatters
+      }
+    }).to_html
+    assert_equal(html, rouge_result)
   end
 
   def assert_tree_not_changed(old, new)
