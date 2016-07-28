@@ -313,6 +313,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/span/extension/comment.text',
                        'test/testcases/span/ial/simple.text',
                        'test/testcases/span/line_breaks/normal.text',
+                       'test/testcases/span/math/normal.text',
                        'test/testcases/span/text_substitutions/entities_as_char.text',
                        'test/testcases/span/text_substitutions/entities.text',
                        'test/testcases/span/text_substitutions/typography.text',
