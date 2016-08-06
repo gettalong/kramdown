@@ -236,14 +236,7 @@ module Kramdown
       end
 
       def convert_a(el, indent)
-        res = inner(el, indent)
-        attr = el.attr.dup
-        if attr['href'].start_with?('mailto:')
-          mail_addr = attr['href'][7..-1]
-          attr['href'] = obfuscate('mailto') << ":" << obfuscate(mail_addr)
-          res = obfuscate(res) if res == mail_addr
-        end
-        format_as_span_html(el.type, attr, res)
+        format_as_span_html(el.type, el.attr, inner(el, indent))
       end
 
       def convert_img(el, indent)
