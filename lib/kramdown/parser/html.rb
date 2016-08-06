@@ -35,8 +35,8 @@ module Kramdown
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
         HTML_CONTENT_MODEL_BLOCK = %w{address applet article aside blockquote body
-             dd details div dl fieldset figure figcaption footer form header hgroup iframe li map menu nav
-              noscript object section summary td}
+             dd details div dl fieldset figure figcaption footer form header hgroup iframe li main
+             map menu nav noscript object section summary td}
         HTML_CONTENT_MODEL_SPAN  = %w{a abbr acronym b bdo big button cite caption del dfn dt em
              h1 h2 h3 h4 h5 h6 i ins label legend optgroup p q rb rbc
              rp rt rtc ruby select small span strong sub sup th tt}
@@ -57,7 +57,7 @@ module Kramdown
                               strong sub sup tt u var}
         HTML_BLOCK_ELEMENTS = %w{address article aside applet body blockquote caption col colgroup dd div dl dt fieldset
                                figcaption footer form h1 h2 h3 h4 h5 h6 header hgroup hr html head iframe legend menu
-                               li map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
+                               li main map nav ol optgroup p pre section summary table tbody td th thead tfoot tr ul}
         HTML_ELEMENTS_WITHOUT_BODY = %w{area base br col command embed hr img input keygen link meta param source track wbr}
 
         HTML_ELEMENT = Hash.new(false)
