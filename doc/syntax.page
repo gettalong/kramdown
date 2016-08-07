@@ -682,7 +682,8 @@ then the first part of the definition. The line with the definition marker may o
 separated from the preceding paragraph by a blank line. The leading tabs or spaces are stripped away
 from this first line of the definition to allow for a nice alignment with the following definition
 content. Each line of the preceding paragraph is taken to be a term and the lines separately parsed
-as span-level elements.
+as span-level elements. Each such term may optionally start with an [IAL](#inline-attribute-lists)
+that should be applied to the term.
 
 The following is a simple definition list:
 
@@ -736,6 +737,16 @@ paragraph otherwise:
 
 The rules about having any block-level element as first element in a list item also apply to a
 definition.
+
+As mentioned at the beginning, an optional IAL for applying attributes to a term or a definition can
+be used:
+
+    {:#term} Term with id="term"
+    : {:.cls} Definition with class "cls"
+
+    {:#term1} First term
+    {:#term2} Second term
+    : {:.cls} Definition
 
 
 ## Tables

@@ -31,7 +31,7 @@ module Kramdown
 
       def convert(el, opts = {:indent => 0})
         res = send("convert_#{el.type}", el, opts)
-        if ![:html_element, :li, :dd, :td].include?(el.type) && (ial = ial_for_element(el))
+        if ![:html_element, :li, :dt, :dd, :td].include?(el.type) && (ial = ial_for_element(el))
           res << ial
           res << "\n\n" if Element.category(el) == :block
         elsif [:ul, :dl, :ol, :codeblock].include?(el.type) && opts[:next] &&
@@ -174,7 +174,11 @@ module Kramdown
       end
 
       def convert_dt(el, opts)
-        inner(el, opts) << "\n"
+        result = ''
+        if ial = ial_for_element(el)
+          result << ial << " "
+        end
+        result << inner(el, opts) << "\n"
       end
 
       HTML_TAGS_WITH_BODY=['div', 'script', 'iframe', 'textarea']
