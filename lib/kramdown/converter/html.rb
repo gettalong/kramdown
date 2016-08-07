@@ -308,10 +308,14 @@ module Kramdown
       def convert_math(el, indent)
         if (result = format_math(el, :indent => indent))
           result
-        elsif el.options[:category] == :block
-          format_as_block_html('pre', el.attr, "$$\n#{el.value}\n$$", indent)
         else
-          format_as_span_html('span', el.attr, "$#{el.value}$")
+          attr = el.attr.dup
+          (attr['class'] = (attr['class'] || '') << " kdmath").lstrip!
+          if el.options[:category] == :block
+            format_as_block_html('div', attr, "$$\n#{el.value}\n$$", indent)
+          else
+            format_as_span_html('span', attr, "$#{el.value}$")
+          end
         end
       end
 
