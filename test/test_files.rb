@@ -11,17 +11,21 @@ require 'minitest/autorun'
 require 'kramdown'
 require 'yaml'
 require 'tmpdir'
-require 'rouge'
 
-# custom formatter for tests
-class RougeHTMLFormatters < Rouge::Formatters::HTML
-  tag 'rouge_html_formatters'
+begin
+  require 'kramdown/converter/syntax_highlighter/rouge'
 
-  def stream(tokens, &b)
-    yield %(<div class="custom-class">)
-    super
-    yield %(</div>)
+  # custom formatter for tests
+  class RougeHTMLFormatters < ::Rouge::Formatters::HTML
+    tag 'rouge_html_formatters'
+
+    def stream(tokens, &b)
+      yield %(<div class="custom-class">)
+      super
+      yield %(</div>)
+    end
   end
+rescue LoadError, SyntaxError, NameError
 end
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
@@ -316,6 +320,7 @@ class TestFiles < Minitest::Test
                        ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'),
                        ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                        ('test/testcases/block/06_codeblock/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
+                       ('test/testcases/block/06_codeblock/rouge/multiple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                       ].compact
 
   # Generate test methods for gfm-to-html conversion
@@ -346,11 +351,15 @@ class TestFiles < Minitest::Test
                         'test/testcases/block/04_header/with_auto_ids.text',
                        ].compact
 
+  EXCLUDE_MODIFY = ['test/testcases/block/06_codeblock/rouge/multiple.text', # bc of HTMLFormater in options
+                   ]
+
   # Generate test methods for asserting that converters don't modify the document tree.
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     opts_file = text_file.sub(/\.text$/, '.options')
     options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
     (Kramdown::Converter.constants.map {|c| c.to_sym} - [:Base, :RemoveHtmlTags, :MathEngine, :SyntaxHighlighter]).each do |conv_class|
+      next if EXCLUDE_MODIFY.any? {|f| text_file =~ /#{f}$/}
       next if conv_class == :Pdf && (RUBY_VERSION < '2.0' || EXCLUDE_PDF_MODIFY.any? {|f| text_file =~ /#{f}$/})
       define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
         doc = Kramdown::Document.new(File.read(text_file), options)
