@@ -165,7 +165,14 @@ module Kramdown
       alias :convert_dd :convert_li
 
       def convert_dt(el, indent)
-        format_as_block_html(el.type, el.attr, inner(el, indent), indent)
+        attr = el.attr.dup
+        @stack.last.options[:ial][:refs].each do |ref|
+          if ref =~ /\Aauto_ids(?:-([\w-]+))?/
+            attr['id'] = ($1 ? $1 : '') << basic_generate_id(el.options[:raw_text])
+            break
+          end
+        end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
+        format_as_block_html(el.type, attr, inner(el, indent), indent)
       end
 
       def convert_html_element(el, indent)

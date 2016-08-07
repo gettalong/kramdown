@@ -418,6 +418,10 @@ module Kramdown
           (el.options[:ial][:refs].include?('toc') rescue nil)
         res = "footnotes" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('footnotes') rescue nil)
+        if el.type == :dl && el.options[:ial] && el.options[:ial][:refs]
+          auto_ids = el.options[:ial][:refs].select {|ref| ref =~ /\Aauto_ids/}.join(" ")
+          res = auto_ids << (res.strip.empty? ? '' : " #{res}") unless auto_ids.empty?
+        end
         res.strip.empty? ? nil : "{:#{res}}"
       end
 

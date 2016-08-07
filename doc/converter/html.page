@@ -99,6 +99,35 @@ kramdown uses the HTML element `em` to style light and the element `strong` to s
 emphasized text parts.
 
 
+## Definition Lists
+
+kramdown allows the automatic generation of element IDs for terms of a definition list. The
+algorithm is the same as with headers (see [above](#auto-ids) except that the last two points about
+adding "section" and unique IDs is not respected. Also, the algorithm works only on the real text as
+if `auto_id_stripping` was activated.
+
+The automatic generation of IDs is activated by assigning the reference name "auto_ids" to a
+definition list. This will generate plain IDs without a prefix. By using a reference name of the
+format "auto_ids-PREFIX", the prefix is used.
+
+Such generated IDs are only used if no ID has been set manually.
+
+Here are examples:
+
+{kdexample::}
+{:auto_ids}
+term
+: definition
+{kdexample}
+
+{kdexample::}
+{:auto_ids-prefix}
+term
+: definition
+{kdexample}
+
+
+
 ## Footnotes
 
 If a document contains footnotes, they are automatically placed at the end of the document.

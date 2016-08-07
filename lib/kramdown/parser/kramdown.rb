@@ -178,7 +178,11 @@ module Kramdown
             last_blank = nil
             update_tree(child)
             update_attr_with_ial(child.attr, child.options[:ial]) if child.options[:ial]
-            update_raw_header_text(child) if child.type == :header
+            # DEPRECATED: option auto_id_stripping will be removed in 2.0 because then this will be
+            # the default behaviour
+            if child.type == :dt || (child.type == :header && @options[:auto_id_stripping])
+              update_raw_text(child)
+            end
             child
           end
         end.flatten!
@@ -267,11 +271,8 @@ module Kramdown
         end
       end
 
-      # Update the raw header text for automatic ID generation.
-      def update_raw_header_text(header)
-        # DEPRECATED: option auto_id_stripping will be removed in 2.0 because then this will be the
-        # default behaviour
-        return unless @options[:auto_id_stripping]
+      # Update the raw text for automatic ID generation.
+      def update_raw_text(item)
         raw_text = ''
 
         append_text = lambda do |child|
@@ -282,8 +283,8 @@ module Kramdown
           end
         end
 
-        append_text.call(header)
-        header.options[:raw_text] = raw_text
+        append_text.call(item)
+        item.options[:raw_text] = raw_text
       end
 
       # Create a new block-level element, taking care of applying a preceding block IAL if it
