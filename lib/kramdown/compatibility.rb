@@ -10,6 +10,8 @@
 #
 # :stopdoc:
 
+require 'rbconfig'
+
 if RUBY_VERSION <= '1.8.6'
   require 'rexml/parsers/baseparser'
   module REXML
