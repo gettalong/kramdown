@@ -500,6 +500,46 @@ It is much better to write such a list in the following way:
 > Also, Markdown uses a fixed number of spaces/tabs to indent the lines that belong to a list item!
 {: .markdown-difference}
 
+Unordered and ordered lists work the same way in regard to the indentation:
+
+    * list 1 item 1
+     * list 1 item 2 (indent 1 space)
+      * list 1 item 3 (indent 2 spaces)
+       * list 1 item 4  (indent 3 spaces)
+        * lazy text belonging to above item 4
+
+^
+
+    1. list 1 item 1
+     2. list 1 item 2 (indent 1 space)
+      3. list 1 item 3 (indent 2 spaces)
+       4. list 1 item 4  (indent 3 spaces)
+        5. lazy text belonging to above item 4
+
+^
+
+    * list 1 item 1
+      * nested list item 1
+      * nested list item 2
+    * list 1 item 2
+      * nested list item 1
+
+^
+
+    1. list 1 item 1
+       1. nested list item 1
+       2. nested list item 2
+    10. list 1 item 2
+        1. nested list item 1
+
+^
+
+    1. text for this list item
+       further text (indent 3 spaces)
+
+    10. text for this list item
+        further text (indent 4 spaces)
+
 When using tabs for indenting the content of a list item, remember that tab stops occur at multiples
 of four for kramdown. Tabs are correctly converted to spaces for calculating the indentation. For
 example:
