@@ -11,6 +11,18 @@ require 'minitest/autorun'
 require 'kramdown'
 require 'yaml'
 require 'tmpdir'
+require 'rouge'
+
+# custom formatter for tests
+class RougeHTMLFormatters < Rouge::Formatters::HTML
+  tag 'rouge_html_formatters'
+
+  def stream(tokens, &b)
+    yield %(<div class="custom-class">)
+    super
+    yield %(</div>)
+  end
+end
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
@@ -52,6 +64,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                           'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
+                          'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
                           ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
                           ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
                           'test/testcases/block/15_math/ritex.html', # bc of tidy
@@ -161,6 +174,7 @@ class TestFiles < Minitest::Test
                           ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           'test/testcases/block/06_codeblock/rouge/simple.text',
+                          'test/testcases/block/06_codeblock/rouge/multiple.text', # check, what document contain more, than one code block
                           'test/testcases/block/15_math/ritex.text', # bc of tidy
                           'test/testcases/span/math/ritex.text', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.text', # bc of tidy
@@ -203,6 +217,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
                              'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
+                             'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
