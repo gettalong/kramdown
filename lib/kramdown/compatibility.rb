@@ -36,3 +36,13 @@ if RUBY_VERSION <= '1.8.6'
   end
 
 end
+
+if !Symbol.instance_methods.include?("<=>")
+
+  class Symbol
+    def <=>(other)
+      self.to_s <=> other.to_s
+    end
+  end
+
+end
