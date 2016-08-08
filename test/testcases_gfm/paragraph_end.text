@@ -1,6 +1,9 @@
 A
   - b
 
+This is a list
+- or is it
+
 blockquote
 > text
 
@@ -11,3 +14,14 @@ codeblock fenced
 ```
 puts hello world
 ```
+
+* level 1
+  some text
+
+  begin level 2
+  * level 2
+  * level 2
+
+# h1
+## h2
+### h3
