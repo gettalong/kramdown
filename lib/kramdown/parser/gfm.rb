@@ -17,9 +17,16 @@ module Kramdown
       def initialize(source, options)
         super
         @span_parsers.delete(:line_break) if @options[:hard_wrap]
+        if @options[:gfm_quirks].include?(:paragraph_end)
+          atx_header_parser = :atx_header_gfm_quirk
+          @paragraph_end = self.class::PARAGRAPH_END_GFM
+        else
+          atx_header_parser = :atx_header_gfm
+          @paragraph_end = self.class::PARAGRAPH_END
+        end
+
         {:codeblock_fenced => :codeblock_fenced_gfm,
-          :atx_header => :atx_header_gfm,
-          :paragraph => :paragraph_gfm}.each do |current, replacement|
+          :atx_header => atx_header_parser}.each do |current, replacement|
           i = @block_parsers.index(current)
           @block_parsers.delete(current)
           @block_parsers.insert(i, replacement)
@@ -60,10 +67,11 @@ module Kramdown
       end
 
       ATX_HEADER_START = /^\#{1,6}\s/
-      define_parser(:atx_header_gfm, ATX_HEADER_START)
+      define_parser(:atx_header_gfm, ATX_HEADER_START, nil, 'parse_atx_header')
+      define_parser(:atx_header_gfm_quirk, ATX_HEADER_START)
 
       # Copied from kramdown/parser/kramdown/header.rb, removed the first line
-      def parse_atx_header_gfm
+      def parse_atx_header_gfm_quirk
         start_line_number = @src.current_line_number
         @src.check(ATX_HEADER_MATCH)
         level, text, id = @src[1], @src[2].to_s.strip, @src[3]
@@ -104,8 +112,12 @@ module Kramdown
       ESCAPED_CHARS_GFM = /\\([\\.*_+`<>()\[\]{}#!:\|"'\$=\-~])/
       define_parser(:escaped_chars_gfm, ESCAPED_CHARS_GFM, '\\\\', :parse_escaped_chars)
 
-      PARAGRAPH_END = /#{LAZY_END}|#{LIST_START}|#{ATX_HEADER_START}|#{DEFINITION_LIST_START}|#{BLOCKQUOTE_START}|#{FENCED_CODEBLOCK_START}/
-      define_parser(:paragraph_gfm, PARAGRAPH_START, nil, 'parse_paragraph')
+      PARAGRAPH_END_GFM = /#{LAZY_END}|#{LIST_START}|#{ATX_HEADER_START}|#{DEFINITION_LIST_START}|#{BLOCKQUOTE_START}|#{FENCED_CODEBLOCK_START}/
+
+      def paragraph_end
+        @paragraph_end
+      end
+
     end
   end
 end

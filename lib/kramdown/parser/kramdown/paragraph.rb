@@ -31,7 +31,7 @@ module Kramdown
       def parse_paragraph
         start_line_number = @src.current_line_number
         result = @src.scan(PARAGRAPH_MATCH)
-        while !@src.match?(self.class::PARAGRAPH_END)
+        while !@src.match?(paragraph_end)
           result << @src.scan(PARAGRAPH_MATCH)
         end
         result.rstrip!
@@ -45,6 +45,10 @@ module Kramdown
         true
       end
       define_parser(:paragraph, PARAGRAPH_START)
+
+      def paragraph_end
+        self.class::PARAGRAPH_END
+      end
 
     end
   end

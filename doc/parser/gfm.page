@@ -20,6 +20,8 @@ changes:
 * Hard line breaks in paragraphs are enforced by default (see option 'hard_wrap').
 * ATX headers need a whitespace character after the hash signs.
 * Strikethroughs can be created using two tildes surrounding a piece of text
+* Blank lines between paragraphs and other block elements are not needed by default (see option
+  `gfm_quirks`)
 
 Please note that the GFM parser tries to mimic the parser used at Github which means that for some
 special cases broken behaviour is the expected behaviour.
@@ -37,4 +39,4 @@ In this case the correct GFM result is:
 
 The GFM parser supports the following options:
 
-{options: {items: [hard_wrap]}}
+{options: {items: [hard_wrap, gfm_quirks]}}

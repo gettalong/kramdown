@@ -133,14 +133,14 @@ module Kramdown
     # - a comma separated string which is split into an array of values
     # - or an array.
     #
-    # Additionally, the array is checked for the correct size.
-    def self.simple_array_validator(val, name, size)
+    # Optionally, the array is checked for the correct size.
+    def self.simple_array_validator(val, name, size = nil)
       if String === val
         val = val.split(/,/)
       elsif !(Array === val)
         raise Kramdown::Error, "Invalid type #{val.class} for option #{name}"
       end
-      if val.size != size
+      if size && val.size != size
         raise Kramdown::Error, "Option #{name} needs exactly #{size} values"
       end
       val
@@ -592,6 +592,35 @@ will be generated.
 Default: '&8617;'
 Used by: HTML converter
 EOF
+
+    define(:gfm_quirks, Object, [:paragraph_end], <<EOF) do |val|
+Enables a set of GFM specific quirks
+
+The way how GFM is transformed on Github often differs from the way
+kramdown does things. Many of these differences are negligible but
+others are not.
+
+This option allows one to enable/disable certain GFM quirks, i.e. ways
+in which GFM parsing differs from kramdown parsing.
+
+The value has to be a list of quirk names that should be enabled,
+separated by commas. Possible names are:
+
+* paragraph_end
+
+  Disables the kramdown restriction that at least one blank line has to
+  be used after a paragraph before a new block element can be started.
+
+  Note that if this quirk is used, lazy line wrapping does not fully
+  work anymore!
+
+Default: paragraph_end
+Used by: GFM parser
+EOF
+      val = simple_array_validator(val, :gfm_quirks)
+      val.map! {|v| str_to_sym(v.to_s)}
+      val
+    end
 
   end
 
