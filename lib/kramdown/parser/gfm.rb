@@ -85,8 +85,8 @@ module Kramdown
         true
       end
 
-      FENCED_CODEBLOCK_START = /^[~`]{3,}/
-      FENCED_CODEBLOCK_MATCH = /^(([~`]){3,})\s*?((\S+?)(?:\?\S*)?)?\s*?\n(.*?)^\1\2*\s*?\n/m
+      FENCED_CODEBLOCK_START = /^[ ]{0,3}[~`]{3,}/
+      FENCED_CODEBLOCK_MATCH = /^[ ]{0,3}(([~`]){3,})\s*?((\S+?)(?:\?\S*)?)?\s*?\n(.*?)^[ ]{0,3}\1\2*\s*?\n/m
       define_parser(:codeblock_fenced_gfm, FENCED_CODEBLOCK_START, nil, 'parse_codeblock_fenced')
 
       STRIKETHROUGH_DELIM = /~~/
