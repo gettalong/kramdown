@@ -13,9 +13,9 @@ module Kramdown
   module Parser
     class Kramdown
 
-      TABLE_SEP_LINE = /^([+|: -]*?-[+|: -]*?)[ \t]*\n/
-      TABLE_HSEP_ALIGN = /[ ]?(:?)-+(:?)[ ]?/
-      TABLE_FSEP_LINE = /^[+|: =]*?=[+|: =]*?[ \t]*\n/
+      TABLE_SEP_LINE = /^([+|: \t-]*?-[+|: \t-]*?)[ \t]*\n/
+      TABLE_HSEP_ALIGN = /[ \t]?(:?)-+(:?)[ \t]?/
+      TABLE_FSEP_LINE = /^[+|: \t=]*?=[+|: \t=]*?[ \t]*\n/
       TABLE_ROW_LINE = /^(.*?)[ \t]*\n/
       TABLE_PIPE_CHECK = /(?:\||.*?[^\\\n]\|)/
       TABLE_LINE = /#{TABLE_PIPE_CHECK}.*?\n/
