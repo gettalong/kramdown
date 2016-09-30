@@ -82,6 +82,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/mathjaxnode.html', # bc of tidy
                           'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
+                          'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
                           'test/testcases/span/05_html/mark_element.html', # bc of tidy
                           'test/testcases/block/09_html/xml.html', # bc of tidy
                           'test/testcases/span/05_html/xml.html', # bc of tidy
@@ -241,6 +242,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/math/mathjaxnode.html', # bc of tidy
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
+                             'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
                              'test/testcases/span/01_link/link_defs_with_ial.html', # bc of attribute ordering
                              'test/testcases/span/05_html/mark_element.html', # bc of tidy
                              'test/testcases/block/09_html/xml.html', # bc of tidy

@@ -54,5 +54,13 @@ preview
   preview with the LaTeX code itself is shown. If it is set to any value other than `false` or
   `true`, that value is shown as the preview.
 
+preview_as_code
+: When `true`, wraps the LaTeX code in `code` / `pre > code` tags instead of `span` / `div` tags,
+  mirroring the structure of inline code / code blocks.
+  This ensures the content is styled like regular code and improves legibility in RSS readers,
+  text browsers, etc.
+  To prevent styling issues after MathJax has loaded, consider adding
+  `.MathJax_Preview:empty{display:none}` to your CSS.
+  Defaults to `false` and expects `preview` to be `true`.
 
 [MathJax]: http://www.mathjax.org
