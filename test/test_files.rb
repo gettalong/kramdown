@@ -85,6 +85,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/05_html/mark_element.html', # bc of tidy
                           'test/testcases/block/09_html/xml.html', # bc of tidy
                           'test/testcases/span/05_html/xml.html', # bc of tidy
+                          'test/testcases/span/text_substitutions/typography_disabled.html', # bc of tidy
                          ].compact
     EXCLUDE_HTML_TEXT_FILES = ['test/testcases/block/09_html/parse_as_span.htmlinput',
                                'test/testcases/block/09_html/parse_as_raw.htmlinput',
@@ -192,6 +193,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/05_html/mark_element.text', # bc of tidy
                           'test/testcases/block/09_html/xml.text', # bc of tidy
                           'test/testcases/span/05_html/xml.text', # bc of tidy
+                          'test/testcases/span/text_substitutions/typography_disabled.text', # bc of tidy
                          ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/}
@@ -245,6 +247,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/05_html/mark_element.html', # bc of tidy
                              'test/testcases/block/09_html/xml.html', # bc of tidy
                              'test/testcases/span/05_html/xml.html', # bc of tidy
+                             'test/testcases/span/text_substitutions/typography_disabled.html', # bc of tidy
                             ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.{html,html.19}'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}(\.19)?$/}
@@ -318,6 +321,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/span/text_substitutions/entities_as_char.text',
                        'test/testcases/span/text_substitutions/entities.text',
                        'test/testcases/span/text_substitutions/typography.text',
+                       'test/testcases/span/text_substitutions/typography_disabled.text',
                        ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'),
                        ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'),
                        ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge

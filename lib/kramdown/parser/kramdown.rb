@@ -111,6 +111,10 @@ module Kramdown
       # Adapt the object to allow parsing like specified in the options.
       def configure_parser
         @parsers = {}
+        # Remove disabled parsers now; this is the first opportunity
+        # since subclasses might append in their initialization.
+        @block_parsers -= @options[:disable_parsers]
+        @span_parsers -= @options[:disable_parsers]
         (@block_parsers + @span_parsers).each do |name|
           if self.class.has_parser?(name)
             @parsers[name] = self.class.parser(name)
