@@ -60,10 +60,10 @@ kramdown Wiki at <https://github.com/gettalong/kramdown/wiki>.
 ## Development
 
 Just clone the git repository as described in **doc/installation.page** and you are good to go. You
-probably want to install `rake` so that you can use the provided rake tasks. Aside from that:
+probably want to install `rake` so that you can use the provided rake tasks.
 
-* The `tidy` binary needs to be installed for the automatically derived tests to work.
-* The `latex` binary needs to be installed for the latex-compilation tests to work.
+If you want to run the tests, the development dependencies are needed as well as some additional
+programs like `tidy` and `latex`. See the `.travis.yml` file for more information.
 
 
 ## License
