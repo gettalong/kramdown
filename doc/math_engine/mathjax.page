@@ -16,6 +16,35 @@ template does *not* include a link to it! The
 [MathJax documentation](http://docs.mathjax.org/en/latest/start.html) describes how to add a link
 to MathJax to your page.
 
+## Using KaTeX instead of MathJax
+
+To use [KaTeX](https://khan.github.io/KaTeX/) instead of MathJax, activate the MathJax engine in
+kramdown, include the KaTeX Javascript files in the HTML file and put the following script at the
+end of the HTML file (note that JQuery is used for some parts but it can probably be done without
+it):
+
+~~~ html
+<script>
+  $("script[type='math/tex']").replaceWith(function() {
+      var tex = $(this).text();
+      return katex.renderToString(tex, \{displayMode: false});
+  });
+
+  $("script[type='math/tex; mode=display']").replaceWith(function() {
+      var tex = $(this).html();
+      return katex.renderToString(tex.replace(/%.*/g, ''), \{displayMode: true});
+  });
+</script>
+~~~
+
+Note that including the KaTeX Javascript files and the above script is normally done using a
+template file (see the [template option](../options.html).
+
+See [this comment](https://github.com/gettalong/kramdown/issues/292#issuecomment-257770946) for more
+details.
+
+
+## Options
 
 The MathJax engine supports the following keys of the option
 ['math_engine_opts'](../options.html#option-math-engine-opts):
