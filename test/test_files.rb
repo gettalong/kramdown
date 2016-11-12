@@ -280,6 +280,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/block/08_list/other_first_element.text',
                        'test/testcases/block/08_list/simple_ul.text',
                        'test/testcases/block/08_list/special_cases.text',
+                       'test/testcases/block/08_list/lazy_and_nested.text', # bc of change in lazy line handling
                        'test/testcases/block/09_html/comment.text',
                        'test/testcases/block/09_html/html_to_native/code.text',
                        'test/testcases/block/09_html/html_to_native/emphasis.text',

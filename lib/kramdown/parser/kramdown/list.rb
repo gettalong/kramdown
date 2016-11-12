@@ -84,10 +84,12 @@ module Kramdown
             item.value = [item.value]
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
             result.sub!(/^(\t+)/) { " " * 4 * $1.length }
-            result.sub!(indent_re, '')
-            if !nested_list_found && result =~ LIST_START
+            indentation_found = result.sub!(indent_re, '')
+            if !nested_list_found && indentation_found && result =~ LIST_START
               item.value << ''
               nested_list_found = true
+            elsif nested_list_found && !indentation_found && result =~ LIST_START
+              result = " " * (indentation + 4) << result
             end
             item.value.last << result
             last_is_blank = false
