@@ -36,3 +36,5 @@ Nam liber tempor
 This: "...some Text"
 
 This: "... some Text"
+
+"\[foo]" "\[foo]" d "\[foo]"
