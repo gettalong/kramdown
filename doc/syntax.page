@@ -787,10 +787,10 @@ There are four different line types that can be used in a table:
 
 * *Separator lines* are used to split the table body into multiple body parts.
 
-  A separator line is any line that contains only pipes, dashes, pluses, colons and spaces and which
-  contains at least one dash and one pipe character. The pipe and plus characters can be used to
-  visually separate columns although this is not needed. Multiple separator lines after another are
-  treated as one separator line.
+  A separator line is any line that contains only pipes, dashes, pluses, colons and spaces/tabs and
+  which contains at least one dash and one pipe character. The pipe and plus characters can be used
+  to visually separate columns although this is not needed. Multiple separator lines after another
+  are treated as one separator line.
 
   Here are some example separator lines:
 
@@ -806,9 +806,9 @@ There are four different line types that can be used in a table:
   alignments. All table rows above the header separator line are considered to be header rows.
 
   The header separator line can be specially formatted to contain column alignment definitions: An
-  alignment definition consists of an optional space followed by an optional colon, one or more
-  dashes, an optional colon and another optional space. The colons of an alignment definition are
-  used to set the alignment of a column: if there are no colons, the column uses the default
+  alignment definition consists of an optional space/tab followed by an optional colon, one or more
+  dashes, an optional colon and another optional space/tab. The colons of an alignment definition
+  are used to set the alignment of a column: if there are no colons, the column uses the default
   alignment, if there is a colon only before the dashes, the column is left aligned, if there are
   colons before and after the dashes, the column is center aligned and if there is only a colon
   after the dashes, the column is right aligned. Each alignment definition sets the alignment for
