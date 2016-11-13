@@ -269,6 +269,8 @@ class TestFiles < Minitest::Test
                        'test/testcases/block/03_paragraph/two_para.text',
                        'test/testcases/block/04_header/atx_header.text',
                        'test/testcases/block/04_header/setext_header.text',
+                       'test/testcases/block/04_header/with_auto_ids.text', # bc of ID generation difference
+                       'test/testcases/block/04_header/with_auto_id_prefix.text', # bc of ID generation difference
                        'test/testcases/block/05_blockquote/indented.text',
                        'test/testcases/block/05_blockquote/lazy.text',
                        'test/testcases/block/05_blockquote/nested.text',
@@ -301,6 +303,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/block/14_table/escaping.text',
                        'test/testcases/block/14_table/simple.text',
                        'test/testcases/block/15_math/normal.text',
+                       'test/testcases/block/16_toc/toc_with_footnotes.text', # bc of ID generation difference
                        'test/testcases/encoding.text',
                        'test/testcases/span/01_link/inline.text',
                        'test/testcases/span/01_link/link_defs.text',
