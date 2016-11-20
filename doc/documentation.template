@@ -9,6 +9,7 @@
 * Converters
   * [HTML](converter/html.html)
   * [LaTeX](converter/latex.html)
+  * [man](converter/man.html)
   * [kramdown](converter/kramdown.html)
   * [RemoveHtmlTags](converter/remove_html_tags.html)
 * Syntax Highlighters
