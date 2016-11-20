@@ -149,7 +149,8 @@ EOF
   file 'man/man1/kramdown.1' => ['man/man1/kramdown.1.erb'] do
     puts "Generating kramdown man page"
     File.open('man/man1/kramdown.1', 'w+') do |file|
-      file.write(ERB.new(File.read('man/man1/kramdown.1.erb')).result(binding))
+      data = ERB.new(File.read('man/man1/kramdown.1.erb')).result(binding)
+      file.write(Kramdown::Document.new(data).to_man)
     end
   end
 
