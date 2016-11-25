@@ -72,6 +72,28 @@ module Kramdown
         end.flatten!
       end
 
+      # Update the raw text for automatic ID generation.
+      def update_raw_text(item)
+        raw_text = ''
+
+        append_text = lambda do |child|
+          if child.type == :text || child.type == :codespan || child.type ==:math
+            raw_text << child.value
+          elsif child.type == :entity
+            raw_text << child.value.char
+          elsif child.type == :smart_quote
+            raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
+          elsif child.type == :typographic_sym
+            raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
+          else
+            child.children.each {|c| append_text.call(c)}
+          end
+        end
+
+        append_text.call(item)
+        item.options[:raw_text] = raw_text
+      end
+
       NON_WORD_RE = (RUBY_VERSION > "1.9" ? /[^\p{Word}\- \t]/ : /[^\w\- \t]/)
 
       def generate_gfm_header_id(text)
