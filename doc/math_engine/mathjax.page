@@ -60,7 +60,7 @@ preview_as_code
   regular code and improves legibility in RSS readers, text browsers, etc.
 
   To prevent styling issues after MathJax has loaded, consider adding
-  `.MathJax_Preview:empty{display:none}` to your CSS.
+  `.MathJax_Preview:empty { display:none }` to your CSS.
 
   Defaults to `false` and only works if `preview` is `true`.
 
