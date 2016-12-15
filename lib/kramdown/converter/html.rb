@@ -453,9 +453,9 @@ module Kramdown
           end
 
           unless @options[:footnote_backlink].empty?
-            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? ' ' : '', name, backlink_text])
+            para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [insert_space ? '&nbsp;' : '', name, backlink_text])
             (1..repeat).each do |index|
-              para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % [" ", "#{name}:#{index}", "#{backlink_text}<sup>#{index+1}</sup>"])
+              para.children << Element.new(:raw, FOOTNOTE_BACKLINK_FMT % ["&nbsp;", "#{name}:#{index}", "#{backlink_text}<sup>#{index+1}</sup>"])
             end
           end
 
