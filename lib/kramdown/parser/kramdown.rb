@@ -91,6 +91,11 @@ module Kramdown
         correct_abbreviations_attributes
         replace_abbreviations(@root)
         @footnotes.each {|name,data| update_tree(data[:content])}
+        @footnotes.each do |name, data|
+          next if data.key?(:marker)
+          line = data[:content].options[:location]
+          warning("Footnote definition for '#{name}' on line #{line} is unreferenced - ignoring")
+        end
       end
 
       #######
