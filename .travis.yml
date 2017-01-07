@@ -3,10 +3,12 @@ rvm:
   - 1.8.7
   - 1.9.3
   - 2.0.0
-  - 2.1.0
-  - 2.2.0
-  - 2.3.0
+  - 2.1
+  - 2.2
+  - 2.3
+  - 2.4
   - jruby-19mode
+  - jruby
 
 jdk:
   - oraclejdk8
@@ -15,8 +17,9 @@ env:
   - TRAVIS_NODE_VERSION="4.0"
 
 matrix:
- allow_failures:
-   - rvm: jruby-19mode
+  allow_failures:
+    - rvm: jruby-19mode
+    - rvm: jruby
 
 before_install:
   - sudo apt-get update
