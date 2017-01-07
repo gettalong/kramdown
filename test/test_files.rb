@@ -396,7 +396,7 @@ class TestFiles < Minitest::Test
     if old.value.kind_of?(Kramdown::Element)
       assert_tree_not_changed(old.value, new.value)
     else
-      assert_equal(old.value, new.value, "value mismatch")
+      assert(old.value == new.value, "value mismatch")
     end
     assert_equal(old.attr, new.attr, "attr mismatch")
     assert_equal(old.options, new.options, "options mismatch")
