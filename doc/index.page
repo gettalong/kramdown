@@ -103,6 +103,10 @@ Version **1.13.2**{:itemprop="softwareVersion"} released on
 
 </div>
 
+<div id="call-to-arms">
+Support kramdown development and <a href="https://www.patreon.com/bePatron?u=4908963" class="patreon">become a patron</a>!
+</div>
+
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
 [Maruku]: http://maruku.rubyforge.org
