@@ -7,8 +7,8 @@ requests it is now released under the MIT license and therefore can easily be us
 projects, too.
 
 However, if you use kramdown in a commercial setting, please consider **contributing back any
-changes** for the benefit of the community and/or **making a donation** (see the links in the
-sidebar on the [kramdown homepage](http://kramdown.gettalong.org/)!
+changes** for the benefit of the community and/or
+[**becoming a patron**](https://www.patreon.com/gettalong) - thanks!
 
 
 ## Introduction
