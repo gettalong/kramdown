@@ -24,6 +24,7 @@
   * [Ritex](math_engine/ritex.html)
   * [itex2MML](math_engine/itex2mml.html)
   * [Mathjax-Node](math_engine/mathjaxnode.html)
+  * [SsKaTeX](math_engine/sskatex.html)
 * [Configuration Options](options.html)
 * [Tests](tests.html)
 
