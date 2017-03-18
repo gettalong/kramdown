@@ -21,6 +21,7 @@ module Kramdown
     autoload :Unidecoder, 'kramdown/utils/unidecoder'
     autoload :StringScanner, 'kramdown/utils/string_scanner'
     autoload :Configurable, 'kramdown/utils/configurable'
+    autoload :LRUCache, 'kramdown/utils/lru_cache'
 
     # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
     def self.camelize(name)
