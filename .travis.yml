@@ -34,6 +34,6 @@ before_install:
   - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
   - (ruby --version | grep jruby) || gem install itextomml
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install mathjax-node cssstyle
+  - npm install mathjax-node@"<1.0" cssstyle
 
 script: ruby -rubygems -Ilib:test test/test_*
