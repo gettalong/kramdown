@@ -522,7 +522,7 @@ syntax to HTML.
 {kdexample}
 
 If you want to use literal backticks in your code, just use two or more backticks as delimiters. The
-space right after the beginning delimiter and the one right before the closing delimiter are ignore:
+space right after the beginning delimiter and the one right before the closing delimiter are ignored:
 
 {kdexample::}
 Use backticks to markup code,
