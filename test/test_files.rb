@@ -15,8 +15,14 @@ require 'tmpdir'
 begin
   require 'kramdown/converter/syntax_highlighter/rouge'
 
+  class Kramdown::Converter::SyntaxHighlighter::Rouge::FORMATTER_CLASS
+    def format(tokens, &b)
+      super.sub(/<\/code><\/pre>\n?/, "</code></pre>\n")
+    end
+  end
+
   # custom formatter for tests
-  class RougeHTMLFormatters < ::Rouge::Formatters::HTML
+  class RougeHTMLFormatters < Kramdown::Converter::SyntaxHighlighter::Rouge::FORMATTER_CLASS
     tag 'rouge_html_formatters'
 
     def stream(tokens, &b)
