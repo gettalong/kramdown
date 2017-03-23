@@ -45,6 +45,18 @@ class TestFiles < Minitest::Test
                       ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
                      ].compact
 
+  `latex -v 2>&1`
+  if $?.exitstatus != 0
+    # mathjax depends on latex, otherwise there's no math engine
+    EXCLUDE_KD_FILES += ['test/testcases/span/math/mathjaxnode.text',
+                         'test/testcases/block/15_math/mathjax_preview.text',
+                         'test/testcases/block/15_math/mathjax_preview_simple.text',
+                         'test/testcases/block/15_math/mathjaxnode.text',
+                         'test/testcases/block/15_math/mathjaxnode_notexhints.text',
+                         'test/testcases/block/15_math/mathjaxnode_semantics.text',
+                        ].compact
+  end
+
   # Generate test methods for kramdown-to-xxx conversion
   Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
     next if EXCLUDE_KD_FILES.any? {|f| text_file =~ /#{f}/}
@@ -347,6 +359,18 @@ class TestFiles < Minitest::Test
                        ('test/testcases/block/15_math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
                        ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
                       ].compact
+
+  `latex -v 2>&1`
+  if $?.exitstatus != 0
+    # mathjax depends on latex, otherwise there's no math engine
+    EXCLUDE_GFM_FILES += ['test/testcases/span/math/mathjaxnode.text',
+                          'test/testcases/block/15_math/mathjax_preview.text',
+                          'test/testcases/block/15_math/mathjax_preview_simple.text',
+                          'test/testcases/block/15_math/mathjaxnode.text',
+                          'test/testcases/block/15_math/mathjaxnode_notexhints.text',
+                          'test/testcases/block/15_math/mathjaxnode_semantics.text',
+                         ].compact
+  end
 
   # Generate test methods for gfm-to-html conversion
   Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|
