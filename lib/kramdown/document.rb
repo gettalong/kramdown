@@ -92,9 +92,8 @@ module Kramdown
     # options that can be used are defined in the Options module.
     #
     # The special options key :input can be used to select the parser that should parse the
-    # +source+. It has to be the name of a class in the Kramdown::Parser module. For example, to
-    # select the kramdown parser, one would set the :input key to +Kramdown+. If this key is not
-    # set, it defaults to +Kramdown+.
+    # +source+. It must be the name of a class in the Kramdown::Parser module: +Base+, +Kramdown+,
+    # +Html+, +Markdown+, or +GFM+. If this key is not set, it defaults to +Kramdown+.
     #
     # The +source+ is immediately parsed by the selected parser so that the root element is
     # immediately available and the output can be generated.
