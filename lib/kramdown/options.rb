@@ -245,6 +245,23 @@ Default: false
 Used by: HTML/Latex converter
 EOF
 
+    define(:disable_parsers, Object, [], <<EOF) do |val|
+List of parsers to disable
+
+Kramdown has a number of built-in span and block parsers, and
+additional parsers can be added by subclassing. This option allows the
+caller to disable specific parsers by name, especially when something
+like smart quotes or typographic dashes will be supplied by a separate
+processing step.
+
+Default: []
+Used by: kramdown parser
+EOF
+      val = simple_array_validator(val, :disable_parsers)
+      val.map! {|v| v.to_sym rescue v}
+      val
+    end
+
     define(:parse_block_html, Boolean, false, <<EOF)
 Process kramdown syntax in block HTML tags
 
