@@ -230,7 +230,7 @@ module Kramdown
       # Uses the option +auto_id_prefix+: the value of this option is prepended to every generated
       # ID.
       def generate_id(str)
-        str = ::Kramdown::Utils::Unidecoder.decode(str) if @options[:transliterated_header_ids]
+        str = ::Kramdown::Utils::Unidecoder.decode(str).strip if @options[:transliterated_header_ids]
         gen_id = basic_generate_id(str)
         gen_id = 'section' if gen_id.length == 0
         @used_ids ||= {}
