@@ -1,5 +1,5 @@
 #
-# setup.rb
+# setup.rb  
 #
 # Copyright (c) 2000-2005 Minero Aoki
 #
