@@ -149,14 +149,17 @@ module Kramdown
         elsif img.attr['src'] !~ /\.jpe?g$|\.png$/
           warning("Cannot render images other than JPEG or PNG, got #{img.attr['src']}#{line ? " on line #{line}" : ''}")
           return nil
-        end
-
-        img_dirs = (@options[:image_directories] || ['.']).dup
-        begin
-          img_path = File.join(img_dirs.shift, img.attr['src'])
-          image_obj, image_info = @pdf.build_image_object(open(img_path))
-        rescue
-          img_dirs.empty? ? raise : retry
+        elsif img.attr['src'] =~ /^[hH][tT][tT][pP][sS]?:/
+          warning("Loading external image: #{img.attr['src']}")
+          image_obj, image_info = @pdf.build_image_object(open(img.attr['src']))
+        else
+          img_dirs = (@options[:image_directories] || ['.']).dup
+          begin
+            img_path = File.join(img_dirs.shift, img.attr['src'])
+            image_obj, image_info = @pdf.build_image_object(open(img_path))
+          rescue
+            img_dirs.empty? ? raise : retry
+          end
         end
 
         options = {:position => :center}
