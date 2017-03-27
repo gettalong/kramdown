@@ -315,6 +315,13 @@ Default: 1
 Used by: HTML converter
 EOF
 
+    define(:footnote_big, Boolean, false, <<EOF)
+If this option is `true`, footnote will be big numbers, no <sup>superscript</sup>.
+
+Default: false
+Used by: HTML converter
+EOF
+
     define(:enable_coderay, Boolean, true, <<EOF)
 Use coderay for syntax highlighting
 

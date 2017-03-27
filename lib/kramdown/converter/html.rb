@@ -275,7 +275,11 @@ module Kramdown
           @footnotes << [el.options[:name], el.value, number, 0]
           @footnotes_by_name[el.options[:name]] = @footnotes.last
         end
-        "<sup id=\"fnref:#{el.options[:name]}#{repeat}\"><a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
+        if @options[:footnote_big]
+          "<a href=\"#fn:#{el.options[:name]}\" class=\"footnote\" id=\"fnref:#{el.options[:name]}#{repeat}\">[#{number}]</a>"
+        else
+          "<sup id=\"fnref:#{el.options[:name]}#{repeat}\"><a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
+        end
       end
 
       def convert_raw(el, indent)
