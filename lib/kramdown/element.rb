@@ -486,13 +486,13 @@ module Kramdown
     # Create a new Element object of type +type+. The optional parameters +value+, +attr+ and
     # +options+ can also be set in this constructor for convenience.
     def initialize(type, value = nil, attr = nil, options = nil)
-      @type, @value, @attr, @options = type, value, (Utils::OrderedHash.new.merge!(attr) if attr), options
+      @type, @value, @attr, @options = type, value, ({}.merge!(attr) if attr), options
       @children = []
     end
 
-    # The attributes of the element. Uses an Utils::OrderedHash to retain the insertion order.
+    # The attributes of the element.
     def attr
-      @attr ||= Utils::OrderedHash.new
+      @attr ||= {}
     end
 
     # The options hash for the element. It is used for storing arbitray options.
