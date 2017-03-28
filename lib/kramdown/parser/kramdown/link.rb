@@ -40,6 +40,7 @@ module Kramdown
         update_attr_with_ial(el.attr, ial) if ial
         if el.type == :a
           el.attr['href'] = href
+          href.gsub(/^(http|\/\/)/) { el.attr['target'] = '_blank' }
         else
           el.attr['src'] = href
           el.attr['alt'] = alt_text
