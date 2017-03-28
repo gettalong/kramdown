@@ -44,7 +44,7 @@ module Kramdown
         @footnote_location = nil
         @toc = []
         @toc_code = nil
-        @indent = 2
+        @indent = @options[:indent] || 2
         @stack = []
       end
 
