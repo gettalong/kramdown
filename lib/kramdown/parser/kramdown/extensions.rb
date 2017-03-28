@@ -152,7 +152,7 @@ module Kramdown
       # location.
       def parse_block_extensions
         if @src.scan(ALD_START)
-          parse_attribute_list(@src[2], @alds[@src[1]] ||= Utils::OrderedHash.new)
+          parse_attribute_list(@src[2], @alds[@src[1]] ||= {})
           @tree.children << new_block_el(:eob, :ald)
           true
         elsif @src.check(EXT_BLOCK_START)
@@ -160,10 +160,10 @@ module Kramdown
         elsif @src.scan(IAL_BLOCK_START)
           if @tree.children.last && @tree.children.last.type != :blank &&
               (@tree.children.last.type != :eob || [:link_def, :abbrev_def, :footnote_def].include?(@tree.children.last.value))
-            parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
+            parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
             @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else
-            parse_attribute_list(@src[1], @block_ial ||= Utils::OrderedHash.new)
+            parse_attribute_list(@src[1], @block_ial ||= {})
           end
           true
         else
@@ -184,9 +184,9 @@ module Kramdown
         elsif @src.check(IAL_SPAN_START)
           if @tree.children.last && @tree.children.last.type != :text
             @src.pos += @src.matched_size
-            attr = Utils::OrderedHash.new
+            attr = {}
             parse_attribute_list(@src[1], attr)
-            update_ial_with_ial(@tree.children.last.options[:ial] ||= Utils::OrderedHash.new, attr)
+            update_ial_with_ial(@tree.children.last.options[:ial] ||= {}, attr)
             update_attr_with_ial(@tree.children.last.attr, attr)
           else
             warning("Found span IAL after text - ignoring it")

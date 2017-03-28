@@ -17,7 +17,6 @@ module Kramdown
 
     autoload :Entities, 'kramdown/utils/entities'
     autoload :Html, 'kramdown/utils/html'
-    autoload :OrderedHash, 'kramdown/utils/ordered_hash'
     autoload :Unidecoder, 'kramdown/utils/unidecoder'
     autoload :StringScanner, 'kramdown/utils/string_scanner'
     autoload :Configurable, 'kramdown/utils/configurable'

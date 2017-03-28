@@ -110,7 +110,7 @@ module Kramdown
         # If the optional +in_html_tag+ parameter is set to +false+, attributes are not modified to
         # contain only lowercase letters.
         def parse_html_attributes(str, line = nil, in_html_tag = true)
-          attrs = Utils::OrderedHash.new
+          attrs = {}
           str.scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
             attr.downcase! if in_html_tag
             if attrs.has_key?(attr)
