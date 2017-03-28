@@ -1538,7 +1538,9 @@ The parser also replaces normal single `'` and double quotes `"` with "fancy quo
 times when kramdown falsely replace the quotes. If this is the case, just \'escape\" the quotes and
 they won't be replaced with fancy ones.
 
-
+**Note** if you are experiencing issues with the above symbols appearing, examine the encoding specified for
+resultant document. For example you may need to add `<meta charset="utf-8">` to the head section of your html
+document.
 
 # Non-content elements
 
