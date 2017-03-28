@@ -35,9 +35,6 @@
 #
 # MIT - see the COPYING file.
 
-
-require 'kramdown/compatibility'
-
 require 'kramdown/version'
 require 'kramdown/element'
 require 'kramdown/error'
