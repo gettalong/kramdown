@@ -67,7 +67,7 @@ module Kramdown
         false
       end
 
-      # Returns whether the template should be applied ater the conversion of the tree.
+      # Returns whether the template should be applied after the conversion of the tree.
       #
       # Defaults to true.
       def apply_template_after?
