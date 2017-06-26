@@ -32,5 +32,7 @@ module Kramdown
 
     end
 
+    HashAst = HashAST
+
   end
 end
