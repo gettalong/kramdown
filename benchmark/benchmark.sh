@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.bashrc
+source ~/.profile
 
 RUBY_VERSIONS=`rvm list strings | sort`
 KD_VERSIONS="`git tag | sort -V` master"
@@ -8,7 +8,7 @@ OTHERS=false
 AVERAGE=1
 MASTER_AS=master
 
-while getopts "r:k:o:m:a:" optname; do
+while getopts "r:k:om:a:" optname; do
     case "$optname" in
         "r")
             RUBY_VERSIONS="$OPTARG"
@@ -18,13 +18,13 @@ while getopts "r:k:o:m:a:" optname; do
             ;;
         "o")
             OTHERS=true
-	    ;;
-	"m")
-	    MASTER_AS="$OPTARG"
             ;;
-	"a")
-	    AVERAGE="$OPTARG"
-	    ;;
+        "m")
+            MASTER_AS="$OPTARG"
+            ;;
+        "a")
+            AVERAGE="$OPTARG"
+            ;;
         "?")
             echo "Unknown option $OPTARG"
             exit 1
@@ -50,8 +50,8 @@ git clone .git ${TMPDIR}/kramdown
 cd ${TMPDIR}/kramdown
 
 for RUBY_VERSION in $RUBY_VERSIONS; do
-	rvm $RUBY_VERSION
-	echo "Creating benchmark data for $(ruby -v)"
+  rvm use $RUBY_VERSION
+  echo "Creating benchmark data for $(ruby -v)"
 
     for KD_VERSION in $KD_VERSIONS; do
         echo "Using kramdown version $KD_VERSION"
