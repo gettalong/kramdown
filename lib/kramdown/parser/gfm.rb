@@ -84,7 +84,13 @@ module Kramdown
           elsif child.type == :smart_quote
             raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
           elsif child.type == :typographic_sym
-            raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
+            if child.value == :laquo_space
+              raw_text << "« "
+            elsif child.value == :raquo_space
+              raw_text << " »"
+            else
+              raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
+            end
           else
             child.children.each {|c| append_text.call(c)}
           end
