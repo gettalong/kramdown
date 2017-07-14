@@ -154,6 +154,31 @@ module Kramdown
         el
       end
 
+      # To handle task-lists we override the parse method for lists, converting matching text into checkbox input
+      # elements where necessary (as well as applying classes to the ul/ol and li elements).
+      def parse_list
+        super
+        @tree.children.each do |element|
+          if [:ul, :ol].include? element.type
+            is_tasklist = false
+            element.children.each do |li|
+              # li -> p -> raw_text
+              checked = li.children[0].children[0].value.gsub!(
+                  /\[ \]\s+/, '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />')
+              unchecked = li.children[0].children[0].value.gsub!(
+                  /\[x\]\s+/i, '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />')
+              is_tasklist = (checked != nil or unchecked != nil)
+              if is_tasklist
+                li.attr[:class] = 'task-list-item'
+              end
+            end
+            if is_tasklist
+              element.attr[:class] = 'task-list'
+            end
+          end
+        end
+      end
+
       ESCAPED_CHARS_GFM = /\\([\\.*_+`<>()\[\]{}#!:\|"'\$=\-~])/
       define_parser(:escaped_chars_gfm, ESCAPED_CHARS_GFM, '\\\\', :parse_escaped_chars)
 
