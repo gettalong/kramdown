@@ -1,13 +1,10 @@
 language: ruby
 rvm:
-  - 1.8.7
-  - 1.9.3
   - 2.0.0
   - 2.1
   - 2.2
   - 2.3
   - 2.4.0
-  - jruby-19mode
   - jruby
 
 jdk:
@@ -28,12 +25,12 @@ matrix:
 before_install:
   - sudo apt-get update
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
-  - gem install rake --version 10.5.0
+  - gem install rake
   - gem install minitest coderay stringex ritex
   - gem install rouge --version "${ROUGE}"
-  - (ruby --version | grep -qv 'ruby 1.[89]') && gem install prawn prawn-table || true
+  - gem install prawn prawn-table
   - (ruby --version | grep jruby) || gem install itextomml
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - npm install mathjax-node@"<1.0" cssstyle
 
-script: ruby -rubygems -Ilib:test test/test_*
+script: ruby -Ilib:test test/test_*

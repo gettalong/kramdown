@@ -18,7 +18,7 @@ module Kramdown
       gem 'stringex' if defined?(Gem)
       path = $:.find {|dir| File.directory?(File.join(File.expand_path(dir), "stringex", "unidecoder_data"))}
 
-      if RUBY_VERSION <= '1.8.6' || !path
+      if !path
         def self.decode(string)
           string
         end

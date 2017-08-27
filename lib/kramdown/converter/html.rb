@@ -442,7 +442,7 @@ module Kramdown
         text.each_byte do |b|
           result << (b > 128 ? b.chr : "&#%03d;" % b)
         end
-        result.force_encoding(text.encoding) if result.respond_to?(:force_encoding)
+        result.force_encoding(text.encoding)
         result
       end
 
