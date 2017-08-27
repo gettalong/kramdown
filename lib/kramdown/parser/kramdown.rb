@@ -90,7 +90,10 @@ module Kramdown
         update_tree(@root)
         correct_abbreviations_attributes
         replace_abbreviations(@root)
-        @footnotes.each {|name,data| update_tree(data[:content])}
+        @footnotes.each do |name,data|
+          update_tree(data[:content])
+          replace_abbreviations(data[:content])
+        end
         @footnotes.each do |name, data|
           next if data.key?(:marker)
           line = data[:content].options[:location]
