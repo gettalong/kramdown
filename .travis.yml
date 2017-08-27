@@ -13,9 +13,6 @@ jdk:
 env:
   global:
     - TRAVIS_NODE_VERSION="4.0"
-  matrix:
-    - ROUGE="~> 1.8"
-    - ROUGE="~> 2.0"
 
 matrix:
   allow_failures:
@@ -27,7 +24,7 @@ before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
   - gem install rake
   - gem install minitest coderay stringex ritex
-  - gem install rouge --version "${ROUGE}"
+  - gem install rouge
   - gem install prawn prawn-table
   - (ruby --version | grep jruby) || gem install itextomml
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
