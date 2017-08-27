@@ -1,11 +1,10 @@
 language: ruby
 rvm:
-  - 2.0.0
   - 2.1
   - 2.2
   - 2.3
   - 2.4.0
-  - jruby
+  - jruby-head
 
 jdk:
   - oraclejdk8
@@ -16,8 +15,7 @@ env:
 
 matrix:
   allow_failures:
-    - rvm: jruby-19mode
-    - rvm: jruby
+    - rvm: jruby-head
 
 before_install:
   - sudo apt-get update
