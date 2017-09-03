@@ -19,7 +19,7 @@ matrix:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra tidy
+  - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra tidy
   - gem install rake
   - gem install minitest coderay stringex ritex
   - gem install rouge
