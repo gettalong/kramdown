@@ -1435,6 +1435,10 @@ optionally followed by other word characters, digits or dashes. For example:
 
     This is some text.[^1]. Other text.[^footnote].
 
+> Note that footnote markers cannot be used as part of the link text of a link because this would
+> lead to nested links which is not allowed in HTML.
+{: .information}
+
 Footnote markers with the same name will link to the same footnote definition. The actual naming of
 a footnote does not matter since the numbering of footnotes is controlled via the position of the
 footnote markers in the document (the first found footnote marker will get the number 1, the second 
