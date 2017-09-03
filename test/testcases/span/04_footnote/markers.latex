@@ -10,14 +10,14 @@ and a quote
 \end{quote}
 
 \begin{itemize}
-\item and a list item \footnote{some \emph{text}}
+\item{} and a list item \footnote{some \emph{text}}
 \end{itemize}
 
 \section*{And a header\footnote{\begin{verbatim}code block
 continued here
 \end{verbatim}}}
 
-A marker without a definition [\^{}without].
+A marker without a definition {[}\^{}without{]}.
 
 A marker \footnote{} used twice\footnote{Some foot note text} and thrice\footnote{Some foot note text}.
 

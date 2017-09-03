@@ -5,12 +5,12 @@ blockquote
 \end{quote}
 
 \begin{itemize}
-\item a list
+\item{} a list
 with some text
 \end{itemize}
 
 \begin{itemize}
-\item other list
+\item{} other list
 \end{itemize}
 \begin{verbatim}code
 \end{verbatim}
