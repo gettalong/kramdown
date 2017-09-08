@@ -210,9 +210,9 @@ module Kramdown
       def convert_a(el, opts)
         url = el.attr['href']
         if url.start_with?('#')
-          "\\hyperlink{#{escape(url[1..-1])}}{#{inner(el, opts)}}"
+          "\\hyperlink{#{url[1..-1].gsub('%', "\\%")}}{#{inner(el, opts)}}"
         else
-          "\\href{#{escape(url)}}{#{inner(el, opts)}}"
+          "\\href{#{url.gsub('%', "\\%")}}{#{inner(el, opts)}}"
         end
       end
 
