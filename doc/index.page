@@ -97,8 +97,8 @@ extensions that have been made popular by the [PHP Markdown Extra] package and [
 It is probably the fastest pure-Ruby Markdown converter available (September 2014), being about 3x
 faster than [Maruku] and about 4.5x faster than [BlueFeather].
 
-Version **1.14.0**{:itemprop="softwareVersion"} released on
-**2017-06-26**{:itemprop="datePublished"}, [more news](news.html)
+Version **1.15.0**{:itemprop="softwareVersion"} released on
+**2017-09-08**{:itemprop="datePublished"}, [more news](news.html)
 {: style="text-align: center; font-size: 80%"}
 
 </div>
