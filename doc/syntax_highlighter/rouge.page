@@ -25,8 +25,8 @@ formatter
 : A custom Rouge formatter class that should be used instead of the following default formatter
   (Rogue 1.x: `Rouge::Formatters::HTML` / Rogue 2.x: `Rouge::Formatters::HTMLLegacy`).
 
-  Note that setting this key only makes sense using Ruby code because the value needs to be a class
-  object!
+  If this setting is a string, it needs to contain the name of a constant under the
+  `Rouge::Formatters` namespace.
 
 disable
 : If set to `true`, highlighting with Rouge will be disabled.
