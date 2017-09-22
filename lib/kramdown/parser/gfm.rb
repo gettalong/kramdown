@@ -158,25 +158,24 @@ module Kramdown
       # elements where necessary (as well as applying classes to the ul/ol and li elements).
       def parse_list
         super
-        @tree.children.each do |element|
-          if [:ul, :ol].include? element.type
-            is_tasklist = false
-            element.children.each do |li|
-              # li -> p -> raw_text
-              checked = li.children[0].children[0].value.gsub!(
-                  /\[ \]\s+/, '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />')
-              unchecked = li.children[0].children[0].value.gsub!(
-                  /\[x\]\s+/i, '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />')
-              is_tasklist = (checked != nil or unchecked != nil)
-              if is_tasklist
-                li.attr[:class] = 'task-list-item'
-              end
-            end
-            if is_tasklist
-              element.attr[:class] = 'task-list'
-            end
-          end
+        current_list = @tree.children.select{ |element| [:ul, :ol].include?(element.type) }.last
+
+        is_tasklist = false
+        box_unchecked = '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />'
+        box_checked = '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />'
+
+        current_list.children.each do |li|
+          # li -> p -> raw_text
+          checked = li.children[0].children[0].value.gsub!(/\[ \]\s+/, box_unchecked)
+          unchecked = li.children[0].children[0].value.gsub!( /\[x\]\s+/i, box_checked)
+          is_tasklist ||= (!checked.nil? || !unchecked.nil?)
+
+          li.attr['class'] = 'task-list-item' if is_tasklist
         end
+
+        current_list.attr['class'] = 'task-list' if is_tasklist
+
+        true
       end
 
       ESCAPED_CHARS_GFM = /\\([\\.*_+`<>()\[\]{}#!:\|"'\$=\-~])/
