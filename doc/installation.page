@@ -34,6 +34,9 @@ After running the following commands, kramdown is installed and ready to use:
     sudo apt-get install ruby
     sudo gem install kramdown
 
+RPM based distributions, such as Fedora can be installed using the following command:
+
+    sudo dnf install rubygem-kramdown
 
 ### Mac OS X
 
