@@ -30,6 +30,8 @@ module Kramdown
       end
 
       def convert(el)
+        real_el, el = el, el.value if el.type == :footnote
+
         children = el.children.dup
         index = 0
         while index < children.length
@@ -46,7 +48,7 @@ module Kramdown
           end
         end
         el.children = children
-        el
+        real_el || el
       end
 
     end
