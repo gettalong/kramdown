@@ -30,6 +30,10 @@ module Kramdown
       end
 
       def convert(el)
+        if el.type == :footnote
+          el = el.value
+        end
+
         children = el.children.dup
         index = 0
         while index < children.length
