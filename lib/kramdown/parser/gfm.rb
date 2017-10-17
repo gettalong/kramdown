@@ -20,6 +20,7 @@ module Kramdown
         @id_counter = Hash.new(-1)
 
         @span_parsers.delete(:line_break) if @options[:hard_wrap]
+        @span_parsers.delete(:typographic_syms) if @options[:gfm_quirks].include?(:no_auto_typographic)
         if @options[:gfm_quirks].include?(:paragraph_end)
           atx_header_parser = :atx_header_gfm_quirk
           @paragraph_end = self.class::PARAGRAPH_END_GFM
