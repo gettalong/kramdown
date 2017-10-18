@@ -614,6 +614,13 @@ separated by commas. Possible names are:
   Note that if this quirk is used, lazy line wrapping does not fully
   work anymore!
 
+* no_auto_typographic
+
+  Disables automatic conversion of some characters into their
+  corresponding typographic symbols (like `--` to em-dash etc).
+  This helps to achieve results closer to what GitHub Flavored
+  Markdown produces.
+
 Default: paragraph_end
 Used by: GFM parser
 EOF
