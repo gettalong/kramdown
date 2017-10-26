@@ -9,10 +9,31 @@
 #
 
 require 'optparse'
+require 'rbconfig'
+require 'yaml'
 require 'kramdown'
 
-options = {}
+config_file = nil
+begin
+  config_dir = case RbConfig::CONFIG['host_os']
+               when /bccwin|cygwin|djgpp|mingw|mswin|wince/i
+                 File.expand_path((ENV['HOME'] || ENV['USERPROFILE'] || "~") + "/AppData/Local")
+               when /darwin|mac os/
+                 File.expand_path("~/Library/Preferences/")
+               else
+                 File.expand_path(ENV['XDG_CONFIG_HOME'] || '~/.config')
+               end
+  config_file = File.join(config_dir, "kramdownrc")
+rescue
+end
+
+options = if config_file && File.exist?(config_file)
+            YAML.safe_load(File.read(config_file), [Symbol])
+          else
+            {}
+          end
 format = ['html']
+
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
   opts.summary_indent = ' '*4
