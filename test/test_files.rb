@@ -282,6 +282,7 @@ class TestFiles < Minitest::Test
                        'test/testcases/block/03_paragraph/no_newline_at_end.text',
                        'test/testcases/block/03_paragraph/indented.text',
                        'test/testcases/block/03_paragraph/two_para.text',
+                       'test/testcases/block/03_paragraph/line_break_last_line.text',
                        'test/testcases/block/04_header/atx_header.text',
                        'test/testcases/block/04_header/setext_header.text',
                        'test/testcases/block/04_header/with_auto_ids.text', # bc of ID generation difference
