@@ -25,13 +25,15 @@ See the platform specific installation notes for more information!
 
 ### Linux
 
-There are a variety of Linux distributions out there with different package management systems. So
-we will focus on instructions for Ubuntu 17.10 here (which should probably also work for any newer
-Ubuntu version or any recent Debian based distribution).
+You need to make sure that Ruby is installed. If it isn't, consult the documentation of the Linux
+distribution you are using on how to install it. For example, in case of Ubuntu 17.10 (this should
+probably also work for any newer Ubuntu version or any recent Debian based distribution) all you
+need to do is:
 
-After running the following commands, kramdown is installed and ready to use:
+    sudo apt-get install ruby
 
-    sudo apt-get install ruby   # only needed if you don't already have Ruby installed
+Once you have Ruby installed, you need to execute the following command to install kramdown:
+
     sudo gem install kramdown
 
 
