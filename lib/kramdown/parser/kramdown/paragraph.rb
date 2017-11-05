@@ -37,8 +37,13 @@ module Kramdown
         end
         result.rstrip!
         if @tree.children.last && @tree.children.last.type == :p
-          joiner = (extract_string((pos - 3)...pos, @src) == "  \n" ? "  \n" : "\n")
-          @tree.children.last.children.first.value << joiner << result
+          last_item_in_para = @tree.children.last.children.last
+          if last_item_in_para && last_item_in_para.type == @text_type
+            joiner = (extract_string((pos - 3)...pos, @src) == "  \n" ? "  \n" : "\n")
+            last_item_in_para.value << joiner << result
+          else
+            add_text(result, @tree.children.last)
+          end
         else
           @tree.children << new_block_el(:p, nil, nil, :location => start_line_number)
           result.lstrip!
