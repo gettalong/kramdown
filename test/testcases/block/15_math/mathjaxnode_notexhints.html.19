@@ -1,4 +1,4 @@
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" alttext="f(x) = a{x^3} + b{x^2} + cx + d">
   <mi>f</mi>
   <mo stretchy="false">(</mo>
   <mi>x</mi>

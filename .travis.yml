@@ -11,7 +11,7 @@ jdk:
 
 env:
   global:
-    - TRAVIS_NODE_VERSION="4.0"
+    - TRAVIS_NODE_VERSION="4.5"
 
 matrix:
   allow_failures:
@@ -26,6 +26,6 @@ before_install:
   - gem install prawn prawn-table
   - (ruby --version | grep jruby) || gem install itextomml
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install mathjax-node@"<1.0" cssstyle
+  - npm install mathjax-node-cli cssstyle
 
 script: ruby -Ilib:test test/test_*
