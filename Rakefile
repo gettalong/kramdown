@@ -185,6 +185,7 @@ EOF
       s.add_development_dependency 'prawn-table', '~> 0.2.2'
       s.add_development_dependency 'ritex', '~> 1.0'
       s.add_development_dependency 'itextomml', '~> 1.5'
+      s.add_development_dependency 'execjs', '~> 2.7'
 
       #### Documentation
 
@@ -266,6 +267,27 @@ EOF
     puts "Look through the above mentioned files and correct all problems" if inserted
   end
 
+  desc "Check for KaTeX availability"
+  task :test_katexjs do
+    katexjs = 'katex/katex.min.js'
+    raise (<<TKJ) unless File.exists? katexjs
+Cannot find file '#{katexjs}'.
+You need to download KaTeX e.g. from https://github.com/Khan/KaTeX/releases/
+and extract at least '#{katexjs}'.
+Alternatively, if you have a copy of KaTeX unpacked somewhere else,
+you can create a symbolic link 'katex' pointing to that KaTeX directory.
+TKJ
+  end
+
+  desc "Update kramdown SsKaTeX test reference outputs"
+  task update_katex_tests: [:test_katexjs] do
+    # Not framed in terms of rake file tasks to prevent accidental overwrites.
+    stems = ['test/testcases/block/15_math/sskatex',
+             'test/testcases/span/math/sskatex']
+    stems.each do |stem|
+      ruby "-Ilib bin/kramdown --math-engine sskatex #{stem}.text >#{stem}.html.19"
+    end
+  end
 end
 
 task :gemspec => ['dev:gemspec']

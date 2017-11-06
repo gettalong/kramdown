@@ -1,0 +1,103 @@
+---
+title: SsKaTeX
+---
+
+## Math Engine SsKaTeX
+
+This math engine uses a server-side installation of [KaTeX] to convert TeX math formulas into
+HTML+MathML. This eliminates the need for client-side math-rendering JavaScript. Consider this a
+lightweight alternative to [Mathjax-Node](mathjaxnode.html).
+
+Your HTML templates need no longer include Javascripts for Math (neither `katex.js` nor any
+search-and-replace script). Your HTML templates should continue referencing the KaTeX CSS. If you
+host your own copy of the CSS, also keep hosting the fonts.
+
+Requirements for running kramdown with math engine SsKaTeX:
+
+- Ruby gem [`execjs`][execjs],
+- A Javascript engine supported by ExecJS, e.g. via one of
+  - Ruby gem [`therubyracer`][therubyracer],
+  - Ruby gem [`therubyrhino`][therubyrhino],
+  - Ruby gem [`duktape`][duktape],
+  - [Node.js],
+- `katex.min.js` from [KaTeX].
+
+All these requirements need to be met only if SsKaTeX is actually used.
+
+A typical SsKaTeX configuration looks like this:
+
+~~~ yaml
+math_engine: sskatex
+math_engine_opts:
+  katexjs: 'path-to-katex/katex.min.js'
+~~~
+The complete list of available options in `math_engine_opts` follows:
+
+katexjs
+: The path to your copy of `katex.min.js`. Defaults to `'katex/katex.min.js'`. For a relative path,
+  the starting point is the current working directory.
+
+katexopts
+: A dictionary with general KaTeX options such as `throwOnError`, `errorColor`, `colorIsTextColor`,
+  and `macros`. See the [KaTeX documentation][KaTeXopts] for details. Use `throwOnError: false` if
+  you want parse errors highlighted in the HTML output rather than raised as exceptions when
+  compiling. Note that `displayMode` is computed dynamically and should not be specified here.
+
+jsrun
+: An identifier for the Javascript engine to use. Recognized identifiers include: `RubyRacer`,
+  `RubyRhino`, `Duktape`, `MiniRacer`, `Node`, `JavaScriptCore`, `Spidermonkey`, `JScript`, `V8`,
+  and `Disabled`; that last one would raise an error on first use. Which engines are actually
+  available depends on your installation.
+
+  If **jsrun** is not defined, the contents of the environment variable `EXECJS_RUNTIME` will be
+  considered instead; and if that is not defined, an automatic choice will be made. For more
+  information, use the **verbose** option and consult the [ExecJS] documentation.
+
+jsdir
+: The path to a directory with Javascript helper files. Defaults to the subdirectory `sskatex/js`
+  in the data directory of kramdown. There is no need to change that setting unless you want to
+  experiment with Javascript details.
+
+libs
+: A list of UTF-8-encoded Javascript helper files to load. Relative paths are interpreted relative
+  to **jsdir**. The default setting is
+
+  ~~~ yaml
+  libs:
+    - escape_nonascii_html.js
+    - tex_to_html.js
+  ~~~
+  And there is no need to change that unless you want to experiment with Javascript details.
+
+  Files available in the default **jsdir** are:
+
+  escape_nonascii_html.js
+  : defines a function `escape_nonascii_html` that converts non-ASCII characters to HTML numeric
+    character references. Intended as postprocessing filter.
+
+  tex_to_html.js
+  : defines a function `tex_to_html`(*tex*, *display_mode*, *katexopts*) that takes a LaTeX math
+    string, a boolean display mode (`true` for block display, `false` for inline), and a dict with
+    general KaTeX options, and returns a string with corresponding HTML+MathML output. The
+    implementation is allowed to set `katexopts.displayMode`. SsKaTeX applies `tex_to_html` to each
+    math fragment encountered. The implementation given here uses `katex.renderToString` and
+    postprocesses the output with `escape_nonascii_html`.
+
+verbose
+: Whether to log the engine configuration. Defaults to `false`. When set to something else, logs
+  (by converter warnings) the identifiers of the available Javascript engines, the selected engine
+  (cf. option **jsrun**), the names of the Javascript files loaded, and the contents of
+  **katexopts**. That happens only once per new configuration.
+
+debug
+: For debugging. Defaults to `false`. When set to something else, prints (by `warn`) every
+  information that the **verbose** option would log, and every Javascript expression used after
+  engine initialization, immediately to `stderr`.
+
+[duktape]: https://github.com/judofyr/duktape.rb#duktaperb
+[execjs]: https://github.com/rails/execjs#execjs
+[KaTeX]: https://khan.github.io/KaTeX/
+[KaTeXopts]: https://github.com/Khan/KaTeX#rendering-options
+[therubyracer]: https://github.com/cowboyd/therubyracer#therubyracer
+[therubyrhino]: https://github.com/cowboyd/therubyrhino#therubyrhino
+[Node.js]: https://nodejs.org/

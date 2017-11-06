@@ -36,13 +36,35 @@ end
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
+def have_mathjaxnode
+  require 'kramdown/converter/math_engine/mathjaxnode'
+  Kramdown::Converter::MathEngine::MathjaxNode::AVAILABLE or
+  warn "Skipping MathjaxNode tests as MathjaxNode is not available"
+end
+
+def have_katex
+  require 'kramdown/converter/math_engine/sskatex'
+  Kramdown::Converter::MathEngine::SsKaTeX::AVAILABLE and
+  File.file? 'katex/katex.min.js' or
+  warn "Skipping SsKaTeX tests as SsKaTeX is not available"
+end
+
 class TestFiles < Minitest::Test
+
+  HAVE_MATHJAX_NODE = have_mathjaxnode
+  HAVE_KATEX = have_katex
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                       ('test/testcases/span/03_codespan/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
                       ('test/testcases/block/06_codeblock/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
                       ('test/testcases/block/15_math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
                       ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
+                      ('test/testcases/block/15_math/mathjaxnode.text' unless HAVE_MATHJAX_NODE),
+                      ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless HAVE_MATHJAX_NODE),
+                      ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless HAVE_MATHJAX_NODE),
+                      ('test/testcases/span/math/mathjaxnode.text' unless HAVE_MATHJAX_NODE),
+                      ('test/testcases/block/15_math/sskatex.text' unless HAVE_KATEX),
+                      ('test/testcases/span/math/sskatex.text' unless HAVE_KATEX),
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -89,6 +111,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
+                          'test/testcases/span/math/sskatex.html', # bc of tidy
+                          'test/testcases/block/15_math/sskatex.html', # bc of tidy
                           'test/testcases/span/05_html/mark_element.html', # bc of tidy
                           'test/testcases/block/09_html/xml.html', # bc of tidy
                           'test/testcases/span/05_html/xml.html', # bc of tidy
@@ -195,6 +219,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/15_math/mathjaxnode_notexhints.text', # bc of tidy
                           'test/testcases/block/15_math/mathjaxnode_semantics.text', # bc of tidy
                           'test/testcases/span/math/mathjaxnode.text', # bc of tidy
+                          'test/testcases/block/15_math/sskatex.text', # bc of tidy
+                          'test/testcases/span/math/sskatex.text', # bc of tidy
                           'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
                           'test/testcases/span/05_html/mark_element.text', # bc of tidy
                           'test/testcases/block/09_html/xml.text', # bc of tidy
@@ -246,6 +272,8 @@ class TestFiles < Minitest::Test
                              'test/testcases/block/15_math/mathjaxnode_notexhints.html', # bc of tidy
                              'test/testcases/block/15_math/mathjaxnode_semantics.html', # bc of tidy
                              'test/testcases/span/math/mathjaxnode.html', # bc of tidy
+                             'test/testcases/block/15_math/sskatex.html', # bc of tidy
+                             'test/testcases/span/math/sskatex.html', # bc of tidy
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
@@ -347,6 +375,12 @@ class TestFiles < Minitest::Test
                        ('test/testcases/block/06_codeblock/rouge/multiple.text' if RUBY_VERSION < '2.0'), #bc of rouge
                        ('test/testcases/block/15_math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
                        ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
+                       ('test/testcases/block/15_math/mathjaxnode.text' unless HAVE_MATHJAX_NODE),
+                       ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless HAVE_MATHJAX_NODE),
+                       ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless HAVE_MATHJAX_NODE),
+                       ('test/testcases/span/math/mathjaxnode.text' unless HAVE_MATHJAX_NODE),
+                       ('test/testcases/block/15_math/sskatex.text' unless HAVE_KATEX),
+                       ('test/testcases/span/math/sskatex.text' unless HAVE_KATEX),
                       ].compact
 
   # Generate test methods for gfm-to-html conversion
@@ -378,6 +412,8 @@ class TestFiles < Minitest::Test
                        ].compact
 
   EXCLUDE_MODIFY = ['test/testcases/block/06_codeblock/rouge/multiple.text', # bc of HTMLFormater in options
+                    ('test/testcases/block/15_math/sskatex.text' unless HAVE_KATEX),
+                    ('test/testcases/span/math/sskatex.text' unless HAVE_KATEX),
                    ]
 
   # Generate test methods for asserting that converters don't modify the document tree.
