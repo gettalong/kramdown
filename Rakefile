@@ -186,6 +186,7 @@ EOF
       s.add_development_dependency 'ritex', '~> 1.0'
       s.add_development_dependency 'itextomml', '~> 1.5'
       s.add_development_dependency 'execjs', '~> 2.7'
+      s.add_development_dependency 'sskatex', '>= 0.9.23'
 
       #### Documentation
 
@@ -267,8 +268,32 @@ EOF
     puts "Look through the above mentioned files and correct all problems" if inserted
   end
 
+  desc "Check for SsKaTeX availability"
+  task :test_sskatex_deps do
+    katexjs = 'katex/katex.min.js'
+    raise (<<TKJ) unless File.exists? katexjs
+Cannot find file '#{katexjs}'.
+You need to download KaTeX e.g. from https://github.com/Khan/KaTeX/releases/
+and extract at least '#{katexjs}'.
+Alternatively, if you have a copy of KaTeX unpacked somewhere else,
+you can create a symbolic link 'katex' pointing to that KaTeX directory.
+TKJ
+    html = %x{echo '$$a$$' | #{RbConfig.ruby} -Ilib bin/kramdown --math-engine sskatex}
+    raise (<<KTC) unless $?.success?
+Some requirement by SsKaTeX or the employed JS engine has not been satisfied.
+Cf. the above error messages.
+KTC
+    raise (<<XJS) unless / class="katex"/ === html
+Some static dependency of SsKaTeX, probably the 'sskatex' or the 'execjs' gem,
+is not available.
+If you 'gem install sskatex', also make sure that some JS engine is available,
+e.g. by installing one of the gems 'duktape', 'therubyracer', or 'therubyrhino'.
+XJS
+    puts "SsKaTeX is available, and its default configuration works."
+  end
+
   desc "Update kramdown SsKaTeX test reference outputs"
-  task :update_katex_tests do
+  task update_katex_tests: [:test_sskatex_deps] do
     # Not framed in terms of rake file tasks to prevent accidental overwrites.
     stems = ['test/testcases/block/15_math/sskatex',
              'test/testcases/span/math/sskatex']

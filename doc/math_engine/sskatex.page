@@ -14,6 +14,7 @@ host your own copy of the CSS, also keep hosting the fonts.
 
 Requirements for running kramdown with math engine SsKaTeX:
 
+- Ruby gem [`sskatex`][sskatex],
 - Ruby gem [`execjs`][execjs],
 - A Javascript engine supported by ExecJS, e.g. via one of
   - Ruby gem [`therubyracer`][therubyracer],
@@ -29,75 +30,87 @@ A typical SsKaTeX configuration looks like this:
 ~~~ yaml
 math_engine: sskatex
 math_engine_opts:
-  katexjs: 'path-to-katex/katex.min.js'
+  katex_js: 'path-to-katex/katex.min.js'
 ~~~
-The complete list of available options in `math_engine_opts` follows:
+The complete list of available options in `math_engine_opts` follows. Most options, with the notable
+exception of `katex_opts`, do not affect usage nor output, but may be needed to make SsKaTeX work
+with all the external parts (JS engine and KaTeX). Admins should read the [security
+notes](#security).
 
-katexjs
+katex_js
 : The path to your copy of `katex.min.js`. Defaults to `'katex/katex.min.js'`. For a relative path,
   the starting point is the current working directory.
 
-katexopts
+katex_opts
 : A dictionary with general KaTeX options such as `throwOnError`, `errorColor`, `colorIsTextColor`,
   and `macros`. See the [KaTeX documentation][KaTeXopts] for details. Use `throwOnError: false` if
   you want parse errors highlighted in the HTML output rather than raised as exceptions when
   compiling. Note that `displayMode` is computed dynamically and should not be specified here.
 
-jsrun
+js_run
 : An identifier for the Javascript engine to use. Recognized identifiers include: `RubyRacer`,
   `RubyRhino`, `Duktape`, `MiniRacer`, `Node`, `JavaScriptCore`, `Spidermonkey`, `JScript`, `V8`,
   and `Disabled`; that last one would raise an error on first use. Which engines are actually
   available depends on your installation.
 
-  If **jsrun** is not defined, the contents of the environment variable `EXECJS_RUNTIME` will be
+  If **js_run** is not defined, the contents of the environment variable `EXECJS_RUNTIME` will be
   considered instead; and if that is not defined, an automatic choice will be made. For more
-  information, use the **verbose** option and consult the [ExecJS] documentation.
+  information, use the **verbose** option and consult the [execjs] documentation.
 
-jsdir
-: The path to a directory with Javascript helper files. Defaults to the subdirectory `sskatex/js`
-  in the data directory of kramdown. There is no need to change that setting unless you want to
+js_dir
+: The path to a directory with Javascript helper files. Defaults to the subdirectory `js` in the
+  data directory of the `sskatex` gem. There is no need to change that setting unless you want to
   experiment with Javascript details.
 
-libs
+js_libs
 : A list of UTF-8-encoded Javascript helper files to load. Relative paths are interpreted relative
-  to **jsdir**. The default setting is
+  to **js_dir**. The default setting is
 
   ~~~ yaml
-  libs:
+  js_libs:
     - escape_nonascii_html.js
     - tex_to_html.js
   ~~~
   And there is no need to change that unless you want to experiment with Javascript details.
 
-  Files available in the default **jsdir** are:
+  Files available in the default **js_dir** are:
 
   escape_nonascii_html.js
   : defines a function `escape_nonascii_html` that converts non-ASCII characters to HTML numeric
     character references. Intended as postprocessing filter.
 
   tex_to_html.js
-  : defines a function `tex_to_html`(*tex*, *display_mode*, *katexopts*) that takes a LaTeX math
+  : defines a function `tex_to_html`(*tex*, *display_mode*, *katex_opts*) that takes a LaTeX math
     string, a boolean display mode (`true` for block display, `false` for inline), and a dict with
     general KaTeX options, and returns a string with corresponding HTML+MathML output. The
-    implementation is allowed to set `katexopts.displayMode`. SsKaTeX applies `tex_to_html` to each
+    implementation is allowed to set `katex_opts.displayMode`. SsKaTeX applies `tex_to_html` to each
     math fragment encountered. The implementation given here uses `katex.renderToString` and
     postprocesses the output with `escape_nonascii_html`.
 
 verbose
 : Whether to log the engine configuration. Defaults to `false`. When set to something else, logs
   (by converter warnings) the identifiers of the available Javascript engines, the selected engine
-  (cf. option **jsrun**), the names of the Javascript files loaded, and the contents of
-  **katexopts**. That happens only once per new configuration.
+  (cf. option **js_run**), the names of the Javascript files loaded, and the contents of
+  **katex_opts**. That happens only once per new configuration.
 
 debug
 : For debugging. Defaults to `false`. When set to something else, prints (by `warn`) every
   information that the **verbose** option would log, and every Javascript expression used after
   engine initialization, immediately to `stderr`.
 
+### Security
+
+The options with `js` in their names can be used to achieve arbitrary Javascript code execution with
+the privileges of the kramdown process. If kramdown is part of a service that allows file uploads
+and user-specified math engine selection and options, the service should therefore be sandboxed
+(which is recommended practice), or the user-specified options filtered, or SsKaTeX kept unavailable
+e.g. by not installing the `sskatex` gem.
+
 [duktape]: https://github.com/judofyr/duktape.rb#duktaperb
 [execjs]: https://github.com/rails/execjs#execjs
 [KaTeX]: https://khan.github.io/KaTeX/
 [KaTeXopts]: https://github.com/Khan/KaTeX#rendering-options
+[sskatex]: https://github.com/ccorn/sskatex/
 [therubyracer]: https://github.com/cowboyd/therubyracer#therubyracer
 [therubyrhino]: https://github.com/cowboyd/therubyrhino#therubyrhino
 [Node.js]: https://nodejs.org/

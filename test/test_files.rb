@@ -43,11 +43,12 @@ class TestFiles < Minitest::Test
                            end
 
   KATEX_AVAILABLE = begin
-                      require 'kramdown/converter/math_engine/sskatex'
-                      Kramdown::Converter::MathEngine::SsKaTeX::AVAILABLE and
-                        File.file?('katex/katex.min.js') or
-                        warn("Skipping SsKaTeX tests as some SsKaTeX dependency is not available")
-                    end
+                      / class="katex"/ === Kramdown::Document.
+                        new('$$a$$', {:math_engine => :sskatex}).to_html or
+                        warn("Skipping SsKaTeX tests as SsKaTeX is not available.")
+                    rescue
+                      warn("Skipping SsKaTeX tests as default SsKaTeX config does not work.")
+                    end or warn("Run \"rake dev:test_sskatex_deps\" to see why.")
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                       ('test/testcases/span/03_codespan/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
