@@ -25,7 +25,7 @@ module Kramdown::Converter::MathEngine
       require 'json'
       ENV['EXECJS_RUNTIME'] = 'Disabled' # Defer automatic JS engine selection
       require 'execjs'
-      ExecJS::Runtimes.runtimes.select(&:available?).size > 0
+      true
     rescue LoadError
       false
     ensure

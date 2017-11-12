@@ -268,7 +268,7 @@ EOF
   end
 
   desc "Update kramdown SsKaTeX test reference outputs"
-  task update_katex_tests: [:test_katexjs] do
+  task :update_katex_tests do
     # Not framed in terms of rake file tasks to prevent accidental overwrites.
     stems = ['test/testcases/block/15_math/sskatex',
              'test/testcases/span/math/sskatex']
