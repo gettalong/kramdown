@@ -292,14 +292,15 @@ module Kramdown
 
       def convert_img(el, opts)
         alt_text = el.attr['alt'].to_s.gsub(ESCAPED_CHAR_RE) { $1 ? "\\#{$1}" : $2 }
-        if el.attr['src'].empty?
+        src = el.attr['src'].to_s
+        if src.empty?
           "![#{alt_text}]()"
         else
           title = parse_title(el.attr['title'])
-          link = if el.attr['src'].count("()") > 0
-                   "<#{el.attr['src']}>"
+          link = if src.count("()") > 0
+                   "<#{src}>"
                  else
-                   el.attr['src']
+                   src
                  end
           "![#{alt_text}](#{link}#{title})"
         end
