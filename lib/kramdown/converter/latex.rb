@@ -534,7 +534,11 @@ module Kramdown
         :laquo => '\guillemotleft{}', :raquo => '\guillemotright{}'
       } # :nodoc:
       def convert_typographic_sym(el, opts)
-        TYPOGRAPHIC_SYMS[el.value]
+        if (result = @options[:typographic_symbols][el.value])
+          escape(result)
+        else
+          TYPOGRAPHIC_SYMS[el.value]
+        end
       end
 
       def convert_smart_quote(el, opts)

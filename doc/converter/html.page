@@ -174,7 +174,7 @@ Here is an example:
 
 The HTML converter supports the following options:
 
-{options: {items: [auto_ids, auto_id_prefix, auto_id_stripping, transliterated_header_ids, template, footnote_nr, entity_output, smart_quotes, toc_levels, enable_coderay, coderay_wrap, coderay_line_numbers, coderay_line_number_start, coderay_tab_width, coderay_bold_every, coderay_css, coderay_default_lang, syntax_highlighter, syntax_highlighter_opts, math_engine, math_engine_opts, footnote_backlink]}}
+{options: {items: [auto_ids, auto_id_prefix, auto_id_stripping, transliterated_header_ids, template, footnote_nr, entity_output, smart_quotes, toc_levels, enable_coderay, coderay_wrap, coderay_line_numbers, coderay_line_number_start, coderay_tab_width, coderay_bold_every, coderay_css, coderay_default_lang, syntax_highlighter, syntax_highlighter_opts, math_engine, math_engine_opts, footnote_backlink, typographic_symbols]}}
 
 
 {include_file: doc/links.markdown}

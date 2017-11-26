@@ -473,6 +473,37 @@ EOF
       val
     end
 
+    define(:typographic_symbols, Object, {}, <<EOF) do |val|
+Defines a mapping from typographical symbol to output characters
+
+Typographical symbols are normally output using their equivalent Unicode
+codepoint. However, sometimes one wants to change the output, mostly to
+fallback to a sequence of ASCII characters.
+
+This option allows this by specifying a mapping from typographical
+symbol to its output string. For example, the mapping {hellip: ...} would
+output the standard ASCII representation of an ellipsis.
+
+The available typographical symbol names are:
+
+* hellip: ellipsis
+* mdash: em-dash
+* ndash: en-dash
+* laquo: left guillemet
+* raquo: right guillemet
+* laquo_space: left guillemet followed by a space
+* raquo_space: right guillemet preceeded by a space
+
+Default: {}
+Used by: HTML/Latex converter
+EOF
+      val = simple_hash_validator(val, :typographic_symbols)
+      val.keys.each do |k|
+        val[k.kind_of?(String) ? str_to_sym(k) : k] = val.delete(k).to_s
+      end
+      val
+    end
+
     define(:remove_block_html_tags, Boolean, true, <<EOF)
 Remove block HTML tags
 

@@ -305,7 +305,11 @@ module Kramdown
         :raquo => [::Kramdown::Utils::Entities.entity('raquo')]
       } # :nodoc:
       def convert_typographic_sym(el, indent)
-        TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e)}.join('')
+        if (result = @options[:typographic_symbols][el.value])
+          escape_html(result, :text)
+        else
+          TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e)}.join('')
+        end
       end
 
       def convert_smart_quote(el, indent)
