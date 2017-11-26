@@ -463,10 +463,17 @@ module Kramdown
           li = Element.new(:li, nil, {'id' => "fn:#{name}"})
           li.children = Marshal.load(Marshal.dump(data.children))
 
-          if li.children.last.type == :p
-            para = li.children.last
+          para = nil
+          if li.children.last.type == :p || @options[:footnote_backlink_inline]
+            parent = li
+            while !parent.children.empty? && ![:p, :header].include?(parent.children.last.type)
+              parent = parent.children.last
+            end
+            para = parent.children.last
             insert_space = true
-          else
+          end
+
+          unless para
             li.children << (para = Element.new(:p))
             insert_space = false
           end

@@ -624,6 +624,22 @@ Default: '&8617;'
 Used by: HTML converter
 EOF
 
+    define(:footnote_backlink_inline, Boolean, false, <<EOF)
+Specifies whether the footnote backlink should always be inline
+
+With the default of false the footnote backlink is placed at the end of
+the last paragraph if there is one, or an extra paragraph with only the
+footnote backlink is created.
+
+Setting this option to true tries to place the footnote backlink in the
+last, possibly nested paragraph or header. If this fails (e.g. in the
+case of a table), an extra paragraph with only the footnote backlink is
+created.
+
+Default: false
+Used by: HTML converter
+EOF
+
     define(:gfm_quirks, Object, [:paragraph_end], <<EOF) do |val|
 Enables a set of GFM specific quirks
 
