@@ -166,9 +166,10 @@ module Kramdown
         box_checked = '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />'
 
         current_list.children.each do |li|
+          next unless li.children.size > 0 && li.children[0].type == :p
           # li -> p -> raw_text
-          checked = li.children[0].children[0].value.gsub!(/\[ \]\s+/, box_unchecked)
-          unchecked = li.children[0].children[0].value.gsub!( /\[x\]\s+/i, box_checked)
+          checked = li.children[0].children[0].value.gsub!(/\A\s*\[ \]\s+/, box_unchecked)
+          unchecked = li.children[0].children[0].value.gsub!(/\A\s*\[x\]\s+/i, box_checked)
           is_tasklist ||= (!checked.nil? || !unchecked.nil?)
 
           li.attr['class'] = 'task-list-item' if is_tasklist
