@@ -47,3 +47,7 @@ cell1 | cell2
 | a | b |
   c | d
 | e | f |
+
+| Key    | Value type             |
+|--------|------------------------|
+| `Type` | `"GROUP"`\|`"UNKNOWN"` |

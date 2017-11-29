@@ -75,11 +75,7 @@ module Kramdown
 
                 root.children.each do |c|
                   if c.type == :raw_text
-                    # Only on Ruby 1.9: f, *l = c.value.split(/(?<!\\)\|/).map {|t| t.gsub(/\\\|/, '|')}
-                    f, *l = c.value.split(/\\\|/, -1).map {|t| t.split(/\|/, -1)}.inject([]) do |memo, t|
-                      memo.last << "|#{t.shift}" if memo.size > 0
-                      memo.concat(t)
-                    end
+                    f, *l = c.value.split(/(?<!\\)\|/, -1).map {|t| t.gsub(/\\\|/, '|')}
                     (cells.empty? ? cells : cells.last) << f
                     cells.concat(l)
                   else
