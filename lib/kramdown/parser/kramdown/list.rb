@@ -201,6 +201,9 @@ module Kramdown
           elsif @src.check(EOB_MARKER)
             break
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
+            if @options[:auto_dd_para]
+              item.options[:first_as_para] ||= last_is_blank
+            end
             result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
             result.sub!(indent_re, '')
             item.value << result

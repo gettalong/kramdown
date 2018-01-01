@@ -28,7 +28,7 @@ option `html_to_native` to `true` to achieve this.
 
 The kramdown parser supports the following options:
 
-{options: {items: [parse_block_html, parse_span_html, html_to_native]}}
+{options: {items: [auto_dd_para, parse_block_html, parse_span_html, html_to_native]}}
 
 
 [PHP Markdown Extra]: http://michelf.com/projects/php-markdown/extra/
