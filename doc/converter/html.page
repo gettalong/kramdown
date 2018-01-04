@@ -157,12 +157,21 @@ if no ID was set.
 When the `auto_ids` option is set, all headers will appear in the table of contents as they all will
 have an ID. Assign the class name "no_toc" to a header to exclude it from the table of contents.
 
-Here is an example:
+Here is an example that generates a "Table of Contents" as an unordered list:
 
-    # Contents
+    # Contents header
     {:.no_toc}
 
-    * Will be replaced with the ToC, excluding the "Contents" header
+    * A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
+    {:toc}
+
+    # H1 header
+
+    ## H2 header
+
+For a "Table of Contents" as an ordered list:
+
+    1. The generated Toc will be an ordered list
     {:toc}
 
     # H1 header
