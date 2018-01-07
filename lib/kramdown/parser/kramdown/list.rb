@@ -201,9 +201,6 @@ module Kramdown
           elsif @src.check(EOB_MARKER)
             break
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
-            if @options[:auto_dd_para]
-              item.options[:first_as_para] ||= last_is_blank
-            end
             result.sub!(/^(\t+)/) { " "*($1 ? 4*$1.length : 0) }
             result.sub!(indent_re, '')
             item.value << result
@@ -222,6 +219,8 @@ module Kramdown
         deflist.children.each do |it|
           next if it.type == :dt
 
+          first_as_para = it.options.delete(:first_as_para)
+
           parse_blocks(it, it.value)
           it.value = nil
           next if it.children.size == 0
@@ -232,7 +231,8 @@ module Kramdown
             last = nil
           end
 
-          if it.children.first && it.children.first.type == :p && !it.options.delete(:first_as_para)
+          if it.children.first && it.children.first.type == :p &&
+            !(first_as_para || (@options[:auto_dd_para] && it.children.size > 1))
             it.children.first.children.first.value << "\n" if it.children.size > 1
             it.children.first.options[:transparent] = true
           end

@@ -2,3 +2,8 @@ item
 : text
 
   text
+
+item 2
+: text2
+  ^
+  text2

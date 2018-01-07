@@ -163,7 +163,7 @@ body {
     }
 
     a:hover, a:link {
-        color: darken($link-color, 50%);
+        color: $link-color / 2;
     }
 }
 
