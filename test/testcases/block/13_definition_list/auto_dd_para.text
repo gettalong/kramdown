@@ -1,9 +1,33 @@
-item
-: text
+item1
+: para-iff-auto
 
-  text
+  para
 
-item 2
-: text2
+item2
+: para-iff-auto
   ^
-  text2
+  para
+
+item3
+
+: para
+
+item4
+: inline
+
+item5
+: para-iff-auto
+  ^
+
+item6
+: ^
+  para
+
+item7
+: 
+    inline
+
+item9
+: inline
+
+
