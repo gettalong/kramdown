@@ -1,0 +1,29 @@
+---
+title: KaTeX
+---
+
+## Math Engine KaTeX
+
+This math engine uses [KaTeX] via the [katex rubygem][katex-gem] to convert TeX math formulas into
+KaTeX HTML (using [ExecJS] under the hood).
+
+This eliminates the need for client-side math-rendering JavaScript. Your HTML templates still need
+to include the KaTeX CSS (see the [gem's documentation][katex-gem#assets] on this).
+
+A typical KaTeX configuration looks like this:
+
+~~~ yaml
+math_engine: katex
+math_engine_opts: {}
+~~~
+
+`math_engine_opts` are passed directly to `Katex.render`. See the gem's [documentation][katex-gem]
+for more information.
+
+If you need to sanitize the output, see [this example][sanitize-example] for inspiration.
+
+[KaTeX]: https://khan.github.io/KaTeX/
+[ExecJS]: https://github.com/rails/execjs
+[katex-gem]: https://github.com/glebm/katex-ruby
+[katex-gem#assets]: https://github.com/glebm/katex-ruby#assets
+[sanitize-example]: https://github.com/thredded/thredded-markdown_katex/blob/2f5e748c90265526171a6da99557f637d2b717ec/lib/thredded/markdown_katex.rb#L48-L91
