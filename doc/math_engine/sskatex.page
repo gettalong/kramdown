@@ -5,8 +5,9 @@ title: SsKaTeX
 ## Math Engine SsKaTeX
 
 This math engine uses a server-side installation of [KaTeX] to convert TeX math formulas into
-HTML+MathML. This eliminates the need for client-side math-rendering JavaScript. Consider this a
-lightweight alternative to [Mathjax-Node](mathjaxnode.html).
+HTML+MathML. This eliminates the need for client-side math-rendering Javascript. Consider this a
+flexible for-trusted-users-only [alternative](#differences-to-the-katex-math-engine) to the [KaTeX
+math engine] and a lightweight efficient alternative to [Mathjax-Node](mathjaxnode.html).
 
 Your HTML templates need no longer include Javascripts for Math (neither `katex.js` nor any
 search-and-replace script). Your HTML templates should continue referencing the KaTeX CSS. If you
@@ -104,10 +105,41 @@ The options with `js` in their names can be used to achieve arbitrary Javascript
 the privileges of the kramdown process. If kramdown is part of a service that allows file uploads
 and user-specified math engine selection and options, the service should therefore be sandboxed
 (which is recommended practice), or the user-specified options filtered, or SsKaTeX kept unavailable
-e.g. by not installing the `sskatex` gem.
+e.g. by not installing the `sskatex` gem. Consider using the [KaTeX math engine] instead.
+
+### Differences to the KaTeX math engine
+
+Both the KaTeX and the SsKaTeX engine operate in similar ways with similar efficiency and produce
+equivalent output if the underlying `katex.min.js` versions are the same. Differences are mostly in
+configuration and usage scenarios. The following table gives an overview.
+
+| Usage aspect | KaTeX | SsKaTeX |
+|:-|:-|:-|
+| Usability | easy to use | all JS details configurable |
+| Target users | untrusted users | trusted users |
+| Target usage | web services | personal pages |
+| Required Ruby gem | `katex` | `sskatex` |
+| KaTeX JS/CSS/fonts | included | not included |
+| Math language depends on | `katex` gem version | `katex_js` option |
+| KaTeX options | in `math_engine_opts` | in `katex_opts` sub-dict |
+| Default error handling | catches errors | throws on errors |
+
+Therefore:
+
+* If in doubt, try the [KaTeX math engine]. It should work out of the box.
+* If you need more control and are trusted (i.e. you are allowed to run arbitrary code), try
+  SsKaTeX. Example uses:
+  - Work around issues in the current KaTeX version or in the default JS interpreter
+  - Try a more recent KaTeX version when you want it, and not until then
+  - Try interfacing with other JS-based math renderers
+  - Try another Javascript interpreter. E.g. `Duktape` is fast, but `Spidermonkey` may give better
+    error diagnostics and backtraces.
+* Web services processing kramdown input from untrusted users should not make the `sskatex` gem
+  available, as explained in the [Security](#security) section.
 
 [duktape]: https://github.com/judofyr/duktape.rb#duktaperb
 [execjs]: https://github.com/rails/execjs#execjs
+[KaTeX math engine]: katex.html
 [KaTeX]: https://khan.github.io/KaTeX/
 [KaTeXopts]: https://github.com/Khan/KaTeX#rendering-options
 [sskatex]: https://github.com/ccorn/sskatex/

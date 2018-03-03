@@ -94,9 +94,10 @@ For proper functionality, the HTML template must be configured to link to the en
 and CSS. Note that the CSS includes references to webfonts.
 
 Also available are precompiling versions to eliminate the need for client-side Javascript. Those are
-[Mathjax-Node](../math_engine/mathjaxnode.html) and [SsKaTeX](../math_engine/sskatex.html). Each one
-requires a Javascript engine installed where kramdown runs, in order to perform the precompilation.
-The resulting pages still require CSS and fonts, but no Javascript anymore.
+[Mathjax-Node](../math_engine/mathjaxnode.html), [KaTeX](../math_engine/katex.html), and
+[SsKaTeX](../math_engine/sskatex.html). Each one requires a Javascript engine installed where
+kramdown runs, in order to perform the precompilation. The resulting pages still require CSS and
+fonts, but no Javascript anymore.
 
 Alternative math engines are [Ritex](../math_engine/ritex.html) and
 [itex2MML](../math_engine/itex2mml.html) both of which output MathML.

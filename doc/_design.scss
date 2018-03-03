@@ -163,7 +163,7 @@ body {
     }
 
     a:hover, a:link {
-        color: $link-color / 2;
+        color: scale-color($link-color, $lightness: -50%);
     }
 }
 

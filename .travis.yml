@@ -22,6 +22,7 @@ before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra tidy
   - gem install rake
   - gem install minitest coderay stringex ritex execjs sskatex
+  - "ruby -e 'exit RUBY_VERSION < \"2.3\" ? 0 : 1' || gem install katex -v 0.3.0"
   - gem install rouge
   - gem install prawn prawn-table
   - (ruby --version | grep jruby) || gem install itextomml

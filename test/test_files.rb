@@ -42,13 +42,15 @@ class TestFiles < Minitest::Test
                                warn("Skipping MathjaxNode tests as MathjaxNode is not available")
                            end
 
-  KATEX_AVAILABLE = begin
-                      / class="katex"/ === Kramdown::Document.
-                        new('$$a$$', {:math_engine => :sskatex}).to_html or
-                        warn("Skipping SsKaTeX tests as SsKaTeX is not available.")
-                    rescue
-                      warn("Skipping SsKaTeX tests as default SsKaTeX config does not work.")
-                    end or warn("Run \"rake dev:test_sskatex_deps\" to see why.")
+  SSKATEX_AVAILABLE = begin
+                        / class="katex"/ === Kramdown::Document.
+                          new('$$a$$', {:math_engine => :sskatex}).to_html or
+                          warn("Skipping SsKaTeX tests as SsKaTeX is not available.")
+                      rescue
+                        warn("Skipping SsKaTeX tests as default SsKaTeX config does not work.")
+                      end or warn("Run \"rake dev:test_sskatex_deps\" to see why.")
+
+  KATEX_AVAILABLE = RUBY_VERSION >= '2.3'
 
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                       ('test/testcases/span/03_codespan/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
@@ -59,8 +61,10 @@ class TestFiles < Minitest::Test
                       ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless MATHJAX_NODE_AVAILABLE),
                       ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless MATHJAX_NODE_AVAILABLE),
                       ('test/testcases/span/math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                      ('test/testcases/block/15_math/sskatex.text' unless KATEX_AVAILABLE),
-                      ('test/testcases/span/math/sskatex.text' unless KATEX_AVAILABLE),
+                      ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
+                      ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
+                      ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
+                      ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -109,6 +113,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
                           'test/testcases/span/math/sskatex.html', # bc of tidy
                           'test/testcases/block/15_math/sskatex.html', # bc of tidy
+                          'test/testcases/span/math/katex.html', # bc of tidy
+                          'test/testcases/block/15_math/katex.html', # bc of tidy
                           'test/testcases/span/05_html/mark_element.html', # bc of tidy
                           'test/testcases/block/09_html/xml.html', # bc of tidy
                           'test/testcases/span/05_html/xml.html', # bc of tidy
@@ -217,6 +223,8 @@ class TestFiles < Minitest::Test
                           'test/testcases/span/math/mathjaxnode.text', # bc of tidy
                           'test/testcases/block/15_math/sskatex.text', # bc of tidy
                           'test/testcases/span/math/sskatex.text', # bc of tidy
+                          'test/testcases/block/15_math/katex.text', # bc of tidy
+                          'test/testcases/span/math/katex.text', # bc of tidy
                           'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
                           'test/testcases/span/05_html/mark_element.text', # bc of tidy
                           'test/testcases/block/09_html/xml.text', # bc of tidy
@@ -270,6 +278,8 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/math/mathjaxnode.html', # bc of tidy
                              'test/testcases/block/15_math/sskatex.html', # bc of tidy
                              'test/testcases/span/math/sskatex.html', # bc of tidy
+                             'test/testcases/block/15_math/katex.html', # bc of tidy
+                             'test/testcases/span/math/katex.html', # bc of tidy
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
@@ -375,8 +385,10 @@ class TestFiles < Minitest::Test
                        ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless MATHJAX_NODE_AVAILABLE),
                        ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless MATHJAX_NODE_AVAILABLE),
                        ('test/testcases/span/math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                       ('test/testcases/block/15_math/sskatex.text' unless KATEX_AVAILABLE),
-                       ('test/testcases/span/math/sskatex.text' unless KATEX_AVAILABLE),
+                       ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
+                       ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
+                       ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
+                       ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
                       ].compact
 
   # Generate test methods for gfm-to-html conversion
@@ -408,8 +420,10 @@ class TestFiles < Minitest::Test
                        ].compact
 
   EXCLUDE_MODIFY = ['test/testcases/block/06_codeblock/rouge/multiple.text', # bc of HTMLFormater in options
-                    ('test/testcases/block/15_math/sskatex.text' unless KATEX_AVAILABLE),
-                    ('test/testcases/span/math/sskatex.text' unless KATEX_AVAILABLE),
+                    ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
+                    ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
+                    ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
+                    ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
                    ].compact
 
   # Generate test methods for asserting that converters don't modify the document tree.
