@@ -27,11 +27,7 @@ begin
 rescue
 end
 
-options = if config_file && File.exist?(config_file)
-            YAML.safe_load(File.read(config_file), [Symbol])
-          else
-            {}
-          end
+options = {}
 format = ['html']
 
 OptionParser.new do |opts|
@@ -46,7 +42,14 @@ OptionParser.new do |opts|
           "html, GFM or markdown") {|v| options[:input] = v}
   opts.on("-o", "--output ARG", Array, "Specify one or more output formats separated by commas: " \
           "html (default),", "kramdown, latex, pdf, man or remove_html_tags") {|v| format = v}
-
+  opts.separator ""
+  opts.on("--no-config-file", "Do not read any configuration file. Default behavior is to check " \
+          "for a", "configuration file and read it if it exists.") {config_file = nil}
+  opts.on("--config-file FILE", "Specify the name of a configuration file with kramdown options " \
+          "in YAML", "format, e.g. \"auto_id_prefix: ARG\" instead of \"--auto-id-prefix ARG\"",
+          "and \"auto_ids: false\" instead of \"--no-auto-ids\".",
+          "Default: #{config_file}") {|v| config_file = v}
+  opts.separator ""
   opts.on("-v", "--version", "Show the version of kramdown") do
     puts Kramdown::VERSION
     exit
@@ -79,6 +82,17 @@ OptionParser.new do |opts|
 end.parse!
 
 begin
+  if config_file && File.exist?(config_file)
+    config_file_options = YAML.safe_load(File.read(config_file), [Symbol])
+    case config_file_options
+    when nil  # empty configuration file except perhaps YAML header and comments
+      # Nothing to do
+    when Hash
+      options = config_file_options.merge(options)
+    else
+      raise Kramdown::Error, "No YAML map in configuration file \"#{config_file}\""
+    end
+  end
   doc = Kramdown::Document.new(ARGF.read, options)
   result = ''
   format.each {|f| result = doc.send("to_#{f}")}

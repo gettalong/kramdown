@@ -20,9 +20,10 @@ used directly by the kramdown binary. The second set of options controls how kra
 converts its input.
 
 Default values for this second set can be set using YAML via the configuration file `kramdownrc`.
-Note that configuration option names use underscores, not dahes (dashes are just used in the CLI
-options names). This file has to be in XDG_CONFIG_HOME on Linux/Unix, ~/Library/Preferences on macOS
-and ~/AppData/Local on Windows.
+Note that configuration option names use underscores, not dashes (dashes are just used in the CLI
+options names), and boolean options do not have a `no` variant but a value of `true` or `false`.
+This file has to be in XDG_CONFIG_HOME on Linux/Unix, ~/Library/Preferences on macOS and
+~/AppData/Local on Windows.
 
 ## CLI-ONLY OPTIONS
 
@@ -33,6 +34,13 @@ and ~/AppData/Local on Windows.
 `-o` *FORMAT*, `--output` *FORMAT*
 : Specify one or more output formats separated by commas: *html* (default), *kramdown*, *latex*,
   *pdf*, *man* or *remove_html_tags*.
+
+`--no-config-file`
+: Do not read any configuration file. Default behavior is to check for a configuration file and
+  read it if it exists.
+
+`--config-file` *FILE*
+: Override the default path and name of the configuration file.
 
 `-v`, `--version`
 : Show the version of kramdown.
