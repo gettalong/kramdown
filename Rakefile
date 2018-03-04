@@ -269,6 +269,29 @@ EOF
     puts "Look through the above mentioned files and correct all problems" if inserted
   end
 
+  desc "Check for MathjaxNode availability"
+  task :test_mathjaxnode_deps do
+    html = %x{echo '$$a$$' | \
+              #{RbConfig.ruby} -Ilib bin/kramdown --no-config-file --math-engine mathjaxnode}
+    raise (<<MJC) unless $?.success?
+Some requirement by the mathjax-node-cli package has not been satisfied.
+Cf. the above error messages.
+MJC
+    raise (<<MJN) unless %r{\A<math xmlns="http://www.w3.org/\d+/Math/MathML".*</math>\Z}m === html
+The MathjaxNode engine is not available. Try "npm install mathjax-node-cli".
+MJN
+    puts "MathjaxNode is available, and its default configuration works."
+  end
+
+  desc "Update kramdown MathjaxNode test reference outputs"
+  task update_mathjaxnode_tests: [:test_mathjaxnode_deps] do
+    # Not framed in terms of rake file tasks to prevent accidental overwrites.
+    Dir['test/testcases/**/mathjaxnode*.text'].each do |f|
+      stem = f[0..-6] # Remove .text
+      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
+    end
+  end
+
   desc "Check for SsKaTeX availability"
   task :test_sskatex_deps do
     katexjs = 'katex/katex.min.js'
@@ -279,7 +302,8 @@ and extract at least '#{katexjs}'.
 Alternatively, if you have a copy of KaTeX unpacked somewhere else,
 you can create a symbolic link 'katex' pointing to that KaTeX directory.
 TKJ
-    html = %x{echo '$$a$$' | #{RbConfig.ruby} -Ilib bin/kramdown --math-engine sskatex}
+    html = %x{echo '$$a$$' | \
+              #{RbConfig.ruby} -Ilib bin/kramdown --no-config-file --math-engine sskatex}
     raise (<<KTC) unless $?.success?
 Some requirement by SsKaTeX or the employed JS engine has not been satisfied.
 Cf. the above error messages.
@@ -296,20 +320,18 @@ XJS
   desc "Update kramdown SsKaTeX test reference outputs"
   task update_sskatex_tests: [:test_sskatex_deps] do
     # Not framed in terms of rake file tasks to prevent accidental overwrites.
-    stems = ['test/testcases/block/15_math/sskatex',
-             'test/testcases/span/math/sskatex']
-    stems.each do |stem|
-      ruby "-Ilib bin/kramdown --math-engine sskatex #{stem}.text >#{stem}.html.19"
+    Dir['test/testcases/**/sskatex*.text'].each do |f|
+      stem = f[0..-6] # Remove .text
+      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
     end
   end
 
   desc "Update kramdown KaTeX test reference outputs"
   task :update_katex_tests do
     # Not framed in terms of rake file tasks to prevent accidental overwrites.
-    stems = ['test/testcases/block/15_math/katex',
-             'test/testcases/span/math/katex']
-    stems.each do |stem|
-      ruby "-Ilib bin/kramdown --math-engine katex #{stem}.text >#{stem}.html.19"
+    Dir['test/testcases/**/katex*.text'].each do |f|
+      stem = f[0..-6] # Remove .text
+      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
     end
   end
 end
