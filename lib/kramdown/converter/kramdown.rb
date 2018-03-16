@@ -420,14 +420,14 @@ module Kramdown
         res = "footnotes" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('footnotes') rescue nil)
         if el.type == :dl && el.options[:ial] && el.options[:ial][:refs]
-          auto_ids = el.options[:ial][:refs].select {|ref| ref =~ /\Aauto_ids/}.join(" ")
+          auto_ids = el.options[:ial][:refs].select {|ref| ref.start_with?('auto_ids')}.join(" ")
           res = auto_ids << (res.strip.empty? ? '' : " #{res}") unless auto_ids.empty?
         end
         res.strip.empty? ? nil : "{:#{res}}"
       end
 
       def parse_title(attr)
-        attr.to_s.empty? ? '' : ' "' + attr.gsub(/"/, '&quot;') + '"'
+        attr.to_s.empty? ? '' : ' "' + attr.gsub('"', '&quot;') + '"'
       end
 
       # :startdoc:

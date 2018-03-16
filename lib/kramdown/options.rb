@@ -432,7 +432,7 @@ EOF
       else
         raise Kramdown::Error, "Invalid type #{val.class} for option toc_levels"
       end
-      if val.any? {|i| !(1..6).include?(i)}
+      if val.any? {|i| !(1..6).cover?(i)}
         raise Kramdown::Error, "Level numbers for option toc_levels have to be integers from 1 to 6"
       end
       val
