@@ -37,21 +37,8 @@ module Kramdown
       name
     end
 
-    if RUBY_VERSION < '2.0'
-
-      # Resolve the recursive constant +str+.
-      def self.deep_const_get(str)
-        names = str.split(/::/)
-        names.shift if names.first.empty?
-        names.inject(::Object) {|mod, s| mod.const_get(s)}
-      end
-
-    else
-
-      def self.deep_const_get(str)
-        ::Object.const_get(str)
-      end
-
+    def self.deep_const_get(str)
+      ::Object.const_get(str)
     end
 
   end
