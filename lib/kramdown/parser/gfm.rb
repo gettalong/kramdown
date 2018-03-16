@@ -101,7 +101,7 @@ module Kramdown
         item.options[:raw_text] = raw_text
       end
 
-      NON_WORD_RE = (RUBY_VERSION > "1.9" ? /[^\p{Word}\- \t]/ : /[^\w\- \t]/)
+      NON_WORD_RE = /[^\p{Word}\- \t]/
 
       def generate_gfm_header_id(text)
         result = text.downcase
