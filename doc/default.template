@@ -54,10 +54,7 @@
       var sc_security="41321455";
       var sc_client_storage="disabled";
     </script>
-    <script type="text/javascript"
-            src="https://www.statcounter.com/counter/counter.js"
-            async="async">
-    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async="async"></script>
     <noscript><div class="statcounter"><a title="website statistics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="//c.statcounter.com/4267845/0/41321455/1/" alt="website statistics" /></a></div></noscript>
      <!-- End of StatCounter Code for Default Guide -->
 
