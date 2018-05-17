@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -31,6 +32,7 @@ module Kramdown
 
       def convert(el, opts = {:indent => 0})
         res = send("convert_#{el.type}", el, opts)
+        res = res.dup if res.frozen?
         if ![:html_element, :li, :dt, :dd, :td].include?(el.type) && (ial = ial_for_element(el))
           res << ial
           res << "\n\n" if Element.category(el) == :block
@@ -49,7 +51,7 @@ module Kramdown
 
       def inner(el, opts = {:indent => 0})
         @stack.push(el)
-        result = ''
+        result = String.new
         el.children.each_with_index do |inner_el, index|
           options = opts.dup
           options[:index] = index
@@ -104,7 +106,7 @@ module Kramdown
       end
 
       def convert_header(el, opts)
-        res = ''
+        res = String.new
         res << "#{'#' * output_header_level(el.options[:level])} #{inner(el, opts)}"
         res[-1, 1] = "\\#" if res[-1] == ?#
         res << "   {##{el.attr['id']}}" if el.attr['id'] && !el.attr['id'].strip.empty?
@@ -122,11 +124,13 @@ module Kramdown
       alias :convert_dl :convert_ul
 
       def convert_li(el, opts)
-        sym, width = if @stack.last.type == :ul
-                       ['* ', el.children.first && el.children.first.type == :codeblock ? 4 : 2]
-                     else
-                       ["#{opts[:index] + 1}.".ljust(4), 4]
-                     end
+        if @stack.last.type == :ul
+          sym = '* '.dup
+          width = el.children.first && el.children.first.type == :codeblock ? 4 : 2
+        else
+          sym = "#{opts[:index] + 1}.".ljust(4)
+          width = 4
+        end
         if ial = ial_for_element(el)
           sym << ial << " "
         end
@@ -138,7 +142,8 @@ module Kramdown
         last = last.map {|l| " "*width + l}.join("\n")
         text = (first.nil? ? "\n" : first + (last.empty? ? "" : "\n") + last + newlines)
         if el.children.first && el.children.first.type == :p && !el.children.first.options[:transparent]
-          res = "#{sym}#{text}"
+          res = String.new
+          res << "#{sym}#{text}"
           res << "^\n" if el.children.size == 1 && @stack.last.children.last == el &&
             (@stack.last.children.any? {|c| c.children.first.type != :p} || @stack.last.children.size == 1)
           res
@@ -150,7 +155,7 @@ module Kramdown
       end
 
       def convert_dd(el, opts)
-        sym, width = ": ", (el.children.first && el.children.first.type == :codeblock ? 4 : 2)
+        sym, width = ": ".dup, (el.children.first && el.children.first.type == :codeblock ? 4 : 2)
         if ial = ial_for_element(el)
           sym << ial << " "
         end
@@ -174,7 +179,7 @@ module Kramdown
       end
 
       def convert_dt(el, opts)
-        result = ''
+        result = String.new
         if ial = ial_for_element(el)
           result << ial << " "
         end
@@ -192,9 +197,9 @@ module Kramdown
         opts[:block_raw_text] = true if el.options[:category] == :block && opts[:raw_text]
         res = inner(el, opts)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el.attr)}" << (!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />")
+          "<#{el.value}#{html_attributes(el.attr)}#{!res.empty? || HTML_TAGS_WITH_BODY.include?(el.value) ? ">#{res}</#{el.value}>" : " />"}"
         else
-          output = ''
+          output = String.new
           attr = el.attr.dup
           attr['markdown'] = '1' if markdown_attr
           output << "<#{el.value}#{html_attributes(attr)}"
@@ -229,32 +234,32 @@ module Kramdown
       def convert_thead(el, opts)
         rows = inner(el, opts)
         if opts[:alignment].all? {|a| a == :default}
-          "#{rows}|" << "-"*10 << "\n"
+          "#{rows}|#{"-"*10}\n"
         else
-          "#{rows}| " << opts[:alignment].map do |a|
+          "#{rows}| #{opts[:alignment].map do |a|
             case a
             when :left then ":-"
             when :right then "-:"
             when :center then ":-:"
             when :default then "-"
             end
-          end.join(' ') << "\n"
+          end.join(' ')}\n"
         end
       end
 
       def convert_tbody(el, opts)
-        res = ''
+        res = String.new
         res << inner(el, opts)
         res << '|' << '-'*10 << "\n" if opts[:next] && opts[:next].type == :tbody
         res
       end
 
       def convert_tfoot(el, opts)
-        "|" << "="*10 << "\n#{inner(el, opts)}"
+        "|#{"="*10}\n#{inner(el, opts)}"
       end
 
       def convert_tr(el, opts)
-        "| " << el.children.map {|c| convert(c, opts)}.join(" | ") << " |\n"
+        "| #{el.children.map {|c| convert(c, opts)}.join(" | ")} |\n"
       end
 
       def convert_td(el, opts)
@@ -372,7 +377,7 @@ module Kramdown
       end
 
       def create_link_defs
-        res = ''
+        res = String.new
         res << "\n\n" if @linkrefs.size > 0
         @linkrefs.each_with_index do |el, i|
           title = parse_title(el.attr['title'])
@@ -382,7 +387,7 @@ module Kramdown
       end
 
       def create_footnote_defs
-        res = ''
+        res = String.new
         @footnotes.each do |name, data|
           res << "[^#{name}]:\n"
           res << inner(data).chomp.split(/\n/).map {|l| "    #{l}"}.join("\n") + "\n\n"
@@ -391,8 +396,8 @@ module Kramdown
       end
 
       def create_abbrev_defs
-        return '' unless @root.options[:abbrev_defs]
-        res = ''
+        return String.new unless @root.options[:abbrev_defs]
+        res = String.new
         @root.options[:abbrev_defs].each do |name, text|
           res << "*[#{name}]: #{text}\n"
           res << ial_for_element(Element.new(:unused, nil, @root.options[:abbrev_attr][name])).to_s << "\n\n"
@@ -415,9 +420,9 @@ module Kramdown
             " #{k}=\"#{v.to_s}\""
           end
         end.compact.join('')
-        res = "toc" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
+        res = "toc#{" #{res}" unless res.strip.empty?}" if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('toc') rescue nil)
-        res = "footnotes" << (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
+        res = "footnotes#{" #{res}" unless res.strip.empty?}" if (el.type == :ul || el.type == :ol) &&
           (el.options[:ial][:refs].include?('footnotes') rescue nil)
         if el.type == :dl && el.options[:ial] && el.options[:ial][:refs]
           auto_ids = el.options[:ial][:refs].select {|ref| ref =~ /\Aauto_ids/}.join(" ")

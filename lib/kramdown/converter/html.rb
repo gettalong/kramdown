@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -63,7 +64,7 @@ module Kramdown
       # Pushes +el+ onto the @stack before converting the child elements and pops it from the stack
       # afterwards.
       def inner(el, indent)
-        result = ''
+        result = String.new
         indent += @indent
         @stack.push(el)
         el.children.each do |inner_el|
@@ -168,7 +169,7 @@ module Kramdown
         attr = el.attr.dup
         @stack.last.options[:ial][:refs].each do |ref|
           if ref =~ /\Aauto_ids(?:-([\w-]+))?/
-            attr['id'] = ($1 ? $1 : '') << basic_generate_id(el.options[:raw_text])
+            attr['id'] = "#{$1}#{basic_generate_id(el.options[:raw_text])}"
             break
           end
         end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
@@ -178,9 +179,9 @@ module Kramdown
       def convert_html_element(el, indent)
         res = inner(el, indent)
         if el.options[:category] == :span
-          "<#{el.value}#{html_attributes(el.attr)}" << (res.empty? && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value) ? " />" : ">#{res}</#{el.value}>")
+          "<#{el.value}#{html_attributes(el.attr)}#{res.empty? && HTML_ELEMENTS_WITHOUT_BODY.include?(el.value) ? " />" : ">#{res}</#{el.value}>"}"
         else
-          output = ''
+          output = String.new
           output << ' '*indent if @stack.last.type != :html_element || @stack.last.options[:content_model] != :raw
           output << "<#{el.value}#{html_attributes(el.attr)}"
           if el.options[:is_closed] && el.options[:content_model] == :raw
@@ -225,7 +226,7 @@ module Kramdown
         alignment = @stack[-3].options[:alignment][@stack.last.children.index(el)]
         if alignment != :default
           attr = el.attr.dup
-          attr['style'] = (attr.has_key?('style') ? "#{attr['style']}; ": '') << "text-align: #{alignment}"
+          attr['style'] = "#{"#{attr['style']}; " if attr.has_key?('style')}text-align: #{alignment}"
         end
         format_as_block_html(type, attr, res.empty? ? entity_to_str(ENTITY_NBSP) : res, indent)
       end
@@ -321,7 +322,7 @@ module Kramdown
           result
         else
           attr = el.attr.dup
-          (attr['class'] = (attr['class'] || '') << " kdmath").lstrip!
+          attr['class'] = ::Kramdown::Utils.compact_join(attr['class'], "kdmath")
           if el.options[:category] == :block
             format_as_block_html('div', attr, "$$\n#{el.value}\n$$", indent)
           else
@@ -375,8 +376,8 @@ module Kramdown
       # Add the syntax highlighter name to the 'class' attribute of the given attribute hash. And
       # overwrites or add a "language-LANG" part using the +lang+ parameter if +lang+ is not nil.
       def add_syntax_highlighter_to_class_attr(attr, lang = nil)
-        (attr['class'] = (attr['class'] || '') + " highlighter-#{@options[:syntax_highlighter]}").lstrip!
-        attr['class'].sub!(/\blanguage-\S+|(^)/) { "language-#{lang}#{$1 ? ' ' : ''}" } if lang
+        attr['class'] = ::Kramdown::Utils.compact_join(attr['class'], "highlighter-#{@options[:syntax_highlighter]}")
+        attr['class'] = attr['class'].sub(/\blanguage-\S+|(^)/) { "language-#{lang}#{$1 ? ' ' : ''}" } if lang
       end
 
       # Generate and return an element tree for the table of contents.

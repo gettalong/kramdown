@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -18,9 +19,11 @@ module Kramdown::Converter::MathEngine
     def self.call(converter, el, opts)
       type = el.options[:category]
       text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
+      text = text.dup if text.frozen?
       text.gsub!(/<\/?script>?/, '')
 
       preview = preview_string(converter, el, opts)
+      preview = preview.dup if preview.frozen?
 
       attr = {:type => "math/tex#{type == :block ? '; mode=display' : ''}"}
       if type == :block

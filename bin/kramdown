@@ -94,7 +94,7 @@ begin
     end
   end
   doc = Kramdown::Document.new(ARGF.read, options)
-  result = ''
+  result = String.new
   format.each {|f| result = doc.send("to_#{f}")}
   puts result
   doc.warnings.each {|warn| $stderr.puts "Warning: #{warn}"}

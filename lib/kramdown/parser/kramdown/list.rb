@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -86,7 +87,7 @@ module Kramdown
             result.sub!(/^(\t+)/) { " " * 4 * $1.length }
             indentation_found = result.sub!(indent_re, '')
             if !nested_list_found && indentation_found && result =~ LIST_START
-              item.value << ''
+              item.value << String.new
               nested_list_found = true
             elsif nested_list_found && !indentation_found && result =~ LIST_START
               result = " " * (indentation + 4) << result
