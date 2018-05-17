@@ -13,17 +13,22 @@ module Kramdown
   module Parser
     class Kramdown
 
-      HEADER_ID=/(?:[ \t]+\{#([A-Za-z][\w:-]*)\})?/
-      SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)#{HEADER_ID}[ \t]*?\n(-|=)+\s*?\n/
+      HEADER_ID = /[ \t]*?(?:[ \t]{#([A-Za-z][\w:-]*)})?/
+      SETEXT_HEADER_START = /^#{OPT_SPACE}(.*)\n([-=])[-=]*[ \t\r\f\v]*\n/
+      SETEXT_HEADER_CONTENTS = /\A([^\t ].*?)#{HEADER_ID}[\t ]*\z/
 
       # Parse the Setext header at the current location.
       def parse_setext_header
         return false if !after_block_boundary?
 
+        contents_match = SETEXT_HEADER_CONTENTS.match(@src[1])
+        return false unless contents_match
+        text = contents_match[1]
+        id = contents_match[2]
+        level = @src[2]
+
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
-        text, id, level = @src[1], @src[2], @src[3]
-        text.strip!
         el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text, :location => start_line_number)
         add_text(text, el)
         el.attr['id'] = id if id
@@ -34,7 +39,7 @@ module Kramdown
 
 
       ATX_HEADER_START = /^\#{1,6}/
-      ATX_HEADER_MATCH = /^(\#{1,6})(.+?(?:\\#)?)\s*?#*#{HEADER_ID}\s*?\n/
+      ATX_HEADER_MATCH = /^(\#{1,6})(.+?(?:\\#)?)\s*?#*#{HEADER_ID}[ \t\r\f\v]*\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header

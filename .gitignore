@@ -1,3 +1,8 @@
 htmldoc
 pkg
 webgen-tmp
+.bundle/
+CONTRIBUTERS
+VERSION
+kramdown.gemspec
+man/man1/kramdown.1
