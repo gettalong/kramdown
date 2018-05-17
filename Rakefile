@@ -187,7 +187,7 @@ EOF
       s.add_development_dependency 'itextomml', '~> 1.5'
       s.add_development_dependency 'execjs', '~> 2.7'
       s.add_development_dependency 'sskatex', '>= 0.9.37'
-      s.add_development_dependency 'katex', '~> 0.3.0'
+      s.add_development_dependency 'katex', '~> 0.4.3'
 
       #### Documentation
 
