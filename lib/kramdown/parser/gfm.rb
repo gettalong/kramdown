@@ -112,22 +112,16 @@ module Kramdown
         @options[:auto_id_prefix] + result
       end
 
-      ATX_HEADER_START = /^\#{1,6}\s/
+      ATX_HEADER_START = /^(?<level>\#{1,6})[\t ]+(?<contents>.*)\n/
       define_parser(:atx_header_gfm, ATX_HEADER_START, nil, 'parse_atx_header')
       define_parser(:atx_header_gfm_quirk, ATX_HEADER_START)
 
       # Copied from kramdown/parser/kramdown/header.rb, removed the first line
       def parse_atx_header_gfm_quirk
-        start_line_number = @src.current_line_number
-        @src.check(ATX_HEADER_MATCH)
-        level, text, id = @src[1], @src[2].to_s.strip, @src[3]
+        text, id = parse_header_contents
+        text.sub!(/[\t ]#+\z/, '') && text.rstrip!
         return false if text.empty?
-
-        @src.pos += @src.matched_size
-        el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text, :location => start_line_number)
-        add_text(text, el)
-        el.attr['id'] = id if id
-        @tree.children << el
+        add_header(@src["level"].length, text, id)
         true
       end
 

@@ -13,47 +13,60 @@ module Kramdown
   module Parser
     class Kramdown
 
-      HEADER_ID=/(?:[ \t]+\{#([A-Za-z][\w:-]*)\})?/
-      SETEXT_HEADER_START = /^(#{OPT_SPACE}[^ \t].*?)#{HEADER_ID}[ \t]*?\n(-|=)+\s*?\n/
+      SETEXT_HEADER_START = /^#{OPT_SPACE}(?<contents>.*)\n(?<level>[-=])[-=]*[ \t\r\f\v]*\n/
 
       # Parse the Setext header at the current location.
       def parse_setext_header
         return false if !after_block_boundary?
-
-        start_line_number = @src.current_line_number
-        @src.pos += @src.matched_size
-        text, id, level = @src[1], @src[2], @src[3]
-        text.strip!
-        el = new_block_el(:header, nil, nil, :level => (level == '-' ? 2 : 1), :raw_text => text, :location => start_line_number)
-        add_text(text, el)
-        el.attr['id'] = id if id
-        @tree.children << el
+        text, id = parse_header_contents
+        return false if text.empty?
+        add_header(@src["level"] == '-' ? 2 : 1, text, id)
         true
       end
       define_parser(:setext_header, SETEXT_HEADER_START)
 
 
-      ATX_HEADER_START = /^\#{1,6}/
-      ATX_HEADER_MATCH = /^(\#{1,6})(.+?(?:\\#)?)\s*?#*#{HEADER_ID}\s*?\n/
+      ATX_HEADER_START = /^(?<level>\#{1,6})[\t ]*(?<contents>.*)\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header
         return false if !after_block_boundary?
-
-        start_line_number = @src.current_line_number
-        @src.check(ATX_HEADER_MATCH)
-        level, text, id = @src[1], @src[2].to_s.strip, @src[3]
+        text, id = parse_header_contents
+        text.sub!(/[\t ]#+\z/, '') && text.rstrip!
         return false if text.empty?
-
-        @src.pos += @src.matched_size
-        el = new_block_el(:header, nil, nil, :level => level.length, :raw_text => text, :location => start_line_number)
-        add_text(text, el)
-        el.attr['id'] = id if id
-        @tree.children << el
+        add_header(@src["level"].length, text, id)
         true
       end
       define_parser(:atx_header, ATX_HEADER_START)
 
+      protected
+
+      HEADER_ID = /[\t ]{#(?<id>[A-Za-z][\w:-]*)}\z/
+
+      # @return [[String, String]] header text and optional ID.
+      def parse_header_contents
+        text = @src["contents"]
+        text.rstrip!
+        id_match = HEADER_ID.match(text)
+        if id_match
+          id = id_match["id"]
+          text = text[0...-id_match[0].length]
+          text.rstrip!
+        end
+        [text, id]
+      end
+
+      # @param [Number] level
+      # @param [String] text
+      # @param [String, nil] id
+      def add_header(level, text, id)
+        start_line_number = @src.current_line_number
+        @src.pos += @src.matched_size
+        el = new_block_el(:header, nil, nil, :level => level, :raw_text => text, :location => start_line_number)
+        add_text(text, el)
+        el.attr['id'] = id if id
+        @tree.children << el
+      end
     end
   end
 end
