@@ -226,4 +226,13 @@ describe 'location' do
       end
     end
   end
+
+  it 'marks fenced code block as fenced with the GFM parser' do
+    str = %(```\nfenced code\n```\n\n    indented code\n)
+    doc = Kramdown::Document.new(str, :input => 'GFM')
+    fenced_cb = doc.root.children.first
+    indented_cb = doc.root.children.last
+    assert fenced_cb.options[:fenced]
+    refute indented_cb.options[:fenced]
+  end
 end
