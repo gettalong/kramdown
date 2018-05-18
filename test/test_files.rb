@@ -100,6 +100,7 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
                           ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
                           ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
+                          'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
                           'test/testcases/block/15_math/ritex.html', # bc of tidy
                           'test/testcases/span/math/ritex.html', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.html', # bc of tidy
@@ -213,6 +214,7 @@ class TestFiles < Minitest::Test
                           ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
                           'test/testcases/block/06_codeblock/rouge/simple.text',
                           'test/testcases/block/06_codeblock/rouge/multiple.text', # check, what document contain more, than one code block
+                          'test/testcases/block/14_table/empty_tag_in_cell.text', # bc of tidy
                           'test/testcases/block/15_math/ritex.text', # bc of tidy
                           'test/testcases/span/math/ritex.text', # bc of tidy
                           'test/testcases/block/15_math/itex2mml.text', # bc of tidy
@@ -268,6 +270,7 @@ class TestFiles < Minitest::Test
                              'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
                              ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
                              ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
+                             'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
                              'test/testcases/block/15_math/ritex.html', # bc of tidy
                              'test/testcases/span/math/ritex.html', # bc of tidy
                              'test/testcases/block/15_math/itex2mml.html', # bc of tidy

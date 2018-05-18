@@ -122,7 +122,8 @@ module Kramdown
         # algorithm above only takes <code> elements into account!
         pipe_on_line = false
         while (c = root.children.shift)
-          lines = c.value.split(/\n/)
+          next unless (lines = c.value)
+          lines = lines.split("\n")
           if c.type == :codespan
             if lines.size > 2 || (lines.size == 2 && !pipe_on_line)
               break
