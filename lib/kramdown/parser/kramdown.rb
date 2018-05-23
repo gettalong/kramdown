@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -269,10 +270,9 @@ module Kramdown
         ial[:refs].each do |ref|
           update_attr_with_ial(attr, ref) if ref = @alds[ref]
         end if ial[:refs]
-        ial.each do |k,v|
+        ial.each do |k, v|
           if k == IAL_CLASS_ATTR
-            attr[k] = (attr[k] || '') << " #{v}"
-            attr[k].lstrip!
+            attr[k] = ::Kramdown::Utils.compact_join(attr[k], v)
           elsif k.kind_of?(String)
             attr[k] = v
           end
@@ -281,7 +281,7 @@ module Kramdown
 
       # Update the raw text for automatic ID generation.
       def update_raw_text(item)
-        raw_text = ''
+        raw_text = String.new
 
         append_text = lambda do |child|
           if child.type == :text

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -24,8 +25,7 @@ module Kramdown
           elsif id_and_or_class
             id_and_or_class.scan(ALD_TYPE_ID_OR_CLASS).each do |id_attr, class_attr|
               if class_attr
-                opts[IAL_CLASS_ATTR] = (opts[IAL_CLASS_ATTR] || '') << " #{class_attr}"
-                opts[IAL_CLASS_ATTR].lstrip!
+                opts[IAL_CLASS_ATTR] = ::Kramdown::Utils.compact_join(opts[IAL_CLASS_ATTR], class_attr)
               else
                 opts['id'] = id_attr
               end
@@ -43,8 +43,7 @@ module Kramdown
         (ial[:refs] ||= []) << opts[:refs]
         opts.each do |k,v|
           if k == IAL_CLASS_ATTR
-            ial[k] = (ial[k] || '') << " #{v}"
-            ial[k].lstrip!
+            ial[k] = ::Kramdown::Utils.compact_join(ial[k], v)
           elsif k.kind_of?(String)
             ial[k] = v
           end

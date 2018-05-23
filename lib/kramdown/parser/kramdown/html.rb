@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -122,7 +123,7 @@ module Kramdown
           end
 
           attrs = parse_html_attributes(@src[2], line, HTML_ELEMENT[tag_name])
-          attrs.each {|name, value| value.gsub!(/\n+/, ' ')}
+          attrs.each_value { |value| value.gsub!(/\n+/, ' ') unless value.empty? }
 
           do_parsing = (HTML_CONTENT_MODEL[tag_name] == :raw || @tree.options[:content_model] == :raw ? false : @options[:parse_span_html])
           if val = HTML_MARKDOWN_ATTR_MAP[attrs.delete('markdown')]

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -377,7 +378,7 @@ module Kramdown
 
         EMPHASIS_TYPE_MAP = {'em' => :em, 'i' => :em, 'strong' => :strong, 'b' => :strong}
         def convert_em(el)
-          text = ''
+          text = String.new
           extract_text(el, text)
           if text =~ /\A\s/ || text =~ /\s\z/
             process_html_element(el, false)
@@ -392,7 +393,7 @@ module Kramdown
 
         def convert_h1(el)
           set_basics(el, :header, :level => el.value[1..1].to_i)
-          extract_text(el, el.options[:raw_text] = '')
+          extract_text(el, el.options[:raw_text] = String.new)
           process_children(el)
         end
         %w{h2 h3 h4 h5 h6}.each do |i|
@@ -400,11 +401,11 @@ module Kramdown
         end
 
         def convert_code(el)
-          raw = ''
+          raw = String.new
           extract_text(el, raw)
           result = process_text(raw, true)
           begin
-            str = result.inject('') do |mem, c|
+            str = result.inject(String.new) do |mem, c|
               if c.type == :text
                 mem << c.value
               elsif c.type == :entity
@@ -433,7 +434,7 @@ module Kramdown
               set_basics(el, :codeblock)
               if el.children.size == 1 && el.children.first.value == 'code'
                 value = (el.children.first.attr['class'] || '').scan(/\blanguage-\S+/).first
-                el.attr['class'] = "#{value} #{el.attr['class']}".rstrip if value
+                el.attr['class'] = ::Kramdown::Utils.compact_join(value, el.attr['class']) if value
               end
             end
             el.value = result.first.value

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -107,7 +108,7 @@ module Kramdown
             return
           end
         else
-          link_url = ''
+          link_url = String.new
           nr_of_brackets = 0
           while temp = @src.scan_until(LINK_PAREN_STOP_RE)
             link_url << temp

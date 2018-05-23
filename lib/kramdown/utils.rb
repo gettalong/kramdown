@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -25,7 +26,7 @@ module Kramdown
 
     # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
     def self.camelize(name)
-      name.split('_').inject('') {|s,x| s << x[0..0].upcase << x[1..-1] }
+      name.split('_').inject(String.new) {|s,x| s << x[0..0].upcase << x[1..-1] }
     end
 
     # Treat +name+ as if it were camelized (e.g. CamelizedName) and snake-case it (e.g. camelized_name).
@@ -35,6 +36,15 @@ module Kramdown
       name.gsub!(/([a-z])([A-Z])/,'\1_\2')
       name.downcase!
       name
+    end
+
+    # @param [String, nil] left
+    # @param [String, nil] right
+    # @return [String] The equivalent of `[left, right].reject(&:nil?).reject(&:empty?).join(' ')`.
+    def self.compact_join(left, right)
+      return right if left.nil? || left.empty?
+      return left if right.nil? || right.empty?
+      "#{left} #{right}"
     end
 
     if RUBY_VERSION < '2.0'

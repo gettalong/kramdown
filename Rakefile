@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- ruby -*-
 
 # load all optional developer libraries
@@ -33,7 +34,7 @@ begin
         desc = desc.join("\n")
         "[<tt>#{n}</tt> (type: #{definition.type}, default: #{definition.default.inspect})]\n#{desc}\n\n"
       end
-      opt_module.comment.text += "\n== Available Options\n\n" << opt_defs.join("\n\n")
+      opt_module.comment.text += "\n== Available Options\n\n#{opt_defs.join("\n\n")}"
 
       file_info
     end

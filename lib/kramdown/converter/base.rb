@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -235,7 +236,7 @@ module Kramdown
         gen_id = 'section' if gen_id.length == 0
         @used_ids ||= {}
         if @used_ids.has_key?(gen_id)
-          gen_id += '-' << (@used_ids[gen_id] += 1).to_s
+          gen_id += "-#{@used_ids[gen_id] += 1}"
         else
           @used_ids[gen_id] = 0
         end

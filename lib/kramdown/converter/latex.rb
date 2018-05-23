@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -44,7 +45,7 @@ module Kramdown
 
       # Return the converted content of the children of +el+ as a string.
       def inner(el, opts)
-        result = ''
+        result = String.new
         options = opts.dup.merge(:parent => el)
         el.children.each_with_index do |inner_el, index|
           options[:index] = index
@@ -202,9 +203,7 @@ module Kramdown
       end
 
       def convert_br(el, opts)
-        res = "\\newline"
-        res << "\n" if (c = opts[:parent].children[opts[:index]+1]) && (c.type != :text || c.value !~ /^\s*\n/)
-        res
+        "\\newline#{"\n" if (c = opts[:parent].children[opts[:index]+1]) && (c.type != :text || c.value !~ /^\s*\n/)}"
       end
 
       def convert_a(el, opts)
@@ -511,7 +510,7 @@ module Kramdown
         8194 => ['\hskip .5em\relax'],
         8195 => ['\quad'],
       } # :nodoc:
-      ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k][0].insert(-1, '{}')}
+      ENTITY_CONV_TABLE.each_value { |v| v[0] = "{}#{v[0]}" }
 
       def entity_to_latex(entity)
         text, package = ENTITY_CONV_TABLE[entity.code_point]
@@ -583,7 +582,7 @@ module Kramdown
       # additionally to the \hypertarget command.
       def latex_link_target(el, add_label = false)
         if (id = el.attr['id'])
-          "\\hypertarget{#{id}}{}" << (add_label ? "\\label{#{id}}" : '')
+          "\\hypertarget{#{id}}{}#{"\\label{#{id}}" if add_label}"
         else
           nil
         end

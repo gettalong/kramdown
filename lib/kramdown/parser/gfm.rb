@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # -*- coding: utf-8 -*-
 #
 #--
@@ -75,7 +76,7 @@ module Kramdown
 
       # Update the raw text for automatic ID generation.
       def update_raw_text(item)
-        raw_text = ''
+        raw_text = String.new
 
         append_text = lambda do |child|
           if child.type == :text || child.type == :codespan || child.type ==:math
