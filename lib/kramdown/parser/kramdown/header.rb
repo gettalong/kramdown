@@ -13,7 +13,7 @@ module Kramdown
   module Parser
     class Kramdown
 
-      SETEXT_HEADER_START = /^#{OPT_SPACE}(?<contents>.*)\n(?<level>[-=])[-=]*[ \t\r\f\v]*\n/
+      SETEXT_HEADER_START = /^#{OPT_SPACE}(?<contents>[^ \t].*)\n(?<level>[-=])[-=]*[ \t\r\f\v]*\n/
 
       # Parse the Setext header at the current location.
       def parse_setext_header
@@ -26,7 +26,7 @@ module Kramdown
       define_parser(:setext_header, SETEXT_HEADER_START)
 
 
-      ATX_HEADER_START = /^(?<level>\#{1,6})[\t ]*(?<contents>.*)\n/
+      ATX_HEADER_START = /^(?<level>\#{1,6})[\t ]*(?<contents>[^ \t].*)\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header
