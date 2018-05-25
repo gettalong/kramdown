@@ -1,7 +1,6 @@
 htmldoc
 pkg
 webgen-tmp
-.bundle/
 CONTRIBUTERS
 VERSION
 kramdown.gemspec
