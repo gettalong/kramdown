@@ -43,7 +43,7 @@ module Kramdown
 
       HEADER_ID = /[\t ]{#(?<id>[A-Za-z][\w:-]*)}\z/
 
-      # @return [[String, String]] header text and optional ID.
+      # Returns header text and optional ID.
       def parse_header_contents
         text = @src["contents"]
         text.rstrip!
@@ -56,9 +56,6 @@ module Kramdown
         [text, id]
       end
 
-      # @param [Number] level
-      # @param [String] text
-      # @param [String, nil] id
       def add_header(level, text, id)
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
