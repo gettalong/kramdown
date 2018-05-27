@@ -28,7 +28,7 @@ module Kramdown::Converter::SyntaxHighlighter
         ::CodeRay.scan(text, lang.to_sym).html(options(converter, :span)).chomp
       elsif type == :block && (lang || options(converter, :default_lang))
         lang ||= call_opts[:default_lang] = options(converter, :default_lang)
-        ::CodeRay.scan(text, lang.to_s.gsub(/-/, '_').to_sym).html(options(converter, :block)).chomp << "\n"
+        ::CodeRay.scan(text, lang.to_s.tr('-', '_').to_sym).html(options(converter, :block)).chomp << "\n"
       else
         nil
       end

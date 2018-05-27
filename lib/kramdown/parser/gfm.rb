@@ -153,7 +153,7 @@ module Kramdown
       # elements where necessary (as well as applying classes to the ul/ol and li elements).
       def parse_list
         super
-        current_list = @tree.children.select{ |element| [:ul, :ol].include?(element.type) }.last
+        current_list = @tree.children.reverse.detect { |element| [:ul, :ol].include?(element.type) }
 
         is_tasklist = false
         box_unchecked = '<input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />'
