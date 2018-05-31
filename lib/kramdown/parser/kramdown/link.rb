@@ -87,12 +87,15 @@ module Kramdown
 
         # reference style link or no link url
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
+          emit_warning = !@src[1]
           link_id = normalize_link_id(@src[1] || alt_text)
           if @link_defs.has_key?(link_id)
             add_link(el, @link_defs[link_id][0], @link_defs[link_id][1], alt_text,
                      @link_defs[link_id][2] && @link_defs[link_id][2].options[:ial])
           else
-            warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")
+            if emit_warning
+              warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")
+            end
             @src.revert_pos(saved_pos)
             add_text(result)
           end
