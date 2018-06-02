@@ -48,9 +48,9 @@ module Kramdown
 
       def update_elements(element)
         element.children.map! do |child|
-          if child.type == :text && @options[:hard_wrap] && child.value =~ /\n/
+          if child.type == :text && child.value.include?(hard_line_break = "#{@options[:hard_wrap] ? '' : '\\'}\n")
             children = []
-            lines = child.value.split(/\n/, -1)
+            lines = child.value.split(hard_line_break, -1)
             omit_trailing_br = (Kramdown::Element.category(element) == :block && element.children[-1] == child &&
                                 lines[-1].empty?)
             lines.each_with_index do |line, index|
