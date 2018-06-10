@@ -1023,9 +1023,9 @@ content is parsed:
   this one tag (see below).
 
   Note that the parser basically supports only correct XHTML! However, there are some exceptions.
-  For example, attributes without values (i.e. boolean attributes) are also supported and elements
-  without content like `<hr />` can be written as `<hr>`. If an invalid closing tag is found, it is
-  ignored.
+  For example, attributes without values (i.e. boolean attributes) as well as unquoted attribute
+  values are also supported and elements without content like `<hr />` can be written as `<hr>`. If
+  an invalid closing tag is found, it is ignored.
 
 * Parse as block-level elements: If the HTML/XML tag content should be parsed as text containing
   block-level elements, the remaining text on the line will be parsed by the block-level parser as
