@@ -29,8 +29,8 @@ module Kramdown
         HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/im
         HTML_COMMENT_RE = /<!--(.*?)-->/m
         HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
-        HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(["'])(.*?)\2)?/m
-        HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}(?:\s*=\s*(["']).*?\3)?)*)\s*(\/)?>/m
+        HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(?:(\p{Word}+)|("|')(.*?)\3))?/m
+        HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}(?:\s*=\s*(?:\p{Word}+|("|').*?\3))?)*)\s*(\/)?>/m
         HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
         HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
@@ -111,12 +111,12 @@ module Kramdown
         # contain only lowercase letters.
         def parse_html_attributes(str, line = nil, in_html_tag = true)
           attrs = Utils::OrderedHash.new
-          str.scan(HTML_ATTRIBUTE_RE).each do |attr, sep, val|
+          str.scan(HTML_ATTRIBUTE_RE).each do |attr, val, sep, quoted_val|
             attr.downcase! if in_html_tag
             if attrs.has_key?(attr)
               warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")
             end
-            attrs[attr] = val || ""
+            attrs[attr] = val || quoted_val || ""
           end
           attrs
         end
