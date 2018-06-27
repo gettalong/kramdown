@@ -227,6 +227,35 @@ describe 'location' do
     end
   end
 
+  it 'handles GFM autolinks - valid link' do
+    strs = %w(http://www.example.com
+      http://www.example.com/
+      http://example.com/abc/def
+      http://example.com/abc?def=ghi
+    )
+    strs.each do |link_text|
+      str = "def #{link_text} ghi"
+      doc = Kramdown::Document.new(str, :input => 'GFM')
+      children = doc.root.children.first.children
+      assert_equal "def ", children.first.value
+      assert_equal " ghi", children.last.value
+      link = children[1]
+      assert_equal :a, link.type
+      assert_equal link_text, link.attr['href']
+      assert_equal link_text, link.children.first.value
+    end
+  end
+
+  it 'handles GFM autolinks - invalid link' do
+    strs = ["www.example.com"]
+    strs.each do |str|
+      doc = Kramdown::Document.new(str, :input => 'GFM')
+      children = doc.root.children.first.children
+      assert_equal 1, children.length
+      assert_equal str, children.first.value
+    end
+  end
+
   it 'marks fenced code block as fenced with the GFM parser' do
     str = %(```\nfenced code\n```\n\n    indented code\n)
     doc = Kramdown::Document.new(str, :input => 'GFM')
