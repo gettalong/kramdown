@@ -7,7 +7,7 @@
 #++
 #
 
-
+require 'uri'
 require 'kramdown/parser'
 
 module Kramdown
@@ -38,6 +38,11 @@ module Kramdown
 
         i = @span_parsers.index(:escaped_chars)
         @span_parsers[i] = :escaped_chars_gfm if i
+
+        i = nil
+        i = @span_parsers.index(:autolink)
+        @span_parsers[i] = :autolink_gfm if i
+
         @span_parsers << :strikethrough_gfm
       end
 
@@ -181,6 +186,17 @@ module Kramdown
 
       def paragraph_end
         @paragraph_end
+      end
+
+      define_parser(:autolink_gfm, URI::regexp(%w(http https)))
+
+      def parse_autolink_gfm
+        start_line_number = @src.current_line_number
+        @src.pos += @src.matched_size
+        href = @src[0]
+        el = Element.new(:a, nil, {'href' => href}, :location => start_line_number)
+        add_text(@src[0], el)
+        @tree.children << el
       end
 
     end
