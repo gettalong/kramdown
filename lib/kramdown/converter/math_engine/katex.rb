@@ -27,6 +27,7 @@ module Kramdown::Converter::MathEngine
       attr = el.attr.dup
       attr.delete('xmlns')
       attr.delete('display')
+      result = result.dup
       result.insert(result =~ /[[:space:]>]/, converter.html_attributes(attr))
       result = "#{' ' * opts[:indent]}#{result}\n" if display_mode
       result
