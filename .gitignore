@@ -1,7 +1,9 @@
-htmldoc
-pkg
-webgen-tmp
-CONTRIBUTERS
-VERSION
-kramdown.gemspec
-man/man1/kramdown.1
+/htmldoc
+/pkg
+/webgen-tmp
+/CONTRIBUTERS
+/VERSION
+/kramdown.gemspec
+/man/man1/kramdown.1
+/node_modules
+/katex
