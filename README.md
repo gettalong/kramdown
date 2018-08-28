@@ -1,4 +1,4 @@
-# kramdown
+# kramdown [![Build Status](https://travis-ci.org/gettalong/kramdown.svg?branch=master)](https://travis-ci.org/gettalong/kramdown)
 
 ## Readme first!
 
