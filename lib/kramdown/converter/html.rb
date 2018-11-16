@@ -48,6 +48,8 @@ module Kramdown
         @stack = []
       end
 
+      SOURCE_LOCATION_ATTR = :'data-sourcepos'
+
       # The mapping of element type to conversion method.
       DISPATCHER = Hash.new {|h,k| h[k] = "convert_#{k}"}
 
@@ -85,7 +87,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         else
-          format_as_block_html(el.type, el.attr, inner(el, indent), indent)
+          format_as_block_html(el.type, attr, inner(el, indent), indent, el.options[:location])
         end
       end
 
@@ -119,7 +121,7 @@ module Kramdown
       end
 
       def convert_blockquote(el, indent)
-        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent, el.options[:location])
       end
 
       def convert_header(el, indent)
@@ -129,7 +131,7 @@ module Kramdown
         end
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
         level = output_header_level(el.options[:level])
-        format_as_block_html("h#{level}", attr, inner(el, indent), indent)
+        format_as_block_html("h#{level}", attr, inner(el, indent), indent, el.options[:location])
       end
 
       def convert_hr(el, indent)
@@ -143,13 +145,13 @@ module Kramdown
         elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
           @footnote_location = (0..128).to_a.map{|a| rand(36).to_s(36)}.join
         else
-          format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+          format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent, el.options[:location])
         end
       end
       alias :convert_ol :convert_ul
 
       def convert_dl(el, indent)
-        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent, el.options[:location])
       end
 
       def convert_li(el, indent)
@@ -172,7 +174,7 @@ module Kramdown
             break
           end
         end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
-        format_as_block_html(el.type, attr, inner(el, indent), indent)
+        format_as_block_html(el.type, attr, inner(el, indent), indent, el.options[:location])
       end
 
       def convert_html_element(el, indent)
@@ -209,7 +211,7 @@ module Kramdown
       alias :convert_xml_pi :convert_xml_comment
 
       def convert_table(el, indent)
-        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent, el.options[:location])
       end
       alias :convert_thead :convert_table
       alias :convert_tbody :convert_table
@@ -227,7 +229,7 @@ module Kramdown
           attr = el.attr.dup
           attr['style'] = (attr.has_key?('style') ? "#{attr['style']}; ": '') << "text-align: #{alignment}"
         end
-        format_as_block_html(type, attr, res.empty? ? entity_to_str(ENTITY_NBSP) : res, indent)
+        format_as_block_html(type, attr, res.empty? ? entity_to_str(ENTITY_NBSP) : res, indent, el.options[:location])
       end
 
       def convert_comment(el, indent)
@@ -323,7 +325,7 @@ module Kramdown
           attr = el.attr.dup
           (attr['class'] = (attr['class'] || '') << " kdmath").lstrip!
           if el.options[:category] == :block
-            format_as_block_html('div', attr, "$$\n#{el.value}\n$$", indent)
+            format_as_block_html('div', attr, "$$\n#{el.value}\n$$", indent, el.options[:location])
           else
             format_as_span_html('span', attr, "$#{el.value}$")
           end
@@ -356,19 +358,26 @@ module Kramdown
         result
       end
 
+      # Add the location where the element is defined 
+      def add_location_attr!(attr, location)
+        attr[SOURCE_LOCATION_ATTR] = location.to_s if @options[:render_source_location] && !location.nil?
+      end
+
       # Format the given element as span HTML.
       def format_as_span_html(name, attr, body)
         "<#{name}#{html_attributes(attr)}>#{body}</#{name}>"
       end
 
       # Format the given element as block HTML.
-      def format_as_block_html(name, attr, body, indent)
+      def format_as_block_html(name, attr, body, indent, location = nil)
+        add_location_attr!(attr, location) if location
         "#{' '*indent}<#{name}#{html_attributes(attr)}>#{body}</#{name}>\n"
       end
 
       # Format the given element as block HTML with a newline after the start tag and indentation
       # before the end tag.
-      def format_as_indented_block_html(name, attr, body, indent)
+      def format_as_indented_block_html(name, attr, body, indent, location = nil)
+        add_location_attr!(attr, location) if location
         "#{' '*indent}<#{name}#{html_attributes(attr)}>\n#{body}#{' '*indent}</#{name}>\n"
       end
 

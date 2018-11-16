@@ -640,6 +640,18 @@ Default: false
 Used by: HTML converter
 EOF
 
+    define(:render_source_location, Boolean, false, <<EOF)
+Specifies whether the linenumber in the input source on which an element
+is defined should be added to the rendered result.
+
+Setting this option to true adds a `data-sourcepos` attribute to the
+rendered element with the value of the linenumber in the input source
+on which the element was defined. Only applies to block-level elements.
+
+Default: false
+Used by: HTML converter
+EOF
+
     define(:gfm_quirks, Object, [:paragraph_end], <<EOF) do |val|
 Enables a set of GFM specific quirks
 

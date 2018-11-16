@@ -235,4 +235,9 @@ describe 'location' do
     assert fenced_cb.options[:fenced]
     refute indented_cb.options[:fenced]
   end
+
+  it 'adds location to rendered html attributes if enabled' do
+    doc = Kramdown::Document.new(test_cases['header'].gsub(/^      /, '').strip, :render_source_location => true)
+    assert_match /<h2.*data-sourcepos=\"4\"/, doc.to_html
+  end
 end
