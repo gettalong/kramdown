@@ -87,7 +87,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         else
-          format_as_block_html(el.type, attr, inner(el, indent), indent, el.options[:location])
+          format_as_block_html(el.type, el.attr, inner(el, indent), indent, el.options[:location])
         end
       end
 
