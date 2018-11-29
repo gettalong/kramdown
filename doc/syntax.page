@@ -732,12 +732,15 @@ paragraph otherwise:
 
     definition term
     : This definition will just be text because it would normally be a
-      paragraph and the there is no preceding blank line.
+      paragraph and there is no preceding blank line.
 
       > although the definition contains other block-level elements
 
     : This definition *will* be a paragraph since it is preceded by a
       blank line.
+
+To avoid the resulting mix of inline and block elements, you can use the `:auto_dd_para` option to
+mark the first paragraph as such if it is followed by more blocks belonging to the same definition.
 
 The rules about having any block-level element as first element in a list item also apply to a
 definition.

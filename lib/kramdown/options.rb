@@ -305,6 +305,25 @@ EOF
       val
     end
 
+    define(:auto_dd_para, Boolean, false, <<EOF)
+Avoid creation of inline elements adjacent to block elements in
+definitions (`:dd` elements).
+
+Without this option, the first paragraph following a definition marker
+is marked as a block only if the preceding source line is blank.
+Subsequent paragraphs following the same definition marker are always
+converted to block elements however. This can result in inline text
+followed by block elements in HTML output.
+
+With this option, the parser also checks if there is more than one
+paragraph following the same definition marker. If so, the first
+paragraph is marked as a block as well. This is roughly similar to how
+other list types are handled.
+
+Default: false
+Used by: kramdown parser
+EOF
+
     define(:footnote_nr, Integer, 1, <<EOF)
 The number of the first footnote
 
