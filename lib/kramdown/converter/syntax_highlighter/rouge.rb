@@ -28,7 +28,9 @@ module Kramdown::Converter::SyntaxHighlighter
       return nil if opts[:disable] || !lexer
       opts[:css_class] ||= 'highlight' # For backward compatibility when using Rouge 2.0
       formatter = formatter_class(opts).new(opts)
-      formatter.format(lexer.lex(text))
+      formatter.format(lexer.lex(text)).sub(
+        '<code>', "<code data-lang=\"#{lang}\">"
+      )
     end
 
     def self.options(converter, type)
