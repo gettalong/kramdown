@@ -118,17 +118,16 @@ EOF
   end
 
   PKG_FILES = FileList.new([
-                            'Rakefile',
-                            'setup.rb',
-                            'COPYING', 'README.md', 'AUTHORS',
-                            'VERSION', 'CONTRIBUTERS',
+                            'AUTHORS',
                             'bin/*',
-                            'benchmark/*',
+                            'CONTRIBUTERS',
+                            'COPYING',
+                            'data/**/*',
                             'lib/**/*.rb',
                             'man/man1/kramdown.1',
-                            'data/**/*',
-                            'doc/**',
-                            'test/**/*'
+                            'README.md',
+                            'test/**/*',
+                            'VERSION'
                            ])
 
   CLOBBER << "VERSION"
