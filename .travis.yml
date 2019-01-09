@@ -1,10 +1,9 @@
 language: ruby
 rvm:
-  - 2.1
-  - 2.2
   - 2.3
-  - 2.4.4
-  - 2.5.1
+  - 2.4
+  - 2.5
+  - 2.6
   - jruby-head
 
 jdk:
@@ -23,7 +22,7 @@ before_install:
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra tidy
   - gem install rake
   - gem install minitest coderay stringex ritex execjs sskatex
-  - "ruby -e 'exit RUBY_VERSION < \"2.3\" ? 0 : 1' || gem install katex -v 0.4.3"
+  - gem install katex -v 0.4.3"
   - gem install rouge
   - gem install prawn prawn-table
   - (ruby --version | grep jruby) || gem install itextomml

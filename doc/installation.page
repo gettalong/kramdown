@@ -8,7 +8,7 @@ sort_info: 5
 ## Dependencies
 
 Since kramdown is written in Ruby, you just need the [Ruby interpreter](http://www.ruby-lang.org),
-version 2.x. There are no other dependencies.
+version 2.3 or later. There are no other dependencies.
 
 
 ## Compatibility Notes
@@ -16,7 +16,7 @@ version 2.x. There are no other dependencies.
 kramdown should work on any platform which supports Ruby. It has been successfully tested on the
 following platforms:
 
-* Linux with Ruby 2.x and jruby 9.0.0.0.
+* Linux with Ruby 2.3 or later and jruby 9.0.0.0.
 
 See the platform specific installation notes for more information!
 
