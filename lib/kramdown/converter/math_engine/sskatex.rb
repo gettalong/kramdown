@@ -34,7 +34,7 @@ module Kramdown::Converter::MathEngine
       KTXC = ::Kramdown::Utils::LRUCache.new(10)
 
       # A logger that routes messages to the debug channel only. No need to create this dynamically.
-      DEBUG_LOGGER = lambda { |level, &expr| warn(expr.call) }
+      DEBUG_LOGGER = lambda { |_level, &expr| warn(expr.call) }
 
       class << self
         private

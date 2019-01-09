@@ -111,7 +111,7 @@ module Kramdown
         # contain only lowercase letters.
         def parse_html_attributes(str, line = nil, in_html_tag = true)
           attrs = Utils::OrderedHash.new
-          str.scan(HTML_ATTRIBUTE_RE).each do |attr, val, sep, quoted_val|
+          str.scan(HTML_ATTRIBUTE_RE).each do |attr, val, _sep, quoted_val|
             attr.downcase! if in_html_tag
             if attrs.has_key?(attr)
               warning("Duplicate HTML attribute '#{attr}' on line #{line || '?'} - overwriting previous one")

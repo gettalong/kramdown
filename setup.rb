@@ -886,7 +886,7 @@ class ToplevelInstaller
   end
 
   def valid_task_re
-    @valid_task_re ||= /\A(?:#{TASKS.map {|task,desc| task }.join('|')})\z/
+    @valid_task_re ||= /\A(?:#{TASKS.map {|task,_desc| task }.join('|')})\z/
   end
 
   def parsearg_no_options

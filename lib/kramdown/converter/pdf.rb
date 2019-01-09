@@ -458,7 +458,7 @@ module Kramdown
           def available_width
             return super unless @document.respond_to?(:converter) && @document.converter
 
-            @document.image_floats.each do |pn, x, y, w, h|
+            @document.image_floats.each do |pn, _x, y, w, h|
               next if @document.page_number != pn
               if @at[1] + @baseline_y <= y - @document.bounds.absolute_bottom &&
                   (@at[1] + @baseline_y + @arranger.max_line_height + @leading >= y - h - @document.bounds.absolute_bottom)

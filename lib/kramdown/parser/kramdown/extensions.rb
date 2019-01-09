@@ -114,7 +114,7 @@ module Kramdown
             else
               true
             end
-          end.each do |k,v|
+          end.each_key do |k|
             warning("Unknown kramdown option '#{k}'")
           end
           @tree.children << new_block_el(:eob, :extension) if type == :block

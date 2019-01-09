@@ -66,7 +66,7 @@ module Kramdown
         link_type = (result =~ /^!/ ? :img : :a)
 
         # no nested links allowed
-        if link_type == :a && (@tree.type == :img || @tree.type == :a || @stack.any? {|t,s| t && (t.type == :img || t.type == :a)})
+        if link_type == :a && (@tree.type == :img || @tree.type == :a || @stack.any? { |t, _s| t && (t.type == :img || t.type == :a) })
           add_text(result)
           return
         end

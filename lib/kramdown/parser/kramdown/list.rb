@@ -72,7 +72,7 @@ module Kramdown
             item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             list.children << item
 
-            item.value.sub!(self.class::LIST_ITEM_IAL) do |match|
+            item.value.sub!(self.class::LIST_ITEM_IAL) do
               parse_attribute_list($1, item.options[:ial] ||= {})
               ''
             end
@@ -190,7 +190,7 @@ module Kramdown
             item.value, indentation, content_re, lazy_re, indent_re = parse_first_list_line(@src[1].length, @src[2])
             deflist.children << item
 
-            item.value.sub!(self.class::LIST_ITEM_IAL) do |match|
+            item.value.sub!(self.class::LIST_ITEM_IAL) do
               parse_attribute_list($1, item.options[:ial] ||= {})
               ''
             end

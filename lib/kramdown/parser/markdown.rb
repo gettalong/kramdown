@@ -43,7 +43,7 @@ module Kramdown
       PARAGRAPH_END = LAZY_END
 
       IAL_RAND_CHARS = (('a'..'z').to_a + ('0'..'9').to_a)
-      IAL_RAND_STRING = (1..20).collect {|a| IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)]}.join
+      IAL_RAND_STRING = (1..20).collect { IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)] }.join
       LIST_ITEM_IAL = /^\s*(#{IAL_RAND_STRING})?\s*\n/
       IAL_SPAN_START = LIST_ITEM_IAL
 

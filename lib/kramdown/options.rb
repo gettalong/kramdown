@@ -69,7 +69,7 @@ module Kramdown
     # Return a Hash with the default values for all options.
     def self.defaults
       temp = {}
-      @options.each {|n, o| temp[o.name] = o.default}
+      @options.each_value {|o| temp[o.name] = o.default}
       temp
     end
 
@@ -296,7 +296,7 @@ Default: {}
 Used by: kramdown parser
 EOF
       val = simple_hash_validator(val, :link_defs)
-      val.each do |k,v|
+      val.each_value do |v|
         if !(Array === v) || v.size > 2 || v.size < 1
           raise Kramdown::Error, "Invalid structure for hash value of option #{name}"
         end

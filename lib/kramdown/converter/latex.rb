@@ -511,7 +511,7 @@ module Kramdown
         8194 => ['\hskip .5em\relax'],
         8195 => ['\quad'],
       } # :nodoc:
-      ENTITY_CONV_TABLE.each {|k,v| ENTITY_CONV_TABLE[k][0].insert(-1, '{}')}
+      ENTITY_CONV_TABLE.each_key { |k| ENTITY_CONV_TABLE[k][0].insert(-1, '{}') }
 
       def entity_to_latex(entity)
         text, package = ENTITY_CONV_TABLE[entity.code_point]
@@ -606,7 +606,7 @@ module Kramdown
         "["  => "{[}",
         "]"  => "{]}",
       }.merge(Hash[*("{}$%&_#".scan(/./).map {|c| [c, "\\#{c}"]}.flatten)]) # :nodoc:
-      ESCAPE_RE = Regexp.union(*ESCAPE_MAP.collect {|k,v| k}) # :nodoc:
+      ESCAPE_RE = Regexp.union(*ESCAPE_MAP.keys) # :nodoc:
 
       # Escape the special LaTeX characters in the string +str+.
       def escape(str)
