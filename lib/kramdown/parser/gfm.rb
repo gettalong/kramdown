@@ -78,20 +78,20 @@ module Kramdown
         raw_text = ''
 
         append_text = lambda do |child|
-          if child.type == :text || child.type == :codespan || child.type ==:math
+          case child.type
+          when :text, :codespan, :math
             raw_text << child.value
-          elsif child.type == :entity
+          when :entity
             raw_text << child.value.char
-          elsif child.type == :smart_quote
+          when :smart_quote
             raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
-          elsif child.type == :typographic_sym
-            if child.value == :laquo_space
-              raw_text << "« "
-            elsif child.value == :raquo_space
-              raw_text << " »"
-            else
-              raw_text << ::Kramdown::Utils::Entities.entity(child.value.to_s).char
-            end
+          when :typographic_sym
+            raw_text << case child.value
+                        when :laquo_space then "« "
+                        when :raquo_space then " »"
+                        else
+                          ::Kramdown::Utils::Entities.entity(child.value.to_s).char
+                        end
           else
             child.children.each {|c| append_text.call(c)}
           end
