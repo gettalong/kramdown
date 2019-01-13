@@ -25,7 +25,7 @@ module Kramdown::Converter::SyntaxHighlighter
       opts = options(converter, type)
       call_opts[:default_lang] = opts[:default_lang]
       lexer = ::Rouge::Lexer.find_fancy(lang || opts[:default_lang], text)
-      return nil if opts[:disable] || !lexer
+      return nil if opts[:disable] || !lexer || lexer.tag == "plaintext"
       opts[:css_class] ||= 'highlight' # For backward compatibility when using Rouge 2.0
       formatter = formatter_class(opts).new(opts)
       formatter.format(lexer.lex(text))
