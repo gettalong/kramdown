@@ -10,6 +10,6 @@
 module Kramdown
 
   # The kramdown version.
-  VERSION = '1.17.0'
+  VERSION = '2.0.0.beta1'
 
 end
