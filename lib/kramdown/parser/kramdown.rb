@@ -302,7 +302,7 @@ module Kramdown
         el
       end
 
-      @parsers = {}
+      @@parsers = {}
 
       # Struct class holding all the needed data for one block/span-level parser method.
       Data = Struct.new(:name, :start_re, :span_start, :method)
@@ -317,18 +317,18 @@ module Kramdown
       # to the registry. The method name is automatically derived from the +name+ or can explicitly
       # be set by using the +meth_name+ parameter.
       def self.define_parser(name, start_re, span_start = nil, meth_name = "parse_#{name}")
-        raise "A parser with the name #{name} already exists!" if @parsers.key?(name)
-        @parsers[name] = Data.new(name, start_re, span_start, meth_name)
+        raise "A parser with the name #{name} already exists!" if @@parsers.key?(name)
+        @@parsers[name] = Data.new(name, start_re, span_start, meth_name)
       end
 
       # Return the Data structure for the parser +name+.
       def self.parser(name = nil)
-        @parsers[name]
+        @@parsers[name]
       end
 
       # Return +true+ if there is a parser called +name+.
       def self.has_parser?(name)
-        @parsers.key?(name)
+        @@parsers.key?(name)
       end
 
       # Regexp for matching indentation (one tab or four spaces)
