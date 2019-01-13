@@ -9,10 +9,6 @@ rvm:
 jdk:
   - oraclejdk8
 
-env:
-  global:
-    - TRAVIS_NODE_VERSION="6.0"
-
 matrix:
   allow_failures:
     - rvm: jruby-head
@@ -21,13 +17,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra tidy
   - gem install rake
-  - gem install minitest coderay stringex ritex execjs sskatex
-  - gem install katex -v 0.4.3"
+  - gem install minitest stringex
   - gem install rouge
-  - gem install prawn prawn-table
-  - (ruby --version | grep jruby) || gem install itextomml
-  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install mathjax-node-cli cssstyle
-  - curl -L 'https://github.com/Khan/KaTeX/releases/download/v0.9.0/katex.tar.gz' | tar xzf - 'katex/katex.min.js'
 
 script: ruby -Ilib:test test/test_*

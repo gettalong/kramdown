@@ -25,7 +25,6 @@ module Kramdown
     autoload :Kramdown, 'kramdown/converter/kramdown'
     autoload :Toc, 'kramdown/converter/toc'
     autoload :RemoveHtmlTags, 'kramdown/converter/remove_html_tags'
-    autoload :Pdf, 'kramdown/converter/pdf'
     autoload :HashAST, 'kramdown/converter/hash_ast'
     autoload :HashAst, 'kramdown/converter/hash_ast'
     autoload :Man, 'kramdown/converter/man'
@@ -34,7 +33,7 @@ module Kramdown
 
     configurable(:syntax_highlighter)
 
-    ['Minted', "Coderay", "Rouge"].each do |klass_name|
+    ['Minted', "Rouge"].each do |klass_name|
       kn_down = klass_name.downcase.intern
       add_syntax_highlighter(kn_down) do |converter, text, lang, type, opts|
         require "kramdown/converter/syntax_highlighter/#{kn_down}"
@@ -50,7 +49,7 @@ module Kramdown
 
     configurable(:math_engine)
 
-    ["Mathjax", "MathjaxNode", "Katex", "SsKaTeX", "Ritex", "Itex2MML"].each do |klass_name|
+    ["Mathjax"].each do |klass_name|
       kn_down = klass_name.downcase.intern
       add_math_engine(kn_down) do |converter, el, opts|
         require "kramdown/converter/math_engine/#{kn_down}"

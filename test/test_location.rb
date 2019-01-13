@@ -215,24 +215,4 @@ describe 'location' do
       assert_equal(((i + 1) /2.0).ceil, e.options[:location])
     end
   end
-
-  it 'handles hard wrapped paragraphs with the GFM parser' do
-    str = "A*b*C\nA*b*C\nA*b*C"
-    doc = Kramdown::Document.new(str, :input => 'GFM', :hard_wrap => true)
-    para = doc.root.children.first
-    1.upto(3) do |line|
-      0.upto(line == 3 ? 2 : 3) do |element|
-        assert_equal(line, para.children[4*(line - 1) + element].options[:location])
-      end
-    end
-  end
-
-  it 'marks fenced code block as fenced with the GFM parser' do
-    str = %(```\nfenced code\n```\n\n    indented code\n)
-    doc = Kramdown::Document.new(str, :input => 'GFM')
-    fenced_cb = doc.root.children.first
-    indented_cb = doc.root.children.last
-    assert fenced_cb.options[:fenced]
-    refute indented_cb.options[:fenced]
-  end
 end

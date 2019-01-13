@@ -4,16 +4,10 @@ title: Ritex
 
 ## Math Engine Ritex
 
+This math engine was built-in until kramdown 2.0 and since then is available through the
+[`kramdown-math-ritex` gem](https://github.com/kramdown/math-ritex).
+
 Ritex converts TeX math formulas into MathML and can be used together with the [HTML
 converter](../converter/html.html).
 
-To use Ritex, set the option ['math_engine'](../options.html#option-math-engine) to
-'ritex' and make sure that Ritex is available. The Ritex library can be installed, e.g., via
-Rubygems by running `gem install ritex`.
-
-> Note that Ritex is released under the GNU GPL version 2 which means that when you use it in
-> conjunction with kramdown and your application, your application will automatically also fall under
-> the GNU GPL!
->
-> If this is a problem for you, consider using the [itex2MML engine](itex2mml.html) instead!
-{:.information}
+See <https://github.com/kramdown/math-ritex> for documentation!

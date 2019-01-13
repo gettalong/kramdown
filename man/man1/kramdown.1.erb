@@ -29,11 +29,12 @@ This file has to be in XDG_CONFIG_HOME on Linux/Unix, ~/Library/Preferences on m
 
 `-i` *FORMAT*, `--input` *FORMAT*
 : Specify the input format. Available input formats: *kramdown* (this is the default), *markdown*,
-  *GFM* or *html*.
+  or *html*. The input format *GFM* is available through the `kramdown-parser-gfm` gem.
 
 `-o` *FORMAT*, `--output` *FORMAT*
 : Specify one or more output formats separated by commas: *html* (default), *kramdown*, *latex*,
-  *pdf*, *man* or *remove_html_tags*.
+  *man* or *remove_html_tags*. The converter *pdf* is available through the
+  `kramdown-converter-pdf` gem.
 
 `--no-config-file`
 : Do not read any configuration file. Default behavior is to check for a configuration file and

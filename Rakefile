@@ -177,16 +177,8 @@ EOF
       s.default_executable = 'kramdown'
       s.required_ruby_version = '>= 2.3'
       s.add_development_dependency 'minitest', '~> 5.0'
-      s.add_development_dependency 'coderay', '~> 1.0.0'
       s.add_development_dependency 'rouge'
       s.add_development_dependency 'stringex', '~> 1.5.1'
-      s.add_development_dependency 'prawn', '~> 2.0'
-      s.add_development_dependency 'prawn-table', '~> 0.2.2'
-      s.add_development_dependency 'ritex', '~> 1.0'
-      s.add_development_dependency 'itextomml', '~> 1.5'
-      s.add_development_dependency 'execjs', '~> 2.7'
-      s.add_development_dependency 'sskatex', '>= 0.9.37'
-      s.add_development_dependency 'katex', '~> 0.4.3'
 
       #### Documentation
 
@@ -266,72 +258,6 @@ EOF
       end
     end
     puts "Look through the above mentioned files and correct all problems" if inserted
-  end
-
-  desc "Check for MathjaxNode availability"
-  task :test_mathjaxnode_deps do
-    html = %x{echo '$$a$$' | \
-              #{RbConfig.ruby} -Ilib bin/kramdown --no-config-file --math-engine mathjaxnode}
-    raise (<<MJC) unless $?.success?
-Some requirement by the mathjax-node-cli package has not been satisfied.
-Cf. the above error messages.
-MJC
-    raise (<<MJN) unless %r{\A<math xmlns="http://www.w3.org/\d+/Math/MathML".*</math>\Z}m === html
-The MathjaxNode engine is not available. Try "npm install mathjax-node-cli".
-MJN
-    puts "MathjaxNode is available, and its default configuration works."
-  end
-
-  desc "Update kramdown MathjaxNode test reference outputs"
-  task update_mathjaxnode_tests: [:test_mathjaxnode_deps] do
-    # Not framed in terms of rake file tasks to prevent accidental overwrites.
-    Dir['test/testcases/**/mathjaxnode*.text'].each do |f|
-      stem = f[0..-6] # Remove .text
-      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
-    end
-  end
-
-  desc "Check for SsKaTeX availability"
-  task :test_sskatex_deps do
-    katexjs = 'katex/katex.min.js'
-    raise (<<TKJ) unless File.exists? katexjs
-Cannot find file '#{katexjs}'.
-You need to download KaTeX e.g. from https://github.com/Khan/KaTeX/releases/
-and extract at least '#{katexjs}'.
-Alternatively, if you have a copy of KaTeX unpacked somewhere else,
-you can create a symbolic link 'katex' pointing to that KaTeX directory.
-TKJ
-    html = %x{echo '$$a$$' | \
-              #{RbConfig.ruby} -Ilib bin/kramdown --no-config-file --math-engine sskatex}
-    raise (<<KTC) unless $?.success?
-Some requirement by SsKaTeX or the employed JS engine has not been satisfied.
-Cf. the above error messages.
-KTC
-    raise (<<XJS) unless / class="katex"/ === html
-Some static dependency of SsKaTeX, probably the 'sskatex' or the 'execjs' gem,
-is not available.
-If you 'gem install sskatex', also make sure that some JS engine is available,
-e.g. by installing one of the gems 'duktape', 'therubyracer', or 'therubyrhino'.
-XJS
-    puts "SsKaTeX is available, and its default configuration works."
-  end
-
-  desc "Update kramdown SsKaTeX test reference outputs"
-  task update_sskatex_tests: [:test_sskatex_deps] do
-    # Not framed in terms of rake file tasks to prevent accidental overwrites.
-    Dir['test/testcases/**/sskatex*.text'].each do |f|
-      stem = f[0..-6] # Remove .text
-      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
-    end
-  end
-
-  desc "Update kramdown KaTeX test reference outputs"
-  task :update_katex_tests do
-    # Not framed in terms of rake file tasks to prevent accidental overwrites.
-    Dir['test/testcases/**/katex*.text'].each do |f|
-      stem = f[0..-6] # Remove .text
-      ruby "-Ilib bin/kramdown --config-file #{stem}.options #{f} >#{stem}.html.19"
-    end
   end
 end
 

@@ -4,36 +4,10 @@ title: Coderay
 
 ## Syntax Highlighting With Coderay
 
+This syntax highlighter was built-in until kramdown 2.0 and since then is available through the
+[`kramdown-syntax-coderay` gem](https://github.com/kramdown/syntax-coderay).
+
 [Coderay](http://coderay.rubychan.de) (MIT licensed) can be used as syntax highlighter for code
 blocks and code spans when converting to HTML.
 
-To use Coderay, set the option ['syntax_highlighter'](../options.html#option-syntax-highlighter) to
-'coderay' and make sure that Coderay is available. The Coderay library can be installed, e.g., via
-Rubygems by running `gem install coderay`.
-
-> Note that the 'coderay_*' options are deprecated and should not be used anymore!
-{:.information}
-
-The Coderay syntax highlighter supports the following keys of the option
-['syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts):
-
-span
-: A key-value map of options that are only used when syntax highlighting code spans.
-
-block
-: A key-value map of options that are only used when syntax highlighting code blocks.
-
-default_lang
-: The default language that should be used when no language is set for a **code block**.
-
-Furthermore all Coderay options (e.g. 'css', 'line_numbers', 'line_numbers_start', 'bold_every',
-'tab_width', 'wrap') can be set directly on the 'syntax_highlighter_opts' option (where they apply
-to code spans *and* code blocks) and/or on the 'span'/'block' keys.
-
-Here is an example that shows how Ruby code is highlighted:
-
-    require 'kramdown'
-
-    Kramdown::Document.new('* something').to_html
-    puts 1 + 1
-{: .language-ruby}
+See <https://github.com/kramdown/syntax-coderay> for documentation!

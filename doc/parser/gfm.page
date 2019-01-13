@@ -5,38 +5,15 @@ title: GFM Parser
 
 ## Introduction
 
-This parser can parse ["Github Flavored
+This parser was built-in until kramdown 2.0 and since then is available through the
+[`kramdown-parser-gfm` gem][parser-gfm].
+
+It can parse ["Github Flavored
 Markdown"](https://help.github.com/articles/github-flavored-markdown). This is a format of Markdown
 that is used on Github.com for most places where textual input is required, such as issues and
 comments. Some of the extensions, notably the "backtick fenced code blocks" are also used on other
 sites, for example StackOverflow.
 
-## Conformance
+See <https://github.com/kramdown/parser-gfm> for documentation!
 
-At the moment this parser is based on the [kramdown parser](kramdown.html), with the following
-changes:
-
-* Support for fenced code blocks using three or more backticks has been added.
-* Hard line breaks in paragraphs are enforced by default (see option 'hard_wrap').
-* ATX headers need a whitespace character after the hash signs.
-* Strikethroughs can be created using two tildes surrounding a piece of text
-* Blank lines between paragraphs and other block elements are not needed by default (see option
-  `gfm_quirks`)
-
-Please note that the GFM parser tries to mimic the parser used at Github which means that for some
-special cases broken behaviour is the expected behaviour.
-
-Here is an example:
-
-    This ~~is a complex strike through *test ~~with nesting~~ involved* here~~.
-
-In this case the correct GFM result is:
-
-    <p>This <del>is a complex strike through *test ~~with nesting</del> involved* here~~.</p>
-
-
-## Options
-
-The GFM parser supports the following options:
-
-{options: {items: [hard_wrap, gfm_quirks]}}
+[parser-gfm]: https://github.com/kramdown/parser-gfm

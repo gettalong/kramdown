@@ -36,35 +36,9 @@ Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
 
 class TestFiles < Minitest::Test
 
-  MATHJAX_NODE_AVAILABLE = begin
-                             require 'kramdown/converter/math_engine/mathjaxnode'
-                             Kramdown::Converter::MathEngine::MathjaxNode::AVAILABLE or
-                               warn("Skipping MathjaxNode tests as MathjaxNode is not available")
-                           end
-
-  SSKATEX_AVAILABLE = begin
-                        / class="katex"/ === Kramdown::Document.
-                          new('$$a$$', {:math_engine => :sskatex}).to_html or
-                          warn("Skipping SsKaTeX tests as SsKaTeX is not available.")
-                      rescue
-                        warn("Skipping SsKaTeX tests as default SsKaTeX config does not work.")
-                      end or warn("Run \"rake dev:test_sskatex_deps\" to see why.")
-
-  KATEX_AVAILABLE = RUBY_VERSION >= '2.3'
-
   EXCLUDE_KD_FILES = [('test/testcases/block/04_header/with_auto_ids.text' if RUBY_VERSION <= '1.8.6'), # bc of dep stringex not working
                       ('test/testcases/span/03_codespan/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
                       ('test/testcases/block/06_codeblock/rouge/' if RUBY_VERSION < '2.0'), #bc of rouge
-                      ('test/testcases/block/15_math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
-                      ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
-                      ('test/testcases/block/15_math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                      ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless MATHJAX_NODE_AVAILABLE),
-                      ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless MATHJAX_NODE_AVAILABLE),
-                      ('test/testcases/span/math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                      ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
-                      ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
-                      ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
-                      ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
                      ].compact
 
   # Generate test methods for kramdown-to-xxx conversion
@@ -98,24 +72,15 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
                           'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
                           'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
+                          'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
+                          'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
+                          'test/testcases/block/12_extension/options3.html', # bc of rouge
                           ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
                           ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
                           'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
-                          'test/testcases/block/15_math/ritex.html', # bc of tidy
-                          'test/testcases/span/math/ritex.html', # bc of tidy
-                          'test/testcases/block/15_math/itex2mml.html', # bc of tidy
-                          'test/testcases/span/math/itex2mml.html', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode.html', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode_notexhints.html', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode_semantics.html', # bc of tidy
-                          'test/testcases/span/math/mathjaxnode.html', # bc of tidy
                           'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                           'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
-                          'test/testcases/span/math/sskatex.html', # bc of tidy
-                          'test/testcases/block/15_math/sskatex.html', # bc of tidy
-                          'test/testcases/span/math/katex.html', # bc of tidy
-                          'test/testcases/block/15_math/katex.html', # bc of tidy
                           'test/testcases/span/05_html/mark_element.html', # bc of tidy
                           'test/testcases/block/09_html/xml.html', # bc of tidy
                           'test/testcases/span/05_html/xml.html', # bc of tidy
@@ -215,18 +180,6 @@ class TestFiles < Minitest::Test
                           'test/testcases/block/06_codeblock/rouge/simple.text',
                           'test/testcases/block/06_codeblock/rouge/multiple.text', # check, what document contain more, than one code block
                           'test/testcases/block/14_table/empty_tag_in_cell.text', # bc of tidy
-                          'test/testcases/block/15_math/ritex.text', # bc of tidy
-                          'test/testcases/span/math/ritex.text', # bc of tidy
-                          'test/testcases/block/15_math/itex2mml.text', # bc of tidy
-                          'test/testcases/span/math/itex2mml.text', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode.text', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode_notexhints.text', # bc of tidy
-                          'test/testcases/block/15_math/mathjaxnode_semantics.text', # bc of tidy
-                          'test/testcases/span/math/mathjaxnode.text', # bc of tidy
-                          'test/testcases/block/15_math/sskatex.text', # bc of tidy
-                          'test/testcases/span/math/sskatex.text', # bc of tidy
-                          'test/testcases/block/15_math/katex.text', # bc of tidy
-                          'test/testcases/span/math/katex.text', # bc of tidy
                           'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
                           'test/testcases/span/05_html/mark_element.text', # bc of tidy
                           'test/testcases/block/09_html/xml.text', # bc of tidy
@@ -256,12 +209,15 @@ class TestFiles < Minitest::Test
     EXCLUDE_HTML_KD_FILES = ['test/testcases/span/extension/options.html',        # bc of parse_span_html option
                              'test/testcases/span/05_html/normal.html',           # bc of br tag before closing p tag
                              'test/testcases/block/12_extension/nomarkdown.html', # bc of nomarkdown extension
+                             'test/testcases/block/12_extension/options3.html', # bc of rouge
                              'test/testcases/block/09_html/simple.html',          # bc of webgen:block elements
                              'test/testcases/block/09_html/markdown_attr.html',   # bc of markdown attr
                              'test/testcases/block/09_html/html_to_native/table_simple.html', # bc of invalidly converted simple table
                              'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
                              'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
                              'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
+                             'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
+                             'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
                              'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
                              'test/testcases/span/03_codespan/highlighting.html', # bc of span elements inside code element
                              'test/testcases/block/04_header/with_auto_ids.html', # bc of auto_ids=true option
@@ -271,18 +227,6 @@ class TestFiles < Minitest::Test
                              ('test/testcases/span/03_codespan/rouge/simple.html' if RUBY_VERSION < '2.0'),
                              ('test/testcases/span/03_codespan/rouge/disabled.html' if RUBY_VERSION < '2.0'),
                              'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
-                             'test/testcases/block/15_math/ritex.html', # bc of tidy
-                             'test/testcases/span/math/ritex.html', # bc of tidy
-                             'test/testcases/block/15_math/itex2mml.html', # bc of tidy
-                             'test/testcases/span/math/itex2mml.html', # bc of tidy
-                             'test/testcases/block/15_math/mathjaxnode.html', # bc of tidy
-                             'test/testcases/block/15_math/mathjaxnode_notexhints.html', # bc of tidy
-                             'test/testcases/block/15_math/mathjaxnode_semantics.html', # bc of tidy
-                             'test/testcases/span/math/mathjaxnode.html', # bc of tidy
-                             'test/testcases/block/15_math/sskatex.html', # bc of tidy
-                             'test/testcases/span/math/sskatex.html', # bc of tidy
-                             'test/testcases/block/15_math/katex.html', # bc of tidy
-                             'test/testcases/span/math/katex.html', # bc of tidy
                              'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
                              'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
@@ -315,105 +259,6 @@ class TestFiles < Minitest::Test
     end
   end
 
-  EXCLUDE_GFM_FILES = [
-                       'test/testcases/block/03_paragraph/no_newline_at_end.text',
-                       'test/testcases/block/03_paragraph/indented.text',
-                       'test/testcases/block/03_paragraph/two_para.text',
-                       'test/testcases/block/03_paragraph/line_break_last_line.text',
-                       'test/testcases/block/04_header/atx_header.text',
-                       'test/testcases/block/04_header/setext_header.text',
-                       'test/testcases/block/04_header/with_auto_ids.text', # bc of ID generation difference
-                       'test/testcases/block/04_header/with_auto_id_prefix.text', # bc of ID generation difference
-                       'test/testcases/block/05_blockquote/indented.text',
-                       'test/testcases/block/05_blockquote/lazy.text',
-                       'test/testcases/block/05_blockquote/nested.text',
-                       'test/testcases/block/05_blockquote/no_newline_at_end.text',
-                       'test/testcases/block/06_codeblock/error.text',
-                       'test/testcases/block/07_horizontal_rule/error.text',
-                       'test/testcases/block/08_list/escaping.text',
-                       'test/testcases/block/08_list/item_ial.text',
-                       'test/testcases/block/08_list/lazy.text',
-                       'test/testcases/block/08_list/list_and_others.text',
-                       'test/testcases/block/08_list/other_first_element.text',
-                       'test/testcases/block/08_list/simple_ul.text',
-                       'test/testcases/block/08_list/special_cases.text',
-                       'test/testcases/block/08_list/lazy_and_nested.text', # bc of change in lazy line handling
-                       'test/testcases/block/09_html/comment.text',
-                       'test/testcases/block/09_html/html_to_native/code.text',
-                       'test/testcases/block/09_html/html_to_native/emphasis.text',
-                       'test/testcases/block/09_html/html_to_native/typography.text',
-                       'test/testcases/block/09_html/parse_as_raw.text',
-                       'test/testcases/block/09_html/simple.text',
-                       'test/testcases/block/12_extension/comment.text',
-                       'test/testcases/block/12_extension/ignored.text',
-                       'test/testcases/block/12_extension/nomarkdown.text',
-                       'test/testcases/block/13_definition_list/item_ial.text',
-                       'test/testcases/block/13_definition_list/multiple_terms.text',
-                       'test/testcases/block/13_definition_list/no_def_list.text',
-                       'test/testcases/block/13_definition_list/simple.text',
-                       'test/testcases/block/13_definition_list/with_blocks.text',
-                       'test/testcases/block/14_table/errors.text',
-                       'test/testcases/block/14_table/escaping.text',
-                       'test/testcases/block/14_table/simple.text',
-                       'test/testcases/block/15_math/normal.text',
-                       'test/testcases/block/16_toc/toc_with_footnotes.text', # bc of ID generation difference
-                       'test/testcases/encoding.text',
-                       'test/testcases/span/01_link/inline.text',
-                       'test/testcases/span/01_link/link_defs.text',
-                       'test/testcases/span/01_link/reference.text',
-                       'test/testcases/span/02_emphasis/normal.text',
-                       'test/testcases/span/03_codespan/normal.text',
-                       'test/testcases/span/04_footnote/definitions.text',
-                       'test/testcases/span/04_footnote/markers.text',
-                       'test/testcases/span/05_html/across_lines.text',
-                       'test/testcases/span/05_html/markdown_attr.text',
-                       'test/testcases/span/05_html/normal.text',
-                       'test/testcases/span/05_html/raw_span_elements.text',
-                       'test/testcases/span/autolinks/url_links.text',
-                       'test/testcases/span/extension/comment.text',
-                       'test/testcases/span/ial/simple.text',
-                       'test/testcases/span/line_breaks/normal.text',
-                       'test/testcases/span/math/normal.text',
-                       'test/testcases/span/text_substitutions/entities_as_char.text',
-                       'test/testcases/span/text_substitutions/entities.text',
-                       'test/testcases/span/text_substitutions/typography.text',
-                       ('test/testcases/span/03_codespan/rouge/simple.text' if RUBY_VERSION < '2.0'),
-                       ('test/testcases/span/03_codespan/rouge/disabled.text' if RUBY_VERSION < '2.0'),
-                       ('test/testcases/block/06_codeblock/rouge/simple.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                       ('test/testcases/block/06_codeblock/rouge/disabled.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                       ('test/testcases/block/06_codeblock/rouge/multiple.text' if RUBY_VERSION < '2.0'), #bc of rouge
-                       ('test/testcases/block/15_math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
-                       ('test/testcases/span/math/itex2mml.text' if RUBY_PLATFORM == 'java'), # bc of itextomml
-                       ('test/testcases/block/15_math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                       ('test/testcases/block/15_math/mathjaxnode_notexhints.text' unless MATHJAX_NODE_AVAILABLE),
-                       ('test/testcases/block/15_math/mathjaxnode_semantics.text' unless MATHJAX_NODE_AVAILABLE),
-                       ('test/testcases/span/math/mathjaxnode.text' unless MATHJAX_NODE_AVAILABLE),
-                       ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
-                       ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
-                       ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
-                       ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
-                      ].compact
-
-  # Generate test methods for gfm-to-html conversion
-  Dir[File.dirname(__FILE__) + '/{testcases,testcases_gfm}/**/*.text'].each do |text_file|
-    next if EXCLUDE_GFM_FILES.any? {|f| text_file =~ /#{f}$/}
-    basename = text_file.sub(/\.text$/, '')
-
-    html_file = [(".html.19" if RUBY_VERSION >= '1.9'), ".html"].compact.
-      map {|ext| basename + ext }.
-      detect {|file| File.exist?(file) }
-    next unless html_file
-
-    define_method('test_gfm_' + text_file.tr('.', '_') + "_to_html") do
-      opts_file = basename + '.options'
-      opts_file = File.join(File.dirname(html_file), 'options') if !File.exist?(opts_file)
-      options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
-      doc = Kramdown::Document.new(File.read(text_file), options.merge(:input => 'GFM'))
-      assert_equal(File.read(html_file), doc.to_html)
-    end
-  end
-
-
   EXCLUDE_PDF_MODIFY = ['test/testcases/span/text_substitutions/entities.text',
                         'test/testcases/span/text_substitutions/entities_numeric.text',
                         'test/testcases/span/text_substitutions/entities_as_char.text',
@@ -423,10 +268,6 @@ class TestFiles < Minitest::Test
                        ].compact
 
   EXCLUDE_MODIFY = ['test/testcases/block/06_codeblock/rouge/multiple.text', # bc of HTMLFormater in options
-                    ('test/testcases/block/15_math/sskatex.text' unless SSKATEX_AVAILABLE),
-                    ('test/testcases/span/math/sskatex.text' unless SSKATEX_AVAILABLE),
-                    ('test/testcases/block/15_math/katex.text' unless KATEX_AVAILABLE),
-                    ('test/testcases/span/math/katex.text' unless KATEX_AVAILABLE),
                    ].compact
 
   # Generate test methods for asserting that converters don't modify the document tree.

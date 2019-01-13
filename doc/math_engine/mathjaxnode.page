@@ -4,25 +4,10 @@ title: Mathjax-Node
 
 ## Math Engine Mathjax-Node
 
+This math engine was built-in until kramdown 2.0 and since then is available through the
+[`kramdown-math-mathjaxnode` gem](https://github.com/kramdown/math-mathjaxnode).
+
 [Mathjax-Node](https://github.com/mathjax/MathJax-node) converts TeX math formulas into MathML and
 can be used together with the [HTML converter](../converter/html.html).
 
-To use Mathjax-Node, set the option ['math_engine'](../options.html#option-math-engine) to
-'mathjaxnode' and make sure that both [Node.js](https://nodejs.org/) and Mathjax-Node are available.
-The Mathjax-Node library can be installed, e.g., via npm by running `npm install -g mathjax-node`.
-Instructions for installing Node.js can be found in the [joyent/node
-wiki](https://github.com/joyent/node/wiki/Installation).
-
-The Mathjax-Node engine supports the following keys of the option
-['math_engine_opts'](../options.html#option-math-engine-opts):
-
-semantics
-: Specifies whether TeX code should be added in a `<semantics>` tag. It defaults to `false` but if
-  set to `true`, a `<semantics>` tag with the LaTeX code itself is added.
-
-texhints
-: Specifies whether TeX-specific classes should be added. It defaults to `true` but if set to
-  `false`, the TeX-specific classes, like `MJX-TeXAtom-ORD`, will not be added. These classes
-  provide styling hints to the MathJax browser library.
-
-The mathjax-node library is released under the Apache License, Version 2.0.
+See <https://github.com/kramdown/math-mathjaxnode> for documentation!

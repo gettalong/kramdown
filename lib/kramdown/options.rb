@@ -315,86 +315,6 @@ Default: 1
 Used by: HTML converter
 EOF
 
-    define(:enable_coderay, Boolean, true, <<EOF)
-Use coderay for syntax highlighting
-
-If this option is `true`, coderay is used by the HTML converter for
-syntax highlighting the content of code spans and code blocks.
-
-Default: true
-Used by: HTML converter
-EOF
-
-    define(:coderay_wrap, Symbol, :div, <<EOF)
-Defines how the highlighted code should be wrapped
-
-The possible values are :span, :div or nil.
-
-Default: :div
-Used by: HTML converter
-EOF
-
-    define(:coderay_line_numbers, Symbol, :inline, <<EOF)
-Defines how and if line numbers should be shown
-
-The possible values are :table, :inline or nil. If this option is
-nil, no line numbers are shown.
-
-Default: :inline
-Used by: HTML converter
-EOF
-
-    define(:coderay_line_number_start, Integer, 1, <<EOF)
-The start value for the line numbers
-
-Default: 1
-Used by: HTML converter
-EOF
-
-    define(:coderay_tab_width, Integer, 8, <<EOF)
-The tab width used in highlighted code
-
-Used by: HTML converter
-EOF
-
-    define(:coderay_bold_every, Object, 10, <<EOF) do |val|
-Defines how often a line number should be made bold
-
-Can either be an integer or false (to turn off bold line numbers
-completely).
-
-Default: 10
-Used by: HTML converter
-EOF
-      if val == false || val.to_s == 'false'
-        false
-      else
-        Integer(val.to_s) rescue raise Kramdown::Error, "Invalid value for option 'coderay_bold_every'"
-      end
-end
-
-    define(:coderay_css, Symbol, :style, <<EOF)
-Defines how the highlighted code gets styled
-
-Possible values are :class (CSS classes are applied to the code
-elements, one must supply the needed CSS file) or :style (default CSS
-styles are directly applied to the code elements).
-
-Default: style
-Used by: HTML converter
-EOF
-
-    define(:coderay_default_lang, Symbol, nil, <<EOF)
-Sets the default language for highlighting code blocks
-
-If no language is set for a code block, the default language is used
-instead. The value has to be one of the languages supported by coderay
-or nil if no default language should be used.
-
-Default: nil
-Used by: HTML converter
-EOF
-
     define(:entity_output, Symbol, :as_char, <<EOF)
 Defines how entities are output
 
@@ -535,17 +455,7 @@ Default: 0
 Used by: HTML converter, Kramdown converter, Latex converter
 EOF
 
-    define(:hard_wrap, Boolean, true, <<EOF)
-Interprets line breaks literally
-
-Insert HTML `<br />` tags inside paragraphs where the original Markdown
-document had newlines (by default, Markdown ignores these newlines).
-
-Default: true
-Used by: GFM parser
-EOF
-
-    define(:syntax_highlighter, Symbol, :coderay, <<EOF)
+    define(:syntax_highlighter, Symbol, :rouge, <<EOF)
 Set the syntax highlighter
 
 Specifies the syntax highlighter that should be used for highlighting
@@ -555,7 +465,7 @@ highlighting is done.
 Options for the syntax highlighter can be set with the
 syntax_highlighter_opts configuration option.
 
-Default: coderay
+Default: rouge
 Used by: HTML/Latex converter
 EOF
 
@@ -639,42 +549,6 @@ created.
 Default: false
 Used by: HTML converter
 EOF
-
-    define(:gfm_quirks, Object, [:paragraph_end], <<EOF) do |val|
-Enables a set of GFM specific quirks
-
-The way how GFM is transformed on Github often differs from the way
-kramdown does things. Many of these differences are negligible but
-others are not.
-
-This option allows one to enable/disable certain GFM quirks, i.e. ways
-in which GFM parsing differs from kramdown parsing.
-
-The value has to be a list of quirk names that should be enabled,
-separated by commas. Possible names are:
-
-* paragraph_end
-
-  Disables the kramdown restriction that at least one blank line has to
-  be used after a paragraph before a new block element can be started.
-
-  Note that if this quirk is used, lazy line wrapping does not fully
-  work anymore!
-
-* no_auto_typographic
-
-  Disables automatic conversion of some characters into their
-  corresponding typographic symbols (like `--` to em-dash etc).
-  This helps to achieve results closer to what GitHub Flavored
-  Markdown produces.
-
-Default: paragraph_end
-Used by: GFM parser
-EOF
-      val = simple_array_validator(val, :gfm_quirks)
-      val.map! {|v| str_to_sym(v.to_s)}
-      val
-    end
 
   end
 
