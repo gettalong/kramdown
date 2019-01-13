@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -11,8 +11,8 @@ require 'strscan'
 require 'stringio'
 require 'kramdown/parser'
 
-#TODO: use [[:alpha:]] in all regexp to allow parsing of international values in 1.9.1
-#NOTE: use @src.pre_match only before other check/match?/... operations, otherwise the content is changed
+# TODO: use [[:alpha:]] in all regexp to allow parsing of international values in 1.9.1
+# NOTE: use @src.pre_match only before other check/match?/... operations, otherwise the content is changed
 
 module Kramdown
 
@@ -74,14 +74,13 @@ module Kramdown
 
         @block_parsers = [:blank_line, :codeblock, :codeblock_fenced, :blockquote, :atx_header,
                           :horizontal_rule, :list, :definition_list, :block_html, :setext_header,
-                          :block_math, :table, :footnote_definition, :link_definition, :abbrev_definition,
-                          :block_extensions, :eob_marker, :paragraph]
-        @span_parsers =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link, :smart_quotes, :inline_math,
-                         :span_extensions, :html_entity, :typographic_syms, :line_break, :escaped_chars]
-
+                          :block_math, :table, :footnote_definition, :link_definition,
+                          :abbrev_definition, :block_extensions, :eob_marker, :paragraph]
+        @span_parsers =  [:emphasis, :codespan, :autolink, :span_html, :footnote_marker, :link,
+                          :smart_quotes, :inline_math, :span_extensions, :html_entity,
+                          :typographic_syms, :line_break, :escaped_chars]
       end
       private_class_method(:new, :allocate)
-
 
       # The source string provided on initialization is parsed into the @root element.
       def parse
@@ -90,7 +89,7 @@ module Kramdown
         update_tree(@root)
         correct_abbreviations_attributes
         replace_abbreviations(@root)
-        @footnotes.each do |name,data|
+        @footnotes.each do |_name, data|
           update_tree(data[:content])
           replace_abbreviations(data[:content])
         end
@@ -101,9 +100,7 @@ module Kramdown
         end
       end
 
-      #######
       protected
-      #######
 
       # :doc:
       #
@@ -113,7 +110,7 @@ module Kramdown
       # The parameter +link_defs+ is a hash where the keys are possibly unnormalized link IDs and
       # the values are two element arrays consisting of the link target and a title (can be +nil+).
       def update_link_definitions(link_defs)
-        link_defs.each {|k,v| @link_defs[normalize_link_id(k)] = v}
+        link_defs.each {|k, v| @link_defs[normalize_link_id(k)] = v }
       end
 
       # Adapt the object to allow parsing like specified in the options.
@@ -131,7 +128,7 @@ module Kramdown
 
       # Create the needed span parser regexps.
       def span_parser_regexps(parsers = @span_parsers)
-        span_start = /#{parsers.map {|name| @parsers[name].span_start}.join('|')}/
+        span_start = /#{parsers.map {|name| @parsers[name].span_start }.join('|')}/
         [span_start, /(?=#{span_start})/]
       end
 
@@ -142,7 +139,7 @@ module Kramdown
         @src = (text.nil? ? @src : ::Kramdown::Utils::StringScanner.new(text, el.options[:location]))
 
         status = catch(:stop_block_parsing) do
-          while !@src.eos?
+          until @src.eos?
             @block_parsers.any? do |name|
               if @src.check(@parsers[name].start_re)
                 send(@parsers[name].method)
@@ -167,8 +164,8 @@ module Kramdown
         element.children.map! do |child|
           if child.type == :raw_text
             last_blank = nil
-            reset_env(:src => ::Kramdown::Utils::StringScanner.new(child.value, element.options[:location]),
-                      :text_type => :text)
+            reset_env(src: ::Kramdown::Utils::StringScanner.new(child.value, element.options[:location]),
+                      text_type: :text)
             parse_spans(child)
             child.children
           elsif child.type == :eob
@@ -212,12 +209,12 @@ module Kramdown
         span_start = @span_start
         span_start_re = @span_start_re
         span_start, span_start_re = span_parser_regexps(parsers) if parsers
-        parsers = parsers || @span_parsers
+        parsers ||= @span_parsers
 
         used_re = (stop_re.nil? ? span_start_re : /(?=#{Regexp.union(stop_re, span_start)})/)
         stop_re_found = false
         while !@src.eos? && !stop_re_found
-          if result = @src.scan_until(used_re)
+          if (result = @src.scan_until(used_re))
             add_text(result)
             if stop_re && @src.check(stop_re)
               stop_re_found = (block_given? ? yield : true)
@@ -245,7 +242,7 @@ module Kramdown
       # Reset the current parsing environment. The parameter +env+ can be used to set initial
       # values for one or more environment variables.
       def reset_env(opts = {})
-        opts = {:text_type => :raw_text, :stack => []}.merge(opts)
+        opts = {text_type: :raw_text, stack: []}.merge(opts)
         @src = opts[:src]
         @tree = opts[:tree]
         @block_ial = opts[:block_ial]
@@ -255,24 +252,23 @@ module Kramdown
 
       # Return the current parsing environment.
       def save_env
-        [@src, @tree, @block_ial, @stack,  @text_type]
+        [@src, @tree, @block_ial, @stack, @text_type]
       end
 
       # Restore the current parsing environment.
       def restore_env(env)
-        @src, @tree, @block_ial, @stack,  @text_type = *env
+        @src, @tree, @block_ial, @stack, @text_type = *env
       end
 
       # Update the given attributes hash +attr+ with the information from the inline attribute list
       # +ial+ and all referenced ALDs.
       def update_attr_with_ial(attr, ial)
-        ial[:refs].each do |ref|
-          update_attr_with_ial(attr, ref) if ref = @alds[ref]
-        end if ial[:refs]
-        ial.each do |k,v|
+        ial[:refs]&.each do |ref|
+          update_attr_with_ial(attr, ref) if (ref = @alds[ref])
+        end
+        ial.each do |k, v|
           if k == IAL_CLASS_ATTR
-            attr[k] = (attr[k] || '') << " #{v}"
-            attr[k].lstrip!
+            attr[k] = "#{attr[k]} #{v}".lstrip
           elsif k.kind_of?(String)
             attr[k] = v
           end
@@ -281,13 +277,13 @@ module Kramdown
 
       # Update the raw text for automatic ID generation.
       def update_raw_text(item)
-        raw_text = ''
+        raw_text = +''
 
         append_text = lambda do |child|
           if child.type == :text
             raw_text << child.value
           else
-            child.children.each {|c| append_text.call(c)}
+            child.children.each {|c| append_text.call(c) }
           end
         end
 
@@ -306,7 +302,7 @@ module Kramdown
         el
       end
 
-      @@parsers = {}
+      @parsers = {}
 
       # Struct class holding all the needed data for one block/span-level parser method.
       Data = Struct.new(:name, :start_re, :span_start, :method)
@@ -321,18 +317,18 @@ module Kramdown
       # to the registry. The method name is automatically derived from the +name+ or can explicitly
       # be set by using the +meth_name+ parameter.
       def self.define_parser(name, start_re, span_start = nil, meth_name = "parse_#{name}")
-        raise "A parser with the name #{name} already exists!" if @@parsers.has_key?(name)
-        @@parsers[name] = Data.new(name, start_re, span_start, meth_name)
+        raise "A parser with the name #{name} already exists!" if @parsers.key?(name)
+        @parsers[name] = Data.new(name, start_re, span_start, meth_name)
       end
 
       # Return the Data structure for the parser +name+.
       def self.parser(name = nil)
-        @@parsers[name]
+        @parsers[name]
       end
 
       # Return +true+ if there is a parser called +name+.
       def self.has_parser?(name)
-        @@parsers.has_key?(name)
+        @parsers.key?(name)
       end
 
       # Regexp for matching indentation (one tab or four spaces)

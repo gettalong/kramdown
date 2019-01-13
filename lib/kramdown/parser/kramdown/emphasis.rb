@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -23,18 +23,18 @@ module Kramdown
         type = result[0..0]
 
         if (type == '_' && @src.pre_match =~ /[[:alpha:]-]\z/) || @src.check(/\s/) ||
-            @tree.type == element || @stack.any? {|el, _| el.type == element}
+            @tree.type == element || @stack.any? {|el, _| el.type == element }
           add_text(result)
           return
         end
 
         sub_parse = lambda do |delim, elem|
-          el = Element.new(elem, nil, nil, :location => start_line_number)
+          el = Element.new(elem, nil, nil, location: start_line_number)
           stop_re = /#{Regexp.escape(delim)}/
           found = parse_spans(el, stop_re) do
             (@src.pre_match[-1, 1] !~ /\s/) &&
-              (elem != :em || !@src.match?(/#{Regexp.escape(delim*2)}(?!#{Regexp.escape(delim)})/)) &&
-              (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alnum:]]/)) && el.children.size > 0
+              (elem != :em || !@src.match?(/#{Regexp.escape(delim * 2)}(?!#{Regexp.escape(delim)})/)) &&
+              (type != '_' || !@src.match?(/#{Regexp.escape(delim)}[[:alnum:]]/)) && !el.children.empty?
           end
           [found, el, stop_re]
         end

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -17,7 +17,7 @@ module Kramdown
       def parse_horizontal_rule
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
-        @tree.children << new_block_el(:hr, nil, nil, :location => start_line_number)
+        @tree.children << new_block_el(:hr, nil, nil, location: start_line_number)
         true
       end
       define_parser(:horizontal_rule, HR_START)

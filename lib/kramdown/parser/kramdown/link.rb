@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -25,13 +25,14 @@ module Kramdown
         return false if @src[3].to_s =~ /[ \t]+["']/
         @src.pos += @src.matched_size
         link_id, link_url, link_title = normalize_link_id(@src[1]), @src[2] || @src[3], @src[5]
-        warning("Duplicate link ID '#{link_id}' on line #{@src.current_line_number} - overwriting") if @link_defs[link_id]
+        if @link_defs[link_id]
+          warning("Duplicate link ID '#{link_id}' on line #{@src.current_line_number} - overwriting")
+        end
         @tree.children << new_block_el(:eob, :link_def)
         @link_defs[link_id] = [link_url, link_title, @tree.children.last]
         true
       end
       define_parser(:link_definition, LINK_DEFINITION_START)
-
 
       # This helper methods adds the approriate attributes to the element +el+ of type +a+ or +img+
       # and the element itself to the @tree.
@@ -66,16 +67,17 @@ module Kramdown
         link_type = (result =~ /^!/ ? :img : :a)
 
         # no nested links allowed
-        if link_type == :a && (@tree.type == :img || @tree.type == :a || @stack.any? {|t,s| t && (t.type == :img || t.type == :a)})
+        if link_type == :a && (@tree.type == :img || @tree.type == :a ||
+                               @stack.any? {|t, _| t && (t.type == :img || t.type == :a) })
           add_text(result)
           return
         end
-        el = Element.new(link_type, nil, nil, :location => start_line_number)
+        el = Element.new(link_type, nil, nil, location: start_line_number)
 
         count = 1
         found = parse_spans(el, LINK_BRACKET_STOP_RE) do
-          count = count + (@src[1] ? -1 : 1)
-          count - el.children.select {|c| c.type == :img}.size == 0
+          count += (@src[1] ? -1 : 1)
+          count - el.children.select {|c| c.type == :img }.size == 0
         end
         unless found
           @src.revert_pos(saved_pos)
@@ -89,7 +91,7 @@ module Kramdown
         if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
           emit_warning = !@src[1]
           link_id = normalize_link_id(@src[1] || alt_text)
-          if @link_defs.has_key?(link_id)
+          if @link_defs.key?(link_id)
             add_link(el, @link_defs[link_id][0], @link_defs[link_id][1], alt_text,
                      @link_defs[link_id][2] && @link_defs[link_id][2].options[:ial])
           else
@@ -110,9 +112,9 @@ module Kramdown
             return
           end
         else
-          link_url = ''
+          link_url = +''
           nr_of_brackets = 0
-          while temp = @src.scan_until(LINK_PAREN_STOP_RE)
+          while (temp = @src.scan_until(LINK_PAREN_STOP_RE))
             link_url << temp
             if @src[2]
               nr_of_brackets -= 1

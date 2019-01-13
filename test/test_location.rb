@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -7,14 +7,12 @@
 #++
 #
 
-
 require 'minitest/autorun'
 require 'kramdown'
 
-Encoding.default_external = 'utf-8' if RUBY_VERSION >= '1.9'
+Encoding.default_external = 'utf-8'
 
 describe 'location' do
-
   # checks that +element+'s :location option corresponds to the location stored
   # in the element.attr['class']
   def check_element_for_location(element)
@@ -176,7 +174,7 @@ describe 'location' do
     ),
   }
   test_cases.each do |name, test_string|
-    it "Handles #{ name }" do
+    it "Handles #{name}" do
       doc = Kramdown::Document.new(test_string.gsub(/^      /, '').strip)
       check_element_for_location(doc.root)
     end
@@ -195,7 +193,7 @@ describe 'location' do
   it 'handles abbreviations' do
     str = "This *is* ABC and\n**and** ABC second\nanother ABC\nas ABC as\nABC at the end.\n\n*[ABC]: ABC"
     doc = Kramdown::Document.new(str)
-    doc.root.children.first.children.select {|e| e.type == :abbreviation}.each_with_index do |e, i|
+    doc.root.children.first.children.select {|e| e.type == :abbreviation }.each_with_index do |e, i|
       assert_equal(i + 1, e.options[:location])
     end
   end
@@ -203,7 +201,7 @@ describe 'location' do
   it 'handles line breaks' do
     str = "First  \nsecond\\\\\nthird  \n"
     doc = Kramdown::Document.new(str)
-    doc.root.children.first.children.select {|e| e.type == :br}.each_with_index do |e, i|
+    doc.root.children.first.children.select {|e| e.type == :br }.each_with_index do |e, i|
       assert_equal(i + 1, e.options[:location])
     end
   end
@@ -211,8 +209,8 @@ describe 'location' do
   it 'handles smart quotes' do
     str = "This is 'first'\nand 'second' and\n'third'"
     doc = Kramdown::Document.new(str)
-    doc.root.children.first.children.select {|e| e.type == :smart_quote}.each_with_index do |e, i|
-      assert_equal(((i + 1) /2.0).ceil, e.options[:location])
+    doc.root.children.first.children.select {|e| e.type == :smart_quote }.each_with_index do |e, i|
+      assert_equal(((i + 1) / 2.0).ceil, e.options[:location])
     end
   end
 end

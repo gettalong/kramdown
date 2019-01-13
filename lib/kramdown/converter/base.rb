@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -101,10 +101,16 @@ module Kramdown
       def self.convert(tree, options = {})
         converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))
 
-        apply_template(converter, '') if !converter.options[:template].empty? && converter.apply_template_before?
+        if !converter.options[:template].empty? && converter.apply_template_before?
+          apply_template(converter, '')
+        end
         result = converter.convert(tree)
-        result.encode!(tree.options[:encoding]) if result.respond_to?(:encode!) && result.encoding != Encoding::BINARY
-        result = apply_template(converter, result) if !converter.options[:template].empty? && converter.apply_template_after?
+        if result.respond_to?(:encode!) && result.encoding != Encoding::BINARY
+          result.encode!(tree.options[:encoding])
+        end
+        if !converter.options[:template].empty? && converter.apply_template_after?
+          result = apply_template(converter, result)
+        end
 
         [result, converter.warnings]
       end
@@ -112,7 +118,7 @@ module Kramdown
       # Convert the element +el+ and return the resulting object.
       #
       # This is the only method that has to be implemented by sub-classes!
-      def convert(el)
+      def convert(_el)
         raise NotImplementedError
       end
 
@@ -125,28 +131,11 @@ module Kramdown
         obj = Object.new
         obj.instance_variable_set(:@converter, converter)
         obj.instance_variable_set(:@body, body)
-        erb.result(obj.instance_eval{binding})
+        erb.result(obj.instance_eval { binding })
       end
 
       # Return the template specified by +template+.
-      def self.get_template(template)
-        #DEPRECATED: use content of #get_template_new in 2.0
-        format_ext = '.' + self.name.split(/::/).last.downcase
-        shipped = File.join(::Kramdown.data_dir, template + format_ext)
-        if File.exist?(template)
-          File.read(template)
-        elsif File.exist?(template + format_ext)
-          File.read(template + format_ext)
-        elsif File.exist?(shipped)
-          File.read(shipped)
-        elsif template.start_with?('string://')
-          template.sub(/\Astring:\/\//, '')
-        else
-          get_template_new(template)
-        end
-      end
-
-      def self.get_template_new(template) # :nodoc:
+      def self.get_template(template) # :nodoc:
         format_ext = '.' + ::Kramdown::Utils.snake_case(self.name.split(/::/).last)
         shipped = File.join(::Kramdown.data_dir, template + format_ext)
         if File.exist?(template)
@@ -232,10 +221,10 @@ module Kramdown
       def generate_id(str)
         str = ::Kramdown::Utils::Unidecoder.decode(str) if @options[:transliterated_header_ids]
         gen_id = basic_generate_id(str)
-        gen_id = 'section' if gen_id.length == 0
+        gen_id = 'section' if gen_id.empty?
         @used_ids ||= {}
-        if @used_ids.has_key?(gen_id)
-          gen_id += '-' << (@used_ids[gen_id] += 1).to_s
+        if @used_ids.key?(gen_id)
+          gen_id += "-#{@used_ids[gen_id] += 1}"
         else
           @used_ids[gen_id] = 0
         end
@@ -252,7 +241,7 @@ module Kramdown
         gen_id
       end
 
-      SMART_QUOTE_INDICES = {:lsquo => 0, :rsquo => 1, :ldquo => 2, :rdquo => 3} # :nodoc:
+      SMART_QUOTE_INDICES = {lsquo: 0, rsquo: 1, ldquo: 2, rdquo: 3} # :nodoc:
 
       # Return the entity that represents the given smart_quote element.
       def smart_quote_entity(el)

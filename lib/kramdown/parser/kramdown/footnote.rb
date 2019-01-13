@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -22,16 +22,17 @@ module Kramdown
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
 
-        el = Element.new(:footnote_def, nil, nil, :location => start_line_number)
+        el = Element.new(:footnote_def, nil, nil, location: start_line_number)
         parse_blocks(el, @src[2].gsub(INDENT, ''))
-        warning("Duplicate footnote name '#{@src[1]}' on line #{start_line_number} - overwriting") if @footnotes[@src[1]]
+        if @footnotes[@src[1]]
+          warning("Duplicate footnote name '#{@src[1]}' on line #{start_line_number} - overwriting")
+        end
         @tree.children << new_block_el(:eob, :footnote_def)
         (@footnotes[@src[1]] = {})[:content] = el
         @footnotes[@src[1]][:eob] = @tree.children.last
         true
       end
       define_parser(:footnote_definition, FOOTNOTE_DEFINITION_START)
-
 
       FOOTNOTE_MARKER_START = /\[\^(#{ALD_ID_NAME})\]/
 
@@ -49,7 +50,7 @@ module Kramdown
           end
           fn_def[:marker] ||= []
           fn_def[:marker].push(Element.new(:footnote, fn_def[:content], fn_def[:attr],
-                                           fn_def[:options].merge(:name => @src[1], :location => start_line_number)))
+                                           fn_def[:options].merge(name: @src[1], location: start_line_number)))
           @tree.children << fn_def[:marker].last
         else
           warning("Footnote definition for '#{@src[1]}' not found on line #{start_line_number}")

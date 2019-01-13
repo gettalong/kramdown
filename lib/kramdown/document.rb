@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -47,15 +47,14 @@ module Kramdown
 
   # Return the data directory for kramdown.
   def self.data_dir
-    unless defined?(@@data_dir)
+    unless defined?(@data_dir)
       require 'rbconfig'
-      @@data_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data', 'kramdown'))
-      @@data_dir = File.expand_path(File.join(RbConfig::CONFIG["datadir"], "kramdown")) if !File.exist?(@@data_dir)
-      raise "kramdown data directory not found! This is a bug, please report it!" unless File.directory?(@@data_dir)
+      @data_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data', 'kramdown'))
+      @data_dir = File.expand_path(File.join(RbConfig::CONFIG["datadir"], "kramdown")) unless File.exist?(@data_dir)
+      raise "kramdown data directory not found! This is a bug, please report it!" unless File.directory?(@data_dir)
     end
-    @@data_dir
+    @data_dir
   end
-
 
   # The main interface to kramdown.
   #
@@ -84,7 +83,6 @@ module Kramdown
     # ::new) and the conversion phase.
     attr_reader :warnings
 
-
     # Create a new Kramdown document from the string +source+ and use the provided +options+. The
     # options that can be used are defined in the Options module.
     #
@@ -103,7 +101,8 @@ module Kramdown
       if Parser.const_defined?(parser)
         @root, @warnings = Parser.const_get(parser).parse(source, @options)
       else
-        raise Kramdown::Error.new("kramdown has no parser to handle the specified input format: #{@options[:input]}")
+        raise Kramdown::Error, "kramdown has no parser to handle the specified " \
+          "input format: #{@options[:input]}"
       end
     end
 
@@ -138,4 +137,3 @@ module Kramdown
   end
 
 end
-

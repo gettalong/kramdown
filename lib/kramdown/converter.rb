@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -41,7 +41,7 @@ module Kramdown
         if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
           add_syntax_highlighter(kn_down, klass)
         else
-          add_syntax_highlighter(kn_down) {|*args| nil}
+          add_syntax_highlighter(kn_down) { nil }
         end
         syntax_highlighter(kn_down).call(converter, text, lang, type, opts)
       end
@@ -57,7 +57,7 @@ module Kramdown
         if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
           add_math_engine(kn_down, klass)
         else
-          add_math_engine(kn_down) {|*args| nil}
+          add_math_engine(kn_down) { nil }
         end
         math_engine(kn_down).call(converter, el, opts)
       end

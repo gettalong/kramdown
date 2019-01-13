@@ -19,27 +19,25 @@ begin
 
   class RDoc::RDoc
 
-    alias :old_parse_files :parse_files
+    alias old_parse_files parse_files
 
     def parse_files(options)
       file_info = old_parse_files(options)
       require 'kramdown/options'
 
       # Add options documentation to Kramdown::Options module
-      opt_module = @store.all_classes_and_modules.find {|m| m.full_name == 'Kramdown::Options'}
+      opt_module = @store.all_classes_and_modules.find {|m| m.full_name == 'Kramdown::Options' }
       opt_defs = Kramdown::Options.definitions.sort.collect do |n, definition|
-        desc = definition.desc.split(/\n/).map {|l| "    #{l}"}
+        desc = definition.desc.split(/\n/).map {|l| "    #{l}" }
         desc[-2] = []
         desc = desc.join("\n")
         "[<tt>#{n}</tt> (type: #{definition.type}, default: #{definition.default.inspect})]\n#{desc}\n\n"
       end
-      opt_module.comment.text += "\n== Available Options\n\n" << opt_defs.join("\n\n")
+      opt_module.comment.text << "\n== Available Options\n\n" << opt_defs.join("\n\n")
 
       file_info
     end
-
   end
-
 rescue LoadError
 end
 
@@ -59,7 +57,7 @@ require 'kramdown'
 
 # End user tasks ################################################################
 
-task :default => :test
+task default: :test
 
 desc "Install using setup.rb"
 task :install do
@@ -92,7 +90,7 @@ end
 
 if defined?(Webgen) && defined?(RDoc::Task)
   desc "Build the whole user documentation"
-  task :doc => [:rdoc, 'htmldoc']
+  task doc: [:rdoc, 'htmldoc']
 end
 
 tt = Rake::TestTask.new do |test|
@@ -104,36 +102,36 @@ end
 # Release tasks and development tasks ############################################
 
 namespace :dev do
-
   SUMMARY = 'kramdown is a fast, pure-Ruby Markdown-superset converter.'
-  DESCRIPTION = <<EOF
-kramdown is yet-another-markdown-parser but fast, pure Ruby,
-using a strict syntax definition and supporting several common extensions.
-EOF
+  DESCRIPTION = <<~EOF
+    kramdown is yet-another-markdown-parser but fast, pure Ruby,
+    using a strict syntax definition and supporting several common extensions.
+  EOF
 
   begin
-    REL_PAGE = Webgen::Page.from_data(File.read('doc/news/release_' + Kramdown::VERSION.split('.').join('_') + '.page'))
-  rescue
+    data = File.read('doc/news/release_' + Kramdown::VERSION.split('.').join('_') + '.page')
+    REL_PAGE = Webgen::Page.from_data(data)
+  rescue StandardError
     puts 'NO RELEASE NOTES/CHANGES FILE'
   end
 
   PKG_FILES = FileList.new([
-                            'AUTHORS',
-                            'bin/*',
-                            'CONTRIBUTERS',
-                            'COPYING',
-                            'data/**/*',
-                            'lib/**/*.rb',
-                            'man/man1/kramdown.1',
-                            'README.md',
-                            'test/**/*',
-                            'VERSION'
+                             'AUTHORS',
+                             'bin/*',
+                             'CONTRIBUTERS',
+                             'COPYING',
+                             'data/**/*',
+                             'lib/**/*.rb',
+                             'man/man1/kramdown.1',
+                             'README.md',
+                             'test/**/*',
+                             'VERSION',
                            ])
 
   CLOBBER << "VERSION"
   file 'VERSION' do
     puts "Generating VERSION file"
-    File.open('VERSION', 'w+') {|file| file.write(Kramdown::VERSION + "\n")}
+    File.write('VERSION', Kramdown::VERSION + "\n")
   end
 
   CLOBBER << 'CONTRIBUTERS'
@@ -161,7 +159,6 @@ EOF
 
   if defined? Gem
     spec = Gem::Specification.new do |s|
-
       #### Basic information
       s.name = 'kramdown'
       s.version = Kramdown::VERSION
@@ -192,11 +189,10 @@ EOF
       s.homepage = "http://kramdown.gettalong.org"
     end
 
-
-    task :gemspec => [ 'CONTRIBUTERS', 'VERSION', 'man/man1/kramdown.1'] do
+    task gemspec: ['CONTRIBUTERS', 'VERSION', 'man/man1/kramdown.1'] do
       print "Generating Gemspec\n"
       contents = spec.to_ruby
-      File.open("kramdown.gemspec", 'w+') {|f| f.puts(contents)}
+      File.write("kramdown.gemspec", contents)
     end
 
     Gem::PackageTask.new(spec) do |pkg|
@@ -208,23 +204,22 @@ EOF
 
   if defined?(Webgen) && defined?(Gem) && defined?(Rake::RDocTask)
     desc 'Release Kramdown version ' + Kramdown::VERSION
-    task :release => [:clobber, :package, :publish_files, :publish_website]
+    task release: [:clobber, :package, :publish_files, :publish_website]
   end
 
   if defined?(Gem)
     desc "Upload the release to Rubygems"
-    task :publish_files => [:package] do
+    task publish_files: [:package] do
       sh "gem push pkg/kramdown-#{Kramdown::VERSION}.gem"
       puts 'done'
     end
   end
 
   desc "Upload the website"
-  task :publish_website => ['doc'] do
+  task publish_website: ['doc'] do
     puts "Transfer manually!!!"
     # sh "rsync -avc --delete --exclude 'MathJax' --exclude 'robots.txt'  htmldoc/ gettalong@rubyforge.org:/var/www/gforge-projects/kramdown/"
   end
-
 
   if defined? Rcov
     Rcov::RcovTask.new do |rcov|
@@ -232,35 +227,33 @@ EOF
     end
   end
 
-  CODING_LINE = "# -*- coding: utf-8 -*-\n"
-  COPYRIGHT=<<EOF
-#
-#--
-# Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
-#
-# This file is part of kramdown which is licensed under the MIT.
-#++
-#
-EOF
+  CODING_LINE = "# -*- coding: utf-8; frozen_string_literal: true -*-\n"
+  COPYRIGHT = <<~EOF
+    #
+    #--
+    # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
+    #
+    # This file is part of kramdown which is licensed under the MIT.
+    #++
+    #
+  EOF
 
   desc "Insert/Update copyright notice"
   task :update_copyright do
     inserted = false
     Dir["lib/**/*.rb", "test/**/*.rb"].each do |file|
-      if !File.read(file).start_with?(CODING_LINE + COPYRIGHT)
+      unless File.read(file).start_with?(CODING_LINE + COPYRIGHT)
         inserted = true
         puts "Updating file #{file}"
         old = File.read(file)
-        if !old.gsub!(/\A#{Regexp.escape(CODING_LINE)}#\n#--.*?\n#\+\+\n#\n/m, CODING_LINE + COPYRIGHT)
-          old.gsub!(/\A(#{Regexp.escape(CODING_LINE)})?/, CODING_LINE + COPYRIGHT + "\n")
-        end
-        File.open(file, 'w+') {|f| f.puts(old)}
+        old.gsub!(/\A.*?\n#\+\+\n#\n/m, CODING_LINE + COPYRIGHT)
+        File.write(file, old)
       end
     end
     puts "Look through the above mentioned files and correct all problems" if inserted
   end
 end
 
-task :gemspec => ['dev:gemspec']
+task gemspec: ['dev:gemspec']
 
-task :clobber => ['dev:clobber']
+task clobber: ['dev:clobber']

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -26,10 +26,11 @@ module Kramdown
       # add_<name>(ext_name, data=nil, &block):: Define an extension +ext_name+ by specifying either
       #                                          the data as argument or by using a block.
       def configurable(name)
-        singleton_class = (class << self; self; end)
-        singleton_class.send(:define_method, :configurables) do
-          @_configurables ||= Hash.new {|h, k| h[k] = {}}
-        end unless respond_to?(:configurables)
+        unless respond_to?(:configurables)
+          singleton_class.send(:define_method, :configurables) do
+            @_configurables ||= Hash.new {|h, k| h[k] = {} }
+          end
+        end
         singleton_class.send(:define_method, name) do |data|
           configurables[name][data]
         end

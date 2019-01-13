@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -15,7 +15,7 @@ module Kramdown
 
       # Parse the line break at the current location.
       def parse_line_break
-        @tree.children << Element.new(:br, nil, nil, :location => @src.current_line_number)
+        @tree.children << Element.new(:br, nil, nil, location: @src.current_line_number)
         @src.pos += @src.matched_size
       end
       define_parser(:line_break, LINE_BREAK, '(  |\\\\)(?=\n)')

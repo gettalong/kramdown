@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -17,17 +17,17 @@ module Kramdown::Converter::MathEngine
 
     def self.call(converter, el, opts)
       type = el.options[:category]
-      text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value)
+      text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value).dup
       text.gsub!(/<\/?script>?/, '')
 
-      preview = preview_string(converter, el, opts)
+      preview = preview_string(converter, el, opts).dup
 
-      attr = {:type => "math/tex#{type == :block ? '; mode=display' : ''}"}
-      if type == :block
-        preview << converter.format_as_block_html('script', attr, text, opts[:indent])
-      else
-        preview << converter.format_as_span_html('script', attr, text)
-      end
+      attr = {type: "math/tex#{type == :block ? '; mode=display' : ''}"}
+      preview << if type == :block
+                   converter.format_as_block_html('script', attr, text, opts[:indent])
+                 else
+                   converter.format_as_span_html('script', attr, text)
+                 end
     end
 
     def self.preview_string(converter, el, opts)

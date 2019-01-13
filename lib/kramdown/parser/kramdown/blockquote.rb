@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -21,18 +21,17 @@ module Kramdown
       def parse_blockquote
         start_line_number = @src.current_line_number
         result = @src.scan(PARAGRAPH_MATCH)
-        while !@src.match?(self.class::LAZY_END)
+        until @src.match?(self.class::LAZY_END)
           result << @src.scan(PARAGRAPH_MATCH)
         end
         result.gsub!(BLOCKQUOTE_START, '')
 
-        el = new_block_el(:blockquote, nil, nil, :location => start_line_number)
+        el = new_block_el(:blockquote, nil, nil, location: start_line_number)
         @tree.children << el
         parse_blocks(el, result)
         true
       end
       define_parser(:blockquote, BLOCKQUOTE_START)
-
 
     end
   end

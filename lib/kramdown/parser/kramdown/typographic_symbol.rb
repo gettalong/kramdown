@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -16,7 +16,7 @@ module Kramdown
                           ['<< ', :laquo_space], [' >>', :raquo_space],
                           ['<<', :laquo], ['>>', :raquo]]
       TYPOGRAPHIC_SYMS_SUBST = Hash[*TYPOGRAPHIC_SYMS.flatten]
-      TYPOGRAPHIC_SYMS_RE = /#{TYPOGRAPHIC_SYMS.map {|k,v| Regexp.escape(k)}.join('|')}/
+      TYPOGRAPHIC_SYMS_RE = /#{TYPOGRAPHIC_SYMS.map {|k, _v| Regexp.escape(k) }.join('|')}/
 
       # Parse the typographic symbols at the current location.
       def parse_typographic_syms
@@ -24,17 +24,17 @@ module Kramdown
         @src.pos += @src.matched_size
         val = TYPOGRAPHIC_SYMS_SUBST[@src.matched]
         if val.kind_of?(Symbol)
-          @tree.children << Element.new(:typographic_sym, val, nil, :location => start_line_number)
+          @tree.children << Element.new(:typographic_sym, val, nil, location: start_line_number)
         elsif @src.matched == '\\<<'
           @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('lt'),
-                                        nil, :location => start_line_number)
+                                        nil, location: start_line_number)
           @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('lt'),
-                                        nil, :location => start_line_number)
+                                        nil, location: start_line_number)
         else
           @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('gt'),
-                                        nil, :location => start_line_number)
+                                        nil, location: start_line_number)
           @tree.children << Element.new(:entity, ::Kramdown::Utils::Entities.entity('gt'),
-                                        nil, :location => start_line_number)
+                                        nil, location: start_line_number)
         end
       end
       define_parser(:typographic_syms, TYPOGRAPHIC_SYMS_RE, '--|\\.\\.\\.|(?:\\\\| )?(?:<<|>>)')

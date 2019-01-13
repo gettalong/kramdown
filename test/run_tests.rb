@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -22,7 +22,7 @@ arg = if File.directory?(arg)
         arg + '.text'
       end
 
-width = ((size = %x{stty size 2>/dev/null}).length > 0 ? size.split.last.to_i : 72) rescue 72
+width = ((size = `stty size 2>/dev/null`).length > 0 ? size.split.last.to_i : 72) rescue 72
 width -= 8
 fwidth = 0
 Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
@@ -31,13 +31,13 @@ Dir[arg].each {|f| fwidth = [fwidth, f.length + 10].max }.each do |file|
 
   html_file = file.sub('.text', '.html')
   opts_file = file.sub('.text', '.options')
-  opts_file = File.join(File.dirname(file), 'options') if !File.exist?(opts_file)
-  options = File.exist?(opts_file) ? YAML::load(File.read(opts_file)) : {:auto_ids => false, :footnote_nr => 1}
+  opts_file = File.join(File.dirname(file), 'options') unless File.exist?(opts_file)
+  options = File.exist?(opts_file) ? YAML.safe_load(File.read(opts_file)) : {auto_ids: false, footnote_nr: 1}
   doc = Kramdown::Document.new(File.read(file), options)
   begin
     assert_equal(File.read(html_file), doc.to_html)
     puts 'PASSED'
-  rescue Exception => e
+  rescue StandardError
     puts '  FAILED'
     puts $!.message if $VERBOSE
     puts $!.backtrace if $DEBUG

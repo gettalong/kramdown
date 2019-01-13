@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -23,11 +23,11 @@ module Kramdown
 
       # Parse the table at the current location.
       def parse_table
-        return false if !after_block_boundary?
+        return false unless after_block_boundary?
 
         saved_pos = @src.save_pos
         orig_pos = @src.pos
-        table = new_block_el(:table, nil, nil, :alignment => [], :location => @src.current_line_number)
+        table = new_block_el(:table, nil, nil, alignment: [], location: @src.current_line_number)
         leading_pipe = (@src.check(TABLE_LINE) =~ /^\s*\|/)
         @src.scan(TABLE_SEP_LINE)
 
@@ -43,21 +43,22 @@ module Kramdown
           end
         end
 
-        while !@src.eos?
-          break if !@src.check(TABLE_LINE)
+        until @src.eos?
+          break unless @src.check(TABLE_LINE)
           if @src.scan(TABLE_SEP_LINE)
             if rows.empty?
               # nothing to do, ignoring multiple consecutive separator lines
             elsif table.options[:alignment].empty? && !has_footer
               add_container.call(:thead, false)
               table.options[:alignment] = @src[1].scan(TABLE_HSEP_ALIGN).map do |left, right|
-                (left.empty? && right.empty? && :default) || (right.empty? && :left) || (left.empty? && :right) || :center
+                (left.empty? && right.empty? && :default) || (right.empty? && :left) ||
+                  (left.empty? && :right) || :center
               end
             else # treat as normal separator line
               add_container.call(:tbody, false)
             end
           elsif @src.scan(TABLE_FSEP_LINE)
-            add_container.call(:tbody, true) if !rows.empty?
+            add_container.call(:tbody, true) unless rows.empty?
             has_footer = true
           elsif @src.scan(TABLE_ROW_LINE)
             trow = Element.new(:tr)
@@ -66,16 +67,16 @@ module Kramdown
             env = save_env
             cells = []
             @src[1].split(/(<code.*?>.*?<\/code>)/).each_with_index do |str, i|
-              if i % 2 == 1
+              if i.odd?
                 (cells.empty? ? cells : cells.last) << str
               else
-                reset_env(:src => Kramdown::Utils::StringScanner.new(str, @src.current_line_number))
+                reset_env(src: Kramdown::Utils::StringScanner.new(str, @src.current_line_number))
                 root = Element.new(:root)
                 parse_spans(root, nil, [:codespan])
 
                 root.children.each do |c|
                   if c.type == :raw_text
-                    f, *l = c.value.split(/(?<!\\)\|/, -1).map {|t| t.gsub(/\\\|/, '|')}
+                    f, *l = c.value.split(/(?<!\\)\|/, -1).map {|t| t.gsub(/\\\|/, '|') }
                     (cells.empty? ? cells : cells.last) << f
                     cells.concat(l)
                   else
@@ -102,16 +103,16 @@ module Kramdown
           end
         end
 
-        if !before_block_boundary?
+        unless before_block_boundary?
           @src.revert_pos(saved_pos)
           return false
         end
 
         # Parse all lines of the table with the code span parser
         env = save_env
-        l_src = ::Kramdown::Utils::StringScanner.new(extract_string(orig_pos...(@src.pos-1), @src),
+        l_src = ::Kramdown::Utils::StringScanner.new(extract_string(orig_pos...(@src.pos - 1), @src),
                                                      @src.current_line_number)
-        reset_env(:src => l_src)
+        reset_env(src: l_src)
         root = Element.new(:root)
         parse_spans(root, nil, [:codespan, :span_html])
         restore_env(env)
@@ -135,11 +136,11 @@ module Kramdown
             pipe_on_line = (lines.size > 1 ? false : pipe_on_line) || (lines.last =~ /^#{TABLE_PIPE_CHECK}/)
           end
         end
-        @src.revert_pos(saved_pos) and return false if !pipe_on_line
+        @src.revert_pos(saved_pos) and return false unless pipe_on_line
 
-        add_container.call(has_footer ? :tfoot : :tbody, false) if !rows.empty?
+        add_container.call(has_footer ? :tfoot : :tbody, false) unless rows.empty?
 
-        if !table.children.any? {|el| el.type == :tbody}
+        if table.children.none? {|el| el.type == :tbody }
           warning("Found table without body on line #{table.options[:location]} - ignoring it")
           @src.revert_pos(saved_pos)
           return false

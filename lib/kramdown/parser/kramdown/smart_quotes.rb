@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -122,25 +122,25 @@ module Kramdown
       SQ_CLOSE = %![^\ \\\\\t\r\n\\[{(-]!
 
       SQ_RULES = [
-                  [/("|')(?=[_*]{1,2}\S)/, [:lquote1]],
-                  [/("|')(?=#{SQ_PUNCT}(?!\.\.)\B)/, [:rquote1]],
-                  # Special case for double sets of quotes, e.g.:
-                  #   <p>He said, "'Quoted' words in a larger quote."</p>
-                  [/(\s?)"'(?=\w)/, [1, :ldquo, :lsquo]],
-                  [/(\s?)'"(?=\w)/, [1, :lsquo, :ldquo]],
-                  # Special case for decade abbreviations (the '80s):
-                  [/(\s?)'(?=\d\ds)/, [1, :rsquo]],
+        [/("|')(?=[_*]{1,2}\S)/, [:lquote1]],
+        [/("|')(?=#{SQ_PUNCT}(?!\.\.)\B)/, [:rquote1]],
+        # Special case for double sets of quotes, e.g.:
+        #   <p>He said, "'Quoted' words in a larger quote."</p>
+        [/(\s?)"'(?=\w)/, [1, :ldquo, :lsquo]],
+        [/(\s?)'"(?=\w)/, [1, :lsquo, :ldquo]],
+        # Special case for decade abbreviations (the '80s):
+        [/(\s?)'(?=\d\ds)/, [1, :rsquo]],
 
-                  # Get most opening single/double quotes:
-                  [/(\s)('|")(?=\w)/, [1, :lquote2]],
-                  # Single/double closing quotes:
-                  [/(#{SQ_CLOSE})('|")/, [1, :rquote2]],
-                  # Special case for e.g. "<i>Custer</i>'s Last Stand."
-                  [/("|')(?=\s|s\b|$)/, [:rquote1]],
-                  # Any remaining single quotes should be opening ones:
-                  [/(.?)'/m, [1, :lsquo]],
-                  [/(.?)"/m, [1, :ldquo]],
-                 ] #'"
+        # Get most opening single/double quotes:
+        [/(\s)('|")(?=\w)/, [1, :lquote2]],
+        # Single/double closing quotes:
+        [/(#{SQ_CLOSE})('|")/, [1, :rquote2]],
+        # Special case for e.g. "<i>Custer</i>'s Last Stand."
+        [/("|')(?=\s|s\b|$)/, [:rquote1]],
+        # Any remaining single quotes should be opening ones:
+        [/(.?)'/m, [1, :lsquo]],
+        [/(.?)"/m, [1, :ldquo]],
+      ] # '"
 
       SQ_SUBSTS = {
         [:rquote1, '"'] => :rdquo,
@@ -157,13 +157,13 @@ module Kramdown
       # Parse the smart quotes at current location.
       def parse_smart_quotes
         start_line_number = @src.current_line_number
-        substs = SQ_RULES.find {|reg, subst| @src.scan(reg)}[1]
+        substs = SQ_RULES.find {|reg, _subst| @src.scan(reg) }[1]
         substs.each do |subst|
           if subst.kind_of?(Integer)
             add_text(@src[subst])
           else
-            val = SQ_SUBSTS[[subst, @src[subst.to_s[-1,1].to_i]]] || subst
-            @tree.children << Element.new(:smart_quote, val, nil, :location => start_line_number)
+            val = SQ_SUBSTS[[subst, @src[subst.to_s[-1, 1].to_i]]] || subst
+            @tree.children << Element.new(:smart_quote, val, nil, location: start_line_number)
           end
         end
       end

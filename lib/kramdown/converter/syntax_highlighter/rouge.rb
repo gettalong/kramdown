@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -18,7 +18,7 @@ module Kramdown::Converter::SyntaxHighlighter
       # Highlighting via Rouge is available if this constant is +true+.
       AVAILABLE = true
     rescue LoadError, SyntaxError
-      AVAILABLE = false  # :nodoc:
+      AVAILABLE = false # :nodoc:
     end
 
     def self.call(converter, text, lang, type, call_opts)
@@ -50,7 +50,7 @@ module Kramdown::Converter::SyntaxHighlighter
         end
       end
 
-      cache[:span] = opts.merge(span_opts).update(:wrap => false)
+      cache[:span] = opts.merge(span_opts).update(wrap: false)
       cache[:block] = opts.merge(block_opts)
     end
 

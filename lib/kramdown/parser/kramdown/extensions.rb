@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -24,8 +24,7 @@ module Kramdown
           elsif id_and_or_class
             id_and_or_class.scan(ALD_TYPE_ID_OR_CLASS).each do |id_attr, class_attr|
               if class_attr
-                opts[IAL_CLASS_ATTR] = (opts[IAL_CLASS_ATTR] || '') << " #{class_attr}"
-                opts[IAL_CLASS_ATTR].lstrip!
+                opts[IAL_CLASS_ATTR] = "#{opts[IAL_CLASS_ATTR]} #{class_attr}".lstrip
               else
                 opts['id'] = id_attr
               end
@@ -35,16 +34,15 @@ module Kramdown
             opts[key] = val
           end
         end
-        warning("No or invalid attributes found in IAL/ALD content: #{str}") if attrs.length == 0
+        warning("No or invalid attributes found in IAL/ALD content: #{str}") if attrs.empty?
       end
 
       # Update the +ial+ with the information from the inline attribute list +opts+.
       def update_ial_with_ial(ial, opts)
         (ial[:refs] ||= []) << opts[:refs]
-        opts.each do |k,v|
+        opts.each do |k, v|
           if k == IAL_CLASS_ATTR
-            ial[k] = (ial[k] || '') << " #{v}"
-            ial[k].lstrip!
+            ial[k] = "#{ial[k]} #{v}".lstrip
           elsif k.kind_of?(String)
             ial[k] = v
           end
@@ -67,7 +65,8 @@ module Kramdown
 
         if @src[4] || @src.matched == '{:/}'
           name = (@src[4] ? "for '#{@src[4]}' " : '')
-          return error_block.call("Invalid extension stop tag #{name} found on line #{start_line_number} - ignoring it")
+          return error_block.call("Invalid extension stop tag #{name} found on line " \
+                                  "#{start_line_number} - ignoring it")
         end
 
         ext = @src[1]
@@ -75,18 +74,20 @@ module Kramdown
         body = nil
         parse_attribute_list(@src[2] || '', opts)
 
-        if !@src[3]
+        unless @src[3]
           stop_re = (type == :block ? /#{EXT_BLOCK_STOP_STR % ext}/ : /#{EXT_STOP_STR % ext}/)
-          if result = @src.scan_until(stop_re)
+          if (result = @src.scan_until(stop_re))
             body = result.sub!(stop_re, '')
             body.chomp! if type == :block
           else
-            return error_block.call("No stop tag for extension '#{ext}' found on line #{start_line_number} - ignoring it")
+            return error_block.call("No stop tag for extension '#{ext}' found on line " \
+                                    "#{start_line_number} - ignoring it")
           end
         end
 
         if !handle_extension(ext, opts, body, type, start_line_number)
-          error_block.call("Invalid extension with name '#{ext}' specified on line #{start_line_number} - ignoring it")
+          error_block.call("Invalid extension with name '#{ext}' specified on line " \
+                           "#{start_line_number} - ignoring it")
         else
           true
         end
@@ -95,26 +96,31 @@ module Kramdown
       def handle_extension(name, opts, body, type, line_no = nil)
         case name
         when 'comment'
-          @tree.children << Element.new(:comment, body, nil, :category => type, :location => line_no) if body.kind_of?(String)
+          if body.kind_of?(String)
+            @tree.children << Element.new(:comment, body, nil, category: type, location: line_no)
+          end
           true
         when 'nomarkdown'
-          @tree.children << Element.new(:raw, body, nil, :category => type, :location => line_no, :type => opts['type'].to_s.split(/\s+/)) if body.kind_of?(String)
+          if body.kind_of?(String)
+            @tree.children << Element.new(:raw, body, nil, category: type,
+                                          location: line_no, type: opts['type'].to_s.split(/\s+/))
+          end
           true
         when 'options'
-          opts.select do |k,v|
+          opts.select do |k, v|
             k = k.to_sym
             if Kramdown::Options.defined?(k)
               begin
                 val = Kramdown::Options.parse(k, v)
                 @options[k] = val
                 (@root.options[:options] ||= {})[k] = val
-              rescue
+              rescue StandardError
               end
               false
             else
               true
             end
-          end.each do |k,v|
+          end.each do |k, _v|
             warning("Unknown kramdown option '#{k}'")
           end
           @tree.children << new_block_el(:eob, :extension) if type == :block
@@ -123,7 +129,6 @@ module Kramdown
           false
         end
       end
-
 
       ALD_ID_CHARS = /[\w-]/
       ALD_ANY_CHARS = /\\\}|[^\}]/
@@ -152,18 +157,19 @@ module Kramdown
       # location.
       def parse_block_extensions
         if @src.scan(ALD_START)
-          parse_attribute_list(@src[2], @alds[@src[1]] ||= Utils::OrderedHash.new)
+          parse_attribute_list(@src[2], @alds[@src[1]] ||= {})
           @tree.children << new_block_el(:eob, :ald)
           true
         elsif @src.check(EXT_BLOCK_START)
           parse_extension_start_tag(:block)
         elsif @src.scan(IAL_BLOCK_START)
           if @tree.children.last && @tree.children.last.type != :blank &&
-              (@tree.children.last.type != :eob || [:link_def, :abbrev_def, :footnote_def].include?(@tree.children.last.value))
-            parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= Utils::OrderedHash.new)
+              (@tree.children.last.type != :eob ||
+               [:link_def, :abbrev_def, :footnote_def].include?(@tree.children.last.value))
+            parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
             @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else
-            parse_attribute_list(@src[1], @block_ial ||= Utils::OrderedHash.new)
+            parse_attribute_list(@src[1], @block_ial ||= {})
           end
           true
         else
@@ -171,7 +177,6 @@ module Kramdown
         end
       end
       define_parser(:block_extensions, BLOCK_EXTENSIONS_START)
-
 
       EXT_SPAN_START = /#{EXT_START_STR}|#{EXT_STOP_STR % ALD_ID_NAME}/
       IAL_SPAN_START = /\{:(#{ALD_ANY_CHARS}+)\}/
@@ -184,9 +189,9 @@ module Kramdown
         elsif @src.check(IAL_SPAN_START)
           if @tree.children.last && @tree.children.last.type != :text
             @src.pos += @src.matched_size
-            attr = Utils::OrderedHash.new
+            attr = {}
             parse_attribute_list(@src[1], attr)
-            update_ial_with_ial(@tree.children.last.options[:ial] ||= Utils::OrderedHash.new, attr)
+            update_ial_with_ial(@tree.children.last.options[:ial] ||= {}, attr)
             update_attr_with_ial(@tree.children.last.attr, attr)
           else
             warning("Found span IAL after text - ignoring it")

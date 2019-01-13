@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -25,25 +25,26 @@ module Kramdown
     class Markdown < Kramdown
 
       # Array with all the parsing methods that should be removed from the standard kramdown parser.
-      EXTENDED = [:codeblock_fenced, :table, :definition_list, :footnote_definition, :abbrev_definition, :block_math,
-                  :block_extensions,
+      EXTENDED = [:codeblock_fenced, :table, :definition_list, :footnote_definition,
+                  :abbrev_definition, :block_math, :block_extensions,
                   :footnote_marker, :smart_quotes, :inline_math, :span_extensions, :typographic_syms]
 
       def initialize(source, options) # :nodoc:
         super
-        @block_parsers.delete_if {|i| EXTENDED.include?(i)}
-        @span_parsers.delete_if {|i| EXTENDED.include?(i)}
+        @block_parsers.delete_if {|i| EXTENDED.include?(i) }
+        @span_parsers.delete_if {|i| EXTENDED.include?(i) }
       end
 
       # :stopdoc:
 
       BLOCK_BOUNDARY = /#{BLANK_LINE}|#{EOB_MARKER}|\Z/
-      LAZY_END = /#{BLANK_LINE}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z/
+      LAZY_END = /#{BLANK_LINE}|#{EOB_MARKER}|^#{OPT_SPACE}#{LAZY_END_HTML_STOP}|
+                  ^#{OPT_SPACE}#{LAZY_END_HTML_START}|\Z/x
       CODEBLOCK_MATCH = /(?:#{BLANK_LINE}?(?:#{INDENT}[ \t]*\S.*\n)+)*/
       PARAGRAPH_END = LAZY_END
 
       IAL_RAND_CHARS = (('a'..'z').to_a + ('0'..'9').to_a)
-      IAL_RAND_STRING = (1..20).collect {|a| IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)]}.join
+      IAL_RAND_STRING = (1..20).collect { IAL_RAND_CHARS[rand(IAL_RAND_CHARS.size)] }.join
       LIST_ITEM_IAL = /^\s*(#{IAL_RAND_STRING})?\s*\n/
       IAL_SPAN_START = LIST_ITEM_IAL
 

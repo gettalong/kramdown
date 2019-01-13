@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -37,7 +37,7 @@ module Kramdown
           attr['id'] = generate_id(el.options[:raw_text]) if @options[:auto_ids] && !attr['id']
           add_to_toc(el, attr['id']) if attr['id']
         else
-          el.children.each {|child| convert(child)}
+          el.children.each {|child| convert(child) }
         end
         @toc
       end
@@ -45,10 +45,10 @@ module Kramdown
       private
 
       def add_to_toc(el, id)
-        toc_element = Element.new(:toc, el, :id => id)
+        toc_element = Element.new(:toc, el, id: id)
 
         success = false
-        while !success
+        until success
           if @stack.empty?
             @toc.children << toc_element
             @stack << toc_element

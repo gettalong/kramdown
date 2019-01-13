@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -17,7 +17,7 @@ module Kramdown
 
       # Parse the Setext header at the current location.
       def parse_setext_header
-        return false if !after_block_boundary?
+        return false unless after_block_boundary?
         text, id = parse_header_contents
         return false if text.empty?
         add_header(@src["level"] == '-' ? 2 : 1, text, id)
@@ -25,12 +25,11 @@ module Kramdown
       end
       define_parser(:setext_header, SETEXT_HEADER_START)
 
-
       ATX_HEADER_START = /^(?<level>\#{1,6})[\t ]*(?<contents>[^ \t].*)\n/
 
       # Parse the Atx header at the current location.
       def parse_atx_header
-        return false if !after_block_boundary?
+        return false unless after_block_boundary?
         text, id = parse_header_contents
         text.sub!(/[\t ]#+\z/, '') && text.rstrip!
         return false if text.empty?
@@ -59,11 +58,12 @@ module Kramdown
       def add_header(level, text, id)
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
-        el = new_block_el(:header, nil, nil, :level => level, :raw_text => text, :location => start_line_number)
+        el = new_block_el(:header, nil, nil, level: level, raw_text: text, location: start_line_number)
         add_text(text, el)
         el.attr['id'] = id if id
         @tree.children << el
       end
+
     end
   end
 end
