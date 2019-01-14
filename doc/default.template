@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="Thomas Leitner" />
-    <meta name="copyright" content="2009-2016 Thomas Leitner" />
+    <meta name="copyright" content="2009-2019 Thomas Leitner" />
     <meta name="description" content="kramdown is a fast, pure-Ruby Markdown-superset converter" />
     <meta name="keywords" content="ruby, kramdown, markdown, text markup" />
     <link href="{relocatable: default.css}" type="text/css" rel="stylesheet" media="screen,projection" />
@@ -43,7 +43,7 @@
 
     <footer>
       <div class="float-left">
-        Copyright © 2009-2018 Thomas Leitner |
+        Copyright © 2009-2019 Thomas Leitner |
         <a href="https://gettalong.org/legal.html">Legal Notice</a> |
         <a href="https://gettalong.org/privacy.html">Privacy Policy</a>
       </div>

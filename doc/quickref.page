@@ -3,10 +3,6 @@ title: Quick Reference
 in_menu: true
 sort_info: 9
 --- name:sidebar
-<div style="text-align: right">
-<a href="https://www.patreon.com/bePatron?u=4908963" class="patreon">Become a Patron!</a>
-</div>
-
 <h1>Contents</h1>
 
 {menu: {options: {descendants: true, levels: [2,6]}}}
