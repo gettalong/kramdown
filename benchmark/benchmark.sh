@@ -1,6 +1,4 @@
-#!/bin/bash
-
-source ~/.profile
+#!/bin/bash --login
 
 RUBY_VERSIONS=`rvm list strings | sort`
 KD_VERSIONS="`git tag | sort -V` master"
