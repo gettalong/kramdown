@@ -21,6 +21,9 @@ The Rouge syntax highlighter supports the following keys of the option
 default_lang
 : The default language that should be used when no language is set.
 
+guess_lang
+: If no specific language or a default language is set, guess the language.
+
 formatter
 : A custom Rouge formatter class that should be used instead of the following default formatter
   (Rogue 1.x: `Rouge::Formatters::HTML` / Rogue 2.x: `Rouge::Formatters::HTMLLegacy`).
