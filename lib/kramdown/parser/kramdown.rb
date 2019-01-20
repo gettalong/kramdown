@@ -93,11 +93,13 @@ module Kramdown
           update_tree(data[:content])
           replace_abbreviations(data[:content])
         end
+        footnote_count = 0
         @footnotes.each do |name, data|
-          next if data.key?(:marker)
+          (footnote_count += 1; next) if data.key?(:marker)
           line = data[:content].options[:location]
           warning("Footnote definition for '#{name}' on line #{line} is unreferenced - ignoring")
         end
+        @root.options[:footnote_count] = footnote_count
       end
 
       protected

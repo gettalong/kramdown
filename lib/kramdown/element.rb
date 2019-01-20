@@ -42,6 +42,7 @@ module Kramdown
   #
   # :options:: This key may be used to store options that were set during parsing of the document.
   #
+  # :footnote_count:: This key stores the number of actually referenced footnotes of the document.
   #
   # === :blank
   #
