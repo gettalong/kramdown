@@ -12,7 +12,7 @@ OptionParser.new do |opts|
   opts.on("-k VERSION", "--kramdown VERSION", String, "Add benchmark data for kramdown version VERSION") {|v| options[:kramdown] = v}
 end.parse!
 
-THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\()/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}") + '-' + RUBY_PATCHLEVEL.to_s
+THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\(|,)/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}") + '-' + RUBY_PATCHLEVEL.to_s
 
 Dir.chdir(File.dirname(__FILE__))
 BMDATA = File.read('mdbasics.text')
@@ -109,7 +109,7 @@ set output "#{graph_name}"
 EOF
       f.print "plot "
       i, j = 1, 1
-      f.puts((kramdown_names.map {|n| i += 1; "\"#{kramdown_name}\" using 1:#{i} with lp title \"#{n}\""} +
+      f.puts((kramdown_names.map {|n| i += 1; "\"#{kramdown_name}\" using 1:#{i} with lp title \"#{n.sub(/_(.*?)_(.*?)_(.*?)/, ' \1.\2.\3')}\""} +
               static_names.map {|n| j += 1; n =~ /bluefeather/i ? nil : "\"#{static_name}\" using 1:#{j} with lp title \"#{n}\""}.compact
              ).join(", "))
     end
