@@ -550,6 +550,18 @@ module Kramdown
       Used by: HTML converter
     EOF
 
+    define(:footnote_prefix, String, '', <<~EOF)
+      Prefix used for footnote IDs
+
+      This option can be used to set a prefix for footnote IDs. This is useful
+      when rendering multiple documents into the same output file to avoid
+      duplicate IDs. The prefix should only contain characters that are valid
+      in an ID!
+
+      Default: ''
+      Used by: HTML
+    EOF
+
   end
 
 end

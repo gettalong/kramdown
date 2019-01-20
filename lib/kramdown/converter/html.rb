@@ -286,17 +286,19 @@ module Kramdown
 
       def convert_footnote(el, _indent)
         repeat = ''
-        if (footnote = @footnotes_by_name[el.options[:name]])
+        name = @options[:footnote_prefix] + el.options[:name]
+        if (footnote = @footnotes_by_name[name])
           number = footnote[2]
           repeat = ":#{footnote[3] += 1}"
         else
           number = @footnote_counter
           @footnote_counter += 1
-          @footnotes << [el.options[:name], el.value, number, 0]
-          @footnotes_by_name[el.options[:name]] = @footnotes.last
+          @footnotes << [name, el.value, number, 0]
+          @footnotes_by_name[name] = @footnotes.last
         end
-        "<sup id=\"fnref:#{el.options[:name]}#{repeat}\">" \
-          "<a href=\"#fn:#{el.options[:name]}\" class=\"footnote\">#{number}</a></sup>"
+        "<sup id=\"fnref:#{name}#{repeat}\">" \
+          "<a href=\"#fn:#{name}\" class=\"footnote\">" \
+          "#{number}</a></sup>"
       end
 
       def convert_raw(el, _indent)
