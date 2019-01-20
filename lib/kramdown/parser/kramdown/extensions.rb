@@ -39,7 +39,7 @@ module Kramdown
 
       # Update the +ial+ with the information from the inline attribute list +opts+.
       def update_ial_with_ial(ial, opts)
-        (ial[:refs] ||= []) << opts[:refs]
+        (ial[:refs] ||= []).concat(opts[:refs]) if opts.key?(:refs)
         opts.each do |k, v|
           if k == IAL_CLASS_ATTR
             ial[k] = "#{ial[k]} #{v}".lstrip
