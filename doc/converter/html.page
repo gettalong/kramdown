@@ -45,6 +45,10 @@ Following are some examples of header texts and their respective generated IDs:
 
 Such generated IDs are only used if no ID has been set manually before.
 
+## Standalone Images
+
+By assigning the reference name "standalone" to an image that is the sole content of a paragraph,
+the image will be rendered inside a `<figure>` element instead of an image inside a paragraph.
 
 ## Code Blocks
 

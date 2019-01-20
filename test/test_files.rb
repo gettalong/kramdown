@@ -134,6 +134,7 @@ class TestFiles < Minitest::Test
       'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
       'test/testcases/block/06_codeblock/with_lang_in_fenced_block_name_with_dash.text',
       'test/testcases/block/06_codeblock/with_lang_in_fenced_block_any_char.text',
+      'test/testcases/block/03_paragraph/standalone_image.text', # bc of standalone image
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/ }
@@ -177,6 +178,7 @@ class TestFiles < Minitest::Test
       'test/testcases/span/05_html/mark_element.text', # bc of tidy
       'test/testcases/block/09_html/xml.text', # bc of tidy
       'test/testcases/span/05_html/xml.text', # bc of tidy
+      'test/testcases/block/03_paragraph/standalone_image.text', # bc of standalone image
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/ }
@@ -225,6 +227,7 @@ class TestFiles < Minitest::Test
       'test/testcases/span/05_html/mark_element.html', # bc of tidy
       'test/testcases/block/09_html/xml.html', # bc of tidy
       'test/testcases/span/05_html/xml.html', # bc of tidy
+      'test/testcases/block/03_paragraph/standalone_image.html', # bc of standalone image
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/ }
