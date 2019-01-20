@@ -26,7 +26,7 @@ Within a kramdown document
   Using the above example, the options would be set like this within a document:
 
   ~~~
-  {::options auto_ids="false" footnote_nr="5" syntax_highlighter_opts="{line_numbers: true\}" /}
+  {::options auto_ids="false" footnote_nr="5" syntax_highlighter_opts="\{line_numbers: true\}" /}
   ~~~
 
 Using Ruby code
