@@ -500,9 +500,11 @@ module Kramdown
     end
 
     def inspect #:nodoc:
-      "<kd:#{@type}#{@value.nil? ? '' : ' ' + @value.inspect} " \
-        "#{@attr.inspect}#{options.empty? ? '' : ' ' + @options.inspect} " \
-        "#{@children.empty? ? '' : ' ' + @children.inspect}>"
+      "<kd:#{@type}" \
+        "#{value.nil? ? '' : ' value=' + value.inspect}" \
+        "#{attr.empty? ? '' : ' attr=' + attr.inspect}" \
+        "#{options.empty? ? '' : ' options=' + options.inspect}" \
+        "#{children.empty? ? '' : ' children=' + children.inspect}>"
     end
 
     CATEGORY = {} # :nodoc:
