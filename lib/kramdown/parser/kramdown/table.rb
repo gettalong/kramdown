@@ -81,7 +81,7 @@ module Kramdown
                     cells.concat(l)
                   else
                     delim = (c.value.scan(/`+/).max || '') + '`'
-                    tmp = "#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
+                    tmp = +"#{delim}#{' ' if delim.size > 1}#{c.value}#{' ' if delim.size > 1}#{delim}"
                     (cells.empty? ? cells : cells.last) << tmp
                   end
                 end
