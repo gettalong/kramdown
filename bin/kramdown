@@ -30,6 +30,55 @@ end
 options = {}
 format = ['html']
 
+def load_extensions(gems)
+  gems.each do |extension|
+    gem_name = "kramdown-#{extension}"
+    begin
+      require gem_name
+    rescue LoadError
+      puts <<-MSG
+
+        EXTENSION NOT FOUND:  #{gem_name}
+
+        kramdown could not load the specified extension. Please ensure that
+        the gem and its dependencies have been installed.
+
+        If you're using a Gemfile, ensure that the extension has been listed
+        in the Gemfile and its lockfile.
+      MSG
+      abort
+    end
+  end
+end
+
+def summarize_and_exit(opts)
+  generate_kd_options(opts)
+  puts opts.summarize('', 5, 72)
+  exit
+end
+
+def generate_kd_options(opts)
+  opts.separator ""
+  opts.separator "kramdown options:"
+  opts.separator ""
+
+  Kramdown::Options.definitions.sort.each do |n, definition|
+    no = n.to_s.tr('_', '-')
+    if definition.type == Kramdown::Options::Boolean
+      opts.on("--[no-]#{no}") {|v| options[n] = Kramdown::Options.parse(n, v) }
+    else
+      type = definition.type
+      type = String if type == Symbol || type == Object
+      opts.on("--#{no} ARG", type) {|v| options[n] = Kramdown::Options.parse(n, v) }
+    end
+
+    definition.desc.split(/\n/).each do |line|
+      opts.separator opts.summary_indent + ' ' * 6 + line
+    end
+    opts.separator ''
+  end
+end
+
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
   opts.summary_indent = ' ' * 4
@@ -54,29 +103,14 @@ OptionParser.new do |opts|
     puts Kramdown::VERSION
     exit
   end
-  opts.on("-h", "--help", "Show the help") do
-    puts opts.summarize('', 5, 72)
-    exit
+  opts.on("-x", "--extend-help ARG", Array, "Extend help with options from kramdown extensions.",
+          "Specify one or more extension-gem names separated by commas without",
+          "the 'kramdown-' prefix. e.g. parser-gfm,syntax-coderay") do |args|
+    load_extensions(args)
+    summarize_and_exit(opts)
   end
-
-  opts.separator ""
-  opts.separator "kramdown options:"
-  opts.separator ""
-
-  Kramdown::Options.definitions.sort.each do |n, definition|
-    no = n.to_s.tr('_', '-')
-    if definition.type == Kramdown::Options::Boolean
-      opts.on("--[no-]#{no}") {|v| options[n] = Kramdown::Options.parse(n, v) }
-    else
-      type = definition.type
-      type = String if type == Symbol || type == Object
-      opts.on("--#{no} ARG", type) {|v| options[n] = Kramdown::Options.parse(n, v) }
-    end
-
-    definition.desc.split(/\n/).each do |line|
-      opts.separator opts.summary_indent + ' ' * 6 + line
-    end
-    opts.separator ''
+  opts.on("-h", "--help", "Show the help") do
+    summarize_and_exit(opts)
   end
 end.parse!
 
