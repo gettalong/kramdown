@@ -49,18 +49,15 @@ module Kramdown
 
     configurable(:math_engine)
 
-    ["Mathjax"].each do |klass_name|
-      kn_down = klass_name.downcase.intern
-      add_math_engine(kn_down) do |converter, el, opts|
-        require "kramdown/converter/math_engine/#{kn_down}"
-        klass = ::Kramdown::Utils.deep_const_get("::Kramdown::Converter::MathEngine::#{klass_name}")
-        if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
-          add_math_engine(kn_down, klass)
-        else
-          add_math_engine(kn_down) { nil }
-        end
-        math_engine(kn_down).call(converter, el, opts)
+    add_math_engine(:mathjax) do |converter, el, opts|
+      require "kramdown/converter/math_engine/mathjax"
+      klass = ::Kramdown::Converter::MathEngine::Mathjax
+      if !klass.const_defined?(:AVAILABLE) || klass::AVAILABLE
+        add_math_engine(:mathjax, klass)
+      else
+        add_math_engine(:mathjax) { nil }
       end
+      math_engine(:mathjax).call(converter, el, opts)
     end
 
   end
