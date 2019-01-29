@@ -19,8 +19,9 @@ module Kramdown
 
       # Return +true+ if we are after a block boundary.
       def after_block_boundary?
-        !@tree.children.last || @tree.children.last.type == :blank ||
-          (@tree.children.last.type == :eob && @tree.children.last.value.nil?) || @block_ial
+        last_child = @tree.children.last
+        !last_child || last_child.type == :blank ||
+          (last_child.type == :eob && last_child.value.nil?) || @block_ial
       end
 
       # Return +true+ if we are before a block boundary.

@@ -72,7 +72,7 @@ module Kramdown
               parse_first_list_line(@src[1].length, @src[2])
             list.children << item
 
-            item.value.sub!(self.class::LIST_ITEM_IAL) do |_match|
+            item.value.sub!(self.class::LIST_ITEM_IAL) do
               parse_attribute_list($1, item.options[:ial] ||= {})
               ''
             end
@@ -122,22 +122,24 @@ module Kramdown
 
           it.children = temp.children
           it.value = nil
-          next if it.children.empty?
+
+          it_children = it.children
+          next if it_children.empty?
 
           # Handle the case where an EOB marker is inserted by a block IAL for the first paragraph
-          it.children.delete_at(1) if it.children.first.type == :p &&
-            it.children.length >= 2 && it.children[1].type == :eob && it.children.first.options[:ial]
+          it_children.delete_at(1) if it_children.first.type == :p &&
+            it_children.length >= 2 && it_children[1].type == :eob && it_children.first.options[:ial]
 
-          if it.children.first.type == :p &&
-              (it.children.length < 2 || it.children[1].type != :blank ||
-               (it == list.children.last && it.children.length == 2 && !eob_found)) &&
+          if it_children.first.type == :p &&
+              (it_children.length < 2 || it_children[1].type != :blank ||
+              (it == list.children.last && it_children.length == 2 && !eob_found)) &&
               (list.children.last != it || list.children.size == 1 ||
-               list.children[0..-2].any? {|cit| !cit.children.first || cit.children.first.type != :p || cit.children.first.options[:transparent] })
-            it.children.first.children.first.value << "\n" if it.children.size > 1 && it.children[1].type != :blank
-            it.children.first.options[:transparent] = true
+              list.children[0..-2].any? {|cit| !cit.children.first || cit.children.first.type != :p || cit.children.first.options[:transparent] })
+            it_children.first.children.first.value << "\n" if it_children.size > 1 && it_children[1].type != :blank
+            it_children.first.options[:transparent] = true
           end
 
-          last = (it.children.last.type == :blank ? it.children.pop : nil)
+          last = (it_children.last.type == :blank ? it_children.pop : nil)
         end
 
         @tree.children << last if !last.nil? && !eob_found
@@ -222,27 +224,29 @@ module Kramdown
 
           parse_blocks(it, it.value)
           it.value = nil
-          next if it.children.empty?
+          it_children = it.children
+          next if it_children.empty?
 
-          last = (it.children.last.type == :blank ? it.children.pop : nil)
+          last = (it_children.last.type == :blank ? it_children.pop : nil)
 
-          if it.children.first && it.children.first.type == :p && !it.options.delete(:first_as_para)
-            it.children.first.children.first.value << "\n" if it.children.size > 1
-            it.children.first.options[:transparent] = true
+          if it_children.first && it_children.first.type == :p && !it.options.delete(:first_as_para)
+            it_children.first.children.first.value << "\n" if it_children.size > 1
+            it_children.first.options[:transparent] = true
           end
         end
 
-        if @tree.children.length >= 1 && @tree.children.last.type == :dl
-          @tree.children[-1].children.concat(deflist.children)
-        elsif @tree.children.length >= 2 && @tree.children[-1].type == :blank &&
-            @tree.children[-2].type == :dl
-          @tree.children.pop
-          @tree.children[-1].children.concat(deflist.children)
+        children = @tree.children
+        if children.length >= 1 && children.last.type == :dl
+          children[-1].children.concat(deflist.children)
+        elsif children.length >= 2 && children[-1].type == :blank &&
+            children[-2].type == :dl
+          children.pop
+          children[-1].children.concat(deflist.children)
         else
-          @tree.children << deflist
+          children << deflist
         end
 
-        @tree.children << last if last
+        children << last if last
 
         true
       end
