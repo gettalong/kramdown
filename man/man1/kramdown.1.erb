@@ -1,5 +1,5 @@
 # kramdown(1) - a fast, pure-Ruby Markdown-superset converter
-{: data-date="November 2016"}
+{: data-date="January 2019"}
 
 ## SYNOPSIS
 
@@ -35,6 +35,14 @@ This file has to be in XDG_CONFIG_HOME on Linux/Unix, ~/Library/Preferences on m
 : Specify one or more output formats separated by commas: *html* (default), *kramdown*, *latex*,
   *man* or *remove_html_tags*. The converter *pdf* is available through the
   `kramdown-converter-pdf` gem.
+
+`-x` *EXT*, `--extension` *EXT*
+
+: Load one or more extensions. The name of the extension should not include the `kramdown-` prefix,
+  e.g. just `parser-gfm`. Multiple extensions can be loaded by separating them with commas.
+
+  Note: This option has to be used before any other options that rely on the extension already being
+  loaded.
 
 `--no-config-file`
 : Do not read any configuration file. Default behavior is to check for a configuration file and

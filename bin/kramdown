@@ -13,6 +13,37 @@ require 'rbconfig'
 require 'yaml'
 require 'kramdown'
 
+def add_kramdown_options(opts, parsed_options, banner: [], ignore: [])
+  banner_shown = false
+  defined_options = []
+  Kramdown::Options.definitions.sort.each do |n, definition|
+    next if ignore.include?(n)
+
+    unless banner_shown
+      opts.separator("")
+      banner.each {|part| opts.separator(part) }
+      opts.separator("")
+      banner_shown = true
+    end
+
+    defined_options << n
+    no = n.to_s.tr('_', '-')
+    if definition.type == Kramdown::Options::Boolean
+      opts.on("--[no-]#{no}") {|v| parsed_options[n] = Kramdown::Options.parse(n, v) }
+    else
+      type = definition.type
+      type = String if type == Symbol || type == Object
+      opts.on("--#{no} ARG", type) {|v| parsed_options[n] = Kramdown::Options.parse(n, v) }
+    end
+
+    definition.desc.split(/\n/).each do |line|
+      opts.separator opts.summary_indent + ' ' * 6 + line
+    end
+    opts.separator ''
+  end
+  defined_options
+end
+
 config_file = nil
 begin
   config_dir = case RbConfig::CONFIG['host_os']
@@ -30,6 +61,7 @@ end
 options = {}
 format = ['html']
 
+defined_options = []
 OptionParser.new do |opts|
   opts.banner = "Usage: kramdown [options] [FILE FILE ...]"
   opts.summary_indent = ' ' * 4
@@ -42,6 +74,20 @@ OptionParser.new do |opts|
           "html, or markdown") {|v| options[:input] = v }
   opts.on("-o", "--output ARG", Array, "Specify one or more output formats separated by commas: " \
           "html (default),", "kramdown, latex, man or remove_html_tags") {|v| format = v }
+  opts.on("-x", "--extension EXT", Array, "Load one or more extensions (without the 'kramdown-' " \
+          "prefix) separated", "by commas (e.g. parser-gfm,syntax-coderay)",
+          "Note: Use this option before other options!") do |exts|
+    exts.each do |ext|
+      begin
+        require "kramdown-#{ext}"
+        new_options = add_kramdown_options(opts, options, banner: ["#{ext} options:"],
+                                           ignore: defined_options)
+        defined_options.concat(new_options)
+      rescue LoadError
+        $stderr.puts "Couldn't load extension #{ext}, ignoring"
+      end
+    end
+  end
   opts.separator ""
   opts.on("--no-config-file", "Do not read any configuration file. Default behavior is to check " \
           "for a", "configuration file and read it if it exists.") { config_file = nil }
@@ -59,25 +105,8 @@ OptionParser.new do |opts|
     exit
   end
 
-  opts.separator ""
-  opts.separator "kramdown options:"
-  opts.separator ""
-
-  Kramdown::Options.definitions.sort.each do |n, definition|
-    no = n.to_s.tr('_', '-')
-    if definition.type == Kramdown::Options::Boolean
-      opts.on("--[no-]#{no}") {|v| options[n] = Kramdown::Options.parse(n, v) }
-    else
-      type = definition.type
-      type = String if type == Symbol || type == Object
-      opts.on("--#{no} ARG", type) {|v| options[n] = Kramdown::Options.parse(n, v) }
-    end
-
-    definition.desc.split(/\n/).each do |line|
-      opts.separator opts.summary_indent + ' ' * 6 + line
-    end
-    opts.separator ''
-  end
+  new_options = add_kramdown_options(opts, options, banner: ["kramdown options:"])
+  defined_options.concat(new_options)
 end.parse!
 
 begin
