@@ -232,17 +232,18 @@ module Kramdown
           end
         end
 
-        if @tree.children.length >= 1 && @tree.children.last.type == :dl
-          @tree.children[-1].children.concat(deflist.children)
-        elsif @tree.children.length >= 2 && @tree.children[-1].type == :blank &&
-            @tree.children[-2].type == :dl
-          @tree.children.pop
-          @tree.children[-1].children.concat(deflist.children)
+        children = @tree.children
+        if children.length >= 1 && children.last.type == :dl
+          children[-1].children.concat(deflist.children)
+        elsif children.length >= 2 && children[-1].type == :blank &&
+            children[-2].type == :dl
+          children.pop
+          children[-1].children.concat(deflist.children)
         else
-          @tree.children << deflist
+          children << deflist
         end
 
-        @tree.children << last if last
+        children << last if last
 
         true
       end

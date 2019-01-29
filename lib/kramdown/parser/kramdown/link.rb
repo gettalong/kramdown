@@ -92,8 +92,9 @@ module Kramdown
           emit_warning = !@src[1]
           link_id = normalize_link_id(@src[1] || alt_text)
           if @link_defs.key?(link_id)
-            add_link(el, @link_defs[link_id][0], @link_defs[link_id][1], alt_text,
-                     @link_defs[link_id][2] && @link_defs[link_id][2].options[:ial])
+            link_def_id = @link_defs[link_id]
+            add_link(el, link_def_id[0], link_def_id[1], alt_text,
+                     link_def_id[2] && link_def_id[2].options[:ial])
           else
             if emit_warning
               warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")

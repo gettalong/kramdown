@@ -163,10 +163,10 @@ module Kramdown
         elsif @src.check(EXT_BLOCK_START)
           parse_extension_start_tag(:block)
         elsif @src.scan(IAL_BLOCK_START)
-          if @tree.children.last && @tree.children.last.type != :blank &&
-              (@tree.children.last.type != :eob ||
-               [:link_def, :abbrev_def, :footnote_def].include?(@tree.children.last.value))
-            parse_attribute_list(@src[1], @tree.children.last.options[:ial] ||= {})
+          if (last_child = @tree.children.last) && last_child.type != :blank &&
+              (last_child.type != :eob ||
+               [:link_def, :abbrev_def, :footnote_def].include?(last_child.value))
+            parse_attribute_list(@src[1], last_child.options[:ial] ||= {})
             @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
           else
             parse_attribute_list(@src[1], @block_ial ||= {})
@@ -187,12 +187,12 @@ module Kramdown
         if @src.check(EXT_SPAN_START)
           parse_extension_start_tag(:span)
         elsif @src.check(IAL_SPAN_START)
-          if @tree.children.last && @tree.children.last.type != :text
+          if (last_child = @tree.children.last) && last_child.type != :text
             @src.pos += @src.matched_size
             attr = {}
             parse_attribute_list(@src[1], attr)
-            update_ial_with_ial(@tree.children.last.options[:ial] ||= {}, attr)
-            update_attr_with_ial(@tree.children.last.attr, attr)
+            update_ial_with_ial(last_child.options[:ial] ||= {}, attr)
+            update_attr_with_ial(last_child.attr, attr)
           else
             warning("Found span IAL after text - ignoring it")
             add_text(@src.getch)

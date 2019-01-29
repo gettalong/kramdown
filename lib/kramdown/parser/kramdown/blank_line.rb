@@ -16,8 +16,8 @@ module Kramdown
       # Parse the blank line at the current postition.
       def parse_blank_line
         @src.pos += @src.matched_size
-        if @tree.children.last && @tree.children.last.type == :blank
-          @tree.children.last.value << @src.matched
+        if (last_child = @tree.children.last) && last_child.type == :blank
+          last_child.value << @src.matched
         else
           @tree.children << new_block_el(:blank, @src.matched)
         end
