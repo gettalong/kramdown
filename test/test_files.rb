@@ -72,6 +72,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
       'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
+      'test/testcases/block/06_codeblock/guess_lang_css_class.html', # bc of double surrounding <div>
       'test/testcases/block/12_extension/options3.html', # bc of rouge
       'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
       'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
@@ -211,6 +212,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
       'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
+      'test/testcases/block/06_codeblock/guess_lang_css_class.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
       'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
       'test/testcases/block/11_ial/simple.html',           # bc of change of ordering of attributes in header
