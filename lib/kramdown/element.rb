@@ -485,7 +485,7 @@ module Kramdown
 
     # Create a new Element object of type +type+. The optional parameters +value+, +attr+ and
     # +options+ can also be set in this constructor for convenience.
-    def initialize(type, value = nil, attr = nil, options = nil)
+    def initialize(type, value = nil, attr = {}, options = {})
       @type, @value, @attr, @options = type, value, attr, options
       @children = []
     end
