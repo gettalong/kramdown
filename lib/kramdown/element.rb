@@ -522,6 +522,22 @@ module Kramdown
       CATEGORY[el.type] || el.options[:category]
     end
 
+    # syntactic sugar to simplify calls such as +Kramdown::Element.category(el) == :block+ with
+    # +el.block?+.
+    #
+    # Returns boolean true or false.
+    def block?
+      (CATEGORY[type] || options[:category]) == :block
+    end
+
+    # syntactic sugar to simplify calls such as +Kramdown::Element.category(el) == :span+ with
+    # +el.span?+.
+    #
+    # Returns boolean true or false.
+    def span?
+      (CATEGORY[type] || options[:category]) == :span
+    end
+
   end
 
 end
