@@ -13,9 +13,16 @@ matrix:
   allow_failures:
     - rvm: jruby-head
 
+addons:
+  apt:
+    packages:
+      - texlive-latex-base
+      - texlive-latex-recommended
+      - texlive-fonts-recommended
+      - texlive-latex-extra
+      - tidy
+
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra tidy
   - gem install rake
   - gem install minitest stringex
   - gem install rouge
