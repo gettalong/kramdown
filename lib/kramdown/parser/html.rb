@@ -72,7 +72,7 @@ module Kramdown
 
       # Contains the parsing methods. This module can be mixed into any parser to get HTML parsing
       # functionality. The only thing that must be provided by the class are instance variable
-      # @stack for storing the needed state and @src (instance of StringScanner) for the actual
+      # \@stack for storing the needed state and @src (instance of StringScanner) for the actual
       # parsing.
       module Parser
 
