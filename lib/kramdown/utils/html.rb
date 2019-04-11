@@ -68,6 +68,13 @@ module Kramdown
         str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m }
       end
 
+      REDUNDANT_LINE_BREAK_REGEX = /([\p{Han}\p{Hiragana}\p{Katakana}]+)\n([\p{Han}\p{Hiragana}\p{Katakana}]+)/u
+      def fix_cjk_line_break(str)
+        while str.gsub!(REDUNDANT_LINE_BREAK_REGEX, '\1\2')
+        end
+        str
+      end
+
     end
 
   end
