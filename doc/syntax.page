@@ -932,7 +932,7 @@ enviroment except if it begins with a `\begin` statement.
 The following kramdown fragment
 
     $$
-    \begin{align*}
+    \begin{aligned}
       & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
       = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
       & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
@@ -945,13 +945,13 @@ The following kramdown fragment
           \vdots \\
           y_n
         \end{array} \right)
-    \end{align*}
+    \end{aligned}
     $$
 
 renders (using Javascript library [MathJax](http://www.mathjax.org/)) as
 
 $$
-\begin{align*}
+\begin{aligned}
   & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
   = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
   & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
@@ -964,7 +964,7 @@ $$
       \vdots \\
       y_n
     \end{array} \right)
-\end{align*}
+\end{aligned}
 $$
 
 Using inline math is also easy: just surround your math content with two dollar signs, like with a
