@@ -44,8 +44,10 @@ module Kramdown
         [content, indentation, *PARSE_FIRST_LIST_LINE_REGEXP_CACHE[indentation]]
       end
 
-      LIST_START_UL = /^(#{OPT_SPACE}[+*-])([\t| ].*?\n)/
-      LIST_START_OL = /^(#{OPT_SPACE}\d+\.)([\t| ].*?\n)/
+      PATTERN_TAIL = /[\t| ].*?\n/
+
+      LIST_START_UL = /^(#{OPT_SPACE}[+*-])(#{PATTERN_TAIL})/
+      LIST_START_OL = /^(#{OPT_SPACE}\d+\.)(#{PATTERN_TAIL})/
       LIST_START = /#{LIST_START_UL}|#{LIST_START_OL}/
 
       # Parse the ordered or unordered list at the current location.
@@ -77,11 +79,7 @@ module Kramdown
               ''
             end
 
-            list_start_re = if type == :ul
-                              /^( {0,#{[3, indentation - 1].min}}[+*-])([\t| ].*?\n)/
-                            else
-                              /^( {0,#{[3, indentation - 1].min}}\d+\.)([\t| ].*?\n)/
-                            end
+            list_start_re = fetch_pattern(type, indentation)
             nested_list_found = (item.value =~ LIST_START)
             last_is_blank = false
             item.value = [item.value]
@@ -148,7 +146,7 @@ module Kramdown
       end
       define_parser(:list, LIST_START)
 
-      DEFINITION_LIST_START = /^(#{OPT_SPACE}:)([\t| ].*?\n)/
+      DEFINITION_LIST_START = /^(#{OPT_SPACE}:)(#{PATTERN_TAIL})/
 
       # Parse the ordered or unordered list at the current location.
       def parse_definition_list
@@ -198,7 +196,7 @@ module Kramdown
               ''
             end
 
-            def_start_re = /^( {0,#{[3, indentation - 1].min}}:)([\t| ].*?\n)/
+            def_start_re = fetch_pattern(:dl, indentation)
             first_as_para = false
             last_is_blank = false
           elsif @src.check(EOB_MARKER)
@@ -251,6 +249,35 @@ module Kramdown
         true
       end
       define_parser(:definition_list, DEFINITION_LIST_START)
+
+      private
+
+      # precomputed patterns for indentations 1..4 and fallback expression
+      # to compute pattern when indentation is outside the 1..4 range.
+      def fetch_pattern(type, indentation)
+        if type == :ul
+          case indentation
+          when 1 then %r/^( {0}[+*-])(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}[+*-])(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}[+*-])(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}[+*-])(#{PATTERN_TAIL})/o
+          end
+        elsif type == :ol
+          case indentation
+          when 1 then %r/^( {0}\d+\.)(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}\d+\.)(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}\d+\.)(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}\d+\.)(#{PATTERN_TAIL})/o
+          end
+        elsif type == :dl
+          case indentation
+          when 1 then %r/^( {0}:)(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}:)(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}:)(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}:)(#{PATTERN_TAIL})/o
+          end
+        end
+      end
 
     end
   end
