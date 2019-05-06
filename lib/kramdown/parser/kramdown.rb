@@ -195,6 +195,13 @@ module Kramdown
         end.flatten!
       end
 
+      def pattern_stash(stop_re, span_start)
+        @pattern_stash ||= {}
+        @pattern_stash[stop_re] ||= {}
+        @pattern_stash[stop_re][span_start] ||= /(?=#{Regexp.union(stop_re, span_start)})/
+      end
+      private :pattern_stash
+
       # Parse all span-level elements in the source string of @src into +el+.
       #
       # If the parameter +stop_re+ (a regexp) is used, parsing is immediately stopped if the regexp
@@ -213,7 +220,7 @@ module Kramdown
         span_start, span_start_re = span_parser_regexps(parsers) if parsers
         parsers ||= @span_parsers
 
-        used_re = (stop_re.nil? ? span_start_re : /(?=#{Regexp.union(stop_re, span_start)})/)
+        used_re = (stop_re.nil? ? span_start_re : pattern_stash(stop_re, span_start))
         stop_re_found = false
         while !@src.eos? && !stop_re_found
           if (result = @src.scan_until(used_re))
