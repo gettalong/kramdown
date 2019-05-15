@@ -21,7 +21,7 @@ module Kramdown
         if !after_block_boundary?
           return false
         elsif @src[1]
-          @src.scan(/^#{OPT_SPACE}\\/) if @src[3]
+          @src.scan(/^#{OPT_SPACE}\\/o) if @src[3]
           return false
         end
 
