@@ -377,7 +377,11 @@ module Kramdown
       simple_array_validator(val, :latex_headers, 6)
     end
 
-    define(:smart_quotes, Object, %w[lsquo rsquo ldquo rdquo], <<~EOF) do |val|
+    SMART_QUOTES_ENTITIES = %w[lsquo rsquo ldquo rdquo].freeze
+    SMART_QUOTES_STR = SMART_QUOTES_ENTITIES.join(',').freeze
+    private_constant :SMART_QUOTES_ENTITIES, :SMART_QUOTES_STR
+
+    define(:smart_quotes, Object, SMART_QUOTES_ENTITIES, <<~EOF) do |val|
       Defines the HTML entity names or code points for smart quote output
 
       The entities identified by entity name or code point that should be
@@ -388,9 +392,13 @@ module Kramdown
       Default: lsquo,rsquo,ldquo,rdquo
       Used by: HTML/Latex converter
     EOF
-      val = simple_array_validator(val, :smart_quotes, 4)
-      val.map! {|v| Integer(v) rescue v }
-      val
+      if val == SMART_QUOTES_STR || val == SMART_QUOTES_ENTITIES
+        SMART_QUOTES_ENTITIES
+      else
+        val = simple_array_validator(val, :smart_quotes, 4)
+        val.map! {|v| Integer(v) rescue v }
+        val
+      end
     end
 
     define(:typographic_symbols, Object, {}, <<~EOF) do |val|
