@@ -127,9 +127,11 @@ module Kramdown
 
     # Try requiring a parser or converter class and don't raise an error if the file is not found.
     def try_require(type, name)
-      require("kramdown/#{type}/#{Utils.snake_case(name)}")
+      unless Kramdown.const_get(type.capitalize, false).const_defined?(name)
+        require "kramdown/#{type}/#{Utils.snake_case(name)}"
+      end
       true
-    rescue LoadError
+    rescue LoadError, NameError
       true
     end
     protected :try_require
