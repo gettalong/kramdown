@@ -215,6 +215,12 @@ namespace :dev do
     end
   end
 
+  desc "Profile memory usage from the test-cases"
+  task :profile_memory do
+    puts ""
+    ruby 'benchmark/profile_memory_usage.rb'
+  end
+
   desc "Upload the website"
   task publish_website: ['doc'] do
     puts "Transfer manually!!!"
