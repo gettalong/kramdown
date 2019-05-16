@@ -24,6 +24,7 @@ before_install:
   - gem install minitest stringex
   - gem install rouge
   - wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb
+  - sudo apt purge libtidy tidy
   - sudo dpkg -i tidy-5.4.0-64bit.deb
 
 script: ruby -Ilib:test test/test_*
