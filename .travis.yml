@@ -18,11 +18,12 @@ addons:
       - texlive-latex-recommended
       - texlive-fonts-recommended
       - texlive-latex-extra
-      - tidy
 
 before_install:
   - gem install rake
   - gem install minitest stringex
   - gem install rouge
+  - wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb
+  - dpkg -i tidy-5.4.0-64bit.deb
 
 script: ruby -Ilib:test test/test_*
