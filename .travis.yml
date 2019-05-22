@@ -4,10 +4,14 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
-  - 2.6
+  - &latest_ruby 2.6
   - jruby-head
 
 matrix:
+  include:
+    - rvm: *latest_ruby
+      script: rake dev:profile_memory
+      name: Profile Memory Usage
   allow_failures:
     - rvm: jruby-head
 
@@ -23,6 +27,7 @@ before_install:
   - gem install rake
   - gem install minitest stringex
   - gem install rouge
+  - gem install memory_profiler
   - wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb
   - sudo apt purge libtidy-0.99-0
   - sudo dpkg -i tidy-5.4.0-64bit.deb
