@@ -1535,7 +1535,7 @@ kramdown converts the following plain ASCII character into their corresponding t
   non-breakable space
 
 The parser also replaces normal single `'` and double quotes `"` with "fancy quotes". There *may* be
-times when kramdown falsely replace the quotes. If this is the case, just \'escape\" the quotes and
+times when kramdown falsely replace the quotes. If this is the case, just `\'escape\"` the quotes and
 they won't be replaced with fancy ones.
 
 
