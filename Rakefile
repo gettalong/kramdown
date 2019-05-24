@@ -255,7 +255,8 @@ namespace :dev do
 
   desc "Profile memory usage while running the tests"
   task :profile_memory do
-    ruby '-Ilib:test:benchmark -r memory_profiler_preload test/test_files.rb'
+    load_paths = %w[lib test benchmark].join(File::PATH_SEPARATOR)
+    ruby "-I #{load_paths} -r memory_profiler_preload test/test_files.rb"
   end
 end
 
