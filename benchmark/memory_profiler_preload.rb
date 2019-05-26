@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 BEGIN {
   require 'memory_profiler'
   start = Time.now
-  print "\nProfiling... "
+  puts "\nProfiling...\n\n"
 
   MemoryProfiler.start(allow_files: 'kramdown')
 }
@@ -9,7 +11,7 @@ BEGIN {
 END {
   report = MemoryProfiler.stop
 
-  puts "Done in #{(Time.now - start).round(2)} seconds."
+  puts "\nDone in #{(Time.now - start).round(2)} seconds."
   puts "Generating results.."
   puts
 
@@ -30,5 +32,3 @@ END {
   end
   report.pretty_print(print_opts)
 }
-
-
