@@ -99,7 +99,9 @@ module Kramdown
       # 4. Check if the template name starts with 'string://' and if so, strip this prefix away and
       #    use the rest as template.
       def self.convert(tree, options = {})
-        converter = new(tree, ::Kramdown::Options.merge(options.merge(tree.options[:options] || {})))
+        opts = options.merge(tree.options[:options] || {})
+        opts = ::Kramdown::Registry.getset(opts) { ::Kramdown::Options.merge(opts) }
+        converter = new(tree, opts)
 
         if !converter.options[:template].empty? && converter.apply_template_before?
           apply_template(converter, '')

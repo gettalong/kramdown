@@ -36,6 +36,7 @@
 # MIT - see the COPYING file.
 
 require 'kramdown/version'
+require 'kramdown/registry'
 require 'kramdown/element'
 require 'kramdown/error'
 require 'kramdown/parser'
@@ -94,7 +95,7 @@ module Kramdown
     # The +source+ is immediately parsed by the selected parser so that the root element is
     # immediately available and the output can be generated.
     def initialize(source, options = {})
-      @options = Options.merge(options).freeze
+      @options = (Registry.getset(options) { |hsh| Options.merge(hsh) }).freeze
       parser = (@options[:input] || 'kramdown').to_s
       parser = parser[0..0].upcase + parser[1..-1]
       try_require('parser', parser)

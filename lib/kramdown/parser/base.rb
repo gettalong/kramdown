@@ -51,7 +51,7 @@ module Kramdown
       # created text nodes) are automatically initialized.
       def initialize(source, options)
         @source = source
-        @options = Kramdown::Options.merge(options)
+        @options = Kramdown::Registry.getset(options) { Kramdown::Options.merge(options) }
         @root = Element.new(:root, nil, nil, encoding: (source.encoding rescue nil), location: 1,
                             options: {}, abbrev_defs: {}, abbrev_attr: {})
         @warnings = []
