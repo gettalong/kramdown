@@ -179,6 +179,7 @@ class TestFiles < Minitest::Test
       'test/testcases/span/05_html/xml.text', # bc of tidy
       'test/testcases/block/03_paragraph/standalone_image.text', # bc of standalone image
       'test/testcases/cjk-line-break.text',
+      'test/testcases/block/09_html/standalone_image_in_div.html', # bc of standalone image
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/ }
@@ -229,6 +230,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/15_math/normal.html', # bc of mathjax and HTML parser
       'test/testcases/block/15_math/gh_128.html', # bc of mathjax and HTML parser
       'test/testcases/span/04_footnote/backlink_inline.html', # bc of mathjax
+      'test/testcases/block/09_html/standalone_image_in_div.html', # bc of standalone image
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/ }

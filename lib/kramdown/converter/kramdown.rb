@@ -184,10 +184,14 @@ module Kramdown
 
       HTML_TAGS_WITH_BODY = ['div', 'script', 'iframe', 'textarea']
 
+      NON_MARKDOWN_TYPES = [:entity, :text, :html_element].freeze
+      private_constant :NON_MARKDOWN_TYPES
+
       def convert_html_element(el, opts)
         markdown_attr = el.options[:category] == :block && el.children.any? do |c|
-          c.type != :html_element && (c.type != :p || !c.options[:transparent]) &&
-            Element.category(c) == :block
+          c.type != :html_element &&
+          !(c.type == :p && c.options[:transparent] && c.children.none? { |t| !NON_MARKDOWN_TYPES.member?(t.type) }) &&
+          Element.category(c) == :block
         end
         opts[:force_raw_text] = true if %w[script pre code].include?(el.value)
         opts[:raw_text] = opts[:force_raw_text] || opts[:block_raw_text] || \
