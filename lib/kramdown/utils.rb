@@ -24,7 +24,7 @@ module Kramdown
 
     # Treat +name+ as if it were snake cased (e.g. snake_case) and camelize it (e.g. SnakeCase).
     def self.camelize(name)
-      name.split('_').inject(+'') {|s, x| s << x[0..0].upcase << x[1..-1] }
+      name.split('_').inject(+'') {|s, x| s << x.capitalize! }
     end
 
     # Treat +name+ as if it were camelized (e.g. CamelizedName) and snake-case it (e.g. camelized_name).
