@@ -152,12 +152,15 @@ module Kramdown
         "#{' ' * indent}<hr#{html_attributes(el.attr)} />\n"
       end
 
+      ZERO_TO_ONETWENTYEIGHT = (0..128).to_a.freeze
+      private_constant :ZERO_TO_ONETWENTYEIGHT
+
       def convert_ul(el, indent)
         if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
-          @toc_code = [el.type, el.attr, (0..128).to_a.map { rand(36).to_s(36) }.join]
+          @toc_code = [el.type, el.attr, ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join]
           @toc_code.last
         elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
-          @footnote_location = (0..128).to_a.map { rand(36).to_s(36) }.join
+          @footnote_location = ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join
         else
           format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
         end
