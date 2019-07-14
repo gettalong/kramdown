@@ -93,7 +93,9 @@ module Kramdown
           raise "The source text contains invalid characters for the used encoding #{source.encoding}"
         end
         source = source.encode('UTF-8')
-        source.gsub(/\r\n?/, "\n").chomp + "\n"
+        source.gsub!(/\r\n?/, "\n")
+        source.chomp!
+        source << "\n"
       end
 
       # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
