@@ -27,10 +27,16 @@ module Kramdown
 
         # assign static regex to avoid allocating the same on every instance
         # where +result+ equals a single-backtick. Interpolate otherwise.
-        scan_pattern = (result == '`') ? /`/ : /#{result}/
+        if result == '`'
+          scan_pattern = /`/
+          str_sub_pattern = /`\Z/
+        else
+          scan_pattern = /#{result}/
+          str_sub_pattern = /#{result}\Z/
+        end
 
         if (text = @src.scan_until(scan_pattern))
-          text.chomp!(result)
+          text.sub!(str_sub_pattern, '')
           unless simple
             text = text[1..-1] if text[0..0] == ' '
             text = text[0..-2] if text[-1..-1] == ' '
