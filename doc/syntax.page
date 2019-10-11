@@ -1078,7 +1078,7 @@ Parse as span-level elements
         h1 h2 h3 h4 h5 h6 i ins kbd label legend optgroup p pre q rb rbc
         rp rt rtc ruby samp select small span strong sub sup th tt var
 
-> Remember that all span-level HTML tags like `a` or `b` do not start a HTML block! However, the
+> Remember that all span-level HTML tags like `a` or `b` do not start an HTML block! However, the
 > above lists also include span-level HTML tags in the case the `markdown` attribute is used on a
 > tag inside a raw HTML block.
 
