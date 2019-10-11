@@ -480,7 +480,7 @@ module Kramdown
 
       FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\">%s</a>"
 
-      # Return a HTML ordered list with the footnote content for the used footnotes.
+      # Return an HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
         ol = Element.new(:ol)
         ol.attr['start'] = @footnote_start if @footnote_start != 1

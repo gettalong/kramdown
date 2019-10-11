@@ -42,7 +42,7 @@ module Kramdown
     #
     # == Special Implementation Details
     #
-    # HTML converter:: If the syntax highlighter is used with a HTML converter, it should return
+    # HTML converter:: If the syntax highlighter is used with an HTML converter, it should return
     #                  :block type text correctly wrapped (i.e. normally inside a pre-tag, but may
     #                  also be a table-tag or just a div-tag) but :span type text *without* a
     #                  code-tag!

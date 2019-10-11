@@ -16,7 +16,7 @@ module Kramdown
 
   module Parser
 
-    # Used for parsing a HTML document.
+    # Used for parsing an HTML document.
     #
     # The parsing code is in the Parser module that can also be used by other parsers.
     class Html < Base
