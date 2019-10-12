@@ -47,6 +47,7 @@ module Kramdown
       LIST_START_UL = /^(#{OPT_SPACE}[+*-])([\t| ].*?\n)/
       LIST_START_OL = /^(#{OPT_SPACE}\d+\.)([\t| ].*?\n)/
       LIST_START = /#{LIST_START_UL}|#{LIST_START_OL}/
+      LIST_START_NUM_OL = /^#{OPT_SPACE}(\d)+\./
 
       # Parse the ordered or unordered list at the current location.
       def parse_list
@@ -59,6 +60,7 @@ module Kramdown
         eob_found = false
         nested_list_found = false
         last_is_blank = false
+	list_first = true
         until @src.eos?
           start_line_number = @src.current_line_number
           if last_is_blank && @src.check(HR_START)
@@ -71,6 +73,12 @@ module Kramdown
             item.value, indentation, content_re, lazy_re, indent_re =
               parse_first_list_line(@src[1].length, @src[2])
             list.children << item
+
+            if list_first && type == :ol
+              list_first = false
+              num = @src[1].scan(LIST_START_NUM_OL)
+              list.attr['start'] = num[0][0]
+            end
 
             item.value.sub!(self.class::LIST_ITEM_IAL) do
               parse_attribute_list($1, item.options[:ial] ||= {})
