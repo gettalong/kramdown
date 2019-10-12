@@ -77,7 +77,9 @@ module Kramdown
             if list_first && type == :ol
               list_first = false
               num = @src[1].scan(LIST_START_NUM_OL)
-              list.attr['start'] = num[0][0]
+	      if num && num[0][0] != "1"
+                list.attr['start'] = num[0][0]
+	      end
             end
 
             item.value.sub!(self.class::LIST_ITEM_IAL) do
