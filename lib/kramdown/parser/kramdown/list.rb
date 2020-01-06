@@ -263,10 +263,8 @@ module Kramdown
             /^( {0,1}[+*-])(#{PATTERN_TAIL})/o
           when 3
             /^( {0,2}[+*-])(#{PATTERN_TAIL})/o
-          when 4
-            /^( {0,3}[+*-])(#{PATTERN_TAIL})/o
           else
-            /^( {0,#{[3, indentation - 1].min}}[+*-])(#{PATTERN_TAIL})/
+            /^( {0,3}[+*-])(#{PATTERN_TAIL})/o
           end
         elsif type == :ol
           case indentation
@@ -276,10 +274,8 @@ module Kramdown
             /^( {0,1}\d+\.)(#{PATTERN_TAIL})/o
           when 3
             /^( {0,2}\d+\.)(#{PATTERN_TAIL})/o
-          when 4
-            /^( {0,3}\d+\.)(#{PATTERN_TAIL})/o
           else
-            /^( {0,#{[3, indentation - 1].min}}\d+\.)(#{PATTERN_TAIL})/
+            /^( {0,3}\d+\.)(#{PATTERN_TAIL})/o
           end
         elsif type == :dl
           case indentation
@@ -289,10 +285,8 @@ module Kramdown
             /^( {0,1}:)(#{PATTERN_TAIL})/o
           when 3
             /^( {0,2}:)(#{PATTERN_TAIL})/o
-          when 4
-            /^( {0,3}:)(#{PATTERN_TAIL})/o
           else
-            /^( {0,#{[3, indentation - 1].min}}:)(#{PATTERN_TAIL})/
+            /^( {0,3}:)(#{PATTERN_TAIL})/o
           end
         end
       end
