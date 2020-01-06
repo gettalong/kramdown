@@ -16,7 +16,7 @@ module Kramdown
 
   module Parser
 
-    # Used for parsing a HTML document.
+    # Used for parsing an HTML document.
     #
     # The parsing code is in the Parser module that can also be used by other parsers.
     class Html < Base
@@ -286,7 +286,7 @@ module Kramdown
           src = Kramdown::Utils::StringScanner.new(raw)
           result = []
           until src.eos?
-            if (tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/))
+            if (tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/o))
               result << Element.new(:text, tmp)
               src.scan(HTML_ENTITY_RE)
               val = src[1] || (src[2]&.to_i) || src[3].hex
@@ -581,11 +581,11 @@ module Kramdown
         @src = Kramdown::Utils::StringScanner.new(adapt_source(source))
 
         while true
-          if (result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/))
+          if (result = @src.scan(/\s*#{HTML_INSTRUCTION_RE}/o))
             @tree.children << Element.new(:xml_pi, result.strip, nil, category: :block)
-          elsif (result = @src.scan(/\s*#{HTML_DOCTYPE_RE}/))
+          elsif (result = @src.scan(/\s*#{HTML_DOCTYPE_RE}/o))
             # ignore the doctype
-          elsif (result = @src.scan(/\s*#{HTML_COMMENT_RE}/))
+          elsif (result = @src.scan(/\s*#{HTML_COMMENT_RE}/o))
             @tree.children << Element.new(:xml_comment, result.strip, nil, category: :block)
           else
             break

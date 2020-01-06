@@ -252,6 +252,12 @@ namespace :dev do
     end
     puts "Look through the above mentioned files and correct all problems" if inserted
   end
+
+  desc "Profile memory usage while running the tests"
+  task :profile_memory do
+    load_paths = %w[lib test benchmark].join(File::PATH_SEPARATOR)
+    ruby "-I #{load_paths} -r memory_profiler_preload test/test_files.rb"
+  end
 end
 
 task gemspec: ['dev:gemspec']

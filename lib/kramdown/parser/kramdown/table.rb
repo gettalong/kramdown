@@ -132,8 +132,8 @@ module Kramdown
               pipe_on_line = false
             end
           else
-            break if lines.size > 1 && !pipe_on_line && lines.first !~ /^#{TABLE_PIPE_CHECK}/
-            pipe_on_line = (lines.size > 1 ? false : pipe_on_line) || (lines.last =~ /^#{TABLE_PIPE_CHECK}/)
+            break if lines.size > 1 && !pipe_on_line && lines.first !~ /^#{TABLE_PIPE_CHECK}/o
+            pipe_on_line = (lines.size > 1 ? false : pipe_on_line) || (lines.last =~ /^#{TABLE_PIPE_CHECK}/o)
           end
         end
         @src.revert_pos(saved_pos) and return false unless pipe_on_line

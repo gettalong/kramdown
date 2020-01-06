@@ -11,6 +11,7 @@ require 'minitest/autorun'
 require 'kramdown'
 require 'yaml'
 require 'tmpdir'
+require 'open3'
 
 begin
   require 'kramdown/converter/syntax_highlighter/rouge'
@@ -111,14 +112,10 @@ class TestFiles < Minitest::Test
   end
 
   def tidy_output(out)
-    cmd = "tidy -q --doctype omit #{RUBY_VERSION >= '1.9' ? '-utf8' : '-raw'} 2>/dev/null"
-    result = IO.popen(cmd, 'r+') do |io|
-      io.write(out)
-      io.close_write
-      io.read
-    end
-    if $?.exitstatus == 2
-      raise "Problem using tidy"
+    cmd = "tidy -q --doctype omit -utf8"
+    result, error, status = Open3.capture3(cmd, stdin_data: out)
+    if status.exitstatus == 2
+      raise "Problem using tidy: #{error}"
     end
     result
   end
