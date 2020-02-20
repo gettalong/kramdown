@@ -52,7 +52,7 @@ module Kramdown
           # assign a frozen string instead of converting Symbol to String for default use-case.
           @highlighter = "rouge"
         else
-          @highlighter = options[:syntax_highlighter].to_s
+          @highlighter = @highlighter.to_s
         end
       end
 
