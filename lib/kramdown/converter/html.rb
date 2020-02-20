@@ -46,6 +46,14 @@ module Kramdown
         @toc_code = nil
         @indent = 2
         @stack = []
+
+        @highlighter = options[:syntax_highlighter]
+        if @highlighter == :rouge
+          # assign a frozen string instead of converting Symbol to String for default use-case.
+          @highlighter = "rouge"
+        else
+          @highlighter = options[:syntax_highlighter].to_s
+        end
       end
 
       # The mapping of element type to conversion method.
@@ -403,7 +411,7 @@ module Kramdown
       # Add the syntax highlighter name to the 'class' attribute of the given attribute hash. And
       # overwrites or add a "language-LANG" part using the +lang+ parameter if +lang+ is not nil.
       def add_syntax_highlighter_to_class_attr(attr, lang = nil)
-        (attr['class'] = (attr['class'] || '') + " highlighter-#{@options[:syntax_highlighter]}").lstrip!
+        (attr['class'] = (attr['class'] || '') + " highlighter-#{@highlighter}").lstrip!
         attr['class'].sub!(/\blanguage-\S+|(^)/) { "language-#{lang}#{$1 ? ' ' : ''}" } if lang
       end
 
