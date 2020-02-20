@@ -328,7 +328,11 @@ module Kramdown
       Used by: HTML converter, kramdown converter
     EOF
 
-    define(:toc_levels, Object, (1..6).to_a, <<~EOF) do |val|
+    TOC_LEVELS_RANGE = (1..6).freeze
+    TOC_LEVELS_ARRAY = TOC_LEVELS_RANGE.to_a.freeze
+    private_constant :TOC_LEVELS_RANGE, :TOC_LEVELS_ARRAY
+
+    define(:toc_levels, Object, TOC_LEVELS_ARRAY, <<~EOF) do |val|
       Defines the levels that are used for the table of contents
 
       The individual levels can be specified by separating them with commas
@@ -347,12 +351,20 @@ module Kramdown
         else
           raise Kramdown::Error, "Invalid syntax for option toc_levels"
         end
-      when Array, Range
-        val = val.map(&:to_i).uniq
+      when Array
+        unless val.eql?(TOC_LEVELS_ARRAY)
+          val = val.map(&:to_i).uniq
+        end
+      when Range
+        if val.eql?(TOC_LEVELS_RANGE)
+          val = TOC_LEVELS_ARRAY
+        else
+          val = val.map(&:to_i).uniq
+        end
       else
         raise Kramdown::Error, "Invalid type #{val.class} for option toc_levels"
       end
-      if val.any? {|i| !(1..6).cover?(i) }
+      if val.any? {|i| !TOC_LEVELS_RANGE.cover?(i) }
         raise Kramdown::Error, "Level numbers for option toc_levels have to be integers from 1 to 6"
       end
       val
