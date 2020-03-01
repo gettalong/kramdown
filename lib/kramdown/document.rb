@@ -106,10 +106,17 @@ module Kramdown
       end
     end
 
+    # Use Kramdown::Converter::Html class to convert this document into HTML.
+    def to_html
+      output, warnings = Kramdown::Converter::Html.convert(@root, @options)
+      @warnings.concat(warnings)
+      output
+    end
+
     # Check if a method is invoked that begins with +to_+ and if so, try to instantiate a converter
     # class (i.e. a class in the Kramdown::Converter module) and use it for converting the document.
     #
-    # For example, +to_html+ would instantiate the Kramdown::Converter::Html class.
+    # For example, +to_latex+ would instantiate the Kramdown::Converter::Latex class.
     def method_missing(id, *attr, &block)
       if id.to_s =~ /^to_(\w+)$/ && (name = Utils.camelize($1)) &&
           try_require('converter', name) && Converter.const_defined?(name)
