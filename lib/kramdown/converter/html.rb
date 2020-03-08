@@ -300,7 +300,7 @@ module Kramdown
           @footnotes << [name, el.value, number, 0]
           @footnotes_by_name[name] = @footnotes.last
         end
-        "<sup id=\"fnref:#{name}#{repeat}\">" \
+        "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
           "<a href=\"#fn:#{name}\" class=\"footnote\">" \
           "#{number}</a></sup>"
       end
@@ -412,6 +412,7 @@ module Kramdown
       def generate_toc_tree(toc, type, attr)
         sections = Element.new(type, nil, attr.dup)
         sections.attr['id'] ||= 'markdown-toc'
+        sections.attr['role'] ||= 'doc-toc'
         stack = []
         toc.each do |level, id, children|
           li = Element.new(:li, nil, nil, level: level)
@@ -479,7 +480,7 @@ module Kramdown
         result
       end
 
-      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\">%s</a>"
+      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\">%s</a>"
 
       # Return an HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
@@ -489,7 +490,7 @@ module Kramdown
         backlink_text = escape_html(@options[:footnote_backlink], :text)
         while i < @footnotes.length
           name, data, _, repeat = *@footnotes[i]
-          li = Element.new(:li, nil, 'id' => "fn:#{name}")
+          li = Element.new(:li, nil, 'id' => "fn:#{name}", 'role' => 'doc-endnote')
           li.children = Marshal.load(Marshal.dump(data.children))
 
           para = nil
@@ -524,7 +525,7 @@ module Kramdown
         if ol.children.empty?
           ''
         else
-          format_as_indented_block_html('div', {class: "footnotes"}, convert(ol, 2), 0)
+          format_as_indented_block_html('div', {class: "footnotes", role: "doc-endnotes"}, convert(ol, 2), 0)
         end
       end
 
