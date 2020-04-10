@@ -20,20 +20,22 @@ to MathJax to your page.
 
 To use [KaTeX](https://khan.github.io/KaTeX/) instead of MathJax, activate the MathJax engine in
 kramdown, include the KaTeX Javascript files in the HTML file and put the following script at the
-end of the HTML file (note that JQuery is used for some parts but it can probably be done without
-it):
+end of the HTML file:
 
 ~~~ html
 <script>
-  $("script[type='math/tex']").replaceWith(function() {
-      var tex = $(this).text();
-      return katex.renderToString(tex, \{displayMode: false});
-  });
-
-  $("script[type='math/tex; mode=display']").replaceWith(function() {
-      var tex = $(this).html();
-      return katex.renderToString(tex.replace(/%.*/g, ''), \{displayMode: true});
-  });
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll("script[type='math/tex']").forEach(e => {
+            let tex = e.innerText;
+            let html = katex.renderToString(tex, {displayMode: false});
+            e.outerHTML = html;
+        });
+        document.querySelectorAll("script[type='math/tex; mode=display']").forEach(e => {
+            let tex = e.innerText;
+            let html = katex.renderToString(tex, {displayMode: true});
+            e.outerHTML = html;
+        });
+    });
 </script>
 ~~~
 
