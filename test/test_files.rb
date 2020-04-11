@@ -219,14 +219,14 @@ class TestFiles < Minitest::Test
       'test/testcases/block/16_toc/toc_exclude.html',      # bc of different attribute ordering
       'test/testcases/span/autolinks/url_links.html',      # bc of quot entity being converted to char
       'test/testcases/block/14_table/empty_tag_in_cell.html', # bc of tidy
-      'test/testcases/block/15_math/mathjax_preview.html', # bc of mathjax preview
-      'test/testcases/block/15_math/mathjax_preview_simple.html', # bc of mathjax preview
-      'test/testcases/block/15_math/mathjax_preview_as_code.html', # bc of mathjax preview
       'test/testcases/span/01_link/link_defs_with_ial.html', # bc of attribute ordering
       'test/testcases/span/05_html/mark_element.html', # bc of tidy
       'test/testcases/block/09_html/xml.html', # bc of tidy
       'test/testcases/span/05_html/xml.html', # bc of tidy
       'test/testcases/block/03_paragraph/standalone_image.html', # bc of standalone image
+      'test/testcases/block/15_math/normal.html', # bc of mathjax and HTML parser
+      'test/testcases/block/15_math/gh_128.html', # bc of mathjax and HTML parser
+      'test/testcases/span/04_footnote/backlink_inline.html', # bc of mathjax
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/ }
