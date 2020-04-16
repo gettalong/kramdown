@@ -17,7 +17,14 @@ module Kramdown::Converter::MathEngine
 
     def self.call(converter, el, opts)
       value = converter.escape_html(el.value)
-      el.options[:category] == :block ?  "\\[#{value}\\]\n" : "\\(#{value}\\)"
+      result = el.options[:category] == :block ?  "\\[#{value}\\]\n" : "\\(#{value}\\)"
+      if el.attr.empty?
+        result
+      elsif el.options[:category] == :block
+        converter.format_as_block_html('div', el.attr, result, opts[:indent])
+      else
+        converter.format_as_span_html('span', el.attr, "$#{el.value}$")
+      end
     end
 
   end
