@@ -170,8 +170,7 @@ module Kramdown
         elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
           @footnote_location = ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join
         else
-          type = el.type == :ul ? "ul" : "ol"
-          format_as_indented_block_html(type, el.attr, inner(el, indent), indent)
+          format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
         end
       end
       alias convert_ol convert_ul
@@ -181,8 +180,7 @@ module Kramdown
       end
 
       def convert_li(el, indent)
-        type = el.type == :li ? "li" : "dd"
-        output = ' ' * indent << "<#{type}" << html_attributes(el.attr) << ">"
+        output = ' ' * indent << "<#{el.type}" << html_attributes(el.attr) << ">"
         res = inner(el, indent)
         if el.children.empty? || (el.children.first.type == :p && el.children.first.options[:transparent])
           output << res << (res =~ /\n\Z/ ? ' ' * indent : '')
@@ -323,8 +321,7 @@ module Kramdown
       end
 
       def convert_em(el, indent)
-        type = el.type == :em ? "em" : "strong"
-        format_as_span_html(type, el.attr, inner(el, indent))
+        format_as_span_html(el.type, el.attr, inner(el, indent))
       end
       alias convert_strong convert_em
 
