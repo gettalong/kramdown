@@ -182,7 +182,7 @@ module Kramdown
         else
           output << "\n" << res << ' ' * indent
         end
-        output << "</#{type}>\n"
+        output << "</#{el.type}>\n"
       end
       alias convert_dd convert_li
 
