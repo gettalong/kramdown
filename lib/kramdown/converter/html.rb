@@ -47,13 +47,8 @@ module Kramdown
         @indent = 2
         @stack = []
 
-        @highlighter = options[:syntax_highlighter]
-        if @highlighter == :rouge
-          # assign a frozen string instead of converting Symbol to String for default use-case.
-          @highlighter = "rouge"
-        else
-          @highlighter = @highlighter.to_s
-        end
+        # stash string representation of symbol to avoid allocations from multiple interpolations.
+        @highlighter = options[:syntax_highlighter].to_s
       end
 
       # The mapping of element type to conversion method.
