@@ -582,6 +582,13 @@ module Kramdown
       Used by: HTML
     EOF
 
+    define(:remove_line_breaks_for_cjk, Boolean, false, <<~EOF)
+      Specifies whether line breaks should be removed between CJK characters
+
+      Default: false
+      Used by: HTML converter
+    EOF
+
   end
 
 end

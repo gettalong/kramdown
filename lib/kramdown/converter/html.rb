@@ -79,7 +79,7 @@ module Kramdown
 
       def convert_text(el, _indent)
         escaped = escape_html(el.value, :text)
-        fix_cjk_line_break(escaped)
+        @options[:remove_line_breaks_for_cjk] ? fix_cjk_line_break(escaped) : escaped
       end
 
       def convert_p(el, indent)
