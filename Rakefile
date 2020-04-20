@@ -171,8 +171,8 @@ namespace :dev do
 
       s.require_path = 'lib'
       s.executables = ['kramdown']
-      s.default_executable = 'kramdown'
       s.required_ruby_version = '>= 2.3'
+      s.add_dependency "rexml"
       s.add_development_dependency 'minitest', '~> 5.0'
       s.add_development_dependency 'rouge'
       s.add_development_dependency 'stringex', '~> 1.5.1'

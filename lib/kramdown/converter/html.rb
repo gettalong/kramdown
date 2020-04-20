@@ -46,6 +46,9 @@ module Kramdown
         @toc_code = nil
         @indent = 2
         @stack = []
+
+        # stash string representation of symbol to avoid allocations from multiple interpolations.
+        @highlighter_class = " highlighter-#{options[:syntax_highlighter]}"
       end
 
       # The mapping of element type to conversion method.
@@ -78,7 +81,8 @@ module Kramdown
       end
 
       def convert_text(el, _indent)
-        escape_html(el.value, :text)
+        escaped = escape_html(el.value, :text)
+        @options[:remove_line_breaks_for_cjk] ? fix_cjk_line_break(escaped) : escaped
       end
 
       def convert_p(el, indent)
@@ -88,7 +92,7 @@ module Kramdown
             el.children.first.options[:ial]&.[](:refs)&.include?('standalone')
           convert_standalone_image(el.children.first, indent)
         else
-          format_as_block_html(el.type, el.attr, inner(el, indent), indent)
+          format_as_block_html("p", el.attr, inner(el, indent), indent)
         end
       end
 
@@ -135,7 +139,7 @@ module Kramdown
       end
 
       def convert_blockquote(el, indent)
-        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+        format_as_indented_block_html("blockquote", el.attr, inner(el, indent), indent)
       end
 
       def convert_header(el, indent)
@@ -168,7 +172,7 @@ module Kramdown
       alias convert_ol convert_ul
 
       def convert_dl(el, indent)
-        format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
+        format_as_indented_block_html("dl", el.attr, inner(el, indent), indent)
       end
 
       def convert_li(el, indent)
@@ -191,7 +195,7 @@ module Kramdown
             break
           end
         end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
-        format_as_block_html(el.type, attr, inner(el, indent), indent)
+        format_as_block_html("dt", attr, inner(el, indent), indent)
       end
 
       def convert_html_element(el, indent)
@@ -266,7 +270,7 @@ module Kramdown
       end
 
       def convert_a(el, indent)
-        format_as_span_html(el.type, el.attr, inner(el, indent))
+        format_as_span_html("a", el.attr, inner(el, indent))
       end
 
       def convert_img(el, _indent)
@@ -299,7 +303,7 @@ module Kramdown
           @footnotes << [name, el.value, number, 0]
           @footnotes_by_name[name] = @footnotes.last
         end
-        "<sup id=\"fnref:#{name}#{repeat}\">" \
+        "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
           "<a href=\"#fn:#{name}\" class=\"footnote\">" \
           "#{number}</a></sup>"
       end
@@ -403,7 +407,7 @@ module Kramdown
       # Add the syntax highlighter name to the 'class' attribute of the given attribute hash. And
       # overwrites or add a "language-LANG" part using the +lang+ parameter if +lang+ is not nil.
       def add_syntax_highlighter_to_class_attr(attr, lang = nil)
-        (attr['class'] = (attr['class'] || '') + " highlighter-#{@options[:syntax_highlighter]}").lstrip!
+        (attr['class'] = (attr['class'] || '') + @highlighter_class).lstrip!
         attr['class'].sub!(/\blanguage-\S+|(^)/) { "language-#{lang}#{$1 ? ' ' : ''}" } if lang
       end
 
@@ -411,6 +415,7 @@ module Kramdown
       def generate_toc_tree(toc, type, attr)
         sections = Element.new(type, nil, attr.dup)
         sections.attr['id'] ||= 'markdown-toc'
+        sections.attr['role'] ||= 'doc-toc'
         stack = []
         toc.each do |level, id, children|
           li = Element.new(:li, nil, nil, level: level)
@@ -478,7 +483,7 @@ module Kramdown
         result
       end
 
-      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\">%s</a>"
+      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\">%s</a>"
 
       # Return an HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
@@ -488,7 +493,7 @@ module Kramdown
         backlink_text = escape_html(@options[:footnote_backlink], :text)
         while i < @footnotes.length
           name, data, _, repeat = *@footnotes[i]
-          li = Element.new(:li, nil, 'id' => "fn:#{name}")
+          li = Element.new(:li, nil, 'id' => "fn:#{name}", 'role' => 'doc-endnote')
           li.children = Marshal.load(Marshal.dump(data.children))
 
           para = nil
@@ -523,7 +528,7 @@ module Kramdown
         if ol.children.empty?
           ''
         else
-          format_as_indented_block_html('div', {class: "footnotes"}, convert(ol, 2), 0)
+          format_as_indented_block_html('div', {class: "footnotes", role: "doc-endnotes"}, convert(ol, 2), 0)
         end
       end
 

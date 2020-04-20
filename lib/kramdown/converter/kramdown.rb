@@ -34,13 +34,13 @@ module Kramdown
         res = res.dup if res.frozen?
         if ![:html_element, :li, :dt, :dd, :td].include?(el.type) && (ial = ial_for_element(el))
           res << ial
-          res << "\n\n" if Element.category(el) == :block
+          res << "\n\n" if el.block?
         elsif [:ul, :dl, :ol, :codeblock].include?(el.type) && opts[:next] &&
             ([el.type, :codeblock].include?(opts[:next].type) ||
              (opts[:next].type == :blank && opts[:nnext] &&
               [el.type, :codeblock].include?(opts[:nnext].type)))
           res << "^\n\n"
-        elsif Element.category(el) == :block &&
+        elsif el.block? &&
             ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
             (el.type != :html_element || @stack.last.type != :html_element) &&
             (el.type != :p || !el.options[:transparent])
@@ -184,10 +184,15 @@ module Kramdown
 
       HTML_TAGS_WITH_BODY = ['div', 'script', 'iframe', 'textarea']
 
+      HTML_ELEMENT_TYPES = [:entity, :text, :html_element].freeze
+      private_constant :HTML_ELEMENT_TYPES
+
       def convert_html_element(el, opts)
         markdown_attr = el.options[:category] == :block && el.children.any? do |c|
-          c.type != :html_element && (c.type != :p || !c.options[:transparent]) &&
-            Element.category(c) == :block
+          c.type != :html_element &&
+            (c.type != :p || !c.options[:transparent] ||
+             c.children.any? {|t| !HTML_ELEMENT_TYPES.member?(t.type) }) &&
+            c.block?
         end
         opts[:force_raw_text] = true if %w[script pre code].include?(el.value)
         opts[:raw_text] = opts[:force_raw_text] || opts[:block_raw_text] || \
