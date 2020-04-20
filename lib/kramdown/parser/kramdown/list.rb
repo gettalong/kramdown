@@ -257,36 +257,24 @@ module Kramdown
       def fetch_pattern(type, indentation)
         if type == :ul
           case indentation
-          when 1
-            /^( {0}[+*-])(#{PATTERN_TAIL})/o
-          when 2
-            /^( {0,1}[+*-])(#{PATTERN_TAIL})/o
-          when 3
-            /^( {0,2}[+*-])(#{PATTERN_TAIL})/o
-          else
-            /^( {0,3}[+*-])(#{PATTERN_TAIL})/o
+          when 1 then %r/^( {0}[+*-])(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}[+*-])(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}[+*-])(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}[+*-])(#{PATTERN_TAIL})/o
           end
         elsif type == :ol
           case indentation
-          when 1
-            /^( {0}\d+\.)(#{PATTERN_TAIL})/o
-          when 2
-            /^( {0,1}\d+\.)(#{PATTERN_TAIL})/o
-          when 3
-            /^( {0,2}\d+\.)(#{PATTERN_TAIL})/o
-          else
-            /^( {0,3}\d+\.)(#{PATTERN_TAIL})/o
+          when 1 then %r/^( {0}\d+\.)(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}\d+\.)(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}\d+\.)(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}\d+\.)(#{PATTERN_TAIL})/o
           end
         elsif type == :dl
           case indentation
-          when 1
-            /^( {0}:)(#{PATTERN_TAIL})/o
-          when 2
-            /^( {0,1}:)(#{PATTERN_TAIL})/o
-          when 3
-            /^( {0,2}:)(#{PATTERN_TAIL})/o
-          else
-            /^( {0,3}:)(#{PATTERN_TAIL})/o
+          when 1 then %r/^( {0}:)(#{PATTERN_TAIL})/o
+          when 2 then %r/^( {0,1}:)(#{PATTERN_TAIL})/o
+          when 3 then %r/^( {0,2}:)(#{PATTERN_TAIL})/o
+          else %r/^( {0,3}:)(#{PATTERN_TAIL})/o
           end
         end
       end
