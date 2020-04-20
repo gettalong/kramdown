@@ -11,8 +11,8 @@ module Kramdown
   module Parser
     class Kramdown
 
-      ACHARS = '[[:alnum:]]_'
-      AUTOLINK_START_STR = "<((mailto|https?|ftps?):.+?|[-.#{ACHARS}]+@[-#{ACHARS}]+(?:\.[-#{ACHARS}]+)*\.[a-z]+)>"
+      ACHARS = '[[:alnum:]]-_.'
+      AUTOLINK_START_STR = "<((mailto|https?|ftps?):.+?|[#{ACHARS}]+?@[#{ACHARS}]+?)>"
       AUTOLINK_START = /#{AUTOLINK_START_STR}/u
 
       # Parse the autolink at the current location.

@@ -16,7 +16,7 @@ module Kramdown
 
   module Parser
 
-    # Used for parsing a HTML document.
+    # Used for parsing an HTML document.
     #
     # The parsing code is in the Parser module that can also be used by other parsers.
     class Html < Base
@@ -324,7 +324,7 @@ module Kramdown
           tmp = []
           last_is_p = false
           el.children.each do |c|
-            if Element.category(c) != :block || c.type == :text
+            if !c.block? || c.type == :text
               unless last_is_p
                 tmp << Element.new(:p, nil, nil, transparent: true)
                 last_is_p = true
@@ -354,8 +354,8 @@ module Kramdown
           el.children = el.children.reject do |c|
             i += 1
             c.type == :text && c.value.strip.empty? &&
-              (i == 0 || i == el.children.length - 1 || (Element.category(el.children[i - 1]) == :block &&
-                                                         Element.category(el.children[i + 1]) == :block))
+              (i == 0 || i == el.children.length - 1 || ((el.children[i - 1]).block? &&
+                                                         (el.children[i + 1]).block?))
           end
         end
 

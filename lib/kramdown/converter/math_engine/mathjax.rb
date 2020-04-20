@@ -16,40 +16,14 @@ module Kramdown::Converter::MathEngine
   module Mathjax
 
     def self.call(converter, el, opts)
-      type = el.options[:category]
-      text = (el.value =~ /<|&/ ? "% <![CDATA[\n#{el.value} %]]>" : el.value).dup
-      text.gsub!(/<\/?script>?/, '')
-
-      preview = preview_string(converter, el, opts).dup
-
-      attr = {type: "math/tex#{type == :block ? '; mode=display' : ''}"}
-      preview << if type == :block
-                   converter.format_as_block_html('script', attr, text, opts[:indent])
-                 else
-                   converter.format_as_span_html('script', attr, text)
-                 end
-    end
-
-    def self.preview_string(converter, el, opts)
-      preview = converter.options[:math_engine_opts][:preview]
-      return '' unless preview
-
-      preview = (preview == true ? converter.escape_html(el.value) : preview.to_s)
-
-      preview_as_code = converter.options[:math_engine_opts][:preview_as_code]
-
-      if el.options[:category] == :block
-        if preview_as_code
-          converter.format_as_block_html('pre', {'class' => 'MathJax_Preview'},
-                                         converter.format_as_span_html('code', {}, preview),
-                                         opts[:indent])
-        else
-          converter.format_as_block_html('div', {'class' => 'MathJax_Preview'}, preview,
-                                         opts[:indent])
-        end
+      value = converter.escape_html(el.value)
+      result = el.options[:category] == :block ?  "\\[#{value}\\]\n" : "\\(#{value}\\)"
+      if el.attr.empty?
+        result
+      elsif el.options[:category] == :block
+        converter.format_as_block_html('div', el.attr, result, opts[:indent])
       else
-        converter.format_as_span_html(preview_as_code ? 'code' : 'span',
-                                      {'class' => 'MathJax_Preview'}, preview)
+        converter.format_as_span_html('span', el.attr, "$#{el.value}$")
       end
     end
 
