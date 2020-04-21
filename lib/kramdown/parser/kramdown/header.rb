@@ -31,7 +31,7 @@ module Kramdown
       def parse_atx_header
         return false unless after_block_boundary?
         text, id = parse_header_contents
-        text.sub!(/[\t ]#+\z/, '') && text.rstrip!
+        text.sub!(/(?<!\\)#+\z/, '') && text.rstrip!
         return false if text.empty?
         add_header(@src["level"].length, text, id)
         true
