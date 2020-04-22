@@ -1,0 +1,75 @@
+---
+title: kramdown 2.2.0 released
+no_output: true
+sort_info: r2020
+created_at: 2020-04-22 22:52:00 +02:00
+modified_at: 2020-04-22 22:52:00 +02:00
+---
+## kramdown 2.2.0 released
+
+This release is a hotchpotch of many small, internal changes, some minor user visible changes and a
+few bug fixes. Special thanks to Ashwin Maroli for his many contributions!
+
+
+## Changes
+
+* 5 minor changes:
+
+  - Change output of MathJax math engine to be compatible with MathJax v2 and v3 (fixes issue [#626]
+    by Abe Voelker) and wrap it in `<div>`/`<span>` tags for attribute assignment (fixes issue
+    [#533] by Luc J. Bourhis)
+  - Make `rexml` a dependency due to it not being a default gem in the future (PR [#638] by David
+    Rodriguez)
+  - Add WAI-ARIA role attributes to TOC and footnotes HTML (PR [#646] by Maxime Kjaer)
+  - Remove redundant line breaks in HTML output for CJK scripts (fixes issue [#587], PR [#588] both
+    by Fangyi Zhou); can be enabled via the new option `remove_line_breaks_for_cjk`
+  - Several internal changes with respect to memory usage and performance (PRs [#600], [#601],
+    [#621], [#619], [#641], [#642], [#597], [#578], [#598], [#596] by Ashwin Maroli)
+
+* 4 bug fixes:
+
+  - Fix performance problem on missing space with respect to autolinks (fixes issue [#647] by
+    Martijn Stegeman)
+  - Allow juxtaposing `&[mn]dash;` and emphasis (fixes issue [#624] by Kevin Bloch, PR [#625] by
+    Ashwin Maroli)
+  - Fix kramdown converter to better handle markup inside non-convertible HTML tags (PR [#614] by
+    Bob Lail)
+  - Fix regression for atx header parsing by not requiring whitespace before closing hash marks (PR
+    [#652] by Simon Coffey)
+
+* 3 other changes
+
+  - Make Travis CI integration better (PRs [#585] by stephengroat)
+  - Documentation fixes (PRs [#606] by tom93, [#590] by Gleb Mazovetskiy, [#629] by Kazuma
+    Furuhashi, issue [#649] by Joseph Wong)
+  - New rake task and scripts for memory profiling (PRs [#607], [#608] by Aswhin Maroli)
+
+[#585]: https://github.com/gettalong/kramdown/pull/585
+[#600]: https://github.com/gettalong/kramdown/pull/600
+[#601]: https://github.com/gettalong/kramdown/pull/601
+[#606]: https://github.com/gettalong/kramdown/pull/606
+[#590]: https://github.com/gettalong/kramdown/pull/590
+[#607]: https://github.com/gettalong/kramdown/pull/607
+[#621]: https://github.com/gettalong/kramdown/pull/621
+[#619]: https://github.com/gettalong/kramdown/pull/619
+[#638]: https://github.com/gettalong/kramdown/pull/638
+[#629]: https://github.com/gettalong/kramdown/pull/629
+[#641]: https://github.com/gettalong/kramdown/pull/641
+[#608]: https://github.com/gettalong/kramdown/pull/608
+[#625]: https://github.com/gettalong/kramdown/pull/625
+[#646]: https://github.com/gettalong/kramdown/pull/646
+[#614]: https://github.com/gettalong/kramdown/pull/614
+[#642]: https://github.com/gettalong/kramdown/pull/642
+[#597]: https://github.com/gettalong/kramdown/pull/597
+[#578]: https://github.com/gettalong/kramdown/pull/578
+[#598]: https://github.com/gettalong/kramdown/pull/598
+[#596]: https://github.com/gettalong/kramdown/pull/596
+[#588]: https://github.com/gettalong/kramdown/pull/588
+[#652]: https://github.com/gettalong/kramdown/pull/652
+
+[#647]: https://github.com/gettalong/kramdown/issues/647
+[#626]: https://github.com/gettalong/kramdown/issues/626
+[#624]: https://github.com/gettalong/kramdown/issues/624
+[#533]: https://github.com/gettalong/kramdown/issues/533
+[#587]: https://github.com/gettalong/kramdown/issues/587
+[#649]: https://github.com/gettalong/kramdown/issues/649
