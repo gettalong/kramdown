@@ -1,0 +1,17 @@
+---
+title: kramdown 2.2.1 released
+no_output: true
+sort_info: r2021
+created_at: 2020-04-23 16:11:00 +02:00
+modified_at: 2020-04-23 16:11:00 +02:00
+---
+## kramdown 2.2.1 released
+
+## Changes
+
+* 1 bug fix:
+
+  - Don't set `role=doc-toc` in HTML converter because it is invalid for `ul`/`ol` (fixes [#653] by
+    XhmikosR)
+
+[#653]: https://github.com/gettalong/kramdown/issues/653
