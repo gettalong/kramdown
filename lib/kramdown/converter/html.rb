@@ -415,7 +415,6 @@ module Kramdown
       def generate_toc_tree(toc, type, attr)
         sections = Element.new(type, nil, attr.dup)
         sections.attr['id'] ||= 'markdown-toc'
-        sections.attr['role'] ||= 'doc-toc'
         stack = []
         toc.each do |level, id, children|
           li = Element.new(:li, nil, nil, level: level)
