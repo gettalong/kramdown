@@ -89,7 +89,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         elsif el.children.size == 1 && el.children.first.type == :img &&
-            el.children.first.options[:ial]&.[](:refs)&.include?('standalone')
+            el.children.first.options(dig :ial, :refs)&.include?('standalone')
           convert_standalone_image(el.children.first, indent)
         else
           format_as_block_html("p", el.attr, inner(el, indent), indent)
@@ -160,10 +160,10 @@ module Kramdown
       private_constant :ZERO_TO_ONETWENTYEIGHT
 
       def convert_ul(el, indent)
-        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
+        if !@toc_code && el.options.dig(:ial, :refs)&.include?('toc')
           @toc_code = [el.type, el.attr, ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join]
           @toc_code.last
-        elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
+        elsif !@footnote_location && el.options.dig(:ial, :refs)&.include?('footnotes')
           @footnote_location = ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join
         else
           format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)
@@ -189,12 +189,12 @@ module Kramdown
 
       def convert_dt(el, indent)
         attr = el.attr.dup
-        @stack.last.options[:ial][:refs].each do |ref|
+        @stack.last.options.dig(:ial, :refs)&.each do |ref|
           if ref =~ /\Aauto_ids(?:-([\w-]+))?/
             attr['id'] = "#{$1}#{basic_generate_id(el.options[:raw_text])}".lstrip
             break
           end
-        end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
+        end if !attr['id'] && @stack.last.options.dig(:ial, :refs)
         format_as_block_html("dt", attr, inner(el, indent), indent)
       end
 
@@ -249,7 +249,7 @@ module Kramdown
         res = inner(el, indent)
         type = (@stack[-2].type == :thead ? :th : :td)
         attr = el.attr
-        alignment = @stack[-3].options[:alignment][@stack.last.children.index(el)]
+        alignment = @stack[-3].options.dig(:alignment, @stack.last.children.index(el))
         if alignment != :default
           attr = el.attr.dup
           attr['style'] = (attr.key?('style') ? "#{attr['style']}; " : '') + "text-align: #{alignment}"
@@ -337,7 +337,7 @@ module Kramdown
         raquo: [::Kramdown::Utils::Entities.entity('raquo')],
       } # :nodoc:
       def convert_typographic_sym(el, _indent)
-        if (result = @options[:typographic_symbols][el.value])
+        if (result = @options.dig(:typographic_symbols, el.value))
           escape_html(result, :text)
         else
           TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e) }.join('')
@@ -363,8 +363,8 @@ module Kramdown
       end
 
       def convert_abbreviation(el, _indent)
-        title = @root.options[:abbrev_defs][el.value]
-        attr = @root.options[:abbrev_attr][el.value].dup
+        title = @root.options.dig(:abbrev_defs, el.value)
+        attr = @root.options.dig(:abbrev_attr, el.value).dup
         attr['title'] = title unless title.empty?
         format_as_span_html("abbr", attr, el.value)
       end
