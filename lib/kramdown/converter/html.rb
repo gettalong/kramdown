@@ -89,7 +89,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         elsif el.children.size == 1 && el.children.first.type == :img &&
-            el.children.first.options(dig :ial, :refs)&.include?('standalone')
+            el.children.first.options.dig(:ial, :refs)&.include?('standalone')
           convert_standalone_image(el.children.first, indent)
         else
           format_as_block_html("p", el.attr, inner(el, indent), indent)
