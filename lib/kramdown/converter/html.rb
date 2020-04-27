@@ -89,7 +89,7 @@ module Kramdown
         if el.options[:transparent]
           inner(el, indent)
         elsif el.children.size == 1 && el.children.first.type == :img &&
-            el.children.first.options.dig(:ial, :refs)&.include?('standalone')
+            el.children.first.options[:ial]&.[](:refs)&.include?('standalone')
           convert_standalone_image(el.children.first, indent)
         else
           format_as_block_html("p", el.attr, inner(el, indent), indent)
@@ -194,7 +194,7 @@ module Kramdown
             attr['id'] = "#{$1}#{basic_generate_id(el.options[:raw_text])}".lstrip
             break
           end
-        end if !attr['id'] && @stack.last.options.dig(:ial, :refs)
+        end if !attr['id'] && @stack.last.options[:ial] && @stack.last.options[:ial][:refs]
         format_as_block_html("dt", attr, inner(el, indent), indent)
       end
 
@@ -249,7 +249,7 @@ module Kramdown
         res = inner(el, indent)
         type = (@stack[-2].type == :thead ? :th : :td)
         attr = el.attr
-        alignment = @stack[-3].options.dig(:alignment, @stack.last.children.index(el))
+        alignment = @stack[-3].options[:alignment][@stack.last.children.index(el)]
         if alignment != :default
           attr = el.attr.dup
           attr['style'] = (attr.key?('style') ? "#{attr['style']}; " : '') + "text-align: #{alignment}"
@@ -363,8 +363,8 @@ module Kramdown
       end
 
       def convert_abbreviation(el, _indent)
-        title = @root.options.dig(:abbrev_defs, el.value)
-        attr = @root.options.dig(:abbrev_attr, el.value).dup
+        title = @root.options[:abbrev_defs][el.value]
+        attr = @root.options[:abbrev_attr][el.value].dup
         attr['title'] = title unless title.empty?
         format_as_span_html("abbr", attr, el.value)
       end
