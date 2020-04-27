@@ -189,7 +189,7 @@ module Kramdown
 
       def convert_dt(el, indent)
         attr = el.attr.dup
-        @stack.last.options.dig(:ial, :refs)&.each do |ref|
+        @stack.last.options[:ial][:refs].each do |ref|
           if ref =~ /\Aauto_ids(?:-([\w-]+))?/
             attr['id'] = "#{$1}#{basic_generate_id(el.options[:raw_text])}".lstrip
             break
@@ -337,7 +337,7 @@ module Kramdown
         raquo: [::Kramdown::Utils::Entities.entity('raquo')],
       } # :nodoc:
       def convert_typographic_sym(el, _indent)
-        if (result = @options.dig(:typographic_symbols, el.value))
+        if (result = @options[:typographic_symbols][el.value])
           escape_html(result, :text)
         else
           TYPOGRAPHIC_SYMS[el.value].map {|e| entity_to_str(e) }.join('')
