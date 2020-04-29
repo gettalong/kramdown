@@ -927,7 +927,7 @@ two dollar signs, optionally indented up to three spaces. The math block continu
 two dollar signs (which may be on the same line or on one of the next lines) that appear at the end
 of a line, i.e. they may only be followed by whitespace characters. The content of a math block has
 to be valid LaTeX math. It is always wrapped inside a `\begin{displaymath}...\end{displaymath}`
-enviroment except if it begins with a `\begin` statement.
+environment except if it begins with a `\begin` statement.
 
 The following kramdown fragment
 
