@@ -43,18 +43,23 @@ module Kramdown::Converter::SyntaxHighlighter
       return if converter.data.key?(:syntax_highlighter_rouge)
 
       cache = converter.data[:syntax_highlighter_rouge] = {}
+      opts  = converter.options[:syntax_highlighter_opts].dup
 
-      opts = converter.options[:syntax_highlighter_opts].dup
-      span_opts = (opts.delete(:span) || {}).dup
-      block_opts = (opts.delete(:block) || {}).dup
-      [span_opts, block_opts].each do |hash|
-        hash.keys.each do |k|
-          hash[k.kind_of?(String) ? Kramdown::Options.str_to_sym(k) : k] = hash.delete(k)
-        end
-      end
+      span_opts  = opts.delete(:span)  || {}
+      block_opts = opts.delete(:block) || {}
+      normalize_keys(span_opts)
+      normalize_keys(block_opts)
 
-      cache[:span] = opts.merge(span_opts).update(wrap: false)
+      cache[:span]  = opts.merge(span_opts).update(wrap: false)
       cache[:block] = opts.merge(block_opts)
+    end
+
+    def self.normalize_keys(hash)
+      return if hash.empty?
+
+      hash.keys.each do |k|
+        hash[k.kind_of?(String) ? Kramdown::Options.str_to_sym(k) : k] = hash.delete(k)
+      end
     end
 
     def self.formatter_class(opts = {})
