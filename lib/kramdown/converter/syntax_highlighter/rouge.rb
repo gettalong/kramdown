@@ -51,7 +51,9 @@ module Kramdown::Converter::SyntaxHighlighter
       normalize_keys(span_opts)
       normalize_keys(block_opts)
 
-      cache[:span]  = opts.merge(span_opts).update(wrap: false)
+      cache[:span] = opts.merge(span_opts)
+      cache[:span][:wrap] = false
+
       cache[:block] = opts.merge(block_opts)
     end
 
