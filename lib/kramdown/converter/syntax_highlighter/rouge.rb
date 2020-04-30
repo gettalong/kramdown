@@ -43,10 +43,11 @@ module Kramdown::Converter::SyntaxHighlighter
       return if converter.data.key?(:syntax_highlighter_rouge)
 
       cache = converter.data[:syntax_highlighter_rouge] = {}
-      opts  = converter.options[:syntax_highlighter_opts].dup
 
-      span_opts  = opts.delete(:span)  || {}
-      block_opts = opts.delete(:block) || {}
+      opts = converter.options[:syntax_highlighter_opts].dup
+
+      span_opts = opts.delete(:span).dup || {}
+      block_opts = opts.delete(:block).dup || {}
       normalize_keys(span_opts)
       normalize_keys(block_opts)
 
