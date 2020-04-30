@@ -127,7 +127,7 @@ module Kramdown
       end
 
       def convert_ul(el, opts)
-        if !@data[:has_toc] && (el.options[:ial][:refs].include?('toc') rescue nil)
+        if !@data[:has_toc] && el.options.dig(:ial, :refs)&.include?('toc')
           @data[:has_toc] = true
           '\tableofcontents'
         else

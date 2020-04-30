@@ -160,10 +160,10 @@ module Kramdown
       private_constant :ZERO_TO_ONETWENTYEIGHT
 
       def convert_ul(el, indent)
-        if !@toc_code && (el.options[:ial][:refs].include?('toc') rescue nil)
+        if !@toc_code && el.options.dig(:ial, :refs)&.include?('toc')
           @toc_code = [el.type, el.attr, ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join]
           @toc_code.last
-        elsif !@footnote_location && el.options[:ial] && (el.options[:ial][:refs] || []).include?('footnotes')
+        elsif !@footnote_location && el.options.dig(:ial, :refs)&.include?('footnotes')
           @footnote_location = ZERO_TO_ONETWENTYEIGHT.map { rand(36).to_s(36) }.join
         else
           format_as_indented_block_html(el.type, el.attr, inner(el, indent), indent)

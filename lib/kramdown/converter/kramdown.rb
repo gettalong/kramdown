@@ -426,9 +426,9 @@ module Kramdown
           end
         end.compact.join('')
         res = "toc" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
-          (el.options[:ial][:refs].include?('toc') rescue nil)
+          el.options.dig(:ial, :refs)&.include?('toc')
         res = "footnotes" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
-          (el.options[:ial][:refs].include?('footnotes') rescue nil)
+          el.options.dig(:ial, :refs)&.include?('footnotes')
         if el.type == :dl && el.options[:ial] && el.options[:ial][:refs]
           auto_ids = el.options[:ial][:refs].select {|ref| ref.start_with?('auto_ids') }.join(" ")
           res = auto_ids << (res.strip.empty? ? '' : " #{res}") unless auto_ids.empty?
