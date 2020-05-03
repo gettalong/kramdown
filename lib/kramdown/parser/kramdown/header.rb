@@ -8,6 +8,7 @@
 #
 
 require 'kramdown/parser/kramdown/block_boundary'
+require 'rexml/xmltokens'
 
 module Kramdown
   module Parser
@@ -40,7 +41,7 @@ module Kramdown
 
       protected
 
-      HEADER_ID = /[\t ]{#(?<id>[A-Za-z][\w:-]*)}\z/
+      HEADER_ID = /[\t ]{#(?<id>#{REXML::XMLTokens::NAME_START_CHAR}#{REXML::XMLTokens::NAME_CHAR}*)}\z/
 
       # Returns header text and optional ID.
       def parse_header_contents
