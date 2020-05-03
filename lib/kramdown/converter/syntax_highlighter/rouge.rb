@@ -46,8 +46,8 @@ module Kramdown::Converter::SyntaxHighlighter
 
       opts = converter.options[:syntax_highlighter_opts].dup
 
-      span_opts = opts.delete(:span).dup || {}
-      block_opts = opts.delete(:block).dup || {}
+      span_opts = opts.delete(:span)&.dup || {}
+      block_opts = opts.delete(:block)&.dup || {}
       normalize_keys(span_opts)
       normalize_keys(block_opts)
 
