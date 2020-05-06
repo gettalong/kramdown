@@ -49,15 +49,13 @@ module Kramdown
 
         # stash string representation of symbol to avoid allocations from multiple interpolations.
         @highlighter_class = " highlighter-#{options[:syntax_highlighter]}"
+        @dispatcher = Hash.new {|h, k| h[k] = "convert_#{k}" }
       end
-
-      # The mapping of element type to conversion method.
-      DISPATCHER = Hash.new {|h, k| h[k] = "convert_#{k}" }
 
       # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
       # the element.
       def convert(el, indent = -@indent)
-        send(DISPATCHER[el.type], el, indent)
+        send(@dispatcher[el.type], el, indent)
       end
 
       # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
@@ -70,7 +68,7 @@ module Kramdown
         indent += @indent
         @stack.push(el)
         el.children.each do |inner_el|
-          result << send(DISPATCHER[inner_el.type], inner_el, indent)
+          result << send(@dispatcher[inner_el.type], inner_el, indent)
         end
         @stack.pop
         result
