@@ -1139,17 +1139,16 @@ nesting and invalidly used end tags are removed from the output:
       <p>Another para.</p>
     </div>
 
-The parsing of processing instructions and XML comments is also supported. The content of both, PIs
-and XML comments, may span multiple lines. The start of a PI/XML comment may only appear at the
-beginning of a line, optionally indented up to three spaces. If there is text after the end of a PI
-or XML comment, it will be parsed as if it appears on a separate line. kramdown syntax in PIs/XML
-comments is not processed:
+The parsing of XML comments is also supported. The content of XML comments may span multiple lines.
+The start of an XML comment may only appear at the beginning of a line, optionally indented up to
+three spaces. If there is text after the end of an XML comment, it will be parsed as if it appears
+on a separate line. kramdown syntax in XML comments is not processed:
 
     This is a para.
     <!-- a *comment* -->
-    <? a processing `instruction`
+    <!-- a `comment`
        spanning multiple lines
-    ?> First part of para,
+    --> First part of para,
     continues here.
 
 
@@ -1387,13 +1386,13 @@ enable/disable syntax parsing on a tag per tag basis using the `markdown` attrib
 The content of a span-level HTML tag is normally parsed as span-level elements. Note, however, that
 some tags like `<script>` are not parsed, i.e. their content is not modified.
 
-Processing instructions and XML comments can also be used (their content is not parsed). However, as
-with HTML tags the start and the end have to appear in the same block-level element.
+XML comments can also be used (their content is not parsed). However, as with HTML tags the start
+and the end have to appear in the same block-level element.
 
-Span-level PIs and span-level XML comments as well as general span-level HTML and XML tags have to
-be preceded by at least one non whitespace character on the same line so that kramdown correctly
-recognizes them as span-level element and not as block-level element. However, all span HTML tags,
-i.e. `a`, `em`, `b`, ..., (opening or closing) can appear at the start of a line.
+Span-level XML comments as well as general span-level HTML and XML tags have to be preceded by at
+least one non whitespace character on the same line so that kramdown correctly recognizes them as
+span-level element and not as block-level element. However, all span HTML tags, i.e. `a`, `em`, `b`,
+..., (opening or closing) can appear at the start of a line.
 
 Unclosed span-level HTML tags are correctly closed at the end of the span-level text to ensure
 correct nesting and invalidly used end tags or block HTML tags are removed from the output:

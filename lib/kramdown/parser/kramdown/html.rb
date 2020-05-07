@@ -65,17 +65,13 @@ module Kramdown
         end
       end
 
-      HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
+      HTML_BLOCK_START = /^#{OPT_SPACE}<(#{REXML::Parsers::BaseParser::UNAME_STR}|!--|\/)/
 
       # Parse the HTML at the current position as block-level HTML.
       def parse_block_html
         line = @src.current_line_number
         if (result = @src.scan(HTML_COMMENT_RE))
           @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
-          @src.scan(TRAILING_WHITESPACE)
-          true
-        elsif (result = @src.scan(HTML_INSTRUCTION_RE))
-          @tree.children << Element.new(:xml_pi, result, nil, category: :block, location: line)
           @src.scan(TRAILING_WHITESPACE)
           true
         else
@@ -100,15 +96,13 @@ module Kramdown
       end
       define_parser(:block_html, HTML_BLOCK_START)
 
-      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|\?|!--|\/)/
+      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|!--|\/)/
 
       # Parse the HTML at the current position as span-level HTML.
       def parse_span_html
         line = @src.current_line_number
         if (result = @src.scan(HTML_COMMENT_RE))
           @tree.children << Element.new(:xml_comment, result, nil, category: :span, location: line)
-        elsif (result = @src.scan(HTML_INSTRUCTION_RE))
-          @tree.children << Element.new(:xml_pi, result, nil, category: :span, location: line)
         elsif (result = @src.scan(HTML_TAG_CLOSE_RE))
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' on line #{line}")
           add_text(result)
