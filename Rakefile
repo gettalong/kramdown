@@ -179,7 +179,6 @@ namespace :dev do
 
       #### Documentation
 
-      s.has_rdoc = true
       s.rdoc_options = ['--main', 'lib/kramdown/document.rb']
 
       #### Author and project details
