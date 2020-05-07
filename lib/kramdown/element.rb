@@ -14,6 +14,14 @@ module Kramdown
   # kramdown only uses this one class for representing all available elements in an element tree
   # (paragraphs, headers, emphasis, ...). The type of element can be set via the #type accessor.
   #
+  # The root of a kramdown element tree has to be an element of type :root. It needs to have certain
+  # option keys set so that conversions work correctly. If only a part of a tree should be
+  # converted, duplicate the root node and assign the #children appropriately, e.g:
+  #
+  #   root = doc.root
+  #   new_root = root.dup
+  #   new_root.children = [root.children[0]]  # assign new array with elements to convert
+  #
   # Following is a description of all supported element types.
   #
   # Note that the option :location may contain the start line number of an element in the source
