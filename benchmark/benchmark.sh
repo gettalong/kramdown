@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-RUBY_VERSIONS=`rvm list strings | sort`
+RUBY_VERSIONS=`rbenv versions --bare | sort`
 KD_VERSIONS="`git tag | sort -V` master"
 OTHERS=false
 AVERAGE=1
@@ -48,7 +48,7 @@ git clone .git ${TMPDIR}/kramdown
 cd ${TMPDIR}/kramdown
 
 for RUBY_VERSION in $RUBY_VERSIONS; do
-  rvm use $RUBY_VERSION
+  rbenv shell $RUBY_VERSION
   echo "Creating benchmark data for $(ruby -v)"
 
     for KD_VERSION in $KD_VERSIONS; do
@@ -68,5 +68,5 @@ for RUBY_VERSION in $RUBY_VERSIONS; do
 done
 
 cd ${TMPDIR}
-rvm default
+rbenv shell --unset
 ruby generate_data.rb -g
