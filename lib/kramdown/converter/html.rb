@@ -49,7 +49,7 @@ module Kramdown
 
         # stash string representation of symbol to avoid allocations from multiple interpolations.
         @highlighter_class = " highlighter-#{options[:syntax_highlighter]}"
-        @dispatcher = Hash.new {|h, k| h[k] = "convert_#{k}" }
+        @dispatcher = Hash.new {|h, k| h[k] = :"convert_#{k}" }
       end
 
       # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
