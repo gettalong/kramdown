@@ -42,6 +42,8 @@ module Kramdown
 
       # Return the HTML representation of the attributes +attr+.
       def html_attributes(attr)
+        return '' if attr.empty?
+
         attr.map do |k, v|
           v.nil? || (k == 'id' && v.strip.empty?) ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\""
         end.join('')
