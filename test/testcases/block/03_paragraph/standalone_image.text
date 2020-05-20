@@ -3,4 +3,7 @@ para
 
 ![standalone image](some.jpg){:#id .class key="value" standalone}
 
+![standalone image](some.jpg){:#id .class key="value" standalone}
+{:#block-id .block-class block-key="block-value"}
+
 para

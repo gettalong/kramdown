@@ -88,7 +88,7 @@ module Kramdown
           inner(el, indent)
         elsif el.children.size == 1 && el.children.first.type == :img &&
             el.children.first.options[:ial]&.[](:refs)&.include?('standalone')
-          convert_standalone_image(el.children.first, indent)
+          convert_standalone_image(el, indent)
         else
           format_as_block_html("p", el.attr, inner(el, indent), indent)
         end
@@ -97,12 +97,14 @@ module Kramdown
       # Helper method used by +convert_p+ to convert a paragraph that only contains a single :img
       # element.
       def convert_standalone_image(el, indent)
-        attr = el.attr.dup
-        figure_attr = {}
-        figure_attr['class'] = attr.delete('class') if attr.key?('class')
-        figure_attr['id'] = attr.delete('id') if attr.key?('id')
-        body = "#{' ' * (indent + @indent)}<img#{html_attributes(attr)} />\n" \
-          "#{' ' * (indent + @indent)}<figcaption>#{attr['alt']}</figcaption>\n"
+        figure_attr = el.attr.dup
+        image_attr = el.children.first.attr.dup
+
+        figure_attr['class'] = image_attr.delete('class') if image_attr.key?('class') and not figure_attr.key?('class')
+        figure_attr['id'] = image_attr.delete('id') if image_attr.key?('id') and not figure_attr.key?('id')
+
+        body = "#{' ' * (indent + @indent)}<img#{html_attributes(image_attr)} />\n" \
+          "#{' ' * (indent + @indent)}<figcaption>#{image_attr['alt']}</figcaption>\n"
         format_as_indented_block_html("figure", figure_attr, body, indent)
       end
 
