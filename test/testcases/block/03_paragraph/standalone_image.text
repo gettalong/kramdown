@@ -1,6 +1,16 @@
 para
 {:standalone}
 
-![standalone image](some.jpg){:#id .class key="value" standalone}
+![standalone image](some.jpg){: #id .class key="value" standalone}
+
+![standalone image](some.jpg){: #id .class key="value" standalone}
+{: #figure-id .figure-class figure-key="value"}
+
+![standalone image](some.jpg){: #id .class key="value" standalone}
+Some caption text
+{: #figure-id .figure-class figure-key="value"}
+
+![standalone image](some.jpg){:standalone}
+Some [rendered](/page) caption text
 
 para
