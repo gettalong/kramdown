@@ -19,3 +19,5 @@ some <span>*para*</span>
 Some text[^ab].
 
 [^ab]: Some text.
+
+{::options template="/etc/passwd" /}

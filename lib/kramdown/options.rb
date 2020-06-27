@@ -589,6 +589,16 @@ module Kramdown
       Used by: HTML converter
     EOF
 
+    define(:forbidden_inline_options, Object, %w[template], <<~EOF) do |val|
+      Defines the options that may not be set using the {::options} extension
+
+      Default: template
+      Used by: HTML converter
+    EOF
+      val.map! {|item| item.kind_of?(String) ? str_to_sym(item) : item }
+      simple_array_validator(val, :forbidden_inline_options)
+    end
+
   end
 
 end

@@ -110,6 +110,12 @@ module Kramdown
           opts.select do |k, v|
             k = k.to_sym
             if Kramdown::Options.defined?(k)
+              if @options[:forbidden_inline_options].include?(k) ||
+                  k == :forbidden_inline_options
+                warning("Option #{k} may not be set inline")
+                next false
+              end
+
               begin
                 val = Kramdown::Options.parse(k, v)
                 @options[k] = val
