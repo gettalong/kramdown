@@ -18,7 +18,7 @@ describe 'location' do
   def check_element_for_location(element)
     if (match = /^line-(\d+)/.match(element.attr['class'] || ''))
       expected_line = match[1].to_i
-      element.options[:location].must_equal(expected_line)
+      assert_equal(expected_line, element.options[:location])
     end
     element.children.each do |child|
       check_element_for_location(child)
@@ -187,7 +187,7 @@ describe 'location' do
 *[duplicate]: The second definition
     )
     doc = Kramdown::Document.new(test_string.strip)
-    doc.warnings.must_equal ["Duplicate abbreviation ID 'duplicate' on line 4 - overwriting"]
+    assert_equal(["Duplicate abbreviation ID 'duplicate' on line 4 - overwriting"], doc.warnings)
   end
 
   it 'handles abbreviations' do

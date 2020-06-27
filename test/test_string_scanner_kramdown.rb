@@ -21,7 +21,7 @@ describe Kramdown::Utils::StringScanner do
     it "computes the correct current_line_number for example ##{i + 1}" do
       str_sc = Kramdown::Utils::StringScanner.new(test_string)
       scan_regexes.each {|scan_re| str_sc.scan_until(scan_re) }
-      str_sc.current_line_number.must_equal expect
+      assert_equal(expect, str_sc.current_line_number)
     end
   end
 end
