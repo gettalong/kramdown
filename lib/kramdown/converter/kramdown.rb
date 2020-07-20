@@ -39,7 +39,7 @@ module Kramdown
             ([el.type, :codeblock].include?(opts[:next].type) ||
              (opts[:next].type == :blank && opts[:nnext] &&
               [el.type, :codeblock].include?(opts[:nnext].type)))
-          res << "^\n\n"
+          res << "^\n\n" # ^ is a Kramdown-specific EOB marker that forces separation of two blocks that might otherwise merge
         elsif el.block? &&
             ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
             (el.type != :html_element || @stack.last.type != :html_element) &&
