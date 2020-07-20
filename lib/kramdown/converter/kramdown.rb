@@ -45,7 +45,8 @@ module Kramdown
         elsif el.block? &&
             ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
             (el.type != :html_element || @stack.last.type != :html_element) &&
-            (el.type != :p || !el.options[:transparent])
+            (el.type != :p || !el.options[:transparent]) &&
+            !([:ul, :dl, :ol].include?(el.type) && @stack.last.type == :li)
           res << "\n"
         end
         res
