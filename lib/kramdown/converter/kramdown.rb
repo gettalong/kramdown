@@ -44,7 +44,7 @@ module Kramdown
             ![:li, :dd, :dt, :td, :th, :tr, :thead, :tbody, :tfoot, :blank].include?(el.type) &&
             (el.type != :html_element || @stack.last.type != :html_element) &&
             (el.type != :p || !el.options[:transparent]) &&
-            !([:ul, :dl, :ol].include?(el.type) && opts[:parent] == :li)
+            !([:ul, :dl, :ol].include?(el.type) && @stack.last.type == :li)
           res << "\n"
         end
         res
@@ -60,7 +60,6 @@ module Kramdown
           options[:pprev] = (index <= 1 ? nil : el.children[index - 2])
           options[:next] = (index == el.children.length - 1 ? nil : el.children[index + 1])
           options[:nnext] = (index >= el.children.length - 2 ? nil : el.children[index + 2])
-          options[:parent] = el.type
           result << convert(inner_el, options)
         end
         @stack.pop
