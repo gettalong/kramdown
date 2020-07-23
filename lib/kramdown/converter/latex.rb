@@ -517,7 +517,7 @@ module Kramdown
         8194 => ['\hskip .5em\relax'],
         8195 => ['\quad'],
       } # :nodoc:
-      ENTITY_CONV_TABLE.each_value {|v| v[0] = "{}#{v[0]}" }
+      ENTITY_CONV_TABLE.each_value {|v| v[0] = "#{v[0]}{}" }
 
       def entity_to_latex(entity)
         text, package = ENTITY_CONV_TABLE[entity.code_point]
