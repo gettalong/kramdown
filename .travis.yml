@@ -6,6 +6,7 @@ rvm:
   - 2.5
   - &latest_ruby 2.6
   - jruby-head
+  - truffleruby-head
 
 matrix:
   include:
