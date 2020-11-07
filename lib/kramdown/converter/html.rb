@@ -302,7 +302,7 @@ module Kramdown
           @footnotes_by_name[name] = @footnotes.last
         end
         "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
-          "<a href=\"#fn:#{name}\" class=\"footnote\">" \
+          "<a href=\"#fn:#{name}\" class=\"footnote\" aria-label=\"footnote\">" \
           "#{number}</a></sup>"
       end
 
@@ -480,7 +480,7 @@ module Kramdown
         result
       end
 
-      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\">%s</a>"
+      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\" aria-label=\"Go to where this is referenced\">%s</a>"
 
       # Return an HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
