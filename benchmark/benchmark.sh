@@ -48,8 +48,15 @@ git clone .git ${TMPDIR}/kramdown
 cd ${TMPDIR}/kramdown
 
 for RUBY_VERSION in $RUBY_VERSIONS; do
-  rbenv shell $RUBY_VERSION
-  echo "Creating benchmark data for $(ruby -v)"
+  if [[ ${RUBY_VERSION: -1} = j ]]; then
+    rbenv shell ${RUBY_VERSION%j}
+    export RUBYOPT=--jit
+  else
+    rbenv shell $RUBY_VERSION
+    unset RUBYOPT
+  fi
+
+  echo "Creating benchmark data for $(ruby -v) and RUBYOPT=${RUBYOPT}"
 
     for KD_VERSION in $KD_VERSIONS; do
         echo "Using kramdown version $KD_VERSION"

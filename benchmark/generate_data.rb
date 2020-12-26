@@ -12,11 +12,13 @@ OptionParser.new do |opts|
   opts.on("-k VERSION", "--kramdown VERSION", String, "Add benchmark data for kramdown version VERSION") {|v| options[:kramdown] = v}
 end.parse!
 
-THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\(|,)/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}") + '-' + RUBY_PATCHLEVEL.to_s
+THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\(|,)/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}")
+THISRUBY << '-' + RUBY_PATCHLEVEL.to_s unless THISRUBY =~ /p#{RUBY_PATCHLEVEL}$/
+THISRUBY << '-jit' if RUBY_DESCRIPTION =~ /JIT/
 
 Dir.chdir(File.dirname(__FILE__))
 BMDATA = File.read('mdbasics.text')
-MULTIPLIER = (0..5).map {|i| 2**i}
+MULTIPLIER = (8..10).map {|i| 2**i}
 
 if options[:others]
   require 'maruku'
@@ -84,7 +86,7 @@ if options[:kramdown]
       end
     end
   end
-  times.each_with_index {|t,i| data[i+1] << "%14.5f" % (t.inject(0) {|sum,v| sum+v}/3.0)}
+  times.each_with_index {|t,i| data[i+1] << "%14.5f" % (t.inject(0) {|sum,v| sum+v}/t.size)}
   File.open(kramdown, 'w+') do |f|
     data.each {|l| f.puts l}
   end
