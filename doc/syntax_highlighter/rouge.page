@@ -31,6 +31,9 @@ formatter
   If this setting is a string, it needs to contain the name of a constant under the
   `Rouge::Formatters` namespace.
 
+  Note: The formatter class needs to respond to `::new(opts)`, where opts is a hash of options, and
+  to `#format` which needs to return the HTML formatted source code.
+
 disable
 : If set to `true`, highlighting with Rouge will be disabled.
 
