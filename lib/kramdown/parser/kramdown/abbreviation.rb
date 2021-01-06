@@ -46,7 +46,7 @@ module Kramdown
           regexps << /(?=(?:\W|^)#{regexps.first}(?!\w))/ # regexp should only match on word boundaries
         end
         el.children.map! do |child|
-          if child.type == :text
+          if child.type == :text && el.options[:content_model] != :raw
             if child.value =~ regexps.first
               result = []
               strscan = Kramdown::Utils::StringScanner.new(child.value, child.options[:location])
