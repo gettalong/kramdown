@@ -174,7 +174,7 @@ namespace :dev do
       s.required_ruby_version = '>= 2.3'
       s.add_dependency "rexml"
       s.add_development_dependency 'minitest', '~> 5.0'
-      s.add_development_dependency 'rouge'
+      s.add_development_dependency 'rouge', '~> 3.0', '>= 3.26.0'
       s.add_development_dependency 'stringex', '~> 1.5.1'
 
       #### Documentation
