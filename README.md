@@ -7,8 +7,14 @@ requests it is now released under the MIT license and therefore can easily be us
 projects, too.
 
 However, if you use kramdown in a commercial setting, please consider **contributing back any
-changes** for the benefit of the community and/or
-[**becoming a patron**](https://www.patreon.com/gettalong) - thanks!
+changes** for the benefit of the community and/or [**becoming a
+sponsor**](https://github.com/sponsors/gettalong/) or [**a
+patron**](https://www.patreon.com/gettalong) - thanks!
+
+Sponsors:
+
+* **GROSSWEBER** provides <a href="http://grossweber.com/b/kramdown" target="_blank">software
+  development consulting and training services</a>.
 
 
 ## Introduction
