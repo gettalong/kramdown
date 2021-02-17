@@ -314,10 +314,13 @@ module Kramdown
         end
       end
 
-      def convert_em(el, indent)
+      def convert_decoration_generic(el, indent)
         format_as_span_html(el.type, el.attr, inner(el, indent))
       end
-      alias convert_strong convert_em
+      Parser::Html::ElementConverter::DECORATION_TYPE_MAP.values.uniq.each do |i|
+        alias_method("convert_#{i}".to_sym, :convert_decoration_generic)
+      end
+
 
       def convert_entity(el, _indent)
         entity_to_str(el.value, el.options[:original])

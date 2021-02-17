@@ -4,3 +4,6 @@ This is <b>strong<i>italic</i>, yes!</b>.
 
 This is <em> not</em> converted, as <em>is
 </em> this.
+
+This is <sub>sub</sub> and this is <sup>sup</sup>,<u>
+unarticulated</u> or not it works a treat!

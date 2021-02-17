@@ -211,7 +211,7 @@ module Kramdown
                               figcaption form footer header h1 h2 h3 h4 h5 h6 legend li nav p
                               section td th]
         SIMPLE_ELEMENTS = %w[em strong blockquote hr br img p thead tbody tfoot tr td th ul ol dl
-                             li dl dt dd]
+                             li dl dt dd u sub sup]
 
         def initialize(root)
           @root = root
@@ -383,19 +383,21 @@ module Kramdown
           end
         end
 
-        EMPHASIS_TYPE_MAP = {'em' => :em, 'i' => :em, 'strong' => :strong, 'b' => :strong}
-        def convert_em(el)
+        DECORATION_TYPE_MAP = {
+          'em' => :em, 'i' => :em, 'strong' => :strong, 'b' => :strong, 'sub' => :sub, 'sup' => :sup, 'u' => :u
+        }
+        def convert_decoration_generic(el)
           text = +''
           extract_text(el, text)
           if text =~ /\A\s/ || text =~ /\s\z/
             process_html_element(el, false)
           else
-            set_basics(el, EMPHASIS_TYPE_MAP[el.value])
+            set_basics(el, DECORATION_TYPE_MAP[el.value])
             process_children(el)
           end
         end
-        %w[b strong i].each do |i|
-          alias_method("convert_#{i}".to_sym, :convert_em)
+        DECORATION_TYPE_MAP.keys.each do |i|
+          alias_method("convert_#{i}".to_sym, :convert_decoration_generic)
         end
 
         def convert_h1(el)
