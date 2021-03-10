@@ -86,16 +86,11 @@ module Kramdown
     # Create a new Kramdown document from the string +source+ and use the provided +options+. The
     # options that can be used are defined in the Options module.
     #
-    # The special options key :input can be used to select the parser that should parse the
-    # +source+. It has to be the name of a class in the Kramdown::Parser module. For example, to
-    # select the kramdown parser, one would set the :input key to +Kramdown+. If this key is not
-    # set, it defaults to +Kramdown+.
-    #
     # The +source+ is immediately parsed by the selected parser so that the root element is
     # immediately available and the output can be generated.
     def initialize(source, options = {})
       @options = Options.merge(options).freeze
-      parser = (@options[:input] || 'kramdown').to_s
+      parser = @options[:input]
       parser = parser[0..0].upcase + parser[1..-1]
       try_require('parser', parser)
       if Parser.const_defined?(parser)

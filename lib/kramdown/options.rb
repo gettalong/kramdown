@@ -166,8 +166,8 @@ module Kramdown
     # ----------------------------
     # :section: Option Definitions
     #
-    # This sections contains all option definitions that are used by the included
-    # parsers/converters.
+    # This sections contains all option definitions passed to
+    # +Kramdown::Document.new+
     # ----------------------------
 
     define(:template, String, '', <<~EOF)
@@ -229,6 +229,15 @@ module Kramdown
 
       Default: ''
       Used by: HTML/Latex converter
+    EOF
+
+    define(:input, String, 'Kramdown', <<~EOF)
+      Select the parser that should parse the +source+. It has to be the name
+      of a class in the Kramdown::Parser module. The first letter is
+      automatically capitalised for you, so 'Kramdown' or 'kramdown' are both
+      accepted. To use the GitHub Flavored Markdown parser, pass 'GFM'.
+
+      Default: 'Kramdown'
     EOF
 
     define(:transliterated_header_ids, Boolean, false, <<~EOF)
