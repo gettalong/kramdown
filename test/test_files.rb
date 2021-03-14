@@ -21,16 +21,20 @@ begin
   end
 
   # custom formatter for tests
-  class RougeHTMLFormatters < Kramdown::Converter::SyntaxHighlighter::Rouge.formatter_class
+  module Rouge
+    module Formatters
+      class RougeHTMLFormatters < Kramdown::Converter::SyntaxHighlighter::Rouge.formatter_class
 
-    tag 'rouge_html_formatters'
+        tag 'rouge_html_formatters'
 
-    def stream(tokens, &b)
-      yield %(<div class="custom-class">)
-      super
-      yield %(</div>)
+        def stream(tokens, &b)
+          yield %(<div class="custom-class">)
+          super
+          yield %(</div>)
+        end
+
+      end
     end
-
   end
 rescue LoadError, SyntaxError, NameError
 end

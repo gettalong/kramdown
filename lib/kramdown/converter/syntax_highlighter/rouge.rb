@@ -70,7 +70,7 @@ module Kramdown::Converter::SyntaxHighlighter
       when Class
         formatter
       when /\A[[:upper:]][[:alnum:]_]*\z/
-        ::Rouge::Formatters.const_get(formatter)
+        ::Rouge::Formatters.const_get(formatter, false)
       else
         # Available in Rouge 2.0 or later
         ::Rouge::Formatters::HTMLLegacy
