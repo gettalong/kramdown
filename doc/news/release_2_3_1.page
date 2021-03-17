@@ -1,0 +1,51 @@
+---
+title: kramdown 2.3.1 released
+no_output: true
+sort_info: r2031
+created_at: 2021-03-18 00:28:00 +01:00
+modified_at: 2021-03-18 00:28:00 +01:00
+---
+## kramdown 2.3.1 released
+
+This release brings various bug fixes, one of which fixes a security issue that can potentially lead
+to remote code execution.
+
+## Changes
+
+* 2 minor change:
+
+  - Added `rel="footnote"` to footnote links (fixes [#706] by xplosionmind)
+  - Default options are now cached to avoid unnecessary computations (fixes [#685] by Aswhin Maroli)
+
+* 6 bug fixes:
+
+  - Fixed abbreviations handling so that they won't be replaced in raw HTML tags (fixes [#671] by
+    Kaspar Etter)
+  - Restricted Rouge formatters to Rouge::Formatters namespace (pull request [#708] by Stan Hu)
+  - Fixed conversion of empty raw html td/th tags to kramdown (fixes issue [#682] by Virgil
+    Ierubino)
+  - Fixed LaTeX entity conversion (pull request [#681] by aschmitz)
+  - Fixed missing block attributes from IAL on standalone images (pull request [#668] by Tobin
+    Yehle)
+  - Fixed inconsistency in how empty code spans are handle (fixes [#704] by cabo)
+
+* 4 other change:
+
+  - Test on Ruby 2.7 and Ruby 3.0 (pull request [#696] by timcraft)
+  - Fix rouge test failures due to new syntax (fixes issue [#689] by Daniel Leidert)
+  - Clarified requirements for rouge option 'formatter' (fixes issue [#617] by Aswhin Maroli)
+  - Removed warning in `setup.rb` (pull request [#673] by Daniel Bair)
+
+[#689]: https://github.com/gettalong/kramdown/issues/689
+[#671]: https://github.com/gettalong/kramdown/issues/671
+[#617]: https://github.com/gettalong/kramdown/issues/617
+[#706]: https://github.com/gettalong/kramdown/issues/706
+[#704]: https://github.com/gettalong/kramdown/issues/704
+[#685]: https://github.com/gettalong/kramdown/issues/685
+
+[#696]: https://github.com/gettalong/kramdown/pull/696
+[#708]: https://github.com/gettalong/kramdown/pull/708
+[#682]: https://github.com/gettalong/kramdown/pull/682
+[#681]: https://github.com/gettalong/kramdown/pull/681
+[#673]: https://github.com/gettalong/kramdown/pull/673
+[#668]: https://github.com/gettalong/kramdown/pull/668
