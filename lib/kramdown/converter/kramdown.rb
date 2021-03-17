@@ -182,7 +182,7 @@ module Kramdown
         result << inner(el, opts) << "\n"
       end
 
-      HTML_TAGS_WITH_BODY = ['div', 'script', 'iframe', 'textarea']
+      HTML_TAGS_WITH_BODY = ['div', 'script', 'iframe', 'textarea', 'th', 'td']
 
       HTML_ELEMENT_TYPES = [:entity, :text, :html_element].freeze
       private_constant :HTML_ELEMENT_TYPES
