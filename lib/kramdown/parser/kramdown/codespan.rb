@@ -20,7 +20,7 @@ module Kramdown
         simple = (result.length == 1)
         saved_pos = @src.save_pos
 
-        if simple && @src.pre_match =~ /\s\Z/ && @src.match?(/\s/)
+        if simple && @src.pre_match =~ /\s\Z|\A\Z/ && @src.match?(/\s/)
           add_text(result)
           return
         end
