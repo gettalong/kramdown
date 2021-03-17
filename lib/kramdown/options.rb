@@ -39,6 +39,7 @@ module Kramdown
     ALLOWED_TYPES = [String, Integer, Float, Symbol, Boolean, Object]
 
     @options = {}
+    @cached_defaults = nil
 
     # Define a new option called +name+ (a Symbol) with the given +type+ (String, Integer, Float,
     # Symbol, Boolean, Object), default value +default+ and the description +desc+. If a block is
@@ -54,6 +55,7 @@ module Kramdown
       raise ArgumentError, "Invalid type for default value" if !(type === default) && !default.nil?
       raise ArgumentError, "Missing validator block" if type == Object && block.nil?
       @options[name] = Definition.new(name, type, default, desc, block)
+      @cached_defaults = nil
     end
 
     # Return all option definitions.
@@ -68,15 +70,17 @@ module Kramdown
 
     # Return a Hash with the default values for all options.
     def self.defaults
-      temp = {}
-      @options.each {|_n, o| temp[o.name] = o.default }
-      temp
+      @cached_defaults ||= begin
+                             temp = {}
+                             @options.each {|_n, o| temp[o.name] = o.default }
+                             temp.freeze
+                           end
     end
 
     # Merge the #defaults Hash with the *parsed* options from the given Hash, i.e. only valid option
     # names are considered and their value is run through the #parse method.
     def self.merge(hash)
-      temp = defaults
+      temp = defaults.dup
       hash.each do |k, v|
         k = k.to_sym
         temp[k] = @options.key?(k) ? parse(k, v) : v
