@@ -13,8 +13,9 @@ instructions was removed because they are invalid for HTML5 documents.
 This change should only affect a negligible amount of existing kramdown documents since XML
 processing instructions were never something a normal user would use.
 
-Additionally, CVE-2020-14001 is addressed to avoid problems when using the `{::options /}` extension
-together with the 'template' option. **This means updating is highly recommended!**
+Additionally, CVE-2020-14001 (reported by [Javier Rivera](mailto:bytesrabbit@protonmail.com)) is
+addressed to avoid problems when using the `{::options /}` extension together with the 'template'
+option. **This means updating is highly recommended!**
 
 ## Changes
 
