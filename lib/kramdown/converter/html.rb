@@ -303,8 +303,8 @@ module Kramdown
           @footnotes << [name, el.value, number, 0]
           @footnotes_by_name[name] = @footnotes.last
         end
-        "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
-          "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
+        "<sup id=\"fnref:#{name}#{repeat}\">" \
+          "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\" role=\"doc-noteref\">" \
           "#{number}</a></sup>"
       end
 
