@@ -206,6 +206,10 @@ module Kramdown
         warning("Images are not supported")
       end
 
+      def convert_span(el, opts)
+        inner(el, opts)
+      end
+
       def convert_em(el, opts)
         opts[:result] << '\fI'
         inner(el, opts)

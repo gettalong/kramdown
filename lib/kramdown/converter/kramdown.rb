@@ -316,6 +316,10 @@ module Kramdown
         end
       end
 
+      def convert_span(el, opts)
+        "[#{inner(el, opts)}]"
+      end
+
       def convert_codespan(el, _opts)
         delim = (el.value.scan(/`+/).max || '') + '`'
         "#{delim}#{' ' if delim.size > 1}#{el.value}#{' ' if delim.size > 1}#{delim}"

@@ -355,6 +355,7 @@ module Kramdown
       require 'kramdown/parser/kramdown/horizontal_rule'
       require 'kramdown/parser/kramdown/list'
       require 'kramdown/parser/kramdown/link'
+      require 'kramdown/parser/kramdown/span'
       require 'kramdown/parser/kramdown/extensions'
       require 'kramdown/parser/kramdown/footnote'
       require 'kramdown/parser/kramdown/html'

@@ -1,0 +1,15 @@
+Simple [Span]
+
+Simple [Span]{:#id .class}
+
+Simple [Span](https://example.com/){:#id .class}
+
+Simple [Span][linkurl]
+
+Simple [Span][linkurl]{:#id .class}
+
+Simple \[Span\]
+
+Simple \[Span\]{:#id .class}
+
+[linkurl]: https://example.com/

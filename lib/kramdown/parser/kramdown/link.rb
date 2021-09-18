@@ -100,7 +100,11 @@ module Kramdown
               warning("No link definition for link ID '#{link_id}' found on line #{start_line_number}")
             end
             @src.revert_pos(saved_pos)
-            add_text(result)
+            if @src.check(/./) == ']'
+              add_text(result)
+            else
+              parse_span
+            end
           end
           return
         end

@@ -520,7 +520,7 @@ module Kramdown
     [:blank, :p, :header, :blockquote, :codeblock, :ul, :ol, :li, :dl, :dt, :dd,
      :table, :td, :hr].each {|b| CATEGORY[b] = :block }
     [:text, :a, :br, :img, :codespan, :footnote, :em, :strong, :entity, :typographic_sym,
-     :smart_quote, :abbreviation].each {|b| CATEGORY[b] = :span }
+     :smart_quote, :abbreviation, :span].each {|b| CATEGORY[b] = :span }
 
     # Return the category of +el+ which can be :block, :span or +nil+.
     #

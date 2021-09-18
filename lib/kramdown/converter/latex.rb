@@ -236,6 +236,10 @@ module Kramdown
         end
       end
 
+      def convert_span(el, opts)
+        "#{inner(el, opts)}"
+      end
+
       def convert_codespan(el, _opts)
         lang = extract_code_language(el.attr)
         if @options[:syntax_highlighter] == :minted &&

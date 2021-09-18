@@ -277,6 +277,14 @@ module Kramdown
         "<img#{html_attributes(el.attr)} />"
       end
 
+      def convert_span(el, indent)
+        if el.attr.empty?
+          "[#{inner(el, indent)}]"
+        else
+          format_as_span_html('span', el.attr, inner(el, indent))
+        end
+      end
+
       def convert_codespan(el, _indent)
         attr = el.attr.dup
         lang = extract_code_language(attr)
