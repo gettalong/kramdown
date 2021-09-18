@@ -207,7 +207,7 @@ module Kramdown
       end
 
       def convert_span(el, opts)
-        inner(el, opts)
+        "[#{inner(el, opts)}]"
       end
 
       def convert_em(el, opts)
