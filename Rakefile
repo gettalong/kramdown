@@ -176,6 +176,7 @@ namespace :dev do
       s.add_development_dependency 'minitest', '~> 5.0'
       s.add_development_dependency 'rouge', '~> 3.0', '>= 3.26.0'
       s.add_development_dependency 'rubocop', '~> 1.18.0'
+      s.add_development_dependency 'rubocop-performance', '~> 1.11.5'
       s.add_development_dependency 'stringex', '~> 1.5.1'
 
       #### Documentation
