@@ -4,6 +4,7 @@ AllCops:
   Include:
     - bin/*
     - lib/**/*.rb
+  NewCops: enable
   TargetRubyVersion: 2.5
 
 
