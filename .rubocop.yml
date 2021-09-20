@@ -2,11 +2,8 @@ AllCops:
   Include:
     - bin/*
     - lib/**/*.rb
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
 
-
-Metrics/LineLength:
-  Max: 110 # Preferred length is 100
 
 Metrics/ParameterLists:
   CountKeywordArgs: false
@@ -86,7 +83,7 @@ Style/Semicolon:
   AllowAsExpressionSeparator: true
 
 Style/YodaCondition:
-  EnforcedStyle: equality_operators_only
+  EnforcedStyle: forbid_for_equality_operators_only
 
 Style/EmptyElse:
   EnforcedStyle: empty
@@ -96,9 +93,6 @@ Style/CaseEquality:
 
 Style/GuardClause:
   Enabled: false # false alarms
-
-Style/MethodMissingSuper:
-  Enabled: false # why the need to fallback to super?
 
 Style/Next:
   Enabled: false # not really useful
@@ -152,7 +146,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 
-Layout/AlignHash:
+Layout/LineLength:
+  Max: 110 # Preferred length is 100
+
+Layout/HashAlignment:
   EnforcedLastArgumentHashStyle: ignore_implicit
 
 Layout/SpaceInsideBlockBraces:
@@ -182,26 +179,26 @@ Layout/DotPosition:
 Layout/EmptyLineAfterMagicComment:
   Enabled: false # we have the magic comment and then the license
 
-Layout/IndentAssignment:
+Layout/AssignmentIndentation:
   Enabled: false # false alarms
 
 
 Naming/HeredocDelimiterNaming:
   Enabled: false # we like our delimiters short and obvious
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false # for points the names x,y are perfectly reasonable
 
 Lint/LiteralAsCondition:
   Enabled: false # we use while true
 
+Lint/MissingSuper:
+  Enabled: false # why the need to fallback to super?
+
 Lint/NonLocalExitFromIterator:
   Enabled: false
 
-Lint/HandleExceptions:
-  Enabled: false
-
-Performance/FixedSize:
+Lint/SuppressedException:
   Enabled: false
 
 
