@@ -490,6 +490,8 @@ module Kramdown
         ol.attr['start'] = @footnote_start if @footnote_start != 1
         i = 0
         backlink_text = escape_html(@options[:footnote_backlink], :text)
+        type_list = [:p, :header]
+
         while i < @footnotes.length
           name, data, _, repeat = *@footnotes[i]
           li = Element.new(:li, nil, 'id' => "fn:#{name}", 'role' => 'doc-endnote')
@@ -498,7 +500,7 @@ module Kramdown
           para = nil
           if li.children.last.type == :p || @options[:footnote_backlink_inline]
             parent = li
-            while !parent.children.empty? && ![:p, :header].include?(parent.children.last.type)
+            while !parent.children.empty? && !type_list.include?(parent.children.last.type)
               parent = parent.children.last
             end
             para = parent.children.last

@@ -34,9 +34,12 @@ module Kramdown
 
         children = el.children.dup
         index = 0
+        type_list  = [:xml_pi]
+        value_list = %w[style script]
+
         while index < children.length
-          if [:xml_pi].include?(children[index].type) ||
-              (children[index].type == :html_element && %w[style script].include?(children[index].value))
+          if type_list.include?(children[index].type) ||
+              (children[index].type == :html_element && value_list.include?(children[index].value))
             children[index..index] = []
           elsif children[index].type == :html_element &&
             ((@options[:remove_block_html_tags] && children[index].options[:category] == :block) ||

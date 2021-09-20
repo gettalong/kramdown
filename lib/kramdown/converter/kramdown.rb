@@ -412,8 +412,11 @@ module Kramdown
 
       # Return the IAL containing the attributes of the element +el+.
       def ial_for_element(el)
+        type_list = [:img, :a]
+        attr_list = ['href', 'src', 'alt', 'title']
+
         res = el.attr.map do |k, v|
-          next if [:img, :a].include?(el.type) && ['href', 'src', 'alt', 'title'].include?(k)
+          next if type_list.include?(el.type) && attr_list.include?(k)
           next if el.type == :header && k == 'id' && !v.strip.empty?
           if v.nil?
             ''

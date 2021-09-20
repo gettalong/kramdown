@@ -285,14 +285,17 @@ module Kramdown
           raw.gsub!(/\s+/, ' ') unless preserve
           src = Kramdown::Utils::StringScanner.new(raw)
           result = []
+
+          valid_smart_quotes = %w[lsquo rsquo ldquo rdquo]
+          valid_typographic_names = %w[lsquo rsquo ldquo rdquo]
           until src.eos?
             if (tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/o))
               result << Element.new(:text, tmp)
               src.scan(HTML_ENTITY_RE)
               val = src[1] || (src[2]&.to_i) || src[3].hex
-              result << if %w[lsquo rsquo ldquo rdquo].include?(val)
+              result << if valid_smart_quotes.include?(val)
                           Element.new(:smart_quote, val.intern)
-                        elsif %w[mdash ndash hellip laquo raquo].include?(val)
+                        elsif valid_typographic_names.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
                           begin
@@ -411,12 +414,13 @@ module Kramdown
           raw = +''
           extract_text(el, raw)
           result = process_text(raw, true)
+          code_point_list = [60, 62, 34, 38]
           begin
             str = result.inject(+'') do |mem, c|
               if c.type == :text
                 mem << c.value
               elsif c.type == :entity
-                mem << if [60, 62, 34, 38].include?(c.value.code_point)
+                mem << if code_point_list.include?(c.value.code_point)
                          c.value.code_point.chr
                        else
                          c.value.char
