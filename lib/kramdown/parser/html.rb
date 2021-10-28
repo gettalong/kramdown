@@ -279,6 +279,10 @@ module Kramdown
           end.flatten!
         end
 
+        VALID_SMART_QUOTES = Set.new(%w[lsquo rsquo ldquo rdquo]).freeze
+        VALID_TYPOGRAPHIC_NAMES = Set.new(%w[mdash ndash hellip laquo raquo]).freeze
+        private_constant :VALID_SMART_QUOTES, :VALID_TYPOGRAPHIC_NAMES
+
         # Process the HTML text +raw+: compress whitespace (if +preserve+ is +false+) and convert
         # entities in entity elements.
         def process_text(raw, preserve = false)
@@ -286,16 +290,14 @@ module Kramdown
           src = Kramdown::Utils::StringScanner.new(raw)
           result = []
 
-          valid_smart_quotes = %w[lsquo rsquo ldquo rdquo]
-          valid_typographic_names = %w[lsquo rsquo ldquo rdquo]
           until src.eos?
             if (tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/o))
               result << Element.new(:text, tmp)
               src.scan(HTML_ENTITY_RE)
               val = src[1] || (src[2]&.to_i) || src[3].hex
-              result << if valid_smart_quotes.include?(val)
+              result << if VALID_SMART_QUOTES.include?(val)
                           Element.new(:smart_quote, val.intern)
-                        elsif valid_typographic_names.include?(val)
+                        elsif VALID_TYPOGRAPHIC_NAMES.include?(val)
                           Element.new(:typographic_sym, val.intern)
                         else
                           begin
