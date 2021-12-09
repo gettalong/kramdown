@@ -69,6 +69,7 @@ module Kramdown
             eob_found = true
             break
           elsif @src.scan(list_start_re)
+            list.options[:first_list_marker] ||= @src[1].strip
             item = Element.new(:li, nil, nil, location: start_line_number)
             item.value, indentation, content_re, lazy_re, indent_re =
               parse_first_list_line(@src[1].length, @src[2])
