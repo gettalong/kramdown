@@ -54,7 +54,12 @@ module Kramdown
 
       # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
       # the element.
-      def convert(el, indent = -@indent)
+      def convert(el, indent = nil)
+        if el.type == :root
+          indent ||= -@indent
+        else
+          indent ||= 0
+        end
         send(@dispatcher[el.type], el, indent)
       end
 
