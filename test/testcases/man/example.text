@@ -80,6 +80,6 @@ ignored.
 
 *[MD]: Markdown
 
-Math elements work $$\l = 5$$ inline and in block form:
+Math elements work $$\lambda = 5$$ inline and in block form:
 
 $$\lambda_5 = \alpha + 4$$

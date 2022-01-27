@@ -114,7 +114,7 @@ line breaks\.
 .P
 Abbreviations like MD can be used but the abbreviation title is ignored\.
 .P
-Math elements work \fB\el = 5\fP inline and in block form:
+Math elements work \fB\elambda = 5\fP inline and in block form:
 .sp
 .RS 4
 .EX
