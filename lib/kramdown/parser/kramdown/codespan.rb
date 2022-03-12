@@ -41,7 +41,11 @@ module Kramdown
             text = text[1..-1] if text[0..0] == ' '
             text = text[0..-2] if text[-1..-1] == ' '
           end
-          @tree.children << Element.new(:codespan, text, nil, location: start_line_number)
+          @tree.children << Element.new(:codespan, text, nil, {
+                                          codespan_delimiter: result,
+                                          location: start_line_number
+                                        })
+
         else
           @src.revert_pos(saved_pos)
           add_text(result)
