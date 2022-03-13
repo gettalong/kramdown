@@ -14,7 +14,8 @@ end.parse!
 
 THISRUBY = (self.class.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION.scan(/^.*?(?=\s*\(|,)/).first.sub(/\s/, '-') : "ruby-#{RUBY_VERSION}")
 THISRUBY << '-' + RUBY_PATCHLEVEL.to_s unless THISRUBY =~ /p#{RUBY_PATCHLEVEL}$/
-THISRUBY << '-jit' if RUBY_DESCRIPTION =~ /JIT/
+THISRUBY << '-mjit' if RUBY_DESCRIPTION =~ /MJIT/
+THISRUBY << '-yjit' if RUBY_DESCRIPTION =~ /YJIT/
 
 Dir.chdir(File.dirname(__FILE__))
 BMDATA = File.read('mdbasics.text')

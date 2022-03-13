@@ -48,9 +48,12 @@ git clone .git ${TMPDIR}/kramdown
 cd ${TMPDIR}/kramdown
 
 for RUBY_VERSION in $RUBY_VERSIONS; do
-  if [[ ${RUBY_VERSION: -1} = j ]]; then
-    rbenv shell ${RUBY_VERSION%j}
-    export RUBYOPT=--jit
+  if [[ ${RUBY_VERSION: -1} = m ]]; then
+    rbenv shell ${RUBY_VERSION%m}
+    export RUBYOPT=--mjit
+  elif [[ ${RUBY_VERSION: -1} = y ]]; then
+    rbenv shell ${RUBY_VERSION%y}
+    export RUBYOPT=--yjit
   else
     rbenv shell $RUBY_VERSION
     unset RUBYOPT
