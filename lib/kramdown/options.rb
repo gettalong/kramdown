@@ -596,7 +596,9 @@ module Kramdown
     define(:forbidden_inline_options, Object, %w[template], <<~EOF) do |val|
       Defines the options that may not be set using the {::options} extension
 
-      Default: template
+      The value needs to be an array of option names.
+
+      Default: [template]
       Used by: HTML converter
     EOF
       val.map! {|item| item.kind_of?(String) ? str_to_sym(item) : item }
