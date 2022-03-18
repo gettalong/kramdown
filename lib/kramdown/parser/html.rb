@@ -240,7 +240,14 @@ module Kramdown
             return
           when :html_element
           when :root
-            el.children.each {|c| process(c) }
+            el.children.map! do |c|
+              if c.type == :text
+                process_text(c.value, !do_conversion)
+              else
+                process(c)
+                c
+              end
+            end.flatten!
             remove_whitespace_children(el)
             return
           else return
