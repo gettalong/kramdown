@@ -77,7 +77,9 @@ module Kramdown
         else
           el.value.gsub(/\A\n/) do
             opts[:prev] && opts[:prev].type == :br ? '' : "\n"
-          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) { "\\#{$1 || $2}" }
+          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) do
+            $1 || !opts[:prev] || opts[:prev].type == :br ? "\\#{$1 || $2}" : $&
+          end
         end
       end
 
@@ -87,6 +89,7 @@ module Kramdown
         first&.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\." }
         second&.gsub!(/^([=-]+\s*?)$/, "\\\1")
         res = [first, second, *rest].compact.join("\n") + "\n"
+        res.gsub!(/^[ ]{0,3}:/, "\\:")
         if el.children.length == 1 && el.children.first.type == :math
           res = "\\#{res}"
         elsif res.start_with?('\$$') && res.end_with?("\\$$\n")
