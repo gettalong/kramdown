@@ -27,6 +27,7 @@ module Kramdown
         @footnotes = []
         @abbrevs = []
         @stack = []
+        @list_indent = options[:list_indent] || 2
       end
 
       def convert(el, opts = {indent: 0})
@@ -127,7 +128,7 @@ module Kramdown
 
       def convert_li(el, opts)
         sym, width = if @stack.last.type == :ul
-                       [+'* ', el.children.first && el.children.first.type == :codeblock ? 4 : 2]
+                       [+'* ', el.children.first && el.children.first.type == :codeblock ? 4 : @list_indent]
                      else
                        ["#{opts[:index] + 1}.".ljust(4), 4]
                      end
@@ -154,7 +155,7 @@ module Kramdown
       end
 
       def convert_dd(el, opts)
-        sym, width = +": ", (el.children.first && el.children.first.type == :codeblock ? 4 : 2)
+        sym, width = +": ", (el.children.first && el.children.first.type == :codeblock ? 4 : @list_indent)
         if (ial = ial_for_element(el))
           sym << ial << " "
         end
