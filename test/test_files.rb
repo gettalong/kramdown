@@ -197,6 +197,9 @@ class TestFiles < Minitest::Test
         kdtext = Kramdown::Document.new(File.read(text_file), options).to_kramdown
         html = Kramdown::Document.new(kdtext, options).to_html
         assert_equal(tidy_output(File.read(html_file)), tidy_output(html))
+        kdtext4 = Kramdown::Document.new(File.read(text_file), options.merge({list_indent: 4})).to_kramdown
+        html = Kramdown::Document.new(kdtext4, options).to_html
+        assert_equal(tidy_output(File.read(html_file)), tidy_output(html))
       end
     end
   end
