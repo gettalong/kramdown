@@ -605,6 +605,13 @@ module Kramdown
       simple_array_validator(val, :forbidden_inline_options)
     end
 
+    define(:list_indent, Integer, 2, <<~EOF)
+      Sets the number of spaces to use for list indentation
+
+      Default: 2
+      Used by: Kramdown converter
+    EOF
+
   end
 
 end

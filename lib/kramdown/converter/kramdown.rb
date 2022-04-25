@@ -27,7 +27,7 @@ module Kramdown
         @footnotes = []
         @abbrevs = []
         @stack = []
-        @list_indent = options[:list_indent] || 2
+        @list_indent = @options[:list_indent]
         @list_spacing = ' ' * (@list_indent - 2)
       end
 
