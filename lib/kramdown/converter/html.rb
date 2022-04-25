@@ -283,7 +283,7 @@ module Kramdown
         hl_opts = {}
         result = highlight_code(el.value, lang, :span, hl_opts)
         if result
-          add_syntax_highlighter_to_class_attr(attr, hl_opts[:default_lang])
+          add_syntax_highlighter_to_class_attr(attr, lang || hl_opts[:default_lang])
         else
           result = escape_html(el.value)
         end
