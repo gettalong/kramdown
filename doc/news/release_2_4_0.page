@@ -1,0 +1,27 @@
+---
+title: kramdown 2.4.0 released
+no_output: true
+sort_info: r2040
+created_at: 2022-04-25 14:45:00 +02:00
+modified_at: 2022-04-25 14:45:00 +02:00
+---
+## kramdown 2.4.0 released
+
+A minor release bringing a small enhancement to the kramdown converter and some bug fixes.
+
+## Changes
+
+* 1 minor change:
+
+  - Allow using a different list indentation (pull request [#753] by Carsten Borman)
+
+* 2 bug fixes:
+
+  - Fixed escaping of colon when converting to kramdown (fixes [#751] by Carsten Borman)
+  - Fixed setting highlighter class for code spans in HTML converter when using a default language
+    (fixes [#752] by Aswhin Maroli)
+
+[#751]: https://github.com/gettalong/kramdown/issues/751
+[#752]: https://github.com/gettalong/kramdown/issues/752
+
+[#753]: https://github.com/gettalong/kramdown/pull/753
