@@ -104,7 +104,7 @@ module Kramdown
         if !converter.options[:template].empty? && converter.apply_template_before?
           apply_template(converter, '')
         end
-        result = converter.convert(tree)
+        result = converter.convert(tree, converter.options)
         if result.respond_to?(:encode!) && result.encoding != Encoding::BINARY
           result.encode!(tree.options[:encoding] ||
                          (raise ::Kramdown::Error, "Missing encoding option on root element"))
