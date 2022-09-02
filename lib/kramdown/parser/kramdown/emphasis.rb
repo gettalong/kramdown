@@ -46,6 +46,9 @@ module Kramdown
           found, el, stop_re = sub_parse.call(type, :em)
         end
         if found
+          # Useful for implementing underlines.
+          el.options[:char] = type
+
           @src.scan(stop_re)
           @tree.children << el
         else
