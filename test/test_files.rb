@@ -266,6 +266,7 @@ class TestFiles < Minitest::Test
 
   EXCLUDE_MODIFY = [
     'test/testcases/block/06_codeblock/rouge/multiple.text', # bc of HTMLFormater in options
+    'test/testcases/block/04_header/with_header_links.text', # we add an anchor tag
   ].compact
 
   # Generate test methods for asserting that converters don't modify the document tree.

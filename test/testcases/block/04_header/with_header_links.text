@@ -4,21 +4,7 @@
 
 ### Do ^& it now
 
-Hallo
-=====
-
-Not now
--------
-
-# Hallo
-
-# 23232
-
-# 33333
-
-## hallO
+# Header *with [children](http://example.com)*
 
 # Header without ID
 {: id=""}
-
-# Transliterated: Đây-là-ví-dụ

@@ -148,11 +148,10 @@ module Kramdown
           attr['id'] = generate_id(el.options[:raw_text])
         end
 
-        if @options[:auto_ids] && @options[:header_links]
+        if @options[:header_links] && attr['id'].length > 0
           link = Element.new(:a, nil, nil)
           link.attr['href'] = "##{attr['id']}"
-          link.children << el.children.pop
-          el.children << link
+          el.children.unshift(link)
         end
 
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
