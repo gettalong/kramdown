@@ -236,6 +236,15 @@ module Kramdown
       Used by: HTML/Latex converter
     EOF
 
+    define(:header_links, Boolean, false, <<~EOF)
+      Adds anchor tags within headers that can be used to generate permalinks
+      when not using a table of contents.
+
+      The anchor tags are empty, but can be styled to your liking.
+
+      Default: false
+    EOF
+
     define(:transliterated_header_ids, Boolean, false, <<~EOF)
       Transliterate the header text before generating the ID
 
