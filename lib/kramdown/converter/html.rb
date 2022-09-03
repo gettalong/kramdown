@@ -147,6 +147,14 @@ module Kramdown
         if @options[:auto_ids] && !attr['id']
           attr['id'] = generate_id(el.options[:raw_text])
         end
+
+        if @options[:auto_ids] && @options[:header_links]
+          link = Element.new(:a, nil, nil)
+          link.attr['href'] = "##{attr['id']}"
+          link.children << el.children.pop
+          el.children << link
+        end
+
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
         level = output_header_level(el.options[:level])
         format_as_block_html("h#{level}", attr, inner(el, indent), indent)
