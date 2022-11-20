@@ -586,6 +586,19 @@ module Kramdown
       Used by: HTML
     EOF
 
+    define(:footnote_link_text, String, '', <<~EOF)
+      The text used for the footnote number in a footnote link
+
+      This option can be used to add additional text to the footnote
+      link. It can be straight text; e.g. "footnote" would display
+      footnotes as "footnote 1". It can also be a format string, that passes
+      the footnote argument as the only argument to the format string.
+      "[footnote %s]" would display a footnote as "[footnote 1]".
+
+      Default: ''
+      Used by: HTML
+    EOF
+
     define(:remove_line_breaks_for_cjk, Boolean, false, <<~EOF)
       Specifies whether line breaks should be removed between CJK characters
 

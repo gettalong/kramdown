@@ -294,6 +294,7 @@ module Kramdown
       def convert_footnote(el, _indent)
         repeat = ''
         name = @options[:footnote_prefix] + el.options[:name]
+        link_text = @options[:footnote_link_text]
         if (footnote = @footnotes_by_name[name])
           number = footnote[2]
           repeat = ":#{footnote[3] += 1}"
@@ -303,9 +304,16 @@ module Kramdown
           @footnotes << [name, el.value, number, 0]
           @footnotes_by_name[name] = @footnotes.last
         end
-        "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
-          "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
-          "#{number}</a></sup>"
+        formatted_link_text = sprintf(link_text, number)
+        if (formatted_link_text == link_text)
+          "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
+            "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
+            "#{link_text}#{number}</a></sup>"
+        else
+          "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
+            "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
+            "#{formatted_link_text}</a></sup>"
+        end
       end
 
       def convert_raw(el, _indent)
