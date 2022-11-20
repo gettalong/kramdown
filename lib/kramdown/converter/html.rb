@@ -314,9 +314,10 @@ module Kramdown
           @footnotes << [name, el.value, number, 0]
           @footnotes_by_name[name] = @footnotes.last
         end
+        formatted_link_text = sprintf(@options[:footnote_link_text], number)
         "<sup id=\"fnref:#{name}#{repeat}\">" \
           "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\" role=\"doc-noteref\">" \
-          "#{number}</a></sup>"
+          "#{formatted_link_text}</a></sup>"
       end
 
       def convert_raw(el, _indent)
