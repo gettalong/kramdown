@@ -111,7 +111,12 @@ end.parse!
 
 begin
   if config_file && File.exist?(config_file)
-    config_file_options = YAML.safe_load(File.read(config_file), [Symbol])
+    config_file_options =
+      if YAML.method(:safe_load).parameters.include?(%i[key permitted_classes])
+        YAML.safe_load(File.read(config_file), permitted_classes: [Symbol])
+      else # compatibility with Psych < 3.1.0
+        YAML.safe_load(File.read(config_file), [Symbol])
+      end
     case config_file_options
     when nil # empty configuration file except perhaps YAML header and comments
       # Nothing to do
