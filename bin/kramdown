@@ -111,7 +111,7 @@ end.parse!
 
 begin
   if config_file && File.exist?(config_file)
-    config_file_options = YAML.safe_load(File.read(config_file), [Symbol])
+    config_file_options = YAML.safe_load(File.read(config_file), permitted_classes: [Symbol])
     case config_file_options
     when nil # empty configuration file except perhaps YAML header and comments
       # Nothing to do
