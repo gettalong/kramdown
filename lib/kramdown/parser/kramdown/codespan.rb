@@ -43,7 +43,7 @@ module Kramdown
           end
           @tree.children << Element.new(:codespan, text, nil, {
                                           codespan_delimiter: result,
-                                          location: start_line_number
+                                          location: start_line_number,
                                         })
 
         else

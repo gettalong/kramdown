@@ -20,12 +20,7 @@ module Kramdown
         File.directory?(File.join(File.expand_path(dir), "stringex", "unidecoder_data"))
       end
 
-      if !path
-        def self.decode(string)
-          string
-        end
-      else
-
+      if path
         CODEPOINTS = Hash.new do |h, k|
           h[k] = YAML.load_file(File.join(path, "stringex", "unidecoder_data", "#{k}.yml"))
         end
@@ -33,15 +28,16 @@ module Kramdown
         # Transliterate string from Unicode into ASCII.
         def self.decode(string)
           string.gsub(/[^\x00-\x7f]/u) do |codepoint|
-            begin
-              unpacked = codepoint.unpack("U")[0]
-              CODEPOINTS[sprintf("x%02x", unpacked >> 8)][unpacked & 255]
-            rescue StandardError
-              "?"
-            end
+            unpacked = codepoint.unpack1("U")
+            CODEPOINTS[sprintf("x%02x", unpacked >> 8)][unpacked & 255]
+          rescue StandardError
+            "?"
           end
         end
-
+      else
+        def self.decode(string)
+          string
+        end
       end
 
     end

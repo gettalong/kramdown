@@ -35,12 +35,13 @@ module Kramdown
         children = el.children.dup
         index = 0
         while index < children.length
-          if [:xml_pi].include?(children[index].type) ||
-              (children[index].type == :html_element && %w[style script].include?(children[index].value))
+          if children[index].type == :xml_pi ||
+              (children[index].type == :html_element && (children[index].value == 'style' ||
+                                                         children[index].value == 'script'))
             children[index..index] = []
           elsif children[index].type == :html_element &&
-            ((@options[:remove_block_html_tags] && children[index].options[:category] == :block) ||
-             (@options[:remove_span_html_tags] && children[index].options[:category] == :span))
+              ((@options[:remove_block_html_tags] && children[index].options[:category] == :block) ||
+               (@options[:remove_span_html_tags] && children[index].options[:category] == :span))
             children[index..index] = children[index].children
           else
             convert(children[index])

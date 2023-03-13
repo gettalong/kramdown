@@ -42,11 +42,12 @@ module Kramdown
         el.options[:is_closed] = closed
 
         if !closed && handle_body
-          if content_model == :block
+          case content_model
+          when :block
             unless parse_blocks(el)
               warning("Found no end tag for '#{el.value}' (line #{el.options[:location]}) - auto-closing it")
             end
-          elsif content_model == :span
+          when :span
             curpos = @src.pos
             if @src.scan_until(/(?=<\/#{el.value}\s*>)/mi)
               add_text(extract_string(curpos...@src.pos, @src), el)
@@ -57,7 +58,7 @@ module Kramdown
               warning("Found no end tag for '#{el.value}' (line #{el.options[:location]}) - auto-closing it")
             end
           else
-            parse_raw_html(el, &method(:handle_kramdown_html_tag))
+            parse_raw_html(el) {|iel, ic, ih| handle_kramdown_html_tag(iel, ic, ih) }
           end
           unless @tree.type == :html_element && @tree.options[:content_model] == :raw
             @src.scan(TRAILING_WHITESPACE)
@@ -74,24 +75,22 @@ module Kramdown
           @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
           @src.scan(TRAILING_WHITESPACE)
           true
-        else
-          if @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
-            @src.pos += @src.matched_size
-            handle_html_start_tag(line, &method(:handle_kramdown_html_tag))
-            Kramdown::Parser::Html::ElementConverter.convert(@root, @tree.children.last) if @options[:html_to_native]
-            true
-          elsif @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
-            name = @src[1].downcase
+        elsif @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
+          @src.pos += @src.matched_size
+          handle_html_start_tag(line) {|iel, ic, ih| handle_kramdown_html_tag(iel, ic, ih) }
+          Kramdown::Parser::Html::ElementConverter.convert(@root, @tree.children.last) if @options[:html_to_native]
+          true
+        elsif @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
+          name = @src[1].downcase
 
-            if @tree.type == :html_element && @tree.value == name
-              @src.pos += @src.matched_size
-              throw :stop_block_parsing, :found
-            else
-              false
-            end
+          if @tree.type == :html_element && @tree.value == name
+            @src.pos += @src.matched_size
+            throw :stop_block_parsing, :found
           else
             false
           end
+        else
+          false
         end
       end
       define_parser(:block_html, HTML_BLOCK_START)
@@ -124,20 +123,21 @@ module Kramdown
                          @options[:parse_span_html]
                        end
           if (val = HTML_MARKDOWN_ATTR_MAP[attrs.delete('markdown')])
-            if val == :block
+            case val
+            when :block
               warning("Cannot use block-level parsing in span-level HTML tag (line #{line}) " \
                       "- using default mode")
-            elsif val == :span
+            when :span
               do_parsing = true
-            elsif val == :default
+            when :default
               do_parsing = HTML_CONTENT_MODEL[tag_name] != :raw
-            elsif val == :raw
+            when :raw
               do_parsing = false
             end
           end
 
           el = Element.new(:html_element, tag_name, attrs, category: :span, location: line,
-                           content_model: (do_parsing ? :span : :raw), is_closed: !!@src[4])
+                           content_model: (do_parsing ? :span : :raw), is_closed: !@src[4].nil?)
           @tree.children << el
           stop_re = /<\/#{Regexp.escape(tag_name)}\s*>/
           stop_re = Regexp.new(stop_re.source, Regexp::IGNORECASE) if HTML_ELEMENT[tag_name]

@@ -24,7 +24,7 @@ module Kramdown
       # Contains all constants that are used when parsing.
       module Constants
 
-        #:stopdoc:
+        # :stopdoc:
         # The following regexps are based on the ones used by REXML, with some slight modifications.
         HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/im
         HTML_COMMENT_RE = /<!--(.*?)-->/m
@@ -32,7 +32,7 @@ module Kramdown
         HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(?:(\p{Word}+)|("|')(.*?)\3))?/m
         HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}(?:\s*=\s*(?:\p{Word}+|("|').*?\3))?)*)\s*(\/)?>/m
         HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
-        HTML_ENTITY_RE = /&([\w:][\-\w\.:]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
+        HTML_ENTITY_RE = /&([\w:][\w.:-]*);|&#(\d+);|&\#x([0-9a-fA-F]+);/
 
         HTML_CONTENT_MODEL_BLOCK = %w[address applet article aside blockquote body
                                       dd details div dl fieldset figure figcaption
@@ -239,6 +239,7 @@ module Kramdown
             el.options.replace(category: (HTML_CONTENT_MODEL[ptype] == :span ? :span : :block))
             return
           when :html_element
+            # do nothing
           when :root
             el.children.map! do |c|
               if c.type == :text
@@ -296,7 +297,7 @@ module Kramdown
             if (tmp = src.scan_until(/(?=#{HTML_ENTITY_RE})/o))
               result << Element.new(:text, tmp)
               src.scan(HTML_ENTITY_RE)
-              val = src[1] || (src[2]&.to_i) || src[3].hex
+              val = src[1] || src[2]&.to_i || src[3].hex
               result << if %w[lsquo rsquo ldquo rdquo].include?(val)
                           Element.new(:smart_quote, val.intern)
                         elsif %w[mdash ndash hellip laquo raquo].include?(val)
@@ -361,8 +362,8 @@ module Kramdown
           el.children = el.children.reject do |c|
             i += 1
             c.type == :text && c.value.strip.empty? &&
-              (i == 0 || i == el.children.length - 1 || ((el.children[i - 1]).block? &&
-                                                         (el.children[i + 1]).block?))
+              (i == 0 || i == el.children.length - 1 || (el.children[i - 1].block? &&
+                                                         el.children[i + 1].block?))
           end
         end
 
@@ -420,15 +421,16 @@ module Kramdown
           result = process_text(raw, true)
           begin
             str = result.inject(+'') do |mem, c|
-              if c.type == :text
+              case c.type
+              when :text
                 mem << c.value
-              elsif c.type == :entity
+              when :entity
                 mem << if [60, 62, 34, 38].include?(c.value.code_point)
                          c.value.code_point.chr
                        else
                          c.value.char
                        end
-              elsif c.type == :smart_quote || c.type == :typographic_sym
+              when :smart_quote, :typographic_sym
                 mem << entity(c.value.to_s).char
               else
                 raise "Bug - please report"
@@ -518,7 +520,7 @@ module Kramdown
           nr_cells = 0
           check_nr_cells = lambda do |t|
             if t.value == 'tr'
-              count = t.children.select {|cc| cc.value == 'th' || cc.value == 'td' }.length
+              count = t.children.count {|cc| cc.value == 'th' || cc.value == 'td' }
               if count != nr_cells
                 if nr_cells == 0
                   nr_cells = count
@@ -551,7 +553,9 @@ module Kramdown
           check_alignment.call(el)
 
           check_rows = lambda do |t, type|
-            t.children.all? {|r| (r.value == 'tr' || r.type == :text) && r.children.all? {|c| c.value == type || c.type == :text }}
+            t.children.all? do |r|
+              (r.value == 'tr' || r.type == :text) && r.children.all? {|c| c.value == type || c.type == :text }
+            end
           end
           check_rows.call(el, 'td') ||
             (el.children.all? do |t|
@@ -561,10 +565,10 @@ module Kramdown
         end
 
         def convert_script(el)
-          if !is_math_tag?(el)
-            process_html_element(el)
-          else
+          if is_math_tag?(el)
             handle_math_tag(el)
+          else
+            process_html_element(el)
           end
         end
 
@@ -573,7 +577,7 @@ module Kramdown
         end
 
         def handle_math_tag(el)
-          set_basics(el, :math, category: (el.attr['type'] =~ /mode=display/ ? :block : :span))
+          set_basics(el, :math, category: (el.attr['type'].include?("mode=display") ? :block : :span))
           el.value = el.children.shift.value.sub(/\A(?:%\s*)?<!\[CDATA\[\n?(.*?)(?:\s%)?\]\]>\z/m, '\1')
           el.attr.delete('type')
         end
@@ -612,4 +616,3 @@ module Kramdown
   end
 
 end
-

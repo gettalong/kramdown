@@ -121,7 +121,7 @@ module Kramdown
       end
     end
 
-    def inspect #:nodoc:
+    def inspect # :nodoc:
       "<KD:Document: options=#{@options.inspect} root=#{@root.inspect} warnings=#{@warnings.inspect}>"
     end
 

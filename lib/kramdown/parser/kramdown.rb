@@ -80,7 +80,7 @@ module Kramdown
                           :smart_quotes, :inline_math, :span_extensions, :html_entity,
                           :typographic_syms, :line_break, :escaped_chars]
 
-        @span_pattern_cache ||= Hash.new { |h, k| h[k] = {} }
+        @span_pattern_cache ||= Hash.new {|h, k| h[k] = {} }
       end
       private_class_method(:new, :allocate)
 
@@ -166,16 +166,17 @@ module Kramdown
       def update_tree(element)
         last_blank = nil
         element.children.map! do |child|
-          if child.type == :raw_text
+          case child.type
+          when :raw_text
             last_blank = nil
             reset_env(src: ::Kramdown::Utils::StringScanner.new(child.value, element.options[:location]),
                       text_type: :text)
             parse_spans(child)
             child.children
-          elsif child.type == :eob
+          when :eob
             update_attr_with_ial(child.attr, child.options[:ial]) if child.options[:ial]
             []
-          elsif child.type == :blank
+          when :blank
             if last_blank
               last_blank.value << child.value
               []

@@ -17,7 +17,7 @@ module Kramdown::Converter::MathEngine
 
     def self.call(converter, el, opts)
       value = converter.escape_html(el.value)
-      result = el.options[:category] == :block ?  "\\[#{value}\\]\n" : "\\(#{value}\\)"
+      result = el.options[:category] == :block ? "\\[#{value}\\]\n" : "\\(#{value}\\)"
       if el.attr.empty?
         result
       elsif el.options[:category] == :block

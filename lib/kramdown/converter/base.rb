@@ -137,7 +137,7 @@ module Kramdown
 
       # Return the template specified by +template+.
       def self.get_template(template) # :nodoc:
-        format_ext = '.' + ::Kramdown::Utils.snake_case(self.name.split(/::/).last)
+        format_ext = '.' + ::Kramdown::Utils.snake_case(name.split("::").last)
         shipped = File.join(::Kramdown.data_dir, template + format_ext)
         if File.exist?(template)
           File.read(template)
@@ -146,7 +146,7 @@ module Kramdown
         elsif File.exist?(shipped)
           File.read(shipped)
         elsif template.start_with?('string://')
-          template.sub(/\Astring:\/\//, '')
+          template.delete_prefix("string://")
         else
           raise "The specified template file #{template} does not exist"
         end

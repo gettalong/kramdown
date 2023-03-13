@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; frozen_string_literal: true -*-
 #
 #--
 # Copyright (C) 2009-2019 Thomas Leitner <t_leitner@gmx.at>
@@ -36,7 +36,7 @@ def add_kramdown_options(opts, parsed_options, banner: [], ignore: [])
       opts.on("--#{no} ARG", type) {|v| parsed_options[n] = Kramdown::Options.parse(n, v) }
     end
 
-    definition.desc.split(/\n/).each do |line|
+    definition.desc.split("\n").each do |line|
       opts.separator opts.summary_indent + ' ' * 6 + line
     end
     opts.separator ''
@@ -78,14 +78,12 @@ OptionParser.new do |opts|
           "prefix) separated", "by commas (e.g. parser-gfm,syntax-coderay)",
           "Note: Use this option before other options!") do |exts|
     exts.each do |ext|
-      begin
-        require "kramdown-#{ext}"
-        new_options = add_kramdown_options(opts, options, banner: ["#{ext} options:"],
-                                           ignore: defined_options)
-        defined_options.concat(new_options)
-      rescue LoadError
-        $stderr.puts "Couldn't load extension #{ext}, ignoring"
-      end
+      require "kramdown-#{ext}"
+      new_options = add_kramdown_options(opts, options, banner: ["#{ext} options:"],
+                                         ignore: defined_options)
+      defined_options.concat(new_options)
+    rescue LoadError
+      $stderr.puts "Couldn't load extension #{ext}, ignoring"
     end
   end
   opts.separator ""

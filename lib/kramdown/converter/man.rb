@@ -17,7 +17,7 @@ module Kramdown
     # man-pages(7) for information regarding the output.
     class Man < Base
 
-      def convert(el, opts = {indent: 0, result: +''}) #:nodoc:
+      def convert(el, opts = {indent: 0, result: +''}) # :nodoc:
         send("convert_#{el.type}", el, opts)
       end
 
@@ -139,7 +139,7 @@ module Kramdown
       def convert_table(el, opts)
         opts[:alignment] = el.options[:alignment].map {|a| TABLE_CELL_ALIGNMENT[a] }
         table_options = ["box"]
-        table_options << "center" if el.attr['class'] =~ /\bcenter\b/
+        table_options << "center" if el.attr['class']&.match?(/\bcenter\b/)
         opts[:result] << macro("TS") << "#{table_options.join(' ')} ;\n"
         inner(el, opts)
         opts[:result] << macro("TE") << macro("sp")
@@ -171,7 +171,7 @@ module Kramdown
         result = opts[:result]
         opts[:result] = +''
         inner(el, opts)
-        if opts[:result] =~ /\n/
+        if opts[:result].include?("\n")
           warning("Table cells using links are not supported")
           result << "\t"
         else

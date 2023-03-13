@@ -47,7 +47,7 @@ module Kramdown
         end
         el.children.map! do |child|
           if child.type == :text && el.options[:content_model] != :raw
-            if child.value =~ regexps.first
+            if child.value.match?(regexps.first)
               result = []
               strscan = Kramdown::Utils::StringScanner.new(child.value, child.options[:location])
               text_lineno = strscan.current_line_number

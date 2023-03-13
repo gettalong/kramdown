@@ -59,7 +59,7 @@ module Kramdown
       end
 
       def convert_blank(_el, opts)
-        opts[:result] =~ /\n\n\Z|\A\Z/ ? "" : "\n"
+        opts[:result].match?(/\n\n\Z|\A\Z/) ? "" : "\n"
       end
 
       def convert_text(el, _opts)
@@ -153,9 +153,10 @@ module Kramdown
       end
 
       def convert_html_element(el, opts)
-        if el.value == 'i' || el.value == 'em'
+        case el.value
+        when 'i', 'em'
           "\\emph{#{inner(el, opts)}}"
-        elsif el.value == 'b' || el.value == 'strong'
+        when 'b', 'strong'
           "\\textbf{#{inner(el, opts)}}"
         else
           warning("Can't convert HTML element")
@@ -164,7 +165,7 @@ module Kramdown
       end
 
       def convert_xml_comment(el, _opts)
-        el.value.split(/\n/).map {|l| "% #{l}" }.join("\n") + "\n"
+        el.value.split("\n").map {|l| "% #{l}" }.join("\n") + "\n"
       end
 
       def convert_xml_pi(_el, _opts)
@@ -203,7 +204,7 @@ module Kramdown
       end
 
       def convert_comment(el, _opts)
-        el.value.split(/\n/).map {|l| "% #{l}" }.join("\n") << "\n"
+        el.value.split("\n").map {|l| "% #{l}" }.join("\n") << "\n"
       end
 
       def convert_br(_el, opts)
@@ -224,7 +225,7 @@ module Kramdown
 
       def convert_img(el, _opts)
         line = el.options[:location]
-        if el.attr['src'] =~ /^(https?|ftps?):\/\//
+        if el.attr['src'].match?(/^(https?|ftps?):\/\//)
           warning("Cannot include non-local image#{line ? " (line #{line})" : ''}")
           ''
         elsif !el.attr['src'].empty?
@@ -556,7 +557,7 @@ module Kramdown
       def convert_math(el, _opts)
         @data[:packages] += %w[amssymb amsmath amsthm amsfonts]
         if el.options[:category] == :block
-          if el.value =~ /\A\s*\\begin\{/
+          if el.value.match?(/\A\s*\\begin\{/)
             el.value
           else
             latex_environment('displaymath', el, el.value)
@@ -573,7 +574,7 @@ module Kramdown
 
       # Normalize the abbreviation key so that it only contains allowed ASCII character
       def normalize_abbreviation_key(key)
-        key.gsub(/\W/) {|m| m.unpack('H*').first }
+        key.gsub(/\W/) {|m| m.unpack1('H*') }
       end
 
       # Wrap the +text+ inside a LaTeX environment of type +type+. The element +el+ is passed on to
@@ -597,7 +598,7 @@ module Kramdown
 
       # Return a LaTeX comment containing all attributes as 'key="value"' pairs.
       def attribute_list(el)
-        attrs = el.attr.map {|k, v| v.nil? ? '' : " #{k}=\"#{v}\"" }.compact.sort.join('')
+        attrs = el.attr.map {|k, v| v.nil? ? '' : " #{k}=\"#{v}\"" }.compact.sort.join
         attrs = "   % #{attrs}" unless attrs.empty?
         attrs
       end
@@ -611,7 +612,7 @@ module Kramdown
         ">"  => "\\textgreater{}",
         "["  => "{[}",
         "]"  => "{]}",
-      }.merge(Hash[*("{}$%&_#".each_char.map {|c| [c, "\\#{c}"] }.flatten)]) # :nodoc:
+      }.merge(Hash[*"{}$%&_#".each_char.map {|c| [c, "\\#{c}"] }.flatten]) # :nodoc:
       ESCAPE_RE = Regexp.union(*ESCAPE_MAP.collect {|k, _v| k }) # :nodoc:
 
       # Escape the special LaTeX characters in the string +str+.

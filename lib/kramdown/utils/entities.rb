@@ -323,11 +323,11 @@ module Kramdown
       end
 
       ENTITY_TABLE.each do |code_point, data|
-        if data.kind_of?(String)
-          ENTITY_MAP[code_point] = ENTITY_MAP[data] = Entity.new(code_point, data)
-        else
-          ENTITY_MAP[code_point] = ENTITY_MAP[data]
-        end
+        ENTITY_MAP[code_point] = if data.kind_of?(String)
+                                   ENTITY_MAP[data] = Entity.new(code_point, data)
+                                 else
+                                   ENTITY_MAP[data]
+                                 end
       end
 
       # Return the entity for the given code point or name +point_or_name+.

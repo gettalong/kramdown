@@ -18,7 +18,7 @@ module Kramdown
         start_line_number = @src.current_line_number
         @src.pos += @src.matched_size
         begin
-          value = ::Kramdown::Utils::Entities.entity(@src[1] || (@src[2]&.to_i) || @src[3].hex)
+          value = ::Kramdown::Utils::Entities.entity(@src[1] || @src[2]&.to_i || @src[3].hex)
           @tree.children << Element.new(:entity, value,
                                         nil, original: @src.matched, location: start_line_number)
         rescue ::Kramdown::Error

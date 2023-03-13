@@ -1,16 +1,22 @@
+require:
+  - rubocop-performance
+
 AllCops:
   Include:
     - bin/*
     - lib/**/*.rb
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 110 # Preferred length is 100
+  Enabled: false
 
 Metrics/ParameterLists:
   CountKeywordArgs: false
   Max: 8
+  MaxOptionalParameters: 8
 
 Metrics/BlockLength:
   Enabled: false
@@ -77,7 +83,7 @@ Style/NumericPredicate:
   EnforcedStyle: comparison
 
 Style/TernaryParentheses:
-  EnforcedStyle: require_parentheses
+  EnforcedStyle: require_no_parentheses
 
 Style/FormatString:
   EnforcedStyle: sprintf
@@ -86,7 +92,7 @@ Style/Semicolon:
   AllowAsExpressionSeparator: true
 
 Style/YodaCondition:
-  EnforcedStyle: equality_operators_only
+  EnforcedStyle: forbid_for_equality_operators_only
 
 Style/EmptyElse:
   EnforcedStyle: empty
@@ -97,7 +103,7 @@ Style/CaseEquality:
 Style/GuardClause:
   Enabled: false # false alarms
 
-Style/MethodMissingSuper:
+Lint/MissingSuper:
   Enabled: false # why the need to fallback to super?
 
 Style/Next:
@@ -152,8 +158,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedLastArgumentHashStyle: ignore_implicit
+  Exclude:
+    - lib/kramdown/converter/latex.rb # false positive
 
 Layout/SpaceInsideBlockBraces:
   SpaceBeforeBlockParameters: false
@@ -182,14 +190,14 @@ Layout/DotPosition:
 Layout/EmptyLineAfterMagicComment:
   Enabled: false # we have the magic comment and then the license
 
-Layout/IndentAssignment:
+Layout/AssignmentIndentation:
   Enabled: false # false alarms
 
 
 Naming/HeredocDelimiterNaming:
   Enabled: false # we like our delimiters short and obvious
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false # for points the names x,y are perfectly reasonable
 
 Lint/LiteralAsCondition:
@@ -198,7 +206,7 @@ Lint/LiteralAsCondition:
 Lint/NonLocalExitFromIterator:
   Enabled: false
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Performance/FixedSize:
@@ -206,4 +214,47 @@ Performance/FixedSize:
 
 
 Security/Open:
+  Enabled: false
+
+
+
+Layout/LineEndStringConcatenationIndentation:
+  Enabled: false
+Style/EnvHome:
+  Enabled: false
+Style/StringConcatenation:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+Lint/DuplicateBranch:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/OptionalBooleanParameter:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Style/HashEachMethods:
+  Enabled: false
+Naming/PredicateName:
+  Enabled: false
+Lint/IneffectiveAccessModifier:
+  Enabled: false
+Lint/StructNewOverride:
+  Enabled: false
+Style/MultilineIfModifier:
+  Enabled: false
+Style/ClassVars:
+  Enabled: false
+Style/CaseLikeIf:
+  Exclude:
+    - lib/kramdown/options.rb # false positive
+Performance/CollectionLiteralInLoop:
+  Enabled: false # for now, enable later and fix
+Style/HashLikeCase:
+  Exclude:
+    - lib/kramdown/converter/kramdown.rb
+Style/MissingRespondToMissing:
   Enabled: false

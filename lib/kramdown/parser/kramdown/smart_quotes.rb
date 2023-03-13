@@ -119,7 +119,7 @@ module Kramdown
     class Kramdown
 
       SQ_PUNCT = '[!"#\$\%\'()*+,\-.\/:;<=>?\@\[\\\\\]\^_`{|}~]'
-      SQ_CLOSE = %![^\ \\\\\t\r\n\\[{(-]!
+      SQ_CLOSE = %![^ \\\\\t\r\n\\[{(-]!
 
       SQ_RULES = [
         [/("|')(?=[_*]{1,2}\S)/, [:lquote1]],

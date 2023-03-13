@@ -46,7 +46,7 @@ module Kramdown
 
         attr.map do |k, v|
           v.nil? || (k == 'id' && v.strip.empty?) ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\""
-        end.join('')
+        end.join
       end
 
       # :stopdoc:

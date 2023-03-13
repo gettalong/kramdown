@@ -71,7 +71,7 @@ module Kramdown
         ""
       end
 
-      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]\{"'|])|^[ ]{0,3}(:)/
+      ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]{"'|])|^ {0,3}(:)/
 
       def convert_text(el, opts)
         if opts[:raw_text]
@@ -87,11 +87,11 @@ module Kramdown
 
       def convert_p(el, opts)
         w = @options[:line_width] - opts[:indent].to_s.to_i
-        first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split(/\n/)
+        first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split("\n")
         first&.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\." }
         second&.gsub!(/^([=-]+\s*?)$/, "\\\1")
         res = [first, second, *rest].compact.join("\n") + "\n"
-        res.gsub!(/^[ ]{0,3}:/, "\\:")
+        res.gsub!(/^ {0,3}:/, "\\:")
         if el.children.length == 1 && el.children.first.type == :math
           res = "\\#{res}"
         elsif res.start_with?('\$$') && res.end_with?("\\$$\n")
@@ -101,12 +101,12 @@ module Kramdown
       end
 
       def convert_codeblock(el, _opts)
-        el.value.split(/\n/).map {|l| l.empty? ? "    " : "    #{l}" }.join("\n") + "\n"
+        el.value.split("\n").map {|l| l.empty? ? "    " : "    #{l}" }.join("\n") + "\n"
       end
 
       def convert_blockquote(el, opts)
         opts[:indent] += 2
-        inner(el, opts).chomp.split(/\n/).map {|l| "> #{l}" }.join("\n") << "\n"
+        inner(el, opts).chomp.split("\n").map {|l| "> #{l}" }.join("\n") << "\n"
       end
 
       def convert_header(el, opts)
@@ -140,7 +140,7 @@ module Kramdown
         opts[:indent] += width
         text = inner(el, opts)
         newlines = text.scan(/\n*\Z/).first
-        first, *last = text.split(/\n/)
+        first, *last = text.split("\n")
         last = last.map {|l| " " * width + l }.join("\n")
         text = (first.nil? ? "\n" : first + (last.empty? ? "" : "\n") + last + newlines)
         if el.children.first && el.children.first.type == :p && !el.children.first.options[:transparent]
@@ -164,7 +164,7 @@ module Kramdown
         opts[:indent] += width
         text = inner(el, opts)
         newlines = text.scan(/\n*\Z/).first
-        first, *last = text.split(/\n/)
+        first, *last = text.split("\n")
         last = last.map {|l| " " * width + l }.join("\n")
         text = first.to_s + (last.empty? ? "" : "\n") + last + newlines
         text.chomp! if text =~ /\n\n\Z/ && opts[:next] && opts[:next].type == :dd
@@ -187,7 +187,7 @@ module Kramdown
         result << inner(el, opts) << "\n"
       end
 
-      HTML_TAGS_WITH_BODY = ['div', 'script', 'iframe', 'textarea', 'th', 'td']
+      HTML_TAGS_WITH_BODY = %w[div script iframe textarea th td]
 
       HTML_ELEMENT_TYPES = [:entity, :text, :html_element].freeze
       private_constant :HTML_ELEMENT_TYPES
@@ -243,7 +243,7 @@ module Kramdown
 
       def convert_thead(el, opts)
         rows = inner(el, opts)
-        if opts[:alignment].all? {|a| a == :default }
+        if opts[:alignment].all?(:default)
           "#{rows}|#{'-' * 10}\n"
         else
           "#{rows}| " + opts[:alignment].map do |a|
@@ -367,7 +367,7 @@ module Kramdown
       end
 
       def convert_smart_quote(el, _opts)
-        el.value.to_s =~ /[rl]dquo/ ? "\"" : "'"
+        el.value.to_s.match?(/[rl]dquo/) ? "\"" : "'"
       end
 
       def convert_math(el, _opts)
@@ -400,7 +400,7 @@ module Kramdown
         res = +''
         @footnotes.each do |name, data|
           res << "[^#{name}]:\n"
-          res << inner(data).chomp.split(/\n/).map {|l| "    #{l}" }.join("\n") + "\n\n"
+          res << inner(data).chomp.split("\n").map {|l| "    #{l}" }.join("\n") + "\n\n"
         end
         res
       end
@@ -422,14 +422,14 @@ module Kramdown
           next if el.type == :header && k == 'id' && !v.strip.empty?
           if v.nil?
             ''
-          elsif k == 'class' && !v.empty? && !v.index(/[\.#]/)
+          elsif k == 'class' && !v.empty? && !v.index(/[.#]/)
             " " + v.split(/\s+/).map {|w| ".#{w}" }.join(" ")
           elsif k == 'id' && !v.strip.empty?
             " ##{v}"
           else
             " #{k}=\"#{v}\""
           end
-        end.compact.join('')
+        end.compact.join
         res = "toc" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&
           el.options.dig(:ial, :refs)&.include?('toc')
         res = "footnotes" + (res.strip.empty? ? '' : " #{res}") if (el.type == :ul || el.type == :ol) &&

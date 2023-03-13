@@ -85,11 +85,11 @@ module Kramdown
           end
         end
 
-        if !handle_extension(ext, opts, body, type, start_line_number)
+        if handle_extension(ext, opts, body, type, start_line_number)
+          true
+        else
           error_block.call("Invalid extension with name '#{ext}' specified on line " \
                            "#{start_line_number} - ignoring it")
-        else
-          true
         end
       end
 
@@ -137,10 +137,10 @@ module Kramdown
       end
 
       ALD_ID_CHARS = /[\w-]/
-      ALD_ANY_CHARS = /\\\}|[^\}]/
+      ALD_ANY_CHARS = /\\\}|[^}]/
       ALD_ID_NAME = /\w#{ALD_ID_CHARS}*/
-      ALD_CLASS_NAME = /[^\s\.#]+/
-      ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^\}\2])*?)\2/
+      ALD_CLASS_NAME = /[^\s.#]+/
+      ALD_TYPE_KEY_VALUE_PAIR = /(#{ALD_ID_NAME})=("|')((?:\\\}|\\\2|[^}\2])*?)\2/
       ALD_TYPE_CLASS_NAME = /\.(#{ALD_CLASS_NAME})/
       ALD_TYPE_ID_NAME = /#([A-Za-z][\w:-]*)/
       ALD_TYPE_ID_OR_CLASS = /#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}/

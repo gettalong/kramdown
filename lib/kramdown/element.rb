@@ -508,7 +508,7 @@ module Kramdown
       @options ||= {}
     end
 
-    def inspect #:nodoc:
+    def inspect # :nodoc:
       "<kd:#{@type}" \
         "#{value.nil? ? '' : ' value=' + value.inspect}" \
         "#{attr.empty? ? '' : ' attr=' + attr.inspect}" \
