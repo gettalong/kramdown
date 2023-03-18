@@ -110,6 +110,7 @@ module Kramdown
       end
 
       def convert_header(el, opts)
+        opts[:in_header] = true
         res = +''
         res << "#{'#' * output_header_level(el.options[:level])} #{inner(el, opts)}"
         res[-1, 1] = "\\#" if res[-1] == '#'
@@ -284,8 +285,8 @@ module Kramdown
         end
       end
 
-      def convert_br(_el, _opts)
-        "  \n"
+      def convert_br(_el, opts)
+        opts[:in_header] ? "<br />" : "  \n"
       end
 
       def convert_a(el, opts)
