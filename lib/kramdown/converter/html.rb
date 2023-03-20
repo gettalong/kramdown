@@ -148,7 +148,7 @@ module Kramdown
           attr['id'] = generate_id(el.options[:raw_text])
         end
 
-        if @options[:header_links] && attr['id'].length > 0
+        if @options[:header_links] && attr['id'].to_s.length > 0
           link = Element.new(:a, nil, nil)
           link.attr['href'] = "##{attr['id']}"
           el.children.unshift(link)
