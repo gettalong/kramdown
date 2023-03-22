@@ -305,15 +305,9 @@ module Kramdown
           @footnotes_by_name[name] = @footnotes.last
         end
         formatted_link_text = sprintf(link_text, number)
-        if (formatted_link_text == link_text)
-          "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
-            "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
-            "#{link_text}#{number}</a></sup>"
-        else
-          "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
-            "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
-            "#{formatted_link_text}</a></sup>"
-        end
+        "<sup id=\"fnref:#{name}#{repeat}\" role=\"doc-noteref\">" \
+          "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\">" \
+          "#{formatted_link_text}</a></sup>"
       end
 
       def convert_raw(el, _indent)
