@@ -235,7 +235,9 @@ module Kramdown
       # The basic version of the ID generator, without any special provisions for empty or unique
       # IDs.
       def basic_generate_id(str)
-        gen_id = str.gsub(/^[^a-zA-Z]+/, '')
+        gen_id = str.unicode_normalize(:nfkd)
+        gen_id.encode!('ASCII', replace: '')
+        gen_id.gsub!(/^[^a-zA-Z]+/, '')
         gen_id.tr!('^a-zA-Z0-9 -', '')
         gen_id.tr!(' ', '-')
         gen_id.downcase!
