@@ -1047,7 +1047,8 @@ can be configured with the `parse_block_html`. If this is set to `true`, then sy
 blocks is globally enabled. It is also possible to enable/disable syntax parsing on a tag per tag
 basis using the `markdown` attribute:
 
-* If an HTML tag has an attribute `markdown="0"`, then the tag is parsed as raw HTML block.
+* If an HTML tag has an attribute `markdown="0"`, then the content of the tag is parsed as raw HTML
+  block.
 
 * If an HTML tag has an attribute `markdown="1"`, then the default mechanism for parsing syntax in
   this tag is used.
