@@ -88,7 +88,7 @@ module Kramdown
       def convert_p(el, opts)
         w = @options[:line_width] - opts[:indent].to_s.to_i
         first, second, *rest = inner(el, opts).strip.gsub(/(.{1,#{w}})( +|$\n?)/, "\\1\n").split(/\n/)
-        first&.gsub!(/^(?:(#|>)|(\d+)\.|([+-]\s))/) { $1 || $3 ? "\\#{$1 || $3}" : "#{$2}\\." }
+        first&.gsub!(/^(?:(#|>)|(\d+)\.([\s\z])|([+-]\s))/) { $1 || $4 ? "\\#{$1 || $4}" : "#{$2}\\.#{$3}" }
         second&.gsub!(/^([=-]+\s*?)$/, "\\\1")
         res = [first, second, *rest].compact.join("\n") + "\n"
         res.gsub!(/^[ ]{0,3}:/, "\\:")
