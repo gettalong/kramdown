@@ -147,7 +147,7 @@ module Kramdown
         if el.children.first && el.children.first.type == :p && !el.children.first.options[:transparent]
           res = +"#{sym}#{text}"
           res << "^\n" if el.children.size == 1 && @stack.last.children.last == el &&
-            (@stack.last.children.any? {|c| c.children.first.type != :p } || @stack.last.children.size == 1)
+            (@stack.last.children.any? {|c| !c.children.first || c.children.first.type != :p } || @stack.last.children.size == 1)
           res
         elsif el.children.first && el.children.first.type == :codeblock
           "#{sym}\n    #{text}"
