@@ -139,6 +139,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/06_codeblock/with_lang_in_fenced_block_any_char.text',
       'test/testcases/block/03_paragraph/standalone_image.text', # bc of standalone image
       'test/testcases/cjk-line-break.text', # latex unicode support
+      'test/testcases/block/04_header/with_auto_ids.text', # bc of Unicode characters
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_LATEX_FILES.any? {|f| text_file =~ /#{f}$/ }
