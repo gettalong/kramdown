@@ -99,7 +99,7 @@ OptionParser.new do |opts|
     exit
   end
   opts.on("-h", "--help", "Show the help") do
-    puts opts.summarize('', 5, 72)
+    puts opts.summarize(+'', 5, 72)
     exit
   end
 
