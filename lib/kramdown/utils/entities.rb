@@ -81,6 +81,8 @@ module Kramdown
         [977, 'thetasym'],
         [978, 'upsih'],
         [982, 'piv'],
+        [988, 'Gammad'],
+        [989, 'gammad'],
         [8204, 'zwnj'],
         [8205, 'zwj'],
         [8206, 'lrm'],
