@@ -500,7 +500,7 @@ module Kramdown
         backlink_text = escape_html(@options[:footnote_backlink], :text)
         while i < @footnotes.length
           name, data, _, repeat = *@footnotes[i]
-          li = Element.new(:li, nil, 'id' => "fn:#{name}", 'role' => 'doc-endnote')
+          li = Element.new(:li, nil, 'id' => "fn:#{name}")
           li.children = Marshal.load(Marshal.dump(data.children))
 
           para = nil
