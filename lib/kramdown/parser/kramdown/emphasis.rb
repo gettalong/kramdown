@@ -28,6 +28,7 @@ module Kramdown
           return
         end
 
+        warnings_pos = @warnings.size
         sub_parse = lambda do |delim, elem|
           el = Element.new(elem, nil, nil, location: start_line_number)
           stop_re = /#{Regexp.escape(delim)}/
@@ -52,6 +53,7 @@ module Kramdown
           @src.scan(stop_re)
           @tree.children << el
         else
+          @warnings.slice!(0...warnings_pos)
           @src.revert_pos(saved_pos)
           @src.pos += result.length
           add_text(result)
