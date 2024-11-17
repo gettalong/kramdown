@@ -32,3 +32,10 @@ This is awesome.
 {:.testit}
 *[awesome]: Some text here
 {:.test}
+
+*[foo bar]: baz
+
+hello foo bar babble.
+
+hello foo
+bar babble.

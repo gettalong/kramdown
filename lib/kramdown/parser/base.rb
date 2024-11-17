@@ -54,6 +54,12 @@ module Kramdown
         @options = Kramdown::Options.merge(options)
         @root = Element.new(:root, nil, nil, encoding: (source.encoding rescue nil), location: 1,
                             options: {}, abbrev_defs: {}, abbrev_attr: {})
+
+        @root.options[:abbrev_defs].default_proc = @root.options[:abbrev_attr].default_proc =
+          lambda do |h, k|
+            k_mod = k.gsub(/[\s\p{Z}]+/, " ")
+            k != k_mod ? h[k_mod] : nil
+          end
         @warnings = []
         @text_type = :text
       end

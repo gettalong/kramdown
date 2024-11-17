@@ -282,7 +282,11 @@ class TestFiles < Minitest::Test
       define_method("test_whether_#{conv_class}_modifies_tree_with_file_#{text_file.tr('.', '_')}") do
         doc = Kramdown::Document.new(File.read(text_file), options)
         options_before = Marshal.load(Marshal.dump(doc.options))
+        abbrev_proc = doc.root.options[:abbrev_defs].default_proc
+        doc.root.options[:abbrev_defs].default_proc = doc.root.options[:abbrev_attr].default_proc = nil
         tree_before = Marshal.load(Marshal.dump(doc.root))
+        doc.root.options[:abbrev_defs].default_proc = doc.root.options[:abbrev_attr].default_proc =
+          abbrev_proc
         Kramdown::Converter.const_get(conv_class).convert(doc.root, doc.options)
         assert_equal(options_before, doc.options)
         assert_tree_not_changed(tree_before, doc.root)
