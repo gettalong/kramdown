@@ -534,7 +534,7 @@ module Kramdown
             end
           end
           check_nr_cells.call(el)
-          return false if nr_cells == -1
+          return false if nr_cells == -1 || nr_cells == 0
 
           alignment = nil
           check_alignment = proc do |t|
