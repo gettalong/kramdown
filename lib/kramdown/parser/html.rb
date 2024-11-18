@@ -29,6 +29,7 @@ module Kramdown
         HTML_DOCTYPE_RE = /<!DOCTYPE.*?>/im
         HTML_COMMENT_RE = /<!--(.*?)-->/m
         HTML_INSTRUCTION_RE = /<\?(.*?)\?>/m
+        HTML_CDATA_RE = /<!\[CDATA\[(.*?)\]\]>/m
         HTML_ATTRIBUTE_RE = /\s*(#{REXML::Parsers::BaseParser::UNAME_STR})(?:\s*=\s*(?:(\p{Word}+)|("|')(.*?)\3))?/m
         HTML_TAG_RE = /<((?>#{REXML::Parsers::BaseParser::UNAME_STR}))\s*((?>\s+#{REXML::Parsers::BaseParser::UNAME_STR}(?:\s*=\s*(?:\p{Word}+|("|').*?\3))?)*)\s*(\/)?>/m
         HTML_TAG_CLOSE_RE = /<\/(#{REXML::Parsers::BaseParser::UNAME_STR})\s*>/m
@@ -136,7 +137,7 @@ module Kramdown
           end
         end
 
-        HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?))/ # :nodoc:
+        HTML_RAW_START = /(?=<(#{REXML::Parsers::BaseParser::UNAME_STR}|\/|!--|\?|!\[CDATA\[))/ # :nodoc:
 
         # Parse raw HTML from the current source position, storing the found elements in +el+.
         # Parsing continues until one of the following criteria are fulfilled:
@@ -160,6 +161,8 @@ module Kramdown
                 @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
               elsif (result = @src.scan(HTML_INSTRUCTION_RE))
                 @tree.children << Element.new(:xml_pi, result, nil, category: :block, location: line)
+              elsif @src.scan(HTML_CDATA_RE)
+                @tree.children << Element.new(:text, @src[1], nil, cdata: true, location: line)
               elsif @src.scan(HTML_TAG_RE)
                 if method(:handle_html_start_tag).arity.abs >= 1
                   handle_html_start_tag(line, &block)

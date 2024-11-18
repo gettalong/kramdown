@@ -75,14 +75,17 @@ module Kramdown
       ESCAPED_CHAR_RE = /(\$\$|[\\*_`\[\]{"'|])|^ {0,3}(:)/
 
       def convert_text(el, opts)
-        if opts[:raw_text]
+        if opts[:raw_text] || (@stack.last.type == :html_element && @stack.last.options[:content_model] == :raw)
           el.value
         else
-          el.value.gsub(/\A\n/) do
+          result = el.value.gsub(/\A\n/) do
             opts[:prev] && opts[:prev].type == :br ? '' : "\n"
-          end.gsub(/\s+/, ' ').gsub(ESCAPED_CHAR_RE) do
+          end
+          result.gsub!(/\s+/, ' ') unless el.options[:cdata]
+          result.gsub!(ESCAPED_CHAR_RE) do
             $1 || !opts[:prev] || opts[:prev].type == :br ? "\\#{$1 || $2}" : $&
           end
+          result
         end
       end
 

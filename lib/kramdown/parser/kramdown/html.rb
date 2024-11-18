@@ -14,6 +14,7 @@ module Kramdown
     class Kramdown
 
       include Kramdown::Parser::Html::Parser
+      include Kramdown::Utils::Html
 
       # Mapping of markdown attribute value to content model. I.e. :raw when "0", :default when "1"
       # (use default content model for the HTML element), :span when "span", :block when block and
@@ -95,13 +96,15 @@ module Kramdown
       end
       define_parser(:block_html, HTML_BLOCK_START)
 
-      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|!--|\/)/
+      HTML_SPAN_START = /<(#{REXML::Parsers::BaseParser::UNAME_STR}|!--|\/|!\[CDATA\[)/
 
       # Parse the HTML at the current position as span-level HTML.
       def parse_span_html
         line = @src.current_line_number
         if (result = @src.scan(HTML_COMMENT_RE))
           @tree.children << Element.new(:xml_comment, result, nil, category: :span, location: line)
+        elsif @src.scan(HTML_CDATA_RE)
+          add_text(escape_html(@src[1]))
         elsif (result = @src.scan(HTML_TAG_CLOSE_RE))
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' on line #{line}")
           add_text(result)
