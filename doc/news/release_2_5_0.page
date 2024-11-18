@@ -1,0 +1,81 @@
+---
+title: kramdown 2.5.0 released
+no_output: true
+sort_info: r2050
+created_at: 2024-11-18 10:08:00 +01:00
+modified_at: 2024-11-18 10:08:00 +01:00
+---
+## kramdown 2.5.0 released
+
+This release contains a lot of changes that have accumlated for the past two years. There are no big
+changes functionality-wise, just adaptions and bug fixes.
+
+## Changes
+
+* 12 minor changes:
+
+  - New option 'footnote_link_text' for customizing the footnote link text (pull request [#774] by
+    Bryce Willey)
+  - Make Ruby 2.5 the minimum required Ruby version
+  - Update REXML to 3.3.6 to avoid versions with known vulnerabilities (fixes [#806] by Jeremiah
+    Parrack )
+  - Store the emphasis character in the element's options for use by converters (pull request [#764]
+    by ionactual)
+  - Make HTML5 entities available (pull request [#738] by John Haugeland)
+  - Improve readability of output of kramdown converter (pull request [#808] by Paul McMahon)
+  - Improve kramdown converter output of nested compact lists (pull request [#680] by Virgil
+    Ierubino)
+  - Add some more fraction entities like "frac23" (fixes [#769] by Ashwin Maroli)
+  - Add missing "Gammad" and "gammad" entities (fixes [#710] by SomeWeekendReading)
+  - Remove deprecated `role="doc-endnote"` from footnote listing (fixes [#729] by James Mejia)
+  - Match abbreviations across line breaks and other whitespace (fixes [#717] by cabo)
+  - Correctly parse CDATA sections (fixes [#758] by cabo)
+
+* 9 bug fixes:
+
+  - Fix loading of configuration file with recent Rubies using Psych 4.0 (pull request [#779] by
+    Christian Boos)
+  - Fix placement of 'doc-noteref' role attribute for footnote links (fixes [#719] by Louise
+    Steward, pull requests [#723] by psfrolov and [#773] by Bryce Willey)
+  - Convert line break in header to `<br />` when converting to kramdown (fixes [#780] by
+    directionless)
+  - Fix wrong conversion to emphasis element when multiple underscores are used inside words (fixes
+    [#582] by Ashesh Singh, pull request [#583] with tests by Ashesh Singh)
+  - Fix missing classification of `<time>` element as span-level element (fixes [#794] by Étienne
+    Miret)
+  - Fix crash when converting edge case from HTML to kramdown (fixes [#809] and based on pull
+    request [#810], both by Honza Sterba)
+  - Frozen string problem when running `kramdown --help`
+  - HTML table parsing when table is empty (fixed [#802] by gsar)
+  - Fix recording of invalid warnings due to reparsing of span content (fixes [#766] by
+    rubyFeedback)
+
+* 1 other change:
+
+  - Fixed wording of how `markdown="0"` is to be interpreted (fixes [#792] by Étienne Miret)
+
+[#719]: https://github.com/gettalong/kramdown/issues/719
+[#780]: https://github.com/gettalong/kramdown/issues/780
+[#582]: https://github.com/gettalong/kramdown/issues/582
+[#792]: https://github.com/gettalong/kramdown/issues/792
+[#809]: https://github.com/gettalong/kramdown/issues/809
+[#769]: https://github.com/gettalong/kramdown/issues/769
+[#802]: https://github.com/gettalong/kramdown/issues/802
+[#766]: https://github.com/gettalong/kramdown/issues/766
+[#729]: https://github.com/gettalong/kramdown/issues/729
+[#717]: https://github.com/gettalong/kramdown/issues/717
+[#710]: https://github.com/gettalong/kramdown/issues/710
+[#758]: https://github.com/gettalong/kramdown/issues/758
+[#794]: https://github.com/gettalong/kramdown/issues/794
+
+[#779]: https://github.com/gettalong/kramdown/pull/779
+[#723]: https://github.com/gettalong/kramdown/pull/723
+[#773]: https://github.com/gettalong/kramdown/pull/773
+[#764]: https://github.com/gettalong/kramdown/pull/764
+[#738]: https://github.com/gettalong/kramdown/pull/738
+[#583]: https://github.com/gettalong/kramdown/pull/583
+[#806]: https://github.com/gettalong/kramdown/pull/806
+[#808]: https://github.com/gettalong/kramdown/pull/808
+[#810]: https://github.com/gettalong/kramdown/pull/810
+[#774]: https://github.com/gettalong/kramdown/pull/774
+[#680]: https://github.com/gettalong/kramdown/pull/680
