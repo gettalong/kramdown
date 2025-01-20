@@ -30,5 +30,5 @@ END {
     print_opts.merge!(to_file: report_file)
     puts "\nDetailed report saved to '#{report_file}'"
   end
-  report.pretty_print(print_opts)
+  report.pretty_print(**print_opts)
 }

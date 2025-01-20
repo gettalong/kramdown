@@ -1,0 +1,74 @@
+name: CI
+on:
+  push:
+
+jobs:
+  lint:
+    name: Rubocop
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Install Rubocop
+      run: |
+        sudo gem install rubocop -v '~> 1.70'
+        sudo gem install rubocop-performance -v '~> 1.23'
+
+    - name: Run Rubocop
+      run: rubocop --fail-level error
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: '2.5'
+          - ruby: '2.6'
+          - ruby: '2.7'
+          - ruby: '3.0'
+          - ruby: '3.1'
+          - ruby: '3.2'
+          - ruby: jruby-head
+            experimental: true
+          - name: Profile Memory Usage
+            ruby: '3.2'
+            profile_memory: true
+
+    name: ${{ matrix.name || format('Ruby {0}', matrix.ruby) }}
+    continue-on-error: ${{ matrix.experimental == true }}
+    runs-on: ubuntu-24.04
+    steps:
+
+    - uses: actions/checkout@v4
+
+    # https://github.com/ruby/setup-ruby
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+
+    - name: Install packages
+      run: |
+        ruby --version
+        gem --version
+        sudo apt-get install -q -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra
+        wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb
+        sudo apt purge libtidy-0.99-0
+        sudo dpkg -i tidy-5.4.0-64bit.deb
+        gem install rake
+
+    - name: Install dependencies
+      run: |
+        rake gemspec
+        echo -e 'source "http://www.rubygems.org"\n\ngemspec' > Gemfile
+        bundle install
+
+    - name: Run tests
+      if: ${{ !matrix.profile_memory }}
+      run: ruby -Ilib:test test/test_*
+
+    - name: Run profile_memory
+      if: ${{ matrix.profile_memory }}
+      run: |
+        gem install memory_profiler -v '~> 1.0'
+        rake dev:profile_memory
