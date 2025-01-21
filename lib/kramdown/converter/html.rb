@@ -315,8 +315,18 @@ module Kramdown
           @footnotes_by_name[name] = @footnotes.last
         end
         formatted_link_text = sprintf(@options[:footnote_link_text], number)
+        formatted_link_title = sprintf(@options[:footnote_link_title], number)
+
+        link_attr = {
+          href: "#fn:#{name}",
+          class: "footnote",
+          rel: "footnote",
+          role: "doc-noteref"
+        }
+        link_attr['title'] = formatted_link_title unless formatted_link_title.empty?
+
         "<sup id=\"fnref:#{name}#{repeat}\">" \
-          "<a href=\"#fn:#{name}\" class=\"footnote\" rel=\"footnote\" role=\"doc-noteref\">" \
+          "<a#{html_attributes(link_attr)}>" \
           "#{formatted_link_text}</a></sup>"
       end
 
@@ -490,7 +500,7 @@ module Kramdown
         result
       end
 
-      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\">%s</a>"
+      FOOTNOTE_BACKLINK_FMT = "%s<a href=\"#fnref:%s\" class=\"reversefootnote\" role=\"doc-backlink\"%s>%s</a>"
 
       # Return an HTML ordered list with the footnote content for the used footnotes.
       def footnote_content
@@ -520,10 +530,20 @@ module Kramdown
 
           unless @options[:footnote_backlink].empty?
             nbsp = entity_to_str(ENTITY_NBSP)
-            value = sprintf(FOOTNOTE_BACKLINK_FMT, (insert_space ? nbsp : ''), name, backlink_text)
+            number = @footnotes_by_name[name][2]
+            backlink_title_attr = @options[:footnote_backlink_title].empty? ? '' : " title=\"#{escape_html(sprintf(@options[:footnote_backlink_title], number))}\""
+            value = sprintf(FOOTNOTE_BACKLINK_FMT,
+                            (insert_space ? nbsp : ''),
+                            name,
+                            backlink_title_attr,
+                            backlink_text)
             para.children << Element.new(:raw, value)
             (1..repeat).each do |index|
-              value = sprintf(FOOTNOTE_BACKLINK_FMT, nbsp, "#{name}:#{index}",
+              backlink_title_attr = @options[:footnote_backlink_title].empty? ? '' : " title=\"#{escape_html(sprintf(@options[:footnote_backlink_title], number))}\""
+              value = sprintf(FOOTNOTE_BACKLINK_FMT,
+                              nbsp,
+                              "#{name}:#{index}",
+                              backlink_title_attr,
                               "#{backlink_text}<sup>#{index + 1}</sup>")
               para.children << Element.new(:raw, value)
             end

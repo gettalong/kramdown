@@ -613,6 +613,38 @@ module Kramdown
       val
     end
 
+    define(:footnote_link_title, String, '', <<~EOF) do |val|
+      The tooltip on the footnote link
+
+      This option can be used to add the title attribute on footnote
+      links. It should be a format string, and is passed the footnote
+      number as the only argument to the format string.
+      e.g. "Jump to footnote %s" would display as "Jump to footnote 1".
+
+      Tooltips must be plain text. Any special HTML characters will be escaped.
+
+      Default: ''
+      Used by: HTML
+    EOF
+      if !val.empty? && !val.include?('%s')
+        raise Kramdown::Error, "option footnote_link_title needs to contain a '%s'"
+      end
+      val
+    end
+
+    define(:footnote_backlink_title, String, '', <<~EOF)
+      The tooltip on the footnote backlink
+
+      This option can be used to change the title attribute on footnote
+      backlinks. If set to a format string, the footnote number is available as
+      first and only argument to the format string.
+      e.g. "Jump back to [%s] in the text" would display as "Jump back to [1] in the text".
+
+      Tooltips must be plain text. Any special HTML characters will be escaped.
+
+      Default: ''
+      Used by: HTML
+    EOF
 
     define(:remove_line_breaks_for_cjk, Boolean, false, <<~EOF)
       Specifies whether line breaks should be removed between CJK characters
