@@ -8,14 +8,14 @@
 
 ## Introduction
 
-kramdown is a fast, pure Ruby Markdown converter, using a strict syntax definition and
+Kramdown is a fast, pure Ruby Markdown superset converter, using a strict syntax definition and
 supporting several common extensions.
 
 The syntax definition for the kramdown syntax can be found in **doc/syntax.page** (or online at
 <https://kramdown.gettalong.org/syntax.html>) and a quick reference is available in
 **doc/quickref.page** or online at <https://kramdown.gettalong.org/quickref.html>.
 
-The kramdown library is mainly written to support the markdown-to-HTML conversion chain. However,
+The kramdown library is mainly written to support the kramdown-to-HTML conversion chain. However,
 due to its flexibility (by creating an internal AST) it supports other input and output formats as
 well. Here is a list of the supported formats:
 
@@ -35,7 +35,7 @@ For information about changes between versions, have a look at
 
 ## Usage
 
-kramdown has a very simple API, so using kramdown is as easy as
+Kramdown has a very simple API, so using kramdown is as easy as
 
 ```ruby
 require 'kramdown'
@@ -63,11 +63,11 @@ programs like `tidy` and `latex`. See the `.travis.yml` file for more informatio
 
 ## License
 
-kramdown was originally licensed under the GPL (until 1.0.0), but is now under the MIT license and 
-therefore easily used in commercial projects.
+Kramdown was originally licensed under the GPL (until 1.0.0). Due to popular demand it is now released under 
+the MIT license and can therefore easily be used in commercial projects.
 
 If you use kramdown in a commercial setting, please consider contributing back any
-changes for the benefit of the community, or [becoming a sponsor](https://github.com/sponsors/gettalong/) 
+changes for the benefit of the community, and/or [becoming a sponsor](https://github.com/sponsors/gettalong/) 
 or [a patron](https://www.patreon.com/gettalong) - thanks!
 
 MIT - see the **COPYING** file.
