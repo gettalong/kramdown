@@ -260,7 +260,7 @@ class TestFiles < Minitest::Test
 
   # Generate test methods for text-manpage conversion
   Dir[File.dirname(__FILE__) + '/testcases/man/**/*.text'].each do |text_file|
-    define_method('test_' + text_file.tr('.', '_') + "_to_man") do
+    define_method('test_' + text_file.tr('.', '_') + "_to_man_extra") do
       man_file = text_file.sub(/\.text$/, '.man')
       doc = Kramdown::Document.new(File.read(text_file))
       assert_equal(File.read(man_file), doc.to_man)
