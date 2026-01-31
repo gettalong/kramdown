@@ -43,7 +43,7 @@ module Kramdown
         unless regexps
           sorted_abbrevs = @root.options[:abbrev_defs].keys.sort {|a, b| b.length <=> a.length }
           regexps = [Regexp.union(*sorted_abbrevs.map do |k|
-            /#{Regexp.escape(k).gsub(/\\\s/, "[\\s\\p{Z}]+").force_encoding(Encoding::UTF_8)}/
+            /#{Regexp.escape(k).gsub(/\\\s/, "[\\t\\r\\n\\f\\v\\p{Z}]+").force_encoding(Encoding::UTF_8)}/
           end)]
           regexps << /(?=(?:\W|^)#{regexps.first}(?!\w))/ # regexp should only match on word boundaries
         end

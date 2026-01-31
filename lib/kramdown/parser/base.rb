@@ -57,7 +57,7 @@ module Kramdown
 
         @root.options[:abbrev_defs].default_proc = @root.options[:abbrev_attr].default_proc =
           lambda do |h, k|
-            k_mod = k.gsub(/[\s\p{Z}]+/, " ")
+            k_mod = k.gsub(/[\p{Z}\t\r\n\f\v]+/m, " ")
             k != k_mod ? h[k_mod] : nil
           end
         @warnings = []
