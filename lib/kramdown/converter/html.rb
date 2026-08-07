@@ -504,7 +504,7 @@ module Kramdown
           li.children = Marshal.load(Marshal.dump(data.children))
 
           para = nil
-          if li.children.last.type == :p || @options[:footnote_backlink_inline]
+          if li.children.last&.type == :p || @options[:footnote_backlink_inline]
             parent = li
             while !parent.children.empty? && ![:p, :header].include?(parent.children.last.type)
               parent = parent.children.last
