@@ -17,6 +17,30 @@ module Kramdown::Converter::SyntaxHighlighter
 
       # Highlighting via Rouge is available if this constant is +true+.
       AVAILABLE = true
+
+      # The default formatter for Rouge 2.0 or later.
+      #
+      # It produces the same output as ::Rouge::Formatters::HTMLLegacy which is deprecated since
+      # Rouge 5.0 and emits a warning every time it is instantiated.
+      class Formatter < ::Rouge::Formatter
+
+        def initialize(opts = {})
+          @formatter = if opts[:inline_theme]
+                         ::Rouge::Formatters::HTMLInline.new(opts[:inline_theme])
+                       else
+                         ::Rouge::Formatters::HTML.new
+                       end
+          @formatter = ::Rouge::Formatters::HTMLTable.new(@formatter, opts) if opts[:line_numbers]
+          @css_class = opts.fetch(:css_class, 'codehilite') if opts.fetch(:wrap, true)
+        end
+
+        def stream(tokens, &block)
+          yield %(<div class="highlight"><pre class="#{@css_class}"><code>) if @css_class
+          @formatter.stream(tokens, &block)
+          yield "</code></pre></div>" if @css_class
+        end
+
+      end
     rescue LoadError, SyntaxError
       AVAILABLE = false # :nodoc:
     end
@@ -72,8 +96,9 @@ module Kramdown::Converter::SyntaxHighlighter
       when /\A[[:upper:]][[:alnum:]_]*\z/
         ::Rouge::Formatters.const_get(formatter, false)
       else
-        # Available in Rouge 2.0 or later
-        ::Rouge::Formatters::HTMLLegacy
+        # HTMLTable is available in Rouge 2.0 or later
+        ::Rouge::Formatters::HTMLTable
+        Formatter
       end
     rescue NameError
       # Fallback to Rouge 1.x

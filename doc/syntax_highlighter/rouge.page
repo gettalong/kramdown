@@ -12,8 +12,10 @@ To use Rouge, set the option ['syntax_highlighter'](../options.html#option-synta
 Rubygems by running `gem install rouge`.
 
 Note that since Rouge 2.0 has breaking changes, Kramdown swaps formatter classes depending on
-Rouge version. By default, `Rouge::Formatters::HTMLLegacy` is used with Rouge 2.0 or later
-instead of `Rouge::Formatters::HTML` which is the default formatter with Rouge 1.x.
+Rouge version. By default, `Kramdown::Converter::SyntaxHighlighter::Rouge::Formatter` is used
+with Rouge 2.0 or later instead of `Rouge::Formatters::HTML` which is the default formatter with
+Rouge 1.x. It produces the same output as `Rouge::Formatters::HTMLLegacy`, which is deprecated
+since Rouge 5.0.
 
 The Rouge syntax highlighter supports the following keys of the option
 ['syntax_highlighter_opts'](../options.html#option-syntax-highlighter-opts):
@@ -26,7 +28,8 @@ guess_lang
 
 formatter
 : A custom Rouge formatter class that should be used instead of the following default formatter
-  (Rogue 1.x: `Rouge::Formatters::HTML` / Rogue 2.x: `Rouge::Formatters::HTMLLegacy`).
+  (Rouge 1.x: `Rouge::Formatters::HTML` / Rouge 2.0 or later:
+  `Kramdown::Converter::SyntaxHighlighter::Rouge::Formatter`).
 
   If this setting is a string, it needs to contain the name of a constant under the
   `Rouge::Formatters` namespace.

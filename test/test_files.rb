@@ -75,6 +75,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/04_header/header_type_offset.html', # bc of header_offset option
       'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
+      'test/testcases/block/06_codeblock/rouge/line_numbers.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
       'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
       'test/testcases/block/06_codeblock/guess_lang_css_class.html', # bc of double surrounding <div>
@@ -178,6 +179,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/04_header/header_type_offset.text', # bc of header_offset being applied twice
       'test/testcases/block/06_codeblock/rouge/simple.text',
       'test/testcases/block/06_codeblock/rouge/multiple.text', # check, what document contain more, than one code block
+      'test/testcases/block/06_codeblock/rouge/line_numbers.text',
       'test/testcases/block/14_table/empty_tag_in_cell.text', # bc of tidy
       'test/testcases/span/01_link/link_defs_with_ial.text', # bc of attribute ordering
       'test/testcases/span/05_html/mark_element.text', # bc of tidy
@@ -222,6 +224,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/06_codeblock/whitespace.html', # bc of entity to char conversion
       'test/testcases/block/06_codeblock/rouge/simple.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/rouge/multiple.html', # bc of double surrounding <div>
+      'test/testcases/block/06_codeblock/rouge/line_numbers.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/guess_lang_css_class.html', # bc of double surrounding <div>
       'test/testcases/block/06_codeblock/highlighting.html', # bc of span elements inside code element
       'test/testcases/block/06_codeblock/highlighting-opts.html', # bc of span elements inside code element
