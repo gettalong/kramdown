@@ -236,14 +236,33 @@ module Kramdown
       Used by: HTML/Latex converter
     EOF
 
-    define(:header_links, Boolean, false, <<~EOF)
+    define(:header_links, Object, false, <<~EOF) do |val|
       Adds anchor tags within headers that can be used to generate permalinks
       when not using a table of contents.
 
-      The anchor tags are empty, but can be styled to your liking.
+      If the value is `false`, no header links are used; if `true`, the defaults
+      are used: The anchor tags are empty and at the start of the header element.
+      This can be changed by using a hash as value with the following symbol keys:
+
+      * content: Defines the content of the anchor tag, default is ''.
+      * position: Whether the anchor tag is placed at the 'start' or the 'end' of
+        the header tag, default is 'start'.
 
       Default: false
     EOF
+      case val
+      when FalseClass
+        val
+      when TrueClass
+        {content: '', position: :start}
+      else
+        val = simple_hash_validator(val, :header_links)
+        val.keys.each do |k|
+          val[k.kind_of?(String) ? str_to_sym(k) : k] = val.delete(k)
+        end
+        val
+      end
+    end
 
     define(:transliterated_header_ids, Boolean, false, <<~EOF)
       Transliterate the header text before generating the ID

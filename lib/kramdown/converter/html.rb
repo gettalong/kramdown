@@ -155,7 +155,14 @@ module Kramdown
         if @options[:header_links] && attr['id'].to_s.length > 0
           link = Element.new(:a, nil, nil)
           link.attr['href'] = "##{attr['id']}"
-          el.children.unshift(link)
+          unless (header_link_text = @options[:header_links][:content].to_s).empty?
+            link.children << Element.new(:text, header_link_text)
+          end
+          if @options[:header_links][:position].to_s == 'start'
+            el.children.unshift(link)
+          else
+            el.children.push(link)
+          end
         end
 
         @toc << [el.options[:level], attr['id'], el.children] if attr['id'] && in_toc?(el)
