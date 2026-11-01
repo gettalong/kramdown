@@ -17,6 +17,36 @@ module Kramdown::Converter::SyntaxHighlighter
 
       # Highlighting via Rouge is available if this constant is +true+.
       AVAILABLE = true
+
+      # This is the HTMLLegacy implementation from Rouge that is deprecated. Therefore it is
+      # reproduced here and only adapted as needed.
+      class HTMLLegacy < ::Rouge::Formatter
+        def initialize(opts = {})
+          @formatter = if opts[:inline_theme]
+                         ::Rouge::Formatters::HTMLInline.new(opts[:inline_theme])
+                         else
+                         ::Rouge::Formatters::HTML.new
+                       end
+          @formatter = ::Rouge::Formatters::HTMLTable.new(@formatter, opts) if opts[:line_numbers]
+
+          if opts.fetch(:wrap, true)
+            @pygments_wrap = opts.fetch(:css_class, 'codehilite')
+          end
+        end
+
+        def stream(tokens, &b)
+          if @pygments_wrap
+            yield %(<div class="highlight"><pre class="#{@pygments_wrap}"><code>)
+          end
+
+          @formatter.stream(tokens, &b)
+
+          if @pygments_wrap
+            yield "</code></pre></div>"
+          end
+        end
+      end
+
     rescue LoadError, SyntaxError
       AVAILABLE = false # :nodoc:
     end
@@ -72,8 +102,7 @@ module Kramdown::Converter::SyntaxHighlighter
       when /\A[[:upper:]][[:alnum:]_]*\z/
         ::Rouge::Formatters.const_get(formatter, false)
       else
-        # Available in Rouge 2.0 or later
-        ::Rouge::Formatters::HTMLLegacy
+        HTMLLegacy
       end
     rescue NameError
       # Fallback to Rouge 1.x
