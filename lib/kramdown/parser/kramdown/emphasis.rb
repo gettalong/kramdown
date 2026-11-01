@@ -22,8 +22,9 @@ module Kramdown
         element = (result.length == 2 ? :strong : :em)
         type = result[0..0]
 
-        if (type == '_' && @src.pre_match =~ /[[:alnum:]]-?[[:alnum:]]*_*\z/) || @src.match?(/\s/) ||
-            @tree.type == element || @stack.any? {|el, _| el.type == element }
+        if (type == '_' && (tmp = @src.pre_match).match?(/[[:alnum:]]-?[[:alnum:]]*_*\z/, [tmp.size - 50, 0].max)) ||
+           @src.match?(/\s/) ||
+           @tree.type == element || @stack.any? {|el, _| el.type == element }
           add_text(result)
           return
         end
