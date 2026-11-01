@@ -18,7 +18,7 @@ module Kramdown
       def parse_attribute_list(str, opts)
         return if str.strip.empty? || str.strip == ':'
         attrs = str.scan(ALD_TYPE_ANY)
-        attrs.each do |key, sep, val, ref, id_and_or_class, _, _|
+        attrs.each do |key, sep, val, ref, id_and_or_class, _, _, unmatched|
           if ref
             (opts[:refs] ||= []) << ref
           elsif id_and_or_class
@@ -29,6 +29,8 @@ module Kramdown
                 opts['id'] = id_attr
               end
             end
+          elsif unmatched
+            warning("IAL/ALD contains invalid part: #{unmatched}")
           else
             val.gsub!(/\\(\}|#{sep})/, "\\1")
             opts[key] = val
@@ -146,7 +148,7 @@ module Kramdown
       ALD_TYPE_ID_OR_CLASS = /#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME}/
       ALD_TYPE_ID_OR_CLASS_MULTI = /((?:#{ALD_TYPE_ID_NAME}|#{ALD_TYPE_CLASS_NAME})+)/
       ALD_TYPE_REF = /(#{ALD_ID_NAME})/
-      ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_REF}|#{ALD_TYPE_ID_OR_CLASS_MULTI})(?=\s|\Z)/
+      ALD_TYPE_ANY = /(?:\A|\s)(?:#{ALD_TYPE_KEY_VALUE_PAIR}|#{ALD_TYPE_REF}|#{ALD_TYPE_ID_OR_CLASS_MULTI}|(\S+))(?=\s|\Z)/
       ALD_START = /^#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}\s*?\n/
 
       EXT_STOP_STR = "\\{:/(%s)?\\}"
