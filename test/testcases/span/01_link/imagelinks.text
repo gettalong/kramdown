@@ -16,3 +16,10 @@ No id: ![imgo]
 [imgo]: other.png "Title"
 
 With escaped pipe: ![an \| pipe](other.png)
+
+
+Inline alt text override ![alt text](other.png){:alt="Alt override"}
+Referenced alt text override ![alttext]
+
+[alttext]: otherref.png
+{:alt="Alt override"}

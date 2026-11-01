@@ -187,6 +187,7 @@ class TestFiles < Minitest::Test
       'test/testcases/cjk-line-break.text',
       'test/testcases/block/09_html/standalone_image_in_div.html', # bc of standalone image
       'test/testcases/span/abbreviations/abbrev_in_html.text', # bc of invalid abbr tag in SVG
+      'test/testcases/span/01_link/imagelinks.text', # bc of attribute ordering
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.text'].each do |text_file|
       next if EXCLUDE_TEXT_FILES.any? {|f| text_file =~ /#{f}$/ }
@@ -243,6 +244,7 @@ class TestFiles < Minitest::Test
       'test/testcases/block/09_html/standalone_image_in_div.html', # bc of standalone image
       'test/testcases/block/09_html/processing_instruction.html', # bc of PI
       'test/testcases/block/04_header/with_header_links.html', # bc of header_links option
+      'test/testcases/span/01_link/imagelinks.html', # bc of attribute ordering
     ].compact
     Dir[File.dirname(__FILE__) + '/testcases/**/*.html'].each do |html_file|
       next if EXCLUDE_HTML_KD_FILES.any? {|f| html_file =~ /#{f}$/ }

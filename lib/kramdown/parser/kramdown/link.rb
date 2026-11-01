@@ -43,7 +43,7 @@ module Kramdown
           el.attr['href'] = href
         else
           el.attr['src'] = href
-          el.attr['alt'] = alt_text
+          el.attr['alt'] ||= alt_text
           el.children.clear
         end
         el.attr['title'] = title if title
