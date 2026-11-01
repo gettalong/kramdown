@@ -35,7 +35,7 @@ module Kramdown
 
       # Parse the fenced codeblock at the current location.
       def parse_codeblock_fenced
-        if @src.check(self.class::FENCED_CODEBLOCK_MATCH)
+        if @src.match?(self.class::FENCED_CODEBLOCK_MATCH)
           start_line_number = @src.current_line_number
           @src.pos += @src.matched_size
           el = new_block_el(:codeblock, @src[5], nil, location: start_line_number, fenced: true)

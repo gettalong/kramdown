@@ -145,7 +145,7 @@ module Kramdown
         status = catch(:stop_block_parsing) do
           until @src.eos?
             @block_parsers.any? do |name|
-              if @src.check(@parsers[name].start_re)
+              if @src.match?(@parsers[name].start_re)
                 send(@parsers[name].method)
               else
                 false
@@ -226,11 +226,11 @@ module Kramdown
         while !@src.eos? && !stop_re_found
           if (result = @src.scan_until(used_re))
             add_text(result)
-            if stop_re && @src.check(stop_re)
+            if stop_re && @src.match?(stop_re)
               stop_re_found = (block_given? ? yield : true)
             end
             processed = parsers.any? do |name|
-              if @src.check(@parsers[name].start_re)
+              if @src.match?(@parsers[name].start_re)
                 send(@parsers[name].method)
                 true
               else

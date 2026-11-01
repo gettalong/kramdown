@@ -26,7 +26,7 @@ module Kramdown
 
       # Return +true+ if we are before a block boundary.
       def before_block_boundary?
-        @src.check(self.class::BLOCK_BOUNDARY)
+        @src.match?(self.class::BLOCK_BOUNDARY)
       end
 
     end

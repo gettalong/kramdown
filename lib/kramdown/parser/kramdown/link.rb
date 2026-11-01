@@ -88,7 +88,7 @@ module Kramdown
         @src.scan(LINK_BRACKET_STOP_RE)
 
         # reference style link or no link url
-        if @src.scan(LINK_INLINE_ID_RE) || !@src.check(/\(/)
+        if @src.scan(LINK_INLINE_ID_RE) || !@src.match?(/\(/)
           emit_warning = !@src[1]
           link_id = normalize_link_id(@src[1] || alt_text)
           if @link_defs.key?(link_id)

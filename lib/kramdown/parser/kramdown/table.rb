@@ -44,7 +44,7 @@ module Kramdown
         end
 
         until @src.eos?
-          break unless @src.check(TABLE_LINE)
+          break unless @src.match?(TABLE_LINE)
           if @src.scan(TABLE_SEP_LINE)
             if rows.empty?
               # nothing to do, ignoring multiple consecutive separator lines

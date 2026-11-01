@@ -76,12 +76,12 @@ module Kramdown
           @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
           @src.scan(TRAILING_WHITESPACE)
           true
-        elsif @src.check(/^#{OPT_SPACE}#{HTML_TAG_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
+        elsif @src.match?(/^#{OPT_SPACE}#{HTML_TAG_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
           @src.pos += @src.matched_size
           handle_html_start_tag(line) {|iel, ic, ih| handle_kramdown_html_tag(iel, ic, ih) }
           Kramdown::Parser::Html::ElementConverter.convert(@root, @tree.children.last) if @options[:html_to_native]
           true
-        elsif @src.check(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
+        elsif @src.match?(/^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/o) && !HTML_SPAN_ELEMENTS.include?(@src[1].downcase)
           name = @src[1].downcase
 
           if @tree.type == :html_element && @tree.value == name

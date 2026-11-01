@@ -168,14 +168,14 @@ module Kramdown
           parse_attribute_list(@src[2], @alds[@src[1]] ||= {})
           @tree.children << new_block_el(:eob, :ald)
           true
-        elsif @src.check(EXT_BLOCK_START)
+        elsif @src.match?(EXT_BLOCK_START)
           parse_extension_start_tag(:block)
         elsif @src.scan(IAL_BLOCK_START)
           if (last_child = @tree.children.last) && last_child.type != :blank &&
               (last_child.type != :eob ||
                [:link_def, :abbrev_def, :footnote_def].include?(last_child.value))
             parse_attribute_list(@src[1], last_child.options[:ial] ||= {})
-            @tree.children << new_block_el(:eob, :ial) unless @src.check(IAL_BLOCK_START)
+            @tree.children << new_block_el(:eob, :ial) unless @src.match?(IAL_BLOCK_START)
           else
             parse_attribute_list(@src[1], @block_ial ||= {})
           end
@@ -192,9 +192,9 @@ module Kramdown
 
       # Parse the extension span at the current location.
       def parse_span_extensions
-        if @src.check(EXT_SPAN_START)
+        if @src.match?(EXT_SPAN_START)
           parse_extension_start_tag(:span)
-        elsif @src.check(IAL_SPAN_START)
+        elsif @src.match?(IAL_SPAN_START)
           if (last_child = @tree.children.last) && last_child.type != :text
             @src.pos += @src.matched_size
             attr = {}

@@ -53,7 +53,7 @@ module Kramdown
       # Parse the ordered or unordered list at the current location.
       def parse_list
         start_line_number = @src.current_line_number
-        type, list_start_re = (@src.check(LIST_START_UL) ? [:ul, LIST_START_UL] : [:ol, LIST_START_OL])
+        type, list_start_re = (@src.match?(LIST_START_UL) ? [:ul, LIST_START_UL] : [:ol, LIST_START_OL])
         list = new_block_el(type, nil, nil, location: start_line_number)
 
         item = nil
@@ -63,7 +63,7 @@ module Kramdown
         last_is_blank = false
         until @src.eos?
           start_line_number = @src.current_line_number
-          if last_is_blank && @src.check(HR_START)
+          if last_is_blank && @src.match?(HR_START)
             break
           elsif @src.scan(EOB_MARKER)
             eob_found = true
@@ -200,7 +200,7 @@ module Kramdown
             def_start_re = fetch_pattern(:dl, indentation)
             first_as_para = false
             last_is_blank = false
-          elsif @src.check(EOB_MARKER)
+          elsif @src.match?(EOB_MARKER)
             break
           elsif (result = @src.scan(content_re)) || (!last_is_blank && (result = @src.scan(lazy_re)))
             result.sub!(/^(\t+)/) { " " * ($1 ? 4 * $1.length : 0) }
