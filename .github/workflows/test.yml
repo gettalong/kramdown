@@ -1,0 +1,26 @@
+name: kramdown Tests
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        ruby: ['3.2', '3.3', '3.4', '4.0', head]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - run: |
+        sudo apt install -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra
+        wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb
+        sudo apt purge libtidy-0.99-0
+        sudo dpkg -i tidy-5.4.0-64bit.deb
+        gem install rake
+        gem install minitest stringex
+        gem install rouge
+    - run: |
+        ruby -Ilib:test test/test_*
