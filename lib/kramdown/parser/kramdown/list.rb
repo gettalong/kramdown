@@ -24,6 +24,8 @@ module Kramdown
         content_re = /^(?:(?:\t| {4}){#{indentation / 4}} {#{indentation % 4}}|(?:\t| {4}){#{indentation / 4 + 1}}).*\S.*\n/
         lazy_re = /(?!^ {0,#{[indentation, 3].min}}(?:#{IAL_BLOCK}|#{LAZY_END_HTML_STOP}|#{LAZY_END_HTML_START})).*\S.*\n/
 
+        h.shift if h.size > 100
+
         h[indentation] = [content_re, lazy_re, indent_re]
       end
 
