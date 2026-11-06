@@ -65,14 +65,13 @@ module Kramdown
       # NOTE: Normally we'd have to add one to the count of newlines to get the correct line number.
       # However we add the one indirectly by using a one-based start_line_number.
       def current_line_number
-        # Not using string[@previous_pos..best_pos].count('\n') because it is slower
-        strscan = ::StringScanner.new(string)
-        strscan.pos = @previous_pos
-        old_pos = pos + 1
-        @previous_line_number += 1 while strscan.skip_until(/\n/) && strscan.pos <= old_pos
-
-        @previous_pos = (eos? ? pos : pos + 1)
-        @previous_line_number
+        cur_pos = pos
+        if cur_pos > @previous_pos
+          @previous_line_number += string.byteslice(@previous_pos, cur_pos - @previous_pos).
+            force_encoding(Encoding::BINARY).count("\n")
+          @previous_pos = cur_pos
+        end
+        string.getbyte(cur_pos) == 10 ? @previous_line_number + 1 : @previous_line_number
       end
 
     end
