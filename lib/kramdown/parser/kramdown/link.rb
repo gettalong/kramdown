@@ -55,11 +55,13 @@ module Kramdown
       LINK_INLINE_ID_RE = /\s*?\[([^\]]+)?\]/
       LINK_INLINE_TITLE_RE = /\s*?(["'])(.+?)\1\s*?\)/m
       LINK_START = /!?\[(?=[^^])/
+      LINK_EMPHASIS_CONTEXT = Hash.new(0).merge!(em: 1, strong: 2).freeze
 
       # Parse the link at the current scanner position. This method is used to parse normal links as
       # well as image links.
       def parse_link
         start_line_number = @src.current_line_number
+        start_pos = @src.pos
         result = @src.scan(LINK_START)
         cur_pos = @src.pos
         saved_pos = @src.save_pos
@@ -72,15 +74,45 @@ module Kramdown
           add_text(result)
           return
         end
+
+        # Failed bracket scans are cached per source position to avoid quadratic or even exponential
+        # runtime on unclosed brackets. Since the scan result depends on whether emphasis may be
+        # parsed, the emphasis context (stored in the two lowest bits) is part of the cache key.
+        unless @link_scan_failures_src.equal?(@src)
+          @link_scan_failures_src, @link_scan_failures = @src, {}
+        end
+        context = @stack.inject(LINK_EMPHASIS_CONTEXT[@tree.type]) do |memo, (t, _)|
+          memo | LINK_EMPHASIS_CONTEXT[t&.type]
+        end
+        start_key = (start_pos << 2) | context
+        if @link_scan_failures[start_key]
+          @src.terminate if @tree.type == :a || @tree.type == :img
+          add_text(result)
+          return
+        end
+
         el = Element.new(link_type, nil, nil, location: start_line_number)
 
         count = 1
+        brackets = []
         found = parse_spans(el, LINK_BRACKET_STOP_RE) do
-          count += (@src[1] ? -1 : 1)
-          count - el.children.count {|c| c.type == :img } == 0
+          closing = @src[1]
+          count += (closing ? -1 : 1)
+          level = count - el.children.count {|c| c.type == :img }
+          brackets << [(closing || @src.matched_size == 2) ? nil : @src.pos, level]
+          level == 0
         end
         unless found
+          # An opening bracket found during the scan can only start a link if a later bracket has a
+          # level of one less than the opening bracket.
+          levels = {}
+          brackets.reverse_each do |pos, level|
+            @link_scan_failures[(pos << 2) | context] = true if pos && !levels[level - 1]
+            levels[level] = true
+          end
+          @link_scan_failures[start_key] = true
           @src.revert_pos(saved_pos)
+          @src.terminate if @tree.type == :a || @tree.type == :img
           add_text(result)
           return
         end

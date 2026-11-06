@@ -134,6 +134,7 @@ class TestFiles < Minitest::Test
     EXCLUDE_LATEX_FILES = [
       'test/testcases/span/01_link/image_in_a.text', # bc of image link
       'test/testcases/span/01_link/imagelinks.text', # bc of image links
+      'test/testcases/span/01_link/unclosed_brackets.text', # bc of image links
       'test/testcases/span/01_link/empty_title.text',
       'test/testcases/span/04_footnote/markers.text', # bc of footnote in header
       'test/testcases/block/06_codeblock/with_lang_in_fenced_block_name_with_dash.text',
