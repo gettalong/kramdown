@@ -106,6 +106,7 @@ module Kramdown
           result = @src.scan(HTML_COMMENT_RE)
           @tree.children << Element.new(:xml_comment, result, nil, category: :span, location: line)
         elsif @src.skip(/<!\[CDATA\[/) && (r = @src.exist?(/\]\]>/); @src.pos -= 9; r)
+          @src.scan(HTML_CDATA_RE)
           add_text(escape_html(@src[1]))
         elsif (result = @src.scan(HTML_TAG_CLOSE_RE))
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' on line #{line}")
