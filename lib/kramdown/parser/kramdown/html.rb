@@ -72,7 +72,8 @@ module Kramdown
       # Parse the HTML at the current position as block-level HTML.
       def parse_block_html
         line = @src.current_line_number
-        if (result = @src.scan(HTML_COMMENT_RE))
+        if @src.skip(/<!--/) && (r = @src.exist?(/-->/); @src.pos -= 4; r)
+          result = @src.scan(HTML_COMMENT_RE)
           @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
           @src.scan(TRAILING_WHITESPACE)
           true
@@ -101,9 +102,10 @@ module Kramdown
       # Parse the HTML at the current position as span-level HTML.
       def parse_span_html
         line = @src.current_line_number
-        if (result = @src.scan(HTML_COMMENT_RE))
+        if @src.skip(/<!--/) && (r = @src.exist?(/-->/); @src.pos -= 4; r)
+          result = @src.scan(HTML_COMMENT_RE)
           @tree.children << Element.new(:xml_comment, result, nil, category: :span, location: line)
-        elsif @src.scan(HTML_CDATA_RE)
+        elsif @src.skip(/<!\[CDATA\[/) && (r = @src.exist?(/\]\]>/); @src.pos -= 9; r)
           add_text(escape_html(@src[1]))
         elsif (result = @src.scan(HTML_TAG_CLOSE_RE))
           warning("Found invalidly used HTML closing tag for '#{@src[1]}' on line #{line}")

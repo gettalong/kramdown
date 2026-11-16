@@ -159,11 +159,14 @@ module Kramdown
             if (result = @src.scan_until(HTML_RAW_START))
               add_text(result, @tree, :text)
               line = @src.current_line_number
-              if (result = @src.scan(HTML_COMMENT_RE))
+              if @src.skip(/<!--/) && (r = @src.exist?(/-->/); @src.pos -= 4; r)
+                result = @src.scan(HTML_COMMENT_RE)
                 @tree.children << Element.new(:xml_comment, result, nil, category: :block, location: line)
-              elsif (result = @src.scan(HTML_INSTRUCTION_RE))
+              elsif @src.skip(/<\?/) && (r = @src.exist?(/\?>/); @src.pos -= 2; r)
+                result = @src.scan(HTML_INSTRUCTION_RE)
                 @tree.children << Element.new(:xml_pi, result, nil, category: :block, location: line)
-              elsif @src.scan(HTML_CDATA_RE)
+              elsif @src.skip(/<!\[CDATA\[/) && (r = @src.exist?(/\]\]>/); @src.pos -= 9; r)
+                @src.scan(HTML_CDATA_RE)
                 @tree.children << Element.new(:text, @src[1], nil, cdata: true, location: line)
               elsif @src.scan(HTML_TAG_RE)
                 if method(:handle_html_start_tag).arity.abs >= 1
