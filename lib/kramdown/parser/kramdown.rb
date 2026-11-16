@@ -81,6 +81,7 @@ module Kramdown
                           :typographic_syms, :line_break, :escaped_chars]
 
         @span_pattern_cache ||= Hash.new {|h, k| h[k] = {} }
+        @stack_counter = 0
       end
       private_class_method(:new, :allocate)
 
@@ -138,6 +139,8 @@ module Kramdown
 
       # Parse all block-level elements in +text+ into the element +el+.
       def parse_blocks(el, text = nil)
+        @stack_counter += 1
+        raise Kramdown::Error, "Elements nested too deep at block level" if @stack_counter > 100
         @stack.push([@tree, @src, @block_ial])
         @tree, @block_ial = el, nil
         @src = (text.nil? ? @src : ::Kramdown::Utils::StringScanner.new(text, el.options[:location]))
@@ -158,6 +161,7 @@ module Kramdown
         end
 
         @tree, @src, @block_ial = *@stack.pop
+        @stack_counter -= 1
         status
       end
 
@@ -213,6 +217,8 @@ module Kramdown
       #
       # The parameter +text_type+ specifies the type which should be used for created text nodes.
       def parse_spans(el, stop_re = nil, parsers = nil, text_type = @text_type)
+        @stack_counter += 1
+        raise Kramdown::Error, "Elements nested too deep at span level" if @stack_counter > 100
         @stack.push([@tree, @text_type]) unless @tree.nil?
         @tree, @text_type = el, text_type
 
@@ -245,6 +251,7 @@ module Kramdown
         end
 
         @tree, @text_type = @stack.pop
+        @stack_counter -= 1
 
         stop_re_found
       end

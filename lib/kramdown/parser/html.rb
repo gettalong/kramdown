@@ -73,8 +73,8 @@ module Kramdown
 
       # Contains the parsing methods. This module can be mixed into any parser to get HTML parsing
       # functionality. The only thing that must be provided by the class are instance variable
-      # @stack for storing the needed state and @src (instance of StringScanner) for the actual
-      # parsing.
+      # @stack for storing the needed state, @src (instance of StringScanner) for the actual
+      # parsing and @stack_counter for checking nested element level.
       module Parser
 
         include Constants
@@ -149,6 +149,8 @@ module Kramdown
         # When an HTML start tag is found, processing is deferred to #handle_html_start_tag,
         # providing the block given to this method.
         def parse_raw_html(el, &block)
+          @stack_counter += 1
+          raise Kramdown::Error, "Elements nested too deep at HTML raw level" if @stack_counter > 200
           @stack.push(@tree)
           @tree = el
 
@@ -191,6 +193,7 @@ module Kramdown
             end
           end
 
+          @stack_counter -= 1
           @tree = @stack.pop
         end
 
@@ -591,6 +594,7 @@ module Kramdown
 
       # Parse the source string provided on initialization as HTML document.
       def parse
+        @stack_counter = 0
         @stack, @tree = [], @root
         @src = Kramdown::Utils::StringScanner.new(adapt_source(source))
 
