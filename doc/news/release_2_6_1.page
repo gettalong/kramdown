@@ -1,0 +1,16 @@
+---
+title: kramdown 2.6.1 released
+no_output: true
+sort_info: r2061
+created_at: 2026-11-16 10:55:00 +01:00
+modified_at: 2026-11-16 10:55:00 +01:00
+---
+## kramdown 2.6.1 released
+
+Hot-fix release for 2.6.0
+
+## Changes
+
+* 1 bug fixes:
+
+  - Fix missing statement leading to an error
