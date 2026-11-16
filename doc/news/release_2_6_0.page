@@ -1,0 +1,46 @@
+---
+title: kramdown 2.6.0 released
+no_output: true
+sort_info: r2060
+created_at: 2026-11-16 09:55:00 +01:00
+modified_at: 2026-11-16 09:55:00 +01:00
+---
+## kramdown 2.6.0 released
+
+This release brings a minor enhancement and a few bug fixes.
+
+## Changes
+
+* 1 minor change:
+
+  - Enhance header_links option to support specifying content and position (fixes [#831] by Shane
+    Becker)
+
+* 9 bug fixes:
+
+  - Fix quadratic-time parsing of unclosed `[` brackets in link/image parser (fixes [#845] by
+    Alex J.)
+  - Fix 'character class has duplicated range' warning (fixes [#821] by Alexander Popov and [#841]
+    by Ryan Davis)
+  - Fix crash when a footnote definition has no content (fixes [#829] by Peter Occil with pull
+    request [#844) by youdie006)
+  - Fix slow parsing of underscores inside words (fixes [#832] by Audrey Hamelers)
+  - Fix setting image alt text via IAL on reference style image (fixes [#838] by snan)
+  - Emit warning when IAL/ALD contains an invalid (i.e. ignored) part (fixes [#839] by cabo)
+  - Fix warning related to deprecated HTMLLegacy formatter of Rouge (fixes [#846] by nicheosala and
+    [#842] by Charlotte Van Petegem)
+  - Fix parsing of too many nested elements by throwing a `Kramdown::Error`
+  - Reduce impact of quadratic time parsing of unclosed HTML comments/instructions/CDATA sections
+
+[#831]: https://github.com/gettalong/kramdown/issues/831
+[#845]: https://github.com/gettalong/kramdown/issues/845
+[#821]: https://github.com/gettalong/kramdown/issues/821
+[#829]: https://github.com/gettalong/kramdown/issues/829
+[#832]: https://github.com/gettalong/kramdown/issues/832
+[#838]: https://github.com/gettalong/kramdown/issues/838
+[#839]: https://github.com/gettalong/kramdown/issues/839
+[#842]: https://github.com/gettalong/kramdown/issues/842
+
+[#841]: https://github.com/gettalong/kramdown/pull/841
+[#844]: https://github.com/gettalong/kramdown/pull/844
+[#846]: https://github.com/gettalong/kramdown/pull/846
